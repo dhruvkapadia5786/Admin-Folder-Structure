@@ -1,0 +1,85 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+table.dataTable thead .sorting {
+    background-image: url("./assets/datatable/sort_both.png");
+}
+
+table.dataTable thead .sorting_asc {
+    background-image: url("./assets/datatable/sort_asc.png") !important;
+}
+
+table.dataTable thead .sorting_desc {
+    background-image: url("./assets/datatable/sort_desc.png") !important;
+}
+
+table.dataTable thead .sorting_asc_disabled {
+    background-image: url("./assets/datatable/sort_asc_disabled.png");
+}
+
+table.dataTable thead .sorting_desc_disabled {
+    background-image: url("./assets/datatable/sort_desc_disabled.png");
+}
+
+.modal-md {
+    max-width: 768px;
+}
+
+.modal-x-lg {
+    max-width: 1080px;
+}
+
+.modal-full-lg {
+    max-width: 1240px;
+}
+
+.modal-open .modal {
+    overflow-y: auto;
+}
+
+.bg-dark-grey {
+    background-color: #37474f;
+}
+
+.bg-light-grey {
+    color: #495057;
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.bg-dark-blue {
+    background-color: #1c313a;
+}
+
+.bg-lighter-blue {
+    background-color: azure;
+}
+
+.bg-dark-green {
+    background-color: #00897b;
+}
+
+.sticky-top-custom {
+    position: sticky;
+    top: 56px;
+    z-index: 1020;
+}
+
+.navbar,
+.page-footer,
+.main-layout {
+    padding-left: 260px !important;
+}
+
+.cdk-overlay-container {
+    z-index: 1100;
+}

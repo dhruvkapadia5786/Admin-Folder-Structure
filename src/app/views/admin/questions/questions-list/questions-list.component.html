@@ -1,0 +1,106 @@
+<div class="w-100 p-3 bg-dark-grey d-flex justify-content-between align-items-center">
+    <h4 class="text-white font-weight-bold mb-0">Questions
+     <span class="ml-2 badge badge-success p-2">{{questions.length}}</span>
+    </h4>
+    <a routerLink="/admin/questions/create-question" routerLinkActive="active" class="btn btn-primary"><i class="fa fa-plus"></i>
+      Add Question
+    </a>
+</div>
+<div class="p-3">
+    <div class="row">
+      <div class="col-md-4">
+        <label for="kits">Medicine Kits</label>
+         <mat-form-field class="w-100">
+           <mat-select placeholder="Select Medicine Kits" (selectionChange)="handleChange($event.value)" [(ngModel)]="selectedKits" multiple>
+             <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'MK')"
+             [indeterminate]="selectedKits.length > 0 && notSelectedMedicineKit"
+             [checked]="!notSelectedMedicineKit">Select All</mat-checkbox>
+             <mat-option color="primary" *ngFor="let mk of kitList" [value]="mk._id">{{mk.name}}</mat-option>
+           </mat-select>
+         </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <label for="chc">Health Condition</label>
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Select Health Condition" (selectionChange)="handleChange($event.value)" [(ngModel)]="selectedCHC" multiple>
+            <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
+              (change)="handleCheckAll($event, 'HC')"
+              [indeterminate]="selectedCHC.length > 0 && notSelectedConditions"
+              [checked]="!notSelectedConditions">Select All</mat-checkbox>
+            <mat-option *ngFor="let condition of chcList" [(value)]="condition._id">{{condition.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <label>Question Category</label>
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Select Question Category" (selectionChange)="handleChange($event.value)" [(ngModel)]="selectedCategory">
+            <mat-option *ngFor="let flow of categoryList" [value]="flow.value">{{flow.type}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <ng-container *ngIf="questions.length > 0; else emptyQuestions">
+      <div class="table-responsive-md">
+        <table class="table table-striped table-hover" datatable [dtOptions]="dtOptions" >
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Type</th>
+              <th>Question</th>
+              <th width="400">Medicine Kits</th>
+              <th width="400">Health Conditions</th>
+              <th width="150">States</th>
+              <th>Active</th>
+              <th width="180">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let que of questions; let i = index">
+              <td>{{i+1}}</td>
+              <td>
+                <span class="badge badge-success">Main</span>
+                <span *ngIf="que.sub_questions && que.sub_questions.length>0" class="badge badge-primary">Sub-Question</span>
+              </td>
+              <td>
+                <p>{{que.text}}</p>
+                <div *ngIf="que.sub_questions && que.sub_questions.length>0">
+                   <b>Sub-Questions :</b>
+                   <p *ngFor="let sQ of que.sub_questions">{{sQ.text}}</p>
+                </div>
+              </td>
+              <td>
+                <ul>
+                  <li *ngFor="let kit of que.pet_dtc_medicine_kits">{{kit.name}}</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li *ngFor="let chc of que.pet_consultation_health_conditions">{{chc.name}}</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li *ngFor="let state of que.states">{{state.name}}</li>
+                </ul>
+              </td>
+              <td>
+                <i *ngIf="que.is_active" class="fa fa-check text-success"></i>
+                <i *ngIf="!que.is_active" class="fa fa-times text-danger"></i>
+              </td>
+              <td>
+                <button (click)=viewQuestion(que._id) class="btn btn-sm btn-default"><i class="fa fa-eye"></i></button>
+                <button (click)=editQuestion(que._id) class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+    <ng-template #emptyQuestions>
+      <div class="col-sm-12 text-center text-muted">
+        <h2><i class="fa fa-info-circle"></i></h2>
+        <h4>No Records Yet!</h4><hr>
+      </div>
+    </ng-template>
+</div>

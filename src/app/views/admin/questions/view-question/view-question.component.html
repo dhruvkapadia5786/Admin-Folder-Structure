@@ -1,0 +1,130 @@
+<div class="w-100 p-3 bg-dark-grey d-flex justify-content-between align-items-center">
+    <h4 class="text-white font-weight-bold mb-0">View Questions</h4>
+    <a routerLink='/admin/questions/edit/{{questionId}}' routerLinkActive="active" class="btn btn-primary pull-right"> Edit</a>
+</div>
+<div class="p-3">
+  <ng-container *ngIf="questionDetails; else noQuestionDetails">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="col-sm-7">
+          <h4 class="font-weight-bold">Question:</h4>
+          <h5 class="font-weight-bold">{{questionDetails.text}}</h5>
+        </div>
+        <div class="col-sm-5">
+          <h5 class="font-weight-bold">Question Details</h5>
+          <h5>Category Name : {{questionDetails.category}}</h5>
+          <h5>
+            Active&nbsp;: &nbsp;
+            <i class="fa fa-check text-success" *ngIf="questionDetails.is_active"></i>
+            <i class="fa fa-times text-danger" *ngIf="!questionDetails.is_active"></i>
+          </h5>
+          <h5>
+            MultiSelect&nbsp;: &nbsp;
+            <i class="fa fa-check text-success" *ngIf="questionDetails.isMultiSelect"></i>
+            <i class="fa fa-times text-danger" *ngIf="!questionDetails.isMultiSelect"></i>
+          </h5>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="col-sm-6">
+              <h4 class="font-weight-bold">Choices:</h4>
+            </div>
+          </div>
+        </div>
+        <div class="row choice hover" *ngFor="let choice of questionDetails.choices">
+          
+            <div class="col-sm-2">
+              <span class="badge badge-danger" *ngIf="choice.result == 1"> Red</span>
+              <span class="badge badge-success" *ngIf="choice.result == 2"> Green</span>
+              <span class="badge badge-warning" *ngIf="choice.result == 3"> Nutral</span>
+            </div>
+            <div class="col-sm-10">
+              <h5>{{choice.text}}</h5>
+              <div class="row">
+                <div class="col-sm-2">
+                  <h6>Active: &nbsp;&nbsp;
+                    <i class="fa fa-check text-success" *ngIf="choice.is_active"></i>
+                    <i class="fa fa-times text-danger" *ngIf="!choice.is_active"></i></h6>
+                  <h6>File Upload: &nbsp;&nbsp;
+                    <i class="fa fa-check text-success" *ngIf="choice.has_file_upload"></i>
+                    <i class="fa fa-times text-danger" *ngIf="!choice.has_file_upload"></i></h6>
+                </div>
+                <div class="col-sm-5">
+                  <h6 *ngIf="choice.consent_message">Consent Message:&nbsp;&nbsp;{{choice.consent_message}}</h6>
+                </div>
+                 
+                <div class="col-sm-5">
+                  <h6 *ngIf="choice.has_subquestions">Sub-Questions:<br/></h6>
+                    <p *ngFor="let subQ of choice.sub_questions; let i = index;">
+                      <span *ngIf="subQ.is_deleted!=1">{{i+1}}. {{subQ.subquestion_question_text}}</span>
+                    </p>
+                </div>
+
+              </div>
+            </div>
+           
+           
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-12">
+        <h4 class="font-weight-bold"> Medicine Kits:</h4>
+        <hr>
+      </div>
+      <br>
+      <div class="row" *ngFor="let kit of questionDetails.pet_dtc_medicine_kits; let i = index;">
+        <div class="col-sm-12">
+          <div class="col-sm-4">
+            <h6>{{i+1}}. {{kit.name}}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-sm-12">
+        <h4 class="font-weight-bold"> Health Conditions:</h4>
+        <hr>
+      </div>
+      <br>
+      <div class="row" *ngFor="let condition of questionDetails.pet_consultation_health_conditions; let i = index;">
+        <div class="col-sm-12">
+          <div class="col-sm-4">
+            <h6>{{i+1}}. {{condition.name}}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <hr>
+        <h4 class="font-weight-bold">States:</h4>
+        <hr>
+        <div class="row" *ngFor="let state of questionDetails.states; let i = index;">
+          <div class="cols-m-12">
+            <div class="col-sm-6">
+              <h6>{{i+1}}.{{state.name}}</h6>
+            </div>
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="view-question-footer">
+      <div class="row">
+        <div class="col-sm-12">
+          <a routerLink="/admin/questions/questions-list" routerLinkActive="active" class="btn btn-primary pull-right">Back</a>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noQuestionDetails>
+    No Question Details
+  </ng-template>
+</div>

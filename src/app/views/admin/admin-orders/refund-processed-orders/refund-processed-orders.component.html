@@ -1,0 +1,24 @@
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link" routerLink="/admin/orders/refund_requested">Refund Requested Orders</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" routerLink="/admin/orders/refund_processed">Refund Processed Orders</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  routerLink="/admin/orders/refund/incomplete">Refund Incomplete Orders</a>
+  </li>
+</ul>
+
+<div class="row p-3">
+  <div class="col-sm-12">
+    <h3>Refund Processed Orders</h3>
+  </div>
+</div>
+<hr>
+
+<div class="p-2">
+    <div class="table-responsive-md" *blockUI="'datatable'">
+      <table mdbTable hover="true" id="ordersList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"></table>
+    </div>
+</div>

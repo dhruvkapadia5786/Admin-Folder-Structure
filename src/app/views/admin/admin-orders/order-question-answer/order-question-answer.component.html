@@ -1,0 +1,98 @@
+<div class="tab-pane mt-4">
+    <ng-container *ngIf="!loading && questions.length;else noHealthQuestions">
+        <button class="btn btn-default float-right mb-3" type="button" (click)="sendAllConsent()">Take All Consent</button> 
+        <div class=" td-accordian" id="" *ngIf="!loading && questions.length && questions[0].id">
+          <div *ngFor="let question of questions; let idx = index"  [ngClass]="getBorderColorClass(question.type,question.choices[0].result,question.has_given_consent)">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button class="btn btn-link collapsed text-left" type="button" data-toggle="collapse" [attr.data-target]="'#collapse'+question.id" aria-expanded="true" aria-controls="collapseOne">
+                  {{(idx+1)+". "+question.text}}
+                </button>
+              </h5>
+            </div>
+            <div [attr.id]="'collapse'+question.id" class="collapse" [ngClass]="{'show': (question.choices[0].result == 1 || question.choices[0].result == 3) }"
+              aria-labelledby="headingOne" data-parent="#questionAccordian">
+              <div class="card-body">
+                <p *ngFor="let answer of question.choices">{{answer.text}}</p>
+              </div>
+              <div *ngIf="question.choices[0].result == 1  || question.type=='sub'">
+                <div class="card-footer">
+                  <div class="consent-body">
+                    <div *ngIf="question.consent_sent_datetime != null && question.consent_message != null">
+                      <h4>Consent Message: {{question.consent_message}}</h4>
+                    </div>
+                    <div *ngIf="question.has_given_consent == 0 && (question.consent_sent_datetime == null || question.consent_sent_datetime == '')">
+                    <!-- <button class="btn btn-danger btn-sm" (click)="openConsentModal(consentModal,'QUESTION',question.user_answer_id,question.choices[0].consent_message)">Send Consent Message<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button> -->
+                    </div>
+                    <div *ngIf="question.has_given_consent == 0 && question.consent_sent_datetime != null">
+                      <h5>Consent Sent Date Time: {{helper.getUserLocalDate(question.consent_sent_datetime)}}</h5>
+                      <!-- <button type="button" class="btn-info btn btn-sm" (click)="openConsentModal(consentModal,'QUESTION',question.user_answer_id,question.consent_message)">Resend Consent Message<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button> -->
+                    </div>
+                    <div *ngIf="question.has_given_consent == 1 && question.consent_sent_datetime != null && question.consent_received_datetime != null">
+                      <h5>Consent Sent Date Time: {{helper.getUserLocalDate(question.consent_sent_datetime)}}</h5>
+                      <h5>Consent Received Date Time: {{helper.getUserLocalDate(question.consent_received_datetime)}}</h5>
+                    </div>
+                  </div>
+                </div>
+
+                  <div *ngFor="let sub_question of question.sub_questions; let sub_index = index">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed text-left" type="button" data-toggle="collapse" [attr.data-target]="'#collapse'+sub_question.id"
+                                aria-expanded="true" aria-controls="collapseTwo">
+                                {{(idx+1)+"-"+(sub_index+1)+". "+sub_question.text}}
+                                </button>
+                            </h5>
+                        </div>
+                        <div [attr.id]="'collapse'+sub_question.id" class="collapse" data-parent="#questionAccordian"> <!-- [ngClass]="{'show': (question.choices[0].result == 1 || question.choices[0].result == 3) }" -->
+                            <div class="card-body">
+                                <div *ngIf="!sub_question.custom_input">
+                                      <p *ngFor="let ans of sub_question.choices">{{ans.text}}</p>
+                                </div>
+                                <p *ngIf="sub_question.custom_input">{{sub_question.custom_input}}</p>
+                            </div>
+                        </div>
+                  </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- CURRENT TAKING MADICINE, ILLNESS AND ALEGIES  -->
+    </ng-container>
+    <ng-template #noHealthQuestions>
+        <div class="text-center text-muted">
+            <h2><i class="fa fa-info-circle"></i></h2>
+            <h4>No Health Questions Found For this Order !</h4>
+        </div>
+    </ng-template>
+ </div>
+
+
+<!-- <div mdbModal #consentModal="mdbModal" class="modal" id="consentModal" tabindex="-1" role="dialog" aria-labelledby="consentModalLabel" aria-hidden="true" [config]="{backdrop: 'false'}">
+    <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
+        <div class="modal-content   text-center">
+            <form [formGroup]="consentForm" (ngSubmit)="sendConsent(consentForm?.valid,consentModal)">                              
+                <div class="modal-header">
+                    <h5 class="modal-title">Send Consent Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeConsentModal(consentModal)">
+                            <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">                   
+                      <input type="hidden" formControlName="answerId" />     
+                      <div class="form-group">
+                          <label class="float-left">Consent Message :</label>
+                          <textarea formControlName="consentMsg" class="form-control form-control-sm" rows="5"></textarea>
+                          <div class="invalid-feedback" *ngIf="consentMsg?.invalid && (consentMsg?.dirty || consentMsg?.touched)" class="text-danger">
+                            <div *ngIf="consentMsg?.errors?.required">Consent message is required.</div>
+                          </div>
+                      </div>  
+                </div>
+                <div class="modal-footer justify-content-center">
+                      <button type="submit" class="btn-primary btn btn-sm"  [disabled]="consentForm?.invalid">Take Consent</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->

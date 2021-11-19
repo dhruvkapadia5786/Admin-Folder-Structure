@@ -1,0 +1,27 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="w-100 d-flex flex-row justify-content-between align-items-center">
+            <p class="font-weight-bold">{{ modalEvent =='EDIT' ? 'Edit Code' : 'Add New Code' }}</p>
+            <button (click)="closeModal()" type="button"  class="close pull-right" aria-label="Close" data-dismiss="modal">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="saveCode(addCodeForm.valid)" [formGroup]="addCodeForm" autocomplete="off">
+            <div class="form-group">
+                <input type="text" id="code" class="form-control" placeholder="Enter Code" formControlName="code" />
+                    <div class="invalid-feedback" *ngIf="code?.invalid && (code?.dirty || code?.touched)" class="text-danger">
+                        <div *ngIf="code?.errors?.required">Code is required.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="created_for" class="form-control" placeholder="Enter Person Name" formControlName="created_for" />
+                    <div class="invalid-feedback" *ngIf="created_for?.invalid && (created_for?.dirty || created_for?.touched)" class="text-danger">
+                        <div *ngIf="created_for?.errors?.required">Person Name is required.</div>
+                </div>
+            </div>
+            <button class="btn btn-success btn-block btn-sm mt-2" type="submit">Save</button>
+        </form>
+    </div>
+</div>

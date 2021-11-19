@@ -1,0 +1,150 @@
+<ng-container *ngIf="medicineKitDetails; else noMedicineKitDetails">
+  <div class=" p-3">
+    <div class="row">
+      <div class="col-sm-6">
+        <label>Medicine Kit ID</label>
+        <h5>{{medicineKitDetails._id || '-'}}</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Treatment Condition</label>
+        <h5>{{medicineKitDetails.condition_name || '-' }}</h5>
+      </div>
+      <div class="col-md-6">
+        <label>Name</label>
+        <h5>{{medicineKitDetails.name || '-'}} <span class="ml-2 badge badge-success badge-pill p-2"
+            *ngIf="medicineKitDetails.is_coming_soon==1">Comming Soon</span></h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Gender</label>
+        <h5>{{medicineKitDetails.for_gender || '-' }}</h5>
+      </div>
+      <div class="col-md-6">
+        <label>Age Group</label>
+        <h5>{{getAgeGroup(medicineKitDetails.age_group)}}</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Actual Price</label>
+        <h5>{{(medicineKitDetails.actual_price | currency) || '-' }}</h5>
+
+        <div class="mt-2" *ngIf="medicineKitDetails.is_offer">
+          <label><i class="fa fa-tag mr-1"></i>Offer Price</label>
+          <h5 class="text-success font-weight-bold">{{(medicineKitDetails.offer_cost | currency) || '-' }}</h5>
+        </div>
+
+      </div>
+      <div class="col-md-6">
+        <label>Pharmacy Price</label>
+        <h5>{{(medicineKitDetails.pharmacy_price | currency) || '-'}}</h5>
+        <br />
+        <label>Doctor Cost (Rate per prescription)</label>
+        <h5>{{(medicineKitDetails.doctor_cost | currency) || '-'}}</h5>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Default Refill Count</label>
+        <h5>{{ medicineKitDetails.default_refill }}</h5>
+      </div>
+      <div class="col-md-6">
+        <label>Refill Frequency</label>
+        <h5>{{ medicineKitDetails.refill_frequency }}</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Tab Name</label>
+        <h5>{{ medicineKitDetails.tab_name || '-' }}</h5>
+      </div>
+      <div class="col-md-6">
+        <label>Tab URL</label>
+        <h5>{{ medicineKitDetails.url || '-' }}</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Active</label>
+        <h5> <i class="fa fa-check text-success" *ngIf="medicineKitDetails.is_active"></i>
+          <i class="fa fa-times text-danger" *ngIf="!medicineKitDetails.is_active"></i>
+        </h5>
+        <br />
+
+        <label>Is Custom Pharmacy Allowed</label>
+        <h5><i class="fa fa-check text-success" *ngIf="medicineKitDetails.is_custom_pharmacy_allowed"></i>
+          <i class="fa fa-times text-danger" *ngIf="!medicineKitDetails.is_custom_pharmacy_allowed"></i>
+        </h5>
+
+        <label>Description</label>
+        <p>{{medicineKitDetails.description}}</p>
+      </div>
+      <div class="col-md-6">
+        <label>Medicine Kit Image</label><br>
+        <img class="rounded shadow" id="blah" [(src)]="imageUrl" alt="your image"
+          style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" (click)="open()" />
+      </div>
+    </div>
+
+    <h4 class="bg-dark text-white pad10">ICD10 Codes</h4>
+    <ul class="mb-5 list-group list-group-flush"
+      *ngIf="medicineKitDetails.icd10_codes && medicineKitDetails.icd10_codes.length>0">
+      <li class="list-group-item  font-weight-normal" *ngFor="let code of medicineKitDetails.icd10_codes">
+        {{code.icd10_code}} {{code.description}}</li>
+    </ul>
+    <p *ngIf="medicineKitDetails.icd10_codes.length==0">No ICD10 Code Attached with this Kit .
+    <p>
+
+    <h4 class="bg-dark text-white pad10">States</h4>
+    <div class="row">
+      <div class="col-md-3 mb-4" *ngFor="let state of medicineKitDetails.states; let i = index;">
+        <h6>{{i+1}}.{{state.name}}</h6>
+        <div>
+          <label>Active</label><br>
+          <mat-slide-toggle class="example-margin"  [checked]="state.is_active" [(ngModel)]="state.is_active"
+             (change)="updateStateStatus($event,state)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h4 class="bg-dark text-white pad10">Medicines</h4>
+        <div class="row">
+          <div class="col-md-6 mb-3" *ngFor="let medicine of medicineKitDetails.medicines">
+            <ul class="list-group">
+              <li class="list-group-item  font-weight-normal">Name : {{medicine.name}}</li>
+              <li class="list-group-item  font-weight-normal">Default Direction : {{medicine.direction}}</li>
+              <li class="list-group-item  font-weight-normal">Quantity : {{medicine.quantity}}</li>
+              <li class="list-group-item  font-weight-normal">Quantity Unit : {{medicine.quantity_unit}}</li>
+              <li class="list-group-item  font-weight-normal">Weight : {{medicine.weight}}</li>
+              <li class="list-group-item  font-weight-normal">Weight Unit : {{medicine.weight_unit}}</li>
+              <li class="list-group-item  font-weight-normal">Price : {{medicine.price | currency}}</li>
+              <li class="list-group-item  font-weight-normal">NDC Number : {{medicine.ndc_number}}</li>
+              <li class="list-group-item  font-weight-normal">Active :
+                <i class="fa fa-check text-success" *ngIf="medicine.is_active"></i>
+                <i class="fa fa-times text-danger" *ngIf="!medicine.is_active"></i>
+              </li>
+              <li class="list-group-item  font-weight-normal">LexiGen ProductId : {{medicine.lexigen_productid}}</li>
+              <li class="list-group-item  font-weight-normal">LexiDrug SynId : {{medicine.lexidrug_synid}}</li>
+              <li class="list-group-item  font-weight-normal">LexiSynonym TypeId : {{medicine.lexisynonym_typeid}}</li>
+              <li class="list-group-item  font-weight-normal">LexiGen DrugId : {{medicine.lexigen_drugid}}</li>
+              <li class="list-group-item  font-weight-normal">Route : {{medicine.route}}</li>
+              <li class="list-group-item  font-weight-normal">Strength : {{medicine.strength}}</li>
+              <li class="list-group-item  font-weight-normal">RXCUI : {{medicine.rxcui}}</li>
+              <li class="list-group-item  font-weight-normal">Days Supply : {{medicine.days_supply}}</li>
+              <li class="list-group-item  font-weight-normal">Drug Classification: {{medicine.drug_classification}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #noMedicineKitDetails>
+  No Medicine Kit Details
+</ng-template>

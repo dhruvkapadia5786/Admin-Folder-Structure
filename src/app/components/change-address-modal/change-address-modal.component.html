@@ -1,0 +1,69 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="font-weight-bold modal-title w-100" id="changeAddressModalTitle">
+            {{modalTitle}}
+        </h4>
+        <button (click)="closeModal()" type="button" id="closeChangeAddressModalBtn" class="close float-right"
+            aria-label="Close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="addressForm" (ngSubmit)="saveUserAddress(addressForm.valid)">
+            <div class="form-group">
+                <label class="float-left">Address Line 1:</label>
+                <input type="text" class="form-control" formControlName="address_line_1" />
+                <div class="invalid-feedback"
+                    *ngIf="address_line_1?.invalid && (address_line_1?.dirty || address_line_1?.touched)"
+                    class="text-danger">
+                    <div *ngIf="address_line_1?.errors?.required">Address Line 1 is required</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="float-left">Address Line 2:</label>
+                <input type="text" class="form-control" formControlName="address_line_2" />
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                        <label class="float-left">City:</label>
+                        <input type="text" class="form-control" formControlName="city_name" />
+                        <div class="invalid-feedback"
+                            *ngIf="city_name?.invalid && (city_name?.dirty || city_name?.touched)" class="text-danger">
+                            <div *ngIf="city_name?.errors?.required">city name is required</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                        <label class="float-left">State:</label>
+                        <select formControlName="state_id" class="form-control" (change)="setStateInfo($event)">
+                            <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
+                        </select>
+                        <div class="invalid-feedback"
+                            *ngIf="state_id?.invalid && (state_id?.dirty || state_id?.touched)" class="text-danger">
+                            <div *ngIf="state_id?.errors?.required">state is required</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                        <label class="float-left">ZipCode:</label>
+                        <input type="text" class="form-control" formControlName="zip_code" />
+                        <div class="invalid-feedback"
+                            *ngIf="zip_code?.invalid && (zip_code?.dirty || zip_code?.touched)" class="text-danger">
+                            <div *ngIf="zip_code?.errors?.required">zipcode is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" [disabled]="addressForm.invalid" type="submit">Save Address</button>
+            </div>
+        </form>
+    </div>
+</div>

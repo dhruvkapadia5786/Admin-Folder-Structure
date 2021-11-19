@@ -1,0 +1,81 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="w-100 d-flex flex-row justify-content-between align-items-center">
+            <p class="font-weight-bold mb-0">{{ modalEvent =='EDIT' ? 'Edit Country' : 'Add Country' }}</p>
+            <button (click)="closeModal()" type="button" class="close float-right" aria-label="Close"
+                data-dismiss="modal">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="saveCountry(countryForm.valid)" [formGroup]="countryForm" autocomplete="off">
+
+            <div class="form-group">
+                <label>Country Name</label><br />
+                <input type="hidden" id="id" formControlName="id" />
+                <input type="text" id="name" class="form-control" placeholder="Enter Country Name"
+                    formControlName="name" />
+                <div class="invalid-feedback" *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+                    class="text-danger">
+                    <div *ngIf="name?.errors?.required">Name is required.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Capital<span class="text-muted ml-2">Optional</span></label><br />
+                <input type="text" id="capital" class="form-control" placeholder="Enter Country Name"
+                    formControlName="capital" />
+            </div>
+
+            <div class="form-group">
+                <label>Country Code <span class="text-muted ml-2">2 Letters</span></label><br />
+                <input type="text" id="code" class="form-control" length="2" placeholder="Enter Country Code"
+                    formControlName="code" />
+                <div class="invalid-feedback" *ngIf="code?.invalid && (code?.dirty || code?.touched)"
+                    class="text-danger">
+                    <div *ngIf="code?.errors?.required">Country Code is required.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>ISO Code <span class="text-muted ml-2">3 Letters</span></label>
+                <input type="text" id="iso_code" formControlName="iso_code" length="3" class="form-control"
+                    placeholder="Currency Name" />
+                <div class="invalid-feedback"
+                    *ngIf="iso_code?.invalid && (iso_code?.dirty || iso_code?.touched)" class="text-danger">
+                    <div *ngIf="iso_code?.errors?.required">ISO Code is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Currency Code <span class="text-muted ml-2">3 Letters</span></label>
+                <input type="text" id="currency_code" formControlName="currency_code" length="3" class="form-control"
+                    placeholder="Currency Code" />
+                <div class="invalid-feedback"
+                    *ngIf="currency_code?.invalid && (currency_code?.dirty || currency_code?.touched)" class="text-danger">
+                    <div *ngIf="currency_code?.errors?.required">Currency Code is required</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Continent <span class="text-muted ml-2">Optional</span></label>
+                <input type="text" id="continent" formControlName="continent" class="form-control"
+                    placeholder="Continent" />
+            </div>
+
+            <div class="form-group">
+                <label>Phone Code <span class="text-muted ml-2">Optional</span></label>
+                <input type="text" id="phone_code" formControlName="phone_code" class="form-control"
+                    placeholder="Phone code" />
+            </div>
+            
+            <div class="form-group">
+                <mat-checkbox id="is_active" formControlName="is_active" color="primary">Active</mat-checkbox>
+            </div>
+            
+            <div class="form-group">
+                <button class="btn btn-success btn-block btn-sm mt-2" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

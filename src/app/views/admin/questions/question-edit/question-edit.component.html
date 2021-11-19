@@ -1,0 +1,299 @@
+<div class="w-100 p-3 bg-dark-grey">
+  <h4 class="text-white font-weight-bold mb-0">Edit Questions</h4>
+</div>
+<div class="p-3">
+  <ng-container *ngIf="questionObj; else emptyQuestion">
+    <form class="p-5" (ngSubmit)="updateQuestion()" [formGroup]="editQuestionFormGroup">
+      <div class="row">
+        <div class="col-sm-3">
+          <label>Flow Type:</label>
+          <mat-form-field>
+            <mat-select formControlName="category">
+              <mat-option *ngFor="let flow of flowTypeList" [value]="flow.value">{{flow.type}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="invalid-feedback" *ngIf="category?.invalid && (category?.dirty || category?.touched)"
+            class="text-danger">
+            <div *ngIf="category?.errors?.required">Flow type is required.</div>
+          </div><br>
+        </div>
+        <div *ngIf="editQuestionFormGroup.get('category')?.value == 'ORDER'" class="col-sm-3">
+          <label>Medicine Kit:</label>
+          <mat-form-field>
+            <mat-select formControlName="pet_dtc_medicine_kits" multiple>
+              <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
+                (change)="handleCheckAll($event, 'kit')"
+                [indeterminate]="pet_dtc_medicine_kits?.value.length > 0 && notSelectedKits"
+                [checked]="!notSelectedKits">All</mat-checkbox>
+              <mat-option *ngFor="let medicineKit of medicineKitList" [value]="medicineKit._id">{{medicineKit.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="invalid-feedback"
+            *ngIf="pet_dtc_medicine_kits?.invalid && (pet_dtc_medicine_kits?.dirty || pet_dtc_medicine_kits?.touched)"
+            class="text-danger">
+            <div *ngIf="pet_dtc_medicine_kits?.errors?.required">Medicine kit is required.</div>
+          </div>
+        </div>
+        <div *ngIf="editQuestionFormGroup.get('category')?.value == 'CONSULTATION'" class="col-sm-6">
+          <label>Health Condition:</label>
+          <mat-form-field>
+            <mat-select formControlName="pet_consultation_health_conditions" multiple>
+              <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
+                (change)="handleCheckAll($event, 'conditions')"
+                [indeterminate]="pet_consultation_health_conditions?.value.length > 0 && notSelectedConditions"
+                [checked]="!notSelectedConditions">Select All Health Conditions</mat-checkbox>
+              <mat-option *ngFor="let condition of healthConditionsList" [(value)]="condition._id">{{condition.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="invalid-feedback"
+            *ngIf="pet_consultation_health_conditions?.invalid && (pet_consultation_health_conditions?.dirty || pet_consultation_health_conditions?.touched)"
+            class="text-danger">
+            <div *ngIf="pet_consultation_health_conditions?.errors?.required">Health Conditions is required.</div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <label for="state">State</label>
+          <mat-form-field>
+            <mat-select formControlName="states" multiple>
+              <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
+                (change)="handleCheckAll($event, 'state')"
+                [indeterminate]="states?.value?.length > 0 && notSelectedStates" [checked]="!notSelectedStates">All
+              </mat-checkbox>
+              <mat-option *ngFor="let st of statesList" [value]="st._id">{{st.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="invalid-feedback" *ngIf="states?.invalid && (states?.dirty || states?.touched)"
+            class="text-danger">
+            <div *ngIf="states?.errors?.required">Please select state.</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <label>Question Text:</label>
+          <textarea class="form-control" rows="5" placeholder="Enter Question Text" formControlName="text"
+            [(ngModel)]="questionObj.text"></textarea>
+          <div class="invalid-feedback" *ngIf="text?.invalid && (text?.dirty || text?.touched)" class="text-danger">
+            <div *ngIf="text?.errors?.required"><label class="text-danger">Question Text is required.</label></div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <label>Question Options:</label><br>
+          <div class="col-sm-6 question-options">
+            <mat-checkbox id="is_multi_select" color="primary" formControlName="is_multi_select"
+              [(ngModel)]="questionObj.is_multi_select">
+              Multi Select
+            </mat-checkbox>
+          </div>
+          <div class="col-sm-6 question-options">
+            <mat-checkbox id="question_is_active" color="primary" formControlName="is_active"
+              [(ngModel)]="questionObj.is_active">
+              Active
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="title">
+        <p class="h4">Choices</p>
+      </div>
+      <hr>
+      <div class="alert alert-danger" *ngIf="choiceError">
+        <h5>Atleast one choice is required!</h5>
+      </div>
+      <div formArrayName="choices">
+        <div *ngFor="let choice of getChoiceDataControls(); let choiceIndex = index" [formGroupName]="choiceIndex">
+          <button class="btn-sm btn-danger float-right" (click)="removeChoice(choiceIndex)"><i class="fa fa-trash"></i> Remove Choice</button>
+          <div class="row">
+            <div class="col-sm-6">
+              <label>Choice Text:</label>
+              <textarea class="form-control" placeholder="Enter The Choice Text" formControlName="text"></textarea>
+              <div class="invalid-feedback"
+                *ngIf="choice.get('text')?.invalid && (choice.get('text')?.dirty || choice.get('text')?.touched)"
+                class="text-danger">
+                <div *ngIf="choice.get('text')?.errors?.required"><label class="text-danger">Choice Text is required.</label></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label>Result:</label>
+              <select class="form-control" formControlName="result" (change)="choiceResultChanged(choice)">
+                <option value="" selected>None</option>
+                <option value="1">Red</option>
+                <option value="2">Green</option>
+                <option value="3">Neutral</option>
+              </select>
+              <div class="invalid-feedback"
+                *ngIf="choice.get('result')?.invalid && (choice.get('result')?.dirty || choice.get('result')?.touched)" class="text-danger">
+                <div *ngIf="choice.get('result')?.errors?.required"><label class="text-danger">Please Select Choice Result.</label></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-5">
+              <label>Options:</label><br>
+              <mat-checkbox color="primary" formControlName="is_active" class="mr-3"> Active </mat-checkbox>
+              <mat-checkbox color="primary" formControlName="has_file_upload"> Has File Upload? </mat-checkbox>
+            </div>
+            <div class="col-sm-12" *ngIf="choice.get('result')?.value == 1">
+              <label>Consent Message:</label>
+              <textarea class="form-control" placeholder="Enter Consent Message"
+                formControlName="consent_message"></textarea>
+              <div class="invalid-feedback"
+                *ngIf="choice.get('consent_message')?.invalid && (choice.get('consent_message')?.dirty || choice.get('consent_message')?.touched)"
+                class="text-danger">
+                <div *ngIf="choice.get('consent_message')?.errors?.required">
+                  <label class="text-danger">
+                    Please add consent message for Red Choice.
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+            
+          <div class="row">
+            <div class="col-sm-6">
+              <label>Choice Has Sub-Questions ?</label><br>
+              <mat-checkbox color="primary" formControlName="has_subquestions">Yes , This Choice Contains Sub-Questions </mat-checkbox>
+            </div>
+            <div class="col-sm-6">
+              <button *ngIf="choice.get('has_subquestions')?.value" type="button" class="btn btn-sm btn-primary btn-block" (click)="addSubQuestion(choiceIndex)"><i class="fa fa-plus mr-2"></i>Add New Sub-Question</button>
+            </div>
+          </div>          
+
+          <div *ngIf="choice.get('has_subquestions')?.value" formArrayName="sub_questions" style="width:100%;">
+            <div class="p-3 my-2 rounded" *ngFor="let subitem of choiceSubQuestions(choiceIndex).controls; let j = index;" [formGroupName]="j" style="background-color:#cce5ff;border-color: #b8daff;">
+              <button type="button" class="btn btn-sm btn-danger float-right" (click)="removeSubQuestion(choiceIndex,j)"><i class="fa fa-trash"></i> Remove Question</button>
+              <div class="row">
+                <div class="col-12">
+                  <label>Sub-Question Text:</label>
+                  <textarea class="form-control" placeholder="Enter Sub-Question Text"
+                    formControlName="subquestion_question_text"></textarea>
+                  <div class="invalid-feedback"
+                    *ngIf="subitem.get('subquestion_question_text')?.invalid && (subitem.get('subquestion_question_text')?.dirty || subitem.get('subquestion_question_text')?.touched)"
+                    class="text-danger">
+                    <div *ngIf="subitem.get('subquestion_question_text')?.errors?.required">Sub-Question text is
+                      required.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <label>Sub-Question Options:</label><br>
+                  <div class="col-6 question-options">
+                    <mat-checkbox id="subitem.get('subquestion_is_active')" color="primary"
+                      formControlName="subquestion_is_active">Active</mat-checkbox>
+                  </div>
+                  <div class="col-6 question-options">
+                    <mat-radio-group aria-labelledby="example-radio-group-label"
+                      formControlName="subquestion_option_type"
+                      (change)="setSubQuestionOptionType(choiceIndex,j,$event)">
+                      <mat-radio-button class="example-radio-button" color="primary" value="input">Take Input From
+                        User</mat-radio-button>
+                      <mat-radio-button class="example-radio-button" color="primary" value="choise">Has Choises
+                      </mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+
+              <div formArrayName="subquestion_choices" style="width:100%">
+                <label *ngIf="subitem.get('subquestion_option_type')?.value=='choise'">Sub-Question Choices</label>
+                <button *ngIf="subitem.get('subquestion_option_type')?.value=='choise'" type="button"
+                  class="btn btn-sm btn-success float-right" (click)="addSubChoice(choiceIndex,j)"><i
+                    class="fa fa-plus"></i></button>
+                <div *ngFor="let choitem of subChoiceDataControls(choiceIndex,j); let k = index;">
+                  <div [formGroupName]="k" id="cho_{{ choiceIndex }}_sub_{{j}}_choise_{{k}}">
+                    <button type="button" class="btn btn-sm btn-danger float-right"
+                      (click)="removeSubChoice(choiceIndex,j,k)" *ngIf="k >= 1"><i class="fa fa-minus"></i></button>
+                    <div class="row">
+                      <div class="col-6">
+                        <label>Choices:</label>
+                        <textarea class="form-control" placeholder="Enter The Choice Text"
+                          formControlName="text"></textarea>
+                        <div class="invalid-feedback"
+                          *ngIf="choitem.get('text')?.invalid && (choitem.get('text')?.dirty || choitem.get('text')?.touched)"
+                          class="text-danger">
+                          <div *ngIf="choitem.get('text')?.errors?.required">Choice text is required.</div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <label>Result:</label>
+                        <select class="form-control form-control-sm form-control-inline" formControlName="result">
+                          <option value="0" selected>None</option>
+                          <option value="1">Red</option>
+                          <option value="2">Green</option>
+                          <option value="3">Neutral</option>
+                        </select>
+                        <div class="invalid-feedback"
+                          *ngIf="choitem.get('result')?.invalid && (choitem.get('result')?.dirty || choitem.get('result')?.touched)"
+                          class="text-danger">
+                          <div *ngIf="choitem.get('result')?.errors?.required">Choice result is required.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-6">
+                        <label>Choice Options:</label><br>
+                        <mat-checkbox color="primary" formControlName="is_active" class="mr-3">Active</mat-checkbox>
+                        <mat-checkbox color="primary" formControlName="has_file_upload">Has File Upload?
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-6" *ngIf="choitem.get('result')?.value==1">
+                        <label>Consent Message:</label>
+                        <input type="text" class="form-control" placeholder="Enter Consent Message"
+                          formControlName="consent_message" />
+                        <div class="invalid-feedback"
+                          *ngIf="choitem.get('consent_message')?.invalid && (choitem.get('consent_message')?.dirty || choitem.get('consent_message')?.touched)"
+                          class="text-danger">
+                          <div *ngIf="choitem.get('consent_message')?.errors?.required">Consent message is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-sm btn-success" (click)="addNewChoice()">Add New Choice</button>
+        </div>
+      </div>
+      <!-- Submit button -->
+      <!-- <div class="text-center">
+        <button class="btn btn-info" type="submit">Submit</button>
+      </div> -->
+      <div class="form-group mt-1">
+        <div class="row">
+          <div class="col">
+            <div class="text-center">
+              <!-- <button type="submit" class="btn btn-info" [disabled]="processTip.invalid">Submit</button> -->
+              <button type="submit" class="btn btn-info mr-2">Submit</button>
+              <a routerLink="/admin/questions/questions-list" routerLinkActive="active" class="btn btn-primary">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+  <ng-template #emptyQuestion>
+    <div class="col-sm-12 text-center text-muted">
+      <h4>Loading..!</h4>
+      <hr>
+    </div>
+  </ng-template>
+</div>

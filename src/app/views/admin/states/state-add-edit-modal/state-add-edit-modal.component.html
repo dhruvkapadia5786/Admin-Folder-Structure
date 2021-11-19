@@ -1,0 +1,56 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="w-100 d-flex flex-row justify-content-between align-items-center">
+            <p class="font-weight-bold mb-0">{{ modalEvent =='EDIT' ? 'Edit State' : 'Add State' }}</p>
+            <button (click)="closeModal()" type="button" class="close float-right" aria-label="Close"
+                data-dismiss="modal">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="saveState(stateForm.valid)" [formGroup]="stateForm" autocomplete="off">
+            <div class="form-group">
+                <mat-label>Select Country</mat-label>
+                <mat-select placeholder="Select Country" formControlName="country_id">
+                    <mat-option color="primary" *ngFor="let country of countryList" [value]="country._id">{{country.name}}</mat-option>
+                </mat-select>
+                <div class="invalid-feedback" *ngIf="country_id?.invalid && (country_id?.dirty || country_id?.touched)"
+                    class="text-danger">
+                    <div *ngIf="country_id?.errors?.required">Country Name is required.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>State Name</label><br />
+                <input type="hidden" id="id" formControlName="id" />
+                <input type="text" id="name" class="form-control" placeholder="Enter State Name"
+                    formControlName="name" />
+                <div class="invalid-feedback" *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+                    class="text-danger">
+                    <div *ngIf="name?.errors?.required">Name is required.</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>2 Letter Abbreviation</label>
+                <input type="text" id="abbreviation" formControlName="abbreviation" length="2" class="form-control"
+                    placeholder="Enter 2 Letter Abbreviation" />
+                <div class="invalid-feedback"
+                    *ngIf="abbreviation?.invalid && (abbreviation?.dirty || abbreviation?.touched)" class="text-danger">
+                    <div *ngIf="abbreviation?.errors?.required">State Abbreviation is required</div>
+                    <div *ngIf="abbreviation?.errors?.maxLength">State Abbreviation of 2 letters only</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <mat-checkbox id="is_active" formControlName="is_active" color="primary">Active</mat-checkbox>
+            </div>
+
+
+            <div class="form-group">
+                <button class="btn btn-success btn-block btn-sm mt-2" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

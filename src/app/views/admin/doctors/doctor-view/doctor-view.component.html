@@ -1,0 +1,324 @@
+<mat-tab-group (selectedIndexChange)="tabEvents($event)">
+  <mat-tab label="Details">
+    <div class="container-fluid doctorDetails">
+      <ng-container *ngIf="doctorDetails; else noDetails ">
+        <div class="p-2 d-flex justify-content-between align-items-center bg-dark-grey">
+          <h4 class="font-weight-normal text-white">Account Actions</h4>
+          <div>
+            <button (click)="manageAccountUsage()"
+              [ngClass]="{'btn':true,'btn-dark':doctorDetails && doctorDetails.is_active==1,'btn-success':doctorDetails && doctorDetails.is_active==0}">
+              <span *ngIf="doctorDetails && doctorDetails.is_active==0">Enable Account Login</span>
+              <span *ngIf="doctorDetails && doctorDetails.is_active==1">Disable Account Login</span>
+            </button>
+            <button [disabled]="doctorDetails.is_active==0" (click)="manageAccountService()"
+              [ngClass]="{'btn':true,'btn-dark':doctorDetails && doctorDetails.account_service_enabled==1,'btn-success':doctorDetails && doctorDetails.account_service_enabled==0}">
+              <span *ngIf="doctorDetails && doctorDetails.account_service_enabled==0">Enable Account Service</span>
+              <span *ngIf="doctorDetails && doctorDetails.account_service_enabled==1">Disable Account Service</span>
+            </button>
+            <a routerLink="/admin/doctors/edit/{{doctorId}}" routerLinkActive="active" class="btn btn-primary mr-2">Edit</a>
+            <a routerLink="/admin/document-upload/{{doctorHashId}}" routerLinkActive="active"
+              class="btn btn-primary">Upload Document</a>
+            <a (click)="loginAsUser()" routerLinkActive="active" class="d-none btn btn-warning">Login To Account<i
+                class="ml-2 fa fa-sign-in" aria-hidden="true"></i></a>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-3">
+            <label>Login Enabled</label>
+            <h5>
+              <i class="fa fa-check text-success" *ngIf="doctorDetails.is_active"></i>
+              <i class="fa fa-times text-danger" *ngIf="!doctorDetails.is_active"></i>
+            </h5>
+          </div>
+          <div class="col-md-3">
+            <label>Service Enabled</label>
+            <h5>
+              <i class="fa fa-check text-success" *ngIf="doctorDetails.account_service_enabled"></i>
+              <i class="fa fa-times text-danger" *ngIf="!doctorDetails.account_service_enabled"></i>
+            </h5>
+          </div>
+          <div class="col-md-4">
+            <label>Last Login At</label>
+            <!-- <h5>{{helper.getUTCtoLocalDateTime(doctorDetails.last_login)}}</h5> -->
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="p-2 bg-dark-grey">
+              <h4 class="font-weight-normal text-white">Personal Details</h4>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <tr>
+                  <td class="font-weight-bold">Company Name</td>
+                  <td class="font-weight-normal">{{doctorDetails.company_name || '-'}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">LLC Name</td>
+                  <td class="font-weight-normal">{{doctorDetails.llc_name || '-'}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">First Name</td>
+                  <td class="font-weight-normal">{{doctorDetails.first_name}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Last Name</td>
+                  <td class="font-weight-normal">{{doctorDetails.last_name}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Suffix</td>
+                  <td class="font-weight-normal">{{doctorDetails.suffix}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Display Name</td>
+                  <td class="font-weight-normal">{{doctorDetails.display_name || '-'}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Date Of Birth</td>
+                  <td class="font-weight-normal">{{(doctorDetails.date_of_birth | date:'MM/dd/yyyy') || '-'}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Registration Date</td>
+                  <td class="font-weight-normal">{{(doctorDetails.date_joined | date:'MM/dd/yyyy')}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Email</td>
+                  <td class="font-weight-normal">{{doctorDetails.email}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Mobile No</td>
+                  <td class="font-weight-normal">{{doctorDetails.cell_phone_number | mask: '(000) 000-0000'}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Fax Number</td>
+                  <td class="font-weight-normal">{{doctorDetails.fax_number | mask: '(000) 000-0000'}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Active</td>
+                  <td class="font-weight-normal"><i
+                      [ngClass]="{'fa':true,'fa-check text-success': doctorDetails.is_active, 'fa-times text-danger': !doctorDetails.is_active}"></i>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-2 bg-dark-grey">
+              <h4 class="font-weight-normal text-white">Professional Details</h4>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <tr>
+                  <td class="font-weight-bold">DS Doctor ID</td>
+                  <td class="font-weight-normal">
+                    <p *ngIf="doctorDetails.doesspot_clinician_id">
+                      {{doctorDetails.doesspot_clinician_id}}</p>
+                    <label *ngIf="doctorDetails.doesspot_error">DS Error</label>
+                    <div *ngIf="doctorDetails.doesspot_error" class="alert alert-danger" role="alert">
+                      {{doctorDetails?.doesspot_error}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">WN Doctor ID</td>
+                  <td class="font-weight-normal">
+                    <p *ngIf="doctorDetails.weno_clinician_id">
+                      {{doctorDetails.weno_clinician_id}}
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">NPI Number</td>
+                  <td class="font-weight-normal">
+                    {{doctorDetails.npi_number}}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">DEA Number</td>
+                  <td class="font-weight-normal">
+                    {{doctorDetails.dea_number}}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Order Batch Size</td>
+                  <td class="font-weight-normal"> {{doctorDetails.order_batch_size}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Consultation Batch Size</td>
+                  <td class="font-weight-normal"> {{doctorDetails.consultation_batch_size}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Policy Expiry Date</td>
+                  <td class="font-weight-normal"> {{doctorDetails.policy_expiry_date | date : 'MM/dd/yyyy'}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Check Payable To Name</td>
+                  <td class="font-weight-normal"> {{doctorDetails.check_payable_to_name || '-' }}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Professional Policy Liability Number</td>
+                  <td class="font-weight-normal">
+                    {{doctorDetails.professional_liability_policy_number}}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold" style="min-width: 200px;">Professional Policy Liability Document</td>
+                  <td class="font-weight-normal">
+                    <!-- <img class="img-responsive license-image" [src]="imageUrl" (click)="open()" height="250px"
+                      width="250px" /> -->
+                      <app-image-preview [imgPath]="imageUrl" height="250" width="250" caption="License Image"></app-image-preview>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-2 bg-dark-grey mt-3">
+          <h4 class="font-weight-normal text-white">Residential Addresses</h4>
+        </div>
+        <table class="table table-sm">
+          <thead class="thead-light">
+            <tr>
+              <th>Address Line 1</th>
+              <th>Address Line 2</th>
+              <th>City</th>
+              <th>State</th>
+              <th>ZipCode</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="doctorDetails.residential_address">
+            <tr>
+              <td>
+                <p class="font-weight-normal mb-0">{{doctorDetails.residential_address.address_line_1 }}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0" *ngIf="doctorDetails.residential_address.address_line_2">
+                  {{doctorDetails.residential_address.address_line_2 }}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{doctorDetails.residential_address.city_name }}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{doctorDetails.residential_address.state_name }}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{doctorDetails.residential_address.zip_code }}</p>
+              </td>
+              <td class="text-left">
+                <p><i class="fa"
+                    [ngClass]="{'fa-check text-success': doctorDetails.residential_address.is_active==1, 'fa-times text-danger': doctorDetails.residential_address.is_active!=1}"></i>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="p-2 bg-dark-grey mt-3">
+          <h4 class="font-weight-normal text-white">Practice Addresses</h4>
+        </div>
+        <table class="table table-sm">
+          <thead class="thead-light">
+            <tr>
+              <th>Address Line 1</th>
+              <th>Address Line 2</th>
+              <th>City</th>
+              <th>State</th>
+              <th>ZipCode</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="doctorDetails.practice_addresses.length">
+            <tr *ngFor="let address of doctorDetails.practice_addresses;let i = index;">
+              <td>
+                <p class="font-weight-normal mb-0">{{address.address_line_1 }}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0" *ngIf="address.address_line_2">{{address.address_line_2 }}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{address.city_name }}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{address.state_name }}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{address.zip_code }}</p>
+              </td>
+              <td class="text-left">
+                <p><i class="fa"
+                    [ngClass]="{'fa-check text-success': address.is_active==1, 'fa-times text-danger': address.is_active!=1}"></i>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="p-2 bg-dark-grey mt-3">
+          <h4 class="font-weight-normal text-white">License Details</h4>
+        </div>
+        <table class="table table-sm table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>#</th>
+              <th>License Number</th>
+              <th>Expiry Date</th>
+              <th>State</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let license of doctorDetails.licenses;let i = index;">
+              <td>
+                <p class="font-weight-normal mb-0">#{{i+1}}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{license.license_number}}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{license.expiry_date | date: 'MM/dd/yyyy'}}</p>
+              </td>
+              <td>
+                <p class="font-weight-normal mb-0">{{license.state_name}}</p>
+              </td>
+              <td>
+                <p><i class="fa"
+                    [ngClass]="{'fa-check text-success': license.is_active==1, 'fa-times text-danger': license.is_active!=1}"></i>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </ng-container>
+      <ng-template #noDetails>
+        <div class="text-center text-muted">
+          <h2><i class="fa fa-info-circle"></i></h2>
+          <h4>No Details!</h4>
+        </div>
+      </ng-template>
+      <hr>
+      <a routerLink="/admin/doctors/list" routerLinkActive="active" class="btn btn-primary pull-right">Back</a>
+    </div>
+  </mat-tab>
+  <mat-tab label="Orders">
+    <br>
+    <div class="container-fluid doctorDetails">
+      <div class="col-lg-12 col-md-12 mb-3 pad-10">
+        <div class="table-responsive-md">
+          <app-doctor-prescribed-orders></app-doctor-prescribed-orders>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Consultations">
+    <br />
+    <div class="container-fluid">
+      <div class="col-lg-12 col-md-12">
+        <app-doctor-consultations></app-doctor-consultations>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

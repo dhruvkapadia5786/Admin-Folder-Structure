@@ -1,0 +1,85 @@
+<div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="searchDoctorModalLabel">Search Doctor</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSearchDoctorModalBtn"  (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+
+        <div class="col-md-6">
+          <div class="form-container">
+            <form [formGroup]="doctorFormGroup" (submit)="onDoctorSubmit(doctorFormGroup)">
+              <div class="form-row">
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName" formControlName="firstName">
+                    <div class="invalid-feedback" *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)" class="text-danger">
+                      <div *ngIf="firstName?.errors?.required">First Name is required.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="lastName">Last Name (optional)</label>
+                    <input type="text" class="form-control" id="lastName" formControlName="lastName">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="cityName">City (optional)</label>
+                    <input type="text" class="form-control" id="city" formControlName="cityName">
+                  </div>
+                </div>
+                <div class="col" *ngIf="states">
+                  <div class="form-group">
+                    <label for="stateName">State (optional)</label>
+                    <select class="form-control" id="stateName" formControlName="stateName">
+                      <option selected disabled>Select State</option>
+                      <option *ngFor="let state of states" [value]="state.abbreviation">{{state.name}}</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="form-group">
+                <label for="zipCode">Zip (optional)</label>
+                <input type="text" class="form-control" id="zipCode" formControlName="zipCode">
+              </div>
+              <button type="submit" class="btn btn-sm btn-primary btn-block">Search</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="doctorSearchResults && doctorSearchResults.length>0">
+          <label>Search Results</label>
+
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search By Docotr Name" [(ngModel)]="query" id="listSearch" />
+              </div>
+
+              <div style="height:400px;max-height:400px;overflow-y: scroll;">
+                    <div class="list-group">
+                        <div  class="list-group-item list-group-item-action" *ngFor="let doctor of doctorSearchResults | searchFilter: query">
+                                <h5 class="mb-1 font-weight-bold">{{doctor.basic.name_prefix?doctor.basic.name_prefix:''}} {{doctor.basic.first_name}} {{ doctor.basic.middle_name? ' '+doctor.basic.middle_name+' ':'' }} {{ doctor.basic.last_name }}  {{ doctor.basic.credential?doctor.basic.credential:'' }}</h5>
+                                <p class="mb-0 text-muted text-uppercase">{{ doctor.taxonomies && doctor.taxonomies[0] ? doctor.taxonomies[0].desc:'' }}</p>
+                                <p class="mb-0 mt-2">{{ doctor.addresses[0].address_1 +', '}}</p>
+                                <p class="mb-0" *ngIf="doctor.addresses[0].address_2">{{ doctor.addresses[0].address_2 +', '}}</p>
+                                <p class="mb-0">{{ doctor.addresses[0].city+' , '+doctor.addresses[0].state +' - '+ doctor.addresses[0].postal_code}}</p>
+                                <p class="mb-0">Phone : {{doctor.addresses[0].telephone_number}}</p>
+                                <p class="mb-1" *ngIf="doctor.addresses[0].fax_number">Fax : {{doctor.addresses[0].fax_number}}</p>
+                                <button type="button" (click)="onSelectDoctorclick(doctor)" class="btn btn-block btn-sm btn-outline-primary">Select This Doctor</button>
+                        </div>
+                    </div>
+              </div>
+
+          </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,187 @@
+<div>
+  <div class="w-100 p-3 bg-dark-grey">
+      <h4 class="text-white font-weight-bold mb-0"><span *ngIf="formMode=='CREATE'">Add User</span><span *ngIf="formMode=='EDIT'">Edit User</span></h4>
+  </div>
+  <div class="form-container px-3 pt-3">
+        <form [formGroup]="userForm"  (submit)="userFormSubmit()">
+
+
+            <div class="form-group">
+              <label for="role">Select Role</label>
+              <mat-select class="form-control" id="role" placeholder="Enter Role" formControlName="role" (selectionChange)="handleChangeRole($event.value)">
+                  <mat-option *ngFor="let role of userRoles" [value]="role.value">{{role.key}}</mat-option>
+              </mat-select>
+
+              <div class="invalid-feedback" *ngIf="role?.invalid && (role?.dirty || role?.touched)" class="text-danger font-weight-bold">
+                <div *ngIf="role?.errors?.required">First name is required.</div>
+              </div>
+            </div>
+
+            <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="first_name">First Name</label>
+                      <input type="text" class="form-control" id="first_name" placeholder="Enter First Name" formControlName="first_name">
+                      <div class="invalid-feedback" *ngIf="first_name?.invalid && (first_name?.dirty || first_name?.touched)" class="text-danger font-weight-bold">
+                        <div *ngIf="first_name?.errors?.required">First name is required.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="last_name">Last Name</label>
+                      <input type="text" class="form-control" id="last_name" placeholder="Enter Last Name" formControlName="last_name">
+                      <div class="invalid-feedback" *ngIf="last_name?.invalid && (last_name?.dirty || last_name?.touched)" class="text-danger font-weight-bold">
+                        <div *ngIf="last_name?.errors?.required">Last name is required.</div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" class="form-control" placeholder="Enter Email Address" id="email" formControlName="email">
+                        <div class="invalid-feedback" *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="text-danger font-weight-bold">
+                          <div *ngIf="email?.errors?.required">Email address is required.</div>
+                          <div *ngIf="email?.errors?.email">Email address is invalid.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" class="form-control" placeholder="Enter Phone Number" id="phone_number" formControlName="phone_number">
+                    <div class="invalid-feedback" *ngIf="phone_number?.invalid && (phone_number?.dirty || phone_number?.touched)" class="text-danger font-weight-bold">
+                      <div *ngIf="phone_number?.errors?.required">Phone Number is required.</div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+
+                  <mat-checkbox id="email_phone_consent" formControlName="email_phone_consent" color="primary">Notifications for Email and Text</mat-checkbox>
+
+                  <mat-checkbox color="primary" formControlName="is_active">
+                    Active
+                  </mat-checkbox>
+
+
+                  <mat-checkbox color="primary" formControlName="add_memo_tab" *ngIf="userForm.get('role')?.value!='pharmacy_cashier'">
+                    Add Memo Tab
+                  </mat-checkbox>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="formMode=='CREATE'">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="float-left">Password</label>
+                    <input type="password" id="password" formControlName="password" class="form-control" placeholder="Enter Password" autocomplete="off"
+                    />
+                    <div class="invalid-feedback" *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="text-danger font-weight-bold">
+                      <div *ngIf="password?.errors?.required">Password is required.</div>
+                      <div *ngIf="password?.errors?.pattern">Password must conatain Following:
+                        <ul>
+                          <li>
+                            At least 8 to 30 characters in length
+                          </li>
+                          <li>Lowercase letters</li>
+                          <li>Uppercase letters</li>
+                          <li>Numbers</li>
+                          <li>Special characters</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+
+        <div *ngIf="showLicenseBlock">
+            <div class="bg-dark-grey text-white p-3">
+              <b>Licenses</b>
+            </div>
+            <div class="alert alert-danger" *ngIf="licenseLengthError">
+              <h5>Atleast one license is required!</h5>
+            </div>
+
+            <div formArrayName="licenses">
+              <div class="mb-3 alert alert-info" *ngFor="let license of getLicensesControls(); let ind=index" [formGroupName]="ind">
+                  <div class="row">
+                        <div class="col-12">
+                          <span class="float-left">
+                            <h5>License #{{ind+1}}</h5>
+                          </span>
+                          <span class="float-right">
+                            <button class="btn-sm btn-danger" (click)="removeLicense(ind)"><i class="fa fa-trash"></i></button>
+                          </span>
+                        </div>
+                  </div>
+
+                  <div class="row">
+                        <div class="col-sm-3">
+                              <div class="form-group">
+                                <label for="license_number">License Number</label>
+                                <input type="text" class="form-control" id="license_number" placeholder="Enter License Number." formControlName="license_number">
+                                <div class="invalid-feedback" *ngIf="license.get('license_number')?.invalid && (license.get('license_number')?.dirty || license.get('license_number')?.touched)"
+                                  class="text-danger font-weight-bold">
+                                  <div *ngIf="license.get('license_number')?.errors?.required">License number is required.</div>
+                                </div>
+                              </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                              <div class="form-group">
+                                <label for="expiry_date">Expiry Date</label>
+                                <input [matDatepicker]="datePicker" (click)="datePicker.open()" class="form-control input-lg" formControlName='expiry_date'
+                                  placeholder="MM/DD/YYYY" mask="09/09/0000">
+                                <mat-datepicker #datePicker></mat-datepicker>
+                                <div class="invalid-feedback" *ngIf="license.get('expiry_date')?.invalid && (license.get('expiry_date')?.dirty || license.get('expiry_date')?.touched)"
+                                  class="text-danger font-weight-bold">
+                                  <div *ngIf="license.get('expiry_date')?.errors?.required">Please select expiry date.</div>
+                                </div>
+                              </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                              <div class="form-group">
+                                <label for="license_state">State</label>
+                                <mat-select placeholder="Enter State" formControlName="state_id" class="form-control input-lg">
+                                  <mat-option *ngFor="let state of getStateList(license.get('state_id')?.value)" [value]="state.id">
+                                    {{state.name}}
+                                  </mat-option>
+                                </mat-select>
+                                <div class="invalid-feedback" *ngIf="license.get('state_id')?.invalid && (license.get('state_id')?.dirty || license.get('state_id')?.touched)"
+                                  class="text-danger font-weight-bold">
+                                  <div *ngIf="license.get('state_id')?.errors?.required">Please select state.</div>
+                                </div>
+                              </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                              <div class="form-group">
+                                <mat-checkbox color="primary" formControlName="is_active">Active</mat-checkbox>
+                              </div>
+                        </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="addNewLicense()"><i class="fa fa-plus mr-2"></i> Add New License</button>
+            </div>
+        </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-success"><i class="fa fa-save mr-2"></i> Save </button>
+          </div>
+        </form>
+  </div>
+</div>

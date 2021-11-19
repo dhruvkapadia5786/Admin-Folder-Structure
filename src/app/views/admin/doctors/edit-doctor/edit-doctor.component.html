@@ -1,0 +1,523 @@
+<div class="w-100 p-3 bg-dark-grey">
+  <h4 class="text-white font-weight-bold mb-0">Edit Doctor</h4>
+</div>
+<div class="p-5">
+  <form (ngSubmit)="saveDoctor()" [formGroup]="addDoctor" autocomplete="off">
+    <!-- Personal Details -->
+    <div class="alert alert-warning my-3">
+      <h5 class="font-weight-bold mb-3">Personal Details</h5>  
+      <div class="row">
+        <div class="col-md-6">
+          <label class="float-left">Company Name</label>
+          <input type="text" id="company_name" class="form-control" placeholder="Enter Company Name"
+            formControlName="company_name" />
+          <div class="invalid-feedback" *ngIf="company_name?.invalid && (company_name?.dirty || company_name?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="company_name?.errors?.required">Company name is required.</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="float-left">LLC Name</label>
+          <input type="text" id="llc_name" formControlName="llc_name" class="form-control input-lg"
+            placeholder="Enter LLC Name" />
+          <div class="invalid-feedback" *ngIf="llc_name?.invalid && (llc_name?.dirty || llc_name?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="llc_name?.errors?.required">LLC name is required.</div>
+          </div>
+        </div>
+      </div>
+          
+      <div class="row">
+        <div class="col-md-4">
+          <label class="float-left">First Name</label>
+          <input type="text" id="first_name" class="form-control" placeholder="Enter First Name"
+            formControlName="first_name" />
+          <div class="invalid-feedback" *ngIf="first_name?.invalid && (first_name?.dirty || first_name?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="first_name?.errors?.required">First name is required.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="float-left">Last Name</label>
+          <input type="text" id="last_name" formControlName="last_name" class="form-control input-lg"
+            placeholder="Enter Last Name" />
+          <div class="invalid-feedback" *ngIf="last_name?.invalid && (last_name?.dirty || last_name?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="last_name?.errors?.required">Last name is required.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="float-left">Suffix</label>
+          <select id="suffix" formControlName="suffix" class="form-control" placeholder="Enter Suffix">
+            <option value="R.PH">R.PH</option>
+            <option value="MD">MD</option>
+            <option value="DO">DO</option>
+            <option value="DDS">DDS</option>
+            <option value="DMD">DMD</option>
+            <option value="DVM">DVM</option>
+            <option value="DPM">DPM</option>
+            <option value="OD">OD</option>
+            <option value="NP">NP</option>
+            <option value="PA">PA</option>
+            <option value="RN">RN</option>
+            <option value="LVN">LVN</option>
+            <option value="LPN">LPN</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="suffix?.invalid && (suffix?.dirty || suffix?.touched)" class="text-danger font-weight-bold">
+            <div *ngIf="suffix?.errors?.required">Suffix is required.</div>
+          </div>
+        </div>
+      </div>
+          
+      <div class="row">
+        <div class="col-md-6">
+          <label class="float-left">Email</label>
+          <input type="email" id="email" formControlName="email" class="form-control input-lg"
+            placeholder="Enter Email" />
+          <div class="invalid-feedback" *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="text-danger font-weight-bold">
+            <div *ngIf="email?.errors?.required">Email is required.</div>
+            <div *ngIf="email?.errors?.email">Email must be a valid email address.</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="float-left">Cell Phone Number</label>
+          <input type="text" id="cell_phone_number" formControlName="cell_phone_number" class="form-control input-lg"
+            placeholder="Enter Cell Phone Number" />
+          <div class="invalid-feedback"
+            *ngIf="cell_phone_number?.invalid && (cell_phone_number?.dirty || cell_phone_number?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="cell_phone_number?.errors?.required">Cell phone number is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <label>Gender</label><br />
+          <div class="custom-control custom-radio">
+            <input class="custom-control-input" type="radio" name="gender" id="gender_male" [value]="1"
+              formControlName="gender">
+            <label class="custom-control-label" for="gender_male">
+              Male
+            </label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input class="custom-control-input" type="radio" name="gender" id="gender_female" [value]="2"
+            formControlName="gender">
+            <label class="custom-control-label" for="gender_female">
+              Female
+            </label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="float-left">Date Of Birth</label>
+          <input matInput [matDatepicker]="date_of_birth" (click)="date_of_birth.open()" class="form-control input-lg"
+            formControlName='date_of_birth' placeholder="MM/DD/YYYY">
+          <mat-datepicker #date_of_birth></mat-datepicker>
+          <!-- <div class="invalid-feedback" *ngIf="date_of_birth?.invalid && (date_of_birth?.dirty || date_of_birth?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="date_of_birth?.errors?.required">Date Of Birth is required.</div>
+          </div> -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <label class="d-block">Display Name</label>
+          <input type="text" id="display_name" formControlName="display_name" class="form-control input-lg"
+            placeholder="Enter Display Name" />
+          <div class="invalid-feedback" *ngIf="display_name?.invalid && (display_name?.dirty || display_name?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="display_name?.errors?.required">Display name is required.</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="d-block">Fax Number</label>
+          <input type="text" id="fax_number" formControlName="fax_number" class="form-control input-lg"
+            placeholder="Enter Fax Number" />
+          <div class="invalid-feedback" *ngIf="fax_number?.invalid && (fax_number?.dirty || fax_number?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="fax_number?.errors?.required">Fax Number is required.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-5">
+          <label class="d-block">Notifications for Email and Text </label>
+          <mat-checkbox id="emailPhoneConsent" formControlName="emailPhoneConsent" color="primary">Notifications
+            for Email and Text</mat-checkbox>
+        </div>
+        <div class="col-md-3">
+          <label class="d-block">Active </label>
+          <mat-checkbox id="is_active" formControlName="is_active" color="primary">Active</mat-checkbox>
+        </div>
+        <div class="col-md-3">
+          <label class="d-block">Add Memo Tab</label>
+          <mat-checkbox color="primary" formControlName="add_memo_tab" [checked]="true">
+            Add Memo Tab
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-success my-3">
+      <h5 class="font-weight-bold mb-3">Professional Details</h5>  
+      <div class="form-group">
+        <div class="form-row">
+          <div class="col-md-6">
+            <label class="float-left">Professional Liability Policy Number</label>
+            <input type="text" id="professional_liability_policy_number" class="form-control"
+              placeholder="Enter Professional Liability Policy Number"
+              formControlName="professional_liability_policy_number" />
+            <div class="invalid-feedback"
+              *ngIf="professional_liability_policy_number?.invalid && (professional_liability_policy_number?.dirty || professional_liability_policy_number?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="professional_liability_policy_number?.errors?.required">Professional liability policy number is
+                required.</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="float-left">NPI Number</label>
+            <input type="text" id="npi_number" formControlName="npi_number" class="form-control input-lg"
+              placeholder="Enter NPI Number" />
+            <div class="invalid-feedback" *ngIf="npi_number?.invalid && (npi_number?.dirty || npi_number?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="npi_number?.errors?.required">NPI number is required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-row">
+          <div class="col-md-6">
+            <label class="float-left">DEA Number</label>
+            <input type="text" id="dea_number" class="form-control" placeholder="Enter DEA Number"
+              formControlName="dea_number" />
+            <div class="invalid-feedback" *ngIf="dea_number?.invalid && (dea_number?.dirty || dea_number?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="dea_number?.errors?.required">DEA number is required.</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="float-left">Check Payable To Name</label>
+            <input type="text" id="check_payable_to_name" class="form-control" placeholder="Enter Check Payable To Name"
+              formControlName="check_payable_to_name" />
+            <div class="invalid-feedback"
+              *ngIf="check_payable_to_name?.invalid && (check_payable_to_name?.dirty || check_payable_to_name?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="check_payable_to_name?.errors?.required">Check payable to name is required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-row">
+          <div class="col-md-6">
+            <label class="float-left">Professional Liability Document</label>
+            <input type="file" id="professional_liability_document" class="form-control"
+              placeholder="Enter Rate Per Prescription" formControlName="professional_liability_document"
+              (change)="onFileSelect($event)" />
+            <div class="invalid-feedback"
+              *ngIf="professional_liability_document?.invalid && (professional_liability_document?.dirty || professional_liability_document?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="professional_liability_document?.errors?.required">Professional liability document is required.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="float-left">Professional Liability Document Expiry Date</label>
+            <input matInput [matDatepicker]="expiry_picker" (click)="expiry_picker.open()" class="form-control input-lg"
+              formControlName='professional_liability_document_expiry_date' placeholder="MM/DD/YYYY">
+            <mat-datepicker #expiry_picker></mat-datepicker>
+            <div class="invalid-feedback"
+              *ngIf="professional_liability_document_expiry_date?.invalid && (professional_liability_document_expiry_date?.dirty || professional_liability_document_expiry_date?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="professional_liability_document_expiry_date?.errors?.required">Professional liability document
+                expiry
+                date is required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-secondary my-3">
+      <h5 class="font-weight-bold mb-3">Rate</h5>  
+      <div class="form-group">
+        <div class="form-row">
+          <div class="col-md-3">
+            <label class="float-left">Order Batch Size</label>
+            <input type="number" id="order_batch_size" formControlName="order_batch_size" class="form-control input-lg"
+              placeholder="Enter Order Batch Size" />
+            <div class="invalid-feedback"
+              *ngIf="order_batch_size?.invalid && (order_batch_size?.dirty || order_batch_size?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="order_batch_size?.errors?.required">Order Batch Size is required.</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="float-left">Consultation Batch Size</label>
+            <input type="number" id="consultation_batch_size" formControlName="consultation_batch_size"
+              class="form-control input-lg" placeholder="Enter Consultation Batch Size" />
+            <div class="invalid-feedback"
+              *ngIf="consultation_batch_size?.invalid && (consultation_batch_size?.dirty || consultation_batch_size?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="consultation_batch_size?.errors?.required">Consultation Batch Size is required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-info my-3">
+      <h5 class="font-weight-bold mb-3">Residential Address</h5>
+      <div class="form-group">
+        <div class="form-row">
+          <div class="col-md-6">
+            <label class="float-left">Address Line 1</label>
+            <input type="text" id="residential_address_1" formControlName="residential_address_1"
+              class="form-control input-lg" placeholder="Enter Residential Address Line 1" />
+            <div class="invalid-feedback"
+              *ngIf="residential_address_1?.invalid && (residential_address_1?.dirty || residential_address_1?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="residential_address_1?.errors?.required">Residential address line 1 is required.</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="d-block">Address Line 2</label>
+            <input type="text" id="residential_address_2" formControlName="residential_address_2"
+              class="form-control input-lg" placeholder="Enter Residential Address Line 2" />
+            <div class="invalid-feedback"
+              *ngIf="residential_address_2?.invalid && (residential_address_2?.dirty || residential_address_2?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="residential_address_2?.errors?.required">Residential address line 2 is required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-row">
+          <div class="col-md-6">
+            <label class="float-left">City</label>
+            <input type="text" id="residential_city" formControlName="residential_city" class="form-control input-lg"
+              placeholder="Enter City" />
+            <div class="invalid-feedback"
+              *ngIf="residential_city?.invalid && (residential_city?.dirty || residential_city?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="residential_city?.errors?.required">City is required.</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="d-block">State</label>
+            <mat-select placeholder="Enter State" formControlName="residential_state_id" class="form-control input-lg">
+              <mat-option *ngFor="let state of states" [value]="state.id">
+                {{state.name}}
+              </mat-option>
+            </mat-select>
+            <div class="invalid-feedback"
+              *ngIf="residential_state_id?.invalid && (residential_state_id?.dirty || residential_state_id?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="residential_state_id?.errors?.required">State is required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-row">
+          <div class="col-md-6">
+            <label class="float-left">Zipcode</label>
+            <input type="text" id="residential_zipcode" formControlName="residential_zipcode"
+              class="form-control input-lg" placeholder="Enter Zipcode" />
+            <div class="invalid-feedback"
+              *ngIf="residential_zipcode?.invalid && (residential_zipcode?.dirty || residential_zipcode?.touched)"
+              class="text-danger font-weight-bold">
+              <div *ngIf="residential_zipcode?.errors?.required">Zipcode is required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-warning my-3">
+      <h5 class="font-weight-bold mb-3">Practice Addresses</h5>
+        
+      <div class="alert alert-danger" *ngIf="addressError">
+        <h5>Atleast one address is required!</h5>
+      </div>
+      <div formArrayName="practice_addresses" class="practice-address">
+        <div *ngFor="let address of getPracticeAddresses(); let practiceAddressesIndex = index"
+          [formGroupName]="practiceAddressesIndex">
+          <div class="row clearfix">
+            <div class="col-sm-12">
+              <div class="col-sm-6">
+                <h5>Practice Address #{{practiceAddressesIndex +1}}</h5>
+              </div>
+              <div class="col-sm-6">
+                <button class="btn-sm btn-danger pull-right" (click)="removeAddress(practiceAddressesIndex)"><i
+                    class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <label class="float-left">Address Line 1</label>
+                <input type="text" id="address_line1" class="form-control" placeholder="Enter Address Line 1"
+                  formControlName="address_line1" />
+                <div class="invalid-feedback"
+                  *ngIf="address.get('address_line1')?.invalid && (address.get('address_line1')?.dirty || address.get('address_line1')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="address.get('address_line1')?.errors?.required"> Address Line 1 is required.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="float-left">Address Line 2</label>
+                <input type="text" id="address_line2" class="form-control" placeholder="Enter Address Line 2"
+                  formControlName="address_line2" />
+                <div class="invalid-feedback"
+                  *ngIf="address.get('address_line2')?.invalid && (address.get('address_line2')?.dirty || address.get('address_line2')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="address.get('address_line2')?.errors?.required"> Address Line 2 is required.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <label class="float-left">City</label>
+                <input type="text" id="city" class="form-control" placeholder="Enter City" formControlName="city" />
+                <div class="invalid-feedback"
+                  *ngIf="address.get('city')?.invalid && (address.get('city')?.dirty || address.get('city')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="address.get('city')?.errors?.required"> City is required.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="float-left">State</label>
+                <!-- <input type="text" id="state_id" class="form-control" placeholder="Enter state" formControlName="state_id" /> -->
+                <mat-select placeholder="Enter State" formControlName="state_id" class="form-control input-lg">
+                  <mat-option *ngFor="let state of states" [value]="state.id">
+                    {{state.name}}
+                  </mat-option>
+                </mat-select>
+                <div class="invalid-feedback"
+                  *ngIf="address.get('state_id')?.invalid && (address.get('state_id')?.dirty || address.get('state_id')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="address.get('state_id')?.errors?.required">State is required.</div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="form-row">
+              <div class="col-md-6">
+                <label class="float-left">Zipcode</label>
+                <input type="text" id="zipcode" class="form-control" placeholder="Enter Zipcode"
+                  formControlName="zipcode" />
+                <div class="invalid-feedback"
+                  *ngIf="address.get('zipcode')?.invalid && (address.get('zipcode')?.dirty || address.get('zipcode')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="address.get('zipcode')?.errors?.required"> Zipcode is required.</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="d-block">Active</label>
+                <mat-checkbox formControlName="is_active" color="primary">Active</mat-checkbox>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-sm btn-success" (click)=" addNewPracticeAddress()">Add New Address</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-primary my-3">
+      <h5 class="font-weight-bold mb-3">Licenses</h5>
+        
+      <div class="alert alert-danger" *ngIf="licenseError">
+        <h5>Atleast one license is required!</h5>
+      </div>
+      <div formArrayName="licenses">
+        <div *ngFor="let license of getLicensesControls(); let licensesIndex = index"
+          [formGroupName]="licensesIndex">
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <label class="float-left">License number #{{licensesIndex +1}}</label>
+                <input type="text" id="license_number" class="form-control" placeholder="Enter License Number"
+                  formControlName="license_number" />
+                <div class="invalid-feedback"
+                  *ngIf="license.get('license_number')?.invalid && (license.get('license_number')?.dirty || license.get('license_number')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="license.get('license_number')?.errors?.required"> License number is required.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="d-block">Expiry Date </label>
+                <!-- <input matInput [matDatepicker]="picker" (click)="picker.open()" class="form-control input-lg"
+                  formControlName='expiry_date' [matDatepickerFilter]="DateFilter" placeholder="MM/DD/YYYY">
+                <mat-datepicker #picker></mat-datepicker> -->
+                <div class="invalid-feedback"
+                  *ngIf="license.get('expiry_date')?.invalid && (license.get('expiry_date')?.dirty || license.get('expiry_date')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="license.get('expiry_date')?.errors?.required">Expiry date is required.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <label class="float-left">State</label>
+                <mat-select placeholder="Enter State" formControlName="state_id" class="form-control input-lg">
+                  <mat-option *ngFor="let state of getStateList(license.get('state_id')?.value)" [value]="state.id">
+                    {{state.name}}
+                  </mat-option>
+                </mat-select>
+                <div class="invalid-feedback"
+                  *ngIf="license.get('state_id')?.invalid && (license.get('state_id')?.dirty || license.get('state_id')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="license.get('state_id')?.errors?.required">State is required.</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="d-block">Active</label>
+                <mat-checkbox formControlName="is_active" color="primary">Active</mat-checkbox>
+              </div>
+              <div class="col-md-2">
+                <label class="d-block"></label>
+                <button class="btn-sm btn-danger pull-right" (click)="removeLicense(licensesIndex)"><i
+                    class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-sm btn-success" (click)="addNewLicense()">Add another Doctor
+            license</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mt-1">
+      <div class="row">
+        <div class="col">
+          <div class="text-center">
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a routerLink="/admin/doctors/list" routerLinkActive="active" class="btn btn-danger">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

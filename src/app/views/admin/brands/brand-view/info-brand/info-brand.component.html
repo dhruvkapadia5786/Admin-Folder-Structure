@@ -1,0 +1,46 @@
+<ng-container > <!-- *ngIf="brandDetails; else noBrandDetails" -->
+
+    <div class="row">
+        <div class="col-md-6">
+            <label>Brand Name</label>
+            <h5>{{brandDetails.name}}
+                <span *ngIf="brandDetails.is_active" class="ml-2 badge badge-success badge-pill p-2">Active</span>
+                <span *ngIf="!brandDetails.is_active" class="ml-2 badge badge-danger badge-pill p-2">Inactive</span>
+            </h5>
+        </div>
+        <div class="col-md-6">
+            <label>Slug</label>
+            <h5>{{brandDetails.slug}}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label>Description</label>
+            <h5>{{brandDetails.description}}</h5>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="float-left">Logo</label><br>
+                <div class="float-left w-100">
+                    <img class="rounded shadow" id="blah" [(src)]="imageUrl" alt="logo image"
+                        style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="float-left">Cover Image</label><br>
+                <div class="float-left w-100">
+                    <img class="rounded shadow" id="blah" [(src)]="coverImageUrl" alt="cover image"
+                        style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-template #noBrandDetails>
+    No Brand Details
+</ng-template>

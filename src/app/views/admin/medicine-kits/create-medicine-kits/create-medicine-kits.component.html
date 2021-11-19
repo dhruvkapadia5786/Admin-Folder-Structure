@@ -1,0 +1,624 @@
+<div class="w-100 p-3 bg-dark-grey">
+  <h4 class="text-white font-weight-bold mb-0">Add Medicine Kit</h4>
+</div>
+<form class="p-5 add-medicine-kit" (ngSubmit)="saveMedicineKit()" [formGroup]="addMedicineKit">
+  <!-- Display Information -->
+  <div class="alert alert-warning my-3">
+    <h5 class="font-weight-bold mb-5">Pet Information</h5>
+    <div class="row">
+
+        <div class="col-md-4 col-12">
+          <label>Pet Type :</label>
+          <mat-select placeholder="Select Pet" class="form-control" formControlName="pet_type" (selectionChange)="getPetDetails($event.value)">
+            <mat-option *ngFor="let pet of petTypeList" [value]="pet._id">
+              {{pet.name}}
+            </mat-option>
+          </mat-select>
+          <div class="invalid-feedback" *ngIf="pet_type?.invalid && (pet_type?.dirty || pet_type?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="pet_type?.errors?.required">Pet Type is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-4 col-12">
+          <label>Pet Breeds :</label>
+          <mat-select placeholder="Select Pet Breeds" class="form-control" formControlName="breeds" multiple>
+            <mat-option *ngFor="let breed of breedsList" [value]="breed">
+              {{breed.name}}
+            </mat-option>
+          </mat-select>
+          <div class="invalid-feedback" *ngIf="breeds?.invalid && (breeds?.dirty || breeds?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="breeds?.errors?.required">Pet Breeds is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-4 col-12">
+          <label>Pet Breeds Size :</label>
+          <mat-select placeholder="Select Pet Breed Size" class="form-control" formControlName="breed_size" multiple>
+            <mat-option *ngFor="let bs of breedSizeList" [value]="bs">
+              {{bs.size_text}}
+            </mat-option>
+          </mat-select>
+          <div class="invalid-feedback" *ngIf="breed_size?.invalid && (breed_size?.dirty || breed_size?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="breed_size?.errors?.required">Pet Breeds Size is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-4 col-12" *ngIf="lifeStageList.length>0">
+          <label>Pet LifeStage :</label>
+          <mat-select placeholder="Select Pet LifeStage" class="form-control" formControlName="lifestage" multiple>
+            <mat-option *ngFor="let ls of lifeStageList" [value]="ls">
+              {{ls}}
+            </mat-option>
+          </mat-select>
+          <div class="invalid-feedback" *ngIf="lifestage?.invalid && (lifestage?.dirty || lifestage?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="lifestage?.errors?.required">Pet LifeStage is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-4 col-12">
+          <label>Pet Health Conditions :</label>
+          <mat-select placeholder="Select Pet Health Conditions" class="form-control" formControlName="health_conditions" multiple>
+            <mat-option *ngFor="let hc of healthConditionsList" [value]="hc._id">
+              {{hc.name}}
+            </mat-option>
+          </mat-select>
+          <div class="invalid-feedback" *ngIf="health_conditions?.invalid && (health_conditions?.dirty || health_conditions?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="health_conditions?.errors?.required">Pet Health Conditions is required.</div>
+          </div>
+        </div>
+
+         <div class="col-md-4 col-12">
+          <label>Shop Category :</label>
+          <mat-select placeholder="Select Shop Category" class="form-control" formControlName="shop_categories" multiple>
+            <mat-option *ngFor="let category of shopCategoriesList" [value]="category._id">
+              {{category.name}}
+            </mat-option>
+          </mat-select>
+          <div class="invalid-feedback" *ngIf="shop_categories?.invalid && (shop_categories?.dirty || shop_categories?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="shop_categories?.errors?.required">Pet Shop Category is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-12">
+             <div class="form-group">
+                <label>Pet Min Weight (lbs):</label>
+                <input type="number" class="form-control" min="1" max="100" placeholder="Pet Min Weight" formControlName="min_weight" />
+                <div class="invalid-feedback" *ngIf="min_weight?.invalid && (min_weight?.dirty || min_weight?.touched)" class="text-danger font-weight-bold">
+                  <div *ngIf="min_weight?.errors?.required">Pet Min Weight is required.</div>
+                </div>
+             </div>
+        </div>
+
+        <div class="col-md-3 col-12">
+             <div class="form-group">
+                <label>Pet Max Weight  (lbs):</label>
+                <input type="number" class="form-control" min="1" max="100" placeholder="Pet Max Weight" formControlName="max_weight" />
+                <div class="invalid-feedback" *ngIf="max_weight?.invalid && (max_weight?.dirty || max_weight?.touched)" class="text-danger font-weight-bold">
+                  <div *ngIf="max_weight?.errors?.required">Pet Max Weight is required.</div>
+                </div>
+             </div>
+        </div>
+
+    </div>
+  </div>
+  <div class="alert alert-primary my-3">
+    <h5 class="font-weight-bold mb-5">Display Information</h5>
+    <div class="row">
+
+    <div class="col-md-4 col-12">
+       <label>Drug Type :</label>
+        <mat-select placeholder="Select Drug Type" class="form-control" formControlName="drug_type">
+          <mat-option *ngFor="let drugType of drugTypesList" [value]="drugType._id">
+            {{drugType.name}}
+          </mat-option>
+        </mat-select>
+        <div class="invalid-feedback" *ngIf="drug_type?.invalid && (drug_type?.dirty || drug_type?.touched)"
+          class="text-danger font-weight-bold">
+          <div *ngIf="drug_type?.errors?.required">Drug Type is required.</div>
+        </div>
+    </div>
+
+     <div class="col-md-4 col-12">
+       <label>Product Form :</label>
+        <mat-select placeholder="Select Product Form" class="form-control" formControlName="product_form">
+          <mat-option *ngFor="let productForm of productFormsList" [value]="productForm._id">
+            {{productForm.name}}
+          </mat-option>
+        </mat-select>
+        <div class="invalid-feedback" *ngIf="product_form?.invalid && (product_form?.dirty || product_form?.touched)"
+          class="text-danger font-weight-bold">
+          <div *ngIf="product_form?.errors?.required">Product Form is required.</div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-12">
+       <label>Brand :</label>
+        <mat-select placeholder="Select Brand" class="form-control" formControlName="brand_id">
+          <mat-option *ngFor="let brand of brandsList" [value]="brand._id">
+            {{brand.name}}
+          </mat-option>
+        </mat-select>
+        <div class="invalid-feedback" *ngIf="brand_id?.invalid && (brand_id?.dirty || brand_id?.touched)"
+          class="text-danger font-weight-bold">
+          <div *ngIf="brand_id?.errors?.required">Brand is required.</div>
+        </div>
+    </div>
+
+      <div class="col-md-8 col-12">
+        <label>Medicine Kit Name:</label>
+        <input type="text" class="form-control" placeholder="Enter Kit Name" formControlName="name" />
+        <div class="invalid-feedback" *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="text-danger font-weight-bold">
+          <div *ngIf="name?.errors?.required">Name is required.</div>
+        </div>
+      </div>
+      <div class="col-md-4 col-12">
+        <label>Strength :</label>
+        <input type="text" class="form-control" placeholder="Enter Strength" formControlName="strength" />
+        <div class="invalid-feedback" *ngIf="strength?.invalid && (strength?.dirty || strength?.touched)" class="text-danger font-weight-bold">
+          <div *ngIf="strength?.errors?.required">Strength is required.</div>
+        </div>
+      </div>
+      <div class="col-md-8 col-12">
+        <label>Generic Name (optional):</label>
+        <input type="text" class="form-control" placeholder="Enter Generic Name" formControlName="generic_name" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <label>Tab Name:</label>
+        <input type="text" class="form-control" placeholder="Enter Tab Name" formControlName="tab_name" />
+        <div class="invalid-feedback" *ngIf="tab_name?.invalid && (tab_name?.dirty || tab_name?.touched)"
+          class="text-danger font-weight-bold">
+          <div *ngIf="tab_name?.errors?.required">Tab name is required.</div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label>Tab URL:</label>
+        <input type="text" class="form-control" placeholder="Enter Tab URL" formControlName="tab_url" />
+        <div class="invalid-feedback" *ngIf="tab_url?.invalid && (tab_url?.dirty || tab_url?.touched)" class="text-danger font-weight-bold">
+          <div *ngIf="tab_url?.errors?.required">Tab URL is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-md-12">
+        <label>Medicine Kit Description :</label>
+        <textarea formControlName="description" class="form-control" placeholder="Enter Description" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2">
+        <label>Active:</label> &nbsp;&nbsp;
+        <mat-checkbox id="is_active" color="primary" formControlName="is_active">Active</mat-checkbox>
+      </div>
+
+      <div class="col-sm-4">
+        <label>Coming Soon:</label> &nbsp;&nbsp;
+        <mat-checkbox id="is_coming_soon" color="primary" formControlName="is_coming_soon">Coming Soon</mat-checkbox>
+      </div>
+  </div>
+  </div>
+
+   <div class="alert alert-info my-3">
+        <h5 class="font-weight-bold mb-5">Upload Images , PDF Documents , Videos</h5>
+
+        <div formArrayName="images">
+            <div *ngFor="let fi of images().controls; let fiIndex=index">
+              <div class="form-group" [formGroupName]="fiIndex">
+                        <div class="form-row">
+                            <div class="col">
+                                <input type="file" class="form-control" placeholder="Choose File" formControlName="image"  [accept]="'.png, .jpg, .jpeg'"  (change)="onFileChange(fiIndex,$event)" />
+                                <div class="invalid-feedback" *ngIf="fi.get('image')?.invalid && (fi.get('image')?.dirty || fi.get('image')?.touched)" class="text-danger">
+                                    <div *ngIf="fi.get('image')?.errors?.required"> File is required.</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                  <div class="custom-control custom-radio">
+                                    <input type="radio" [id]="'customRadio_'+fiIndex" name="is_default" formControlName="is_default" class="custom-control-input" [value]="1">
+                                    <label class="custom-control-label" [htmlFor]="'customRadio_'+fiIndex">Set As Default Image</label>
+                                  </div>
+                                  <input type="text" class="mt-2 form-control" placeholder="Enter Caption" formControlName="caption"  />
+                            </div>
+                            <div class="col" *ngIf="fiIndex > 0">
+                                  <button  type="button" class="btn btn-sm btn-danger" (click)="removeFileInput(fiIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+              <button type="button"  class="btn btn-sm btn-primary" (click)="addFileInput()"><i class="fa fa-plus mr-2"></i>Add More Images</button>
+        </div>
+        <hr/>
+
+          <div formArrayName="videos">
+            <div *ngFor="let vi of videos().controls; let viIndex=index">
+              <div class="form-group" [formGroupName]="viIndex">
+                        <div class="form-row">
+                            <div class="col">
+                                <input type="file" class="form-control" placeholder="Choose File" formControlName="video"  [accept]="'.mp4'"  (change)="onVideoChange(viIndex,$event)" />
+                                <div class="invalid-feedback" *ngIf="vi.get('video')?.invalid && (vi.get('video')?.dirty || vi.get('video')?.touched)" class="text-danger">
+                                    <div *ngIf="vi.get('video')?.errors?.required"> Video is required.</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                  <button  type="button" class="btn btn-sm btn-danger" (click)="removeVideoInput(viIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+              <button type="button"  class="btn btn-sm btn-primary" (click)="addVideoInput()"><i class="fa fa-plus mr-2"></i>Add More Video</button>
+        </div>
+
+        <hr/>
+        <div formArrayName="documents">
+            <div *ngFor="let di of documents().controls; let diIndex=index">
+              <div class="form-group" [formGroupName]="diIndex">
+                        <div class="form-row">
+                            <div class="col">
+                                <input type="file" class="form-control" placeholder="Choose Document" formControlName="document"  [accept]="'.pdf'"  (change)="onDocumentChange(diIndex,$event)" />
+                                <div class="invalid-feedback" *ngIf="di.get('document')?.invalid && (di.get('document')?.dirty || di.get('document')?.touched)" class="text-danger">
+                                    <div *ngIf="di.get('document')?.errors?.required"> Document is required.</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                  <input type="text" class="form-control" placeholder="Enter Document Caption" formControlName="caption"  />
+                                  <div class="invalid-feedback" *ngIf="di.get('caption')?.invalid && (di.get('caption')?.dirty || di.get('caption')?.touched)" class="text-danger">
+                                    <div *ngIf="di.get('caption')?.errors?.required">Document Caption is required.</div>
+                                  </div>
+                            </div>
+                            <div class="col">
+                                  <button  type="button" class="btn btn-sm btn-danger" (click)="removeDocumentInput(diIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+              <button type="button"  class="btn btn-sm btn-primary" (click)="addDocumentInput()"><i class="fa fa-plus mr-2"></i>Add More Document</button>
+        </div>
+
+  </div>
+
+  <div class="alert alert-dark my-3">
+        <h5 class="font-weight-bold mb-5">Kit FAQs</h5>
+        <div formArrayName="faqs">
+            <div *ngFor="let faqItem of faqs().controls; let faqIndex=index">
+              <div class="form-group mt-2" [formGroupName]="faqIndex">
+                        <div class="form-row">
+                            <div class="col-10">
+                                  <input type="text" class="form-control" placeholder="Enter FAQ Question" formControlName="question"  />
+                                  <div class="invalid-feedback" *ngIf="faqItem.get('question')?.invalid && (faqItem.get('question')?.dirty || faqItem.get('question')?.touched)" class="text-danger">
+                                    <div *ngIf="faqItem.get('question')?.errors?.required">FAQ Question is required.</div>
+                                  </div>
+                            </div>
+                            <div class="col-2">
+                                  <button  type="button" class="btn btn-sm btn-danger" (click)="removeFAQInput(faqIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                            </div>
+                            <div class="col-12 mt-2">
+                                  <textarea type="text" class="form-control" placeholder="Enter FAQ Answer" formControlName="answer"></textarea>
+                                  <div class="invalid-feedback" *ngIf="faqItem.get('answer')?.invalid && (faqItem.get('answer')?.dirty || faqItem.get('answer')?.touched)" class="text-danger">
+                                    <div *ngIf="faqItem.get('answer')?.errors?.required">FAQ Answer is required.</div>
+                                  </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+              <button type="button"  class="btn btn-sm btn-primary" (click)="addFAQInput()"><i class="fa fa-plus mr-2"></i>Add More FAQ</button>
+        </div>
+  </div>
+
+   <div class="alert alert-success my-3">
+        <h5 class="font-weight-bold mb-5">Kit Descriptive Attributes</h5>
+        <div formArrayName="attributes">
+            <div *ngFor="let attrItem of attributes().controls; let attrIndex=index">
+              <div class="form-group mt-2" [formGroupName]="attrIndex">
+                        <div class="form-row">
+                            <div class="col-10">
+                                  <input type="text" class="form-control" placeholder="Enter Attribute Name" formControlName="name"  />
+                                  <div class="invalid-feedback" *ngIf="attrItem.get('name')?.invalid && (attrItem.get('name')?.dirty || attrItem.get('name')?.touched)" class="text-danger">
+                                    <div *ngIf="attrItem.get('name')?.errors?.required">Attribute Name is required.</div>
+                                  </div>
+                            </div>
+                            <div class="col-2">
+                                  <button  type="button" class="btn btn-sm btn-danger" (click)="removeAttributeInput(attrIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                            </div>
+                            <div class="col-12 mt-2">
+                                  <textarea type="text" class="form-control" placeholder="Enter Attribute Value" formControlName="value"></textarea>
+                                  <div class="invalid-feedback" *ngIf="attrItem.get('value')?.invalid && (attrItem.get('value')?.dirty || attrItem.get('value')?.touched)" class="text-danger">
+                                    <div *ngIf="attrItem.get('value')?.errors?.required">Attribute Value is required.</div>
+                                  </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+              <button type="button"  class="btn btn-sm btn-primary" (click)="addAttributeInput()"><i class="fa fa-plus mr-2"></i>Add More Attributes</button>
+        </div>
+  </div>
+
+
+  <!-- State Availability  -->
+  <div class="alert alert-warning my-3">
+    <h5 class="font-weight-bold mb-5">State Availability</h5>
+    <div class="row">
+
+      <div class="col-md-4 col-12">
+        <label for="states">State</label><br />
+
+        <mat-select placeholder="Select State" class="form-control w-100" formControlName="states" multiple>
+          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
+            (change)="handleCheckAll($event, 'state')" [indeterminate]="selectedState && notSelectedStates"
+            [checked]="!notSelectedStates">Select All States</mat-checkbox>
+          <mat-option *ngFor="let st of statesList" [value]="st._id" color="primary">{{st.name}}</mat-option>
+        </mat-select>
+
+
+        <div class="invalid-feedback" *ngIf="states?.invalid && (states?.dirty || states?.touched)" class="text-danger font-weight-bold">
+          <div *ngIf="states?.errors?.required">Please select state.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="alert alert-success my-3">
+    <h5 class="font-weight-bold mb-5">Pricing</h5>
+    <div class="row">
+      <div class="col-md-3 col-12">
+        <label>Maximum Order Quantity :</label>
+        <input type="number" class="form-control" min="1" placeholder="Enter Maximum Order Quantity "
+          formControlName="max_order_quantity" />
+        <div class="invalid-feedback" *ngIf="max_order_quantity?.invalid && (max_order_quantity?.dirty || max_order_quantity?.touched)"
+          class="text-danger font-weight-bold">
+          <div *ngIf="max_order_quantity?.errors?.required">Maximum Order Quantity is required.</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-12">
+        <label>Actual Price:</label>
+        <input type="number" class="form-control" min="0" placeholder="Enter Actual Price"
+          formControlName="price" />
+        <div class="invalid-feedback" *ngIf="price?.invalid && (price?.dirty || price?.touched)"
+          class="text-danger font-weight-bold">
+          <div *ngIf="price?.errors?.required">Actual price is required.</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-12">
+        <label>Pharmacy Price:</label>
+        <input type="number" class="form-control" placeholder="Enter Pharmacy Price" min="0"
+          formControlName="pharmacy_price" />
+        <div class="invalid-feedback" *ngIf="pharmacy_price?.invalid && (pharmacy_price?.dirty || pharmacy_price?.touched)"
+          class="text-danger font-weight-bold">
+          <div *ngIf="pharmacy_price?.errors?.required">Pharmacy price is required.</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-12">
+        <div class="form-group">
+          <label>Doctor Cost</label><br />
+          <input type="number" id="doctor_price" class="form-control" placeholder="Enter Doctor Cost"
+            formControlName="doctor_price" />
+          <div class="invalid-feedback" *ngIf="doctor_price?.invalid && (doctor_price?.dirty || doctor_price?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="doctor_price?.errors?.required">Doctor Cost is required.</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-12" *ngIf="addMedicineKit.get('is_offer')?.value==true">
+        <div class="form-group">
+          <label>Offer Cost</label><br />
+          <input type="number" id="offer_price" class="form-control" placeholder="Enter Offer Cost"
+            formControlName="offer_price" />
+          <div class="invalid-feedback" *ngIf="offer_price?.invalid && (offer_price?.dirty || offer_price?.touched)"
+            class="text-danger font-weight-bold">
+            <div *ngIf="offer_price?.errors?.required">Offer Cost is required.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <mat-checkbox id="is_offer" formControlName="is_offer" color="primary">Is Offer Available ?</mat-checkbox>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger my-3">
+    <h5 class="font-weight-bold mb-5">Shipping</h5>
+        <div class="row">
+            <div class="col-md-4">
+              <label>Shipping Weight (Ounce):</label>
+              <input type="number" min="0" class="form-control" placeholder="Enter Shipping Weight"
+                formControlName="shipping_weight" />
+              <div class="invalid-feedback" *ngIf="shipping_weight?.invalid && (shipping_weight?.dirty || shipping_weight?.touched)"
+                class="text-danger font-weight-bold">
+                <div *ngIf="shipping_weight?.errors?.required">Shipping Weight is required.</div>
+              </div>
+            </div>
+        </div>
+  </div>
+
+  <!-- Subscription -->
+  <div class="alert alert-secondary my-3">
+    <h5 class="font-weight-bold mb-5">Subscription</h5>
+    <div class="row">
+      <div class="col-md-4">
+        <label>Auto Refill ? :</label> &nbsp;&nbsp;
+        <mat-checkbox id="is_auto_refill" color="primary" formControlName="is_auto_refill">Is Auto Refill
+        </mat-checkbox>
+      </div>
+      <div class="col-md-4">
+        <label>Default Refill Count:</label>
+        <input type="number" min="0" class="form-control" placeholder="Enter Default Refill"
+          formControlName="default_refill" />
+        <div class="invalid-feedback" *ngIf="default_refill?.invalid && (default_refill?.dirty || default_refill?.touched)"
+          class="text-danger font-weight-bold">
+          <div *ngIf="default_refill?.errors?.required">Default refill count is required.</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label> Refill Frequency In Days:</label>
+        <input type="number" min="0" class="form-control" placeholder="Enter Refill Frequency"
+          formControlName="refill_frequency" />
+        <div class="invalid-feedback"
+          *ngIf="	refill_frequency?.invalid && (	refill_frequency?.dirty || refill_frequency?.touched)" class="text-danger font-weight-bold">
+          <div *ngIf="refill_frequency?.errors?.required"> Refill frequency is required.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prescribe Information ICD10 Code -->
+  <div class="alert alert-info my-3">
+    <h5 class="font-weight-bold mb-5">Prescribe Information</h5>
+
+
+        <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>NDC Number</label>
+                <input type="text" class="form-control" placeholder="Enter NDC Number" formControlName="ndc_number" />
+              </div>
+            </div>
+
+            <div class="col-md-4">
+                  <label>Dispense Unit Id</label>
+                    <mat-select placeholder="Select Dispense Unit Id" class="form-control w-100" formControlName="dispense_unit_id" (selectionChange)="handleSelectionChange($event)">
+                      <mat-option *ngFor="let st of dispenseUnits" [value]="st.StandardDispenseUnitTypeID" color="primary">{{st.Name}}</mat-option>
+                    </mat-select>
+                    <div class="invalid-feedback" *ngIf="dispense_unit_id?.invalid && (dispense_unit_id?.dirty || dispense_unit_id?.touched)" class="text-danger font-weight-bold">
+                      <div *ngIf="dispense_unit_id?.errors?.required">Please select Dispense Unit Id.</div>
+                    </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <label>Doseform</label>
+                  <input type="text" class="form-control" placeholder="Enter Doseform" formControlName="doseform" />
+                  <div class="invalid-feedback" *ngIf="doseform?.invalid && (doseform?.dirty || doseform?.touched)" class="text-danger font-weight-bold">
+                    <div *ngIf="doseform?.errors?.required">Doseform is required.</div>
+                  </div>
+            </div>
+
+
+            <div class="col-md-4">
+                  <label>NCIT Code</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Enter NCIT Code" formControlName="ncpdp_unit_code" />
+                    <div class="input-group-prepend">
+                          <button type="button" class="m-0 btn btn-outline-primary" (click)="NCITCodeSearch()"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </div>
+                  </div>
+            </div>
+
+             <div class="col-md-6">
+              <div class="form-group">
+                  <label>Quantity</label>
+                  <input type="text" class="form-control" placeholder="Enter Quantity" formControlName="quantity" />
+                  <div class="invalid-feedback"
+                    *ngIf="quantity?.invalid && (quantity?.dirty || quantity?.touched)"
+                    class="text-danger font-weight-bold">
+                    <div *ngIf="quantity?.errors?.required">Quantity is required.</div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label>Supply Days</label>
+                    <input type="number" class="form-control" placeholder="Enter Days Supply" formControlName="days_supply" />
+                    <div class="invalid-feedback"
+                    *ngIf="days_supply?.invalid && (days_supply?.dirty || days_supply?.touched)"
+                    class="text-danger font-weight-bold">
+                    <div *ngIf="days_supply?.errors?.required">Supply Days is required.</div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label>Default Direction</label>
+                  <textarea formControlName="default_direction" class="form-control" placeholder="Enter Default Direction"></textarea>
+                  <div class="invalid-feedback" *ngIf="default_direction?.invalid && (default_direction?.dirty || default_direction?.touched)"
+                    class="text-danger font-weight-bold">
+                    <div *ngIf="default_direction?.errors?.required"> Default direction is required.</div>
+                    <div *ngIf="default_direction?.errors?.maxlength"> Maximum 140 characters allowed.</div>
+                  </div>
+              </div>
+            </div>
+        </div>
+
+    <div class="row">
+      <div class="col-12">
+        <label>ICD10 Code</label>
+        <mat-form-field class="example-chip-list w-100">
+          <mat-chip-list #similarDrugChipList>
+            <mat-chip *ngFor="let sd of selectedSimilarDrugs" [selectable]="selectable" [removable]="removable"
+              (removed)="removeSimilarDrug(sd)">
+              {{sd[0]+' '+sd[1]}}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="ICD10 Code" #similarDrugsInput [formControl]="SimilarDrugsCtrl"
+              [matAutocomplete]="autoSimilarDrug" [matChipInputFor]="similarDrugChipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addSimilarDrug($event)">
+          </mat-chip-list>
+          <mat-autocomplete #autoSimilarDrug="matAutocomplete" (optionSelected)="selectedSimilarDrug($event)">
+            <mat-option *ngFor="let similarDrug of filteredSimilarDrugs | async"
+              [value]="similarDrug[0]+'___'+similarDrug[1]">
+              {{similarDrug[0]+' '+similarDrug[1]}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="text-right">
+      <button class="btn btn-sm btn-primary" type="button" (click)="addNewCustomICD10Code()"><i
+          class="fa fa-plus mr-2"></i>Add Custom ICD10 Code</button>
+    </div>
+    <div formArrayName="custom_icd10_codes">
+      <div class="alert-warning mb-2 p-2"
+        *ngFor="let icd10Code of custom_icd10_codesControls(); let icd10CodeIndex = index"
+        [formGroupName]="icd10CodeIndex">
+        <div class="form-row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="float-left">ICD10 Code</label>
+              <input type="text" class="form-control" placeholder="Enter ICD10 Code" formControlName="code" />
+              <div class="invalid-feedback"
+                *ngIf="icd10Code.get('code')?.invalid && (icd10Code.get('code')?.dirty || icd10Code.get('code')?.touched)"
+                class="text-danger font-weight-bold">
+                <div *ngIf="icd10Code.get('code')?.errors?.required">ICD10 Code is required.</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="float-left">Description</label>
+            <input type="text" class="form-control" placeholder="Enter description" formControlName="description" />
+          </div>
+          <div class="col-md-2">
+            <button class="float-right btn btn-sm btn-danger" type="button"
+              (click)="removeCustomICD10Code(icd10CodeIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-3">
+      <button class="btn btn-block btn-success" type="submit">Create Medicine Kit</button>
+  </div>
+
+</form>

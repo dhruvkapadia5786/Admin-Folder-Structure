@@ -1,0 +1,273 @@
+<div class="container-fluid pharmDetails padtb10">
+  <ng-container *ngIf="pharmDetails; else noPharmacyDetails ">
+    
+    <div class="p-2 d-flex justify-content-between align-items-center bg-dark-grey">
+       <h4 class="font-weight-normal text-white">Pharmacy Details</h4> 
+       <div>
+         <!-- href="#searchPharmacyModal" data-target="#searchPharmacyModal" -->
+          <!-- <a class="btn btn-primary" data-toggle="modal" ><i class="fa fa-search mr-2" aria-hidden="true"></i>Search Pharmacy</a> -->
+          <a routerLink="/admin/pharmacies/edit/{{pharmId}}" routerLinkActive="active" class="btn btn-primary"><i class="fa fa-pencil mr-2" aria-hidden="true"></i>Edit</a>        
+       </div>   
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                    <tr>
+                      <td class="font-weight-bold">System Pharmacy ID</td>
+                      <td class="font-weight-normal"># {{pharmDetails.id }}</td>             
+                    </tr>
+                    <tr>
+                      <td class="font-weight-bold">Pharmacy Name</td>
+                      <td class="font-weight-normal">{{pharmDetails.pharmacy_name}}</td>             
+                    </tr>
+                    <tr>
+                      <td class="font-weight-bold">Registration Date</td>
+                      <td class="font-weight-normal">{{(pharmDetails.created | date:'MM/dd/yyyy') || '-'}}</td>             
+                    </tr>
+                    <tr>
+                      <td class="font-weight-bold">Phone No</td>
+                      <td class="font-weight-normal">{{pharmDetails.phone_number | mask: '(000) 000-0000'}}</td>             
+                    </tr>
+                    <tr>
+                      <td  class="font-weight-bold">FAX No</td>
+                      <td class="font-weight-normal">{{pharmDetails.fax_number | mask: '(000) 000-0000'}}</td>             
+                    </tr>
+                    <tr>
+                      <td  class="font-weight-bold">Active</td>
+                      <td  class="font-weight-normal"><i  [ngClass]="{'fa':true,'fa-check text-success': pharmDetails.is_active, 'fa-times text-danger': !pharmDetails.is_active}"></i></td>             
+                    </tr>
+              </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tr>
+                      <td class="font-weight-bold">DS Pharmacy ID</td>
+                      <td class="font-weight-normal">
+                      <p [ngClass]="{'mb-0':true,'text-danger':!pharmDetails.doesspot_pharmacy_id ? true :false }">
+                        {{pharmDetails.doesspot_pharmacy_id?pharmDetails.doesspot_pharmacy_id:'Pharmacy Not Linked with Doesspot
+                        Pharmacy'}}</p>
+                      </td>             
+                    </tr>
+                    <tr>
+                      <td class="font-weight-bold">NPI Number</td>
+                      <td class="font-weight-normal">
+                      {{pharmDetails.npi_number}}
+                      </td>             
+                    </tr>
+                    <tr>
+                      <td class="font-weight-bold">DEA Number</td>
+                      <td class="font-weight-normal">
+                      {{pharmDetails.dea_number}}
+                      </td>             
+                    </tr>
+                    <tr>
+                      <td class="font-weight-bold">NCPDP</td>
+                      <td class="font-weight-normal">
+                      {{pharmDetails.ncpdp}}
+                      </td>             
+                    </tr>
+                    <tr>
+                      <td class="font-weight-bold">Professional Policy Liability Number</td>
+                      <td class="font-weight-normal">
+                      {{pharmDetails.professional_liability_policy_number}}
+                      </td>             
+                    </tr>
+                    <tr>
+                      <td class="font-weight-bold">Professional Policy Liability Document</td>
+                      <td class="font-weight-normal">
+                        <app-image-preview [imgPath]="pharmDetails.professional_liability_document" height="250" width="350" caption="Professional liability Document"></app-image-preview>
+                      </td>             
+                    </tr>
+                </table>
+            </div>       
+        </div>       
+    </div>  
+
+      <div class="p-2 bg-dark-grey">
+        <h4 class="font-weight-normal text-white">Pharmacy Addresses</h4> 
+      </div>   
+      <table class="table table-sm">
+        <thead class="thead-light">
+          <tr>
+            <th>Address Line 1</th>
+            <th>Address Line 2</th>
+            <th>City</th>
+            <th>State</th>
+            <th>ZipCode</th>
+            <th>Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let address of pharmDetails.practice_addresses;let i=index">
+            <td>
+              <p class="font-weight-normal mb-0">{{address.address_line_1 }}</p>
+            </td>
+            <td>
+              <p class="font-weight-normal mb-0" *ngIf="address.address_line_2">{{address.address_line_2 }}</p>
+            </td>
+            <td>
+              <p class="font-weight-normal mb-0">{{address.city_name }}</p>
+            </td>
+            <td>
+              <p class="font-weight-normal mb-0">{{address.state_name }}</p>
+            </td>
+            <td>
+              <p class="font-weight-normal mb-0">{{address.zip_code }}</p>
+            </td>
+            <td class="text-right">
+              <p><i class="fa" [ngClass]="{'fa-check text-success': address.is_active==1, 'fa-times text-danger': address.is_active!=1}"></i>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="p-2 bg-dark-grey">
+        <h4 class="font-weight-normal text-white">Pharmacy Licenses</h4> 
+      </div>    
+      <table class="table table-sm table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th>License Number</th>
+            <th>Expiry Date</th>
+            <th>State</th>
+            <th>Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let license of pharmDetails.licenses;let i=index">
+            <td>
+              <p class="font-weight-normal mb-0">#{{i+1}}</p>
+            </td>
+            <td>
+              <p class="font-weight-normal mb-0">{{license.license_number}}</p>
+            </td>
+            <td>
+              <p class="font-weight-normal mb-0">{{license.expiry_date | date: 'MM/dd/yyyy'}}</p>
+            </td>
+            <td>
+              <p class="font-weight-normal mb-0">{{license.state_name}}</p>
+            </td>
+            <td>
+              <p><i class="fa" [ngClass]="{'fa-check text-success': license.is_active==1, 'fa-times text-danger': license.is_active!=1}"></i>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  
+  </ng-container>
+  <ng-template #noPharmacyDetails>
+    <div class="text-center text-muted">
+      <h2><i class="fa fa-info-circle"></i></h2>
+      <h4>Pharmacy Details Not Available!</h4>
+    </div>
+  </ng-template>
+</div>
+
+
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="searchPharmacyModal" tabindex="-1" role="dialog" aria-labelledby="searchPharmacyModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchPharmacyModalLabel">Pharmacy Search</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSearchPharmacyModalBtn">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <label>Search Results</label>
+            <div style="max-height:500px;overflow-y: scroll;">
+              <div class="list-group" *ngIf="searchResults">
+                <div class="list-group-item list-group-item-action" *ngFor="let pharmacy of searchResults">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{pharmacy.StoreName}}</h5>
+                    <small>PharmacyId : {{pharmacy.PharmacyId}}</small>
+                  </div>
+                  <p class="mb-1">Address1 : {{pharmacy.Address1}}</p>
+                  <p class="mb-1">Address2 ; {{pharmacy.Address2}}</p>
+                  <p class="mb-1">City : {{pharmacy.City}}</p>
+                  <p class="mb-1">State : {{pharmacy.State}}</p>
+                  <p class="mb-1">ZipCode : {{pharmacy.ZipCode}}</p>
+                  <p class="mb-1">PrimaryPhone : {{pharmacy.PrimaryPhone}}</p>
+                  <p class="mb-1">PrimaryFax : {{pharmacy.PrimaryFax}}</p>
+                  <button (click)="onSelectPharmacyclick(pharmacy)" class="float-right btn btn-sm btn-primary">Select
+                    This Pharmacy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-container">
+              <form [formGroup]="pharmacyFormGroup" (submit)="onPharmacySubmit()">
+                <div class="form-row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="zip">Zip</label>
+                      <input type="text" class="form-control" id="zip" formControlName="zip">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="state">State (2 letter)</label>
+                      <input type="text" class="form-control" id="state" formControlName="state" length="2">
+                      <div class="invalid-feedback" *ngIf="state.invalid && (state.dirty || state.touched)"
+                        class="text-danger">
+                        <div *ngIf="state.errors.required">State is required.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="city">City</label>
+                      <input type="text" class="form-control" id="city" formControlName="city">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="ncpdpID">NCPDP ID</label>
+                      <input type="text" class="form-control" id="ncpdpID" formControlName="ncpdpID">
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="address">Address</label>
+                  <input type="text" class="form-control" id="address" formControlName="address">
+                </div>
+
+
+                <div class="form-group">
+                  <label for="phoneOrFax">Phone Or Fax</label>
+                  <input type="text" class="form-control" id="phoneOrFax" formControlName="phoneOrFax">
+                </div>
+
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" id="name" formControlName="name">
+                </div>
+
+                <button type="reset" class="btn btn-danger">Reset</button>
+
+                <button type="submit" class="btn btn-info">Search</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

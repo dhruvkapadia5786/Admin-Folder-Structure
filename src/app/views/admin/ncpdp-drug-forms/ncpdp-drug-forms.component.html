@@ -1,0 +1,20 @@
+<div class="modal-content">
+        <ng-template #customDrugTemplate let-drug="item" let-index="index">
+              <div class="d-flex justify-content-start align-items-center cursor-pointer">
+                <p class="mb-0">{{drug.ncpdp_preferred_term +' - '+drug.ncit_code}}</p>
+              </div>
+        </ng-template>                
+        <div class="form-group">
+            <input class="form-control" 
+                  [(ngModel)]="asyncSelectedDrug" 
+                  [ngModelOptions]="{standalone: true}"
+                  [typeahead]="dataSourceDrug"
+                  (typeaheadLoading)="changeTypeaheadLoadingDrug($event)"
+                  (typeaheadOnSelect)="typeaheadOnSelectDrug($event)"
+                  [typeaheadOptionsLimit]="200"
+                  [typeaheadScrollable]="true"
+                  [typeaheadOptionsInScrollableView]="20"
+                  [typeaheadItemTemplate]="customDrugTemplate"
+                  placeholder="Type drug form (like Tablet,Capsule)">
+        </div>
+</div>

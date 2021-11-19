@@ -1,0 +1,21 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="font-weight-bold modal-title w-100" id="RequestRefundModalTitle">
+            Send Freeform Consent Message
+        </h4>
+        <button (click)="closeModal()" type="button" id="closeRequestRefundModalBtn" class="close float-right" aria-label="Close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="freeFormConsentMessageForm" (ngSubmit)="freeFormConsentMessageFormSubmit(freeFormConsentMessageForm.valid)">
+            <div class="form-group">
+                <label>Enter Consent Message</label>
+                <textarea class="form-control" id="consent_message" rows="3" formControlName="consent_message" required></textarea>
+            </div>
+            <div class="text-center">
+                  <button class="btn btn-primary" [disabled]="freeFormConsentMessageForm.invalid" type="submit">Send</button>
+            </div>
+      </form>
+    </div>
+</div>

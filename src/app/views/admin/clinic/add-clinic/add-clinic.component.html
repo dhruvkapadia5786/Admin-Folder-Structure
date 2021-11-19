@@ -1,0 +1,150 @@
+<div class="w-100 p-3 bg-dark-grey">
+          <h4 class="text-white font-weight-bold mb-0">Add Clinic</h4>
+</div>
+<div class="row">
+    <div class="col-md-8 offset-md-2 my-4">
+        <form (ngSubmit)="addClinic(clinicForm.valid)" [formGroup]="clinicForm" autocomplete="off">
+                  <div class="form-row">
+                              <div class="col">
+                                    <div class="form-group">
+                                          <label>Clinic Name</label>
+                                          <input type="text" id="clinic_name" class="form-control" placeholder="Enter First Name" formControlName="clinic_name"/>
+                                          <div class="invalid-feedback" *ngIf="clinic_name?.invalid && (clinic_name?.dirty || clinic_name?.touched)" class="text-danger">
+                                            <div *ngIf="clinic_name?.errors?.required">Clinic Name is required.</div>
+                                          </div>
+                                    </div>
+                              </div>
+                              <div class="col">
+                                    <div class="form-group">
+                                          <label>Clinic Long Name</label>
+                                          <input type="text" id="clinic_name_long_form" formControlName="clinic_name_long_form" class="form-control"  />
+                                          <div class="invalid-feedback" *ngIf="clinic_name_long_form?.invalid && (clinic_name_long_form?.dirty || clinic_name_long_form?.touched)" class="text-danger">
+                                            <div *ngIf="clinic_name_long_form?.errors?.required">Clinic Long Name required.</div>
+                                          </div>
+                                    </div>
+                              </div>
+                  </div>
+
+                  <div class="form-row">
+                              <div class="col">
+                                    <div class="form-group">
+                                          <label>Address Line1</label>
+                                          <input type="email" id="address_line_1" formControlName="address_line_1" class="form-control" />
+                                          <div class="invalid-feedback" *ngIf="address_line_1?.invalid && (address_line_1?.dirty || address_line_1?.touched)" class="text-danger">
+                                            <div *ngIf="address_line_1?.errors?.required">Address Line1 is required.</div>
+                                          </div>
+                                    </div>
+                              </div>
+                              <div class="col">
+                                    <div class="form-group">
+                                          <label>Address Line2</label>
+                                          <input type="text" id="address_line_2" formControlName="address_line_2" class="form-control" />
+                                          <div class="invalid-feedback" *ngIf="address_line_2?.invalid && (address_line_2?.dirty || address_line_2?.touched)"
+                                            class="text-danger">
+                                            <div *ngIf="address_line_2?.errors?.required">Address Line2 is required.</div>
+                                          </div>
+                                    </div>
+                              </div>
+                  </div>
+
+                  <div class="form-row">
+                            <div class="col">
+                                    <div class="form-group">
+                                      <label>City</label>
+                                          <input type="text" id="city" formControlName="city" class="form-control" />
+                                          <div class="invalid-feedback" *ngIf="city?.invalid && (city?.dirty || city?.touched)"
+                                            class="text-danger">
+                                            <div *ngIf="city?.errors?.required">City is required.</div>
+                                          </div>
+
+
+                                    </div>
+                            </div>
+                            <div class="col">
+                                    <div class="form-group">
+                                      <label>State</label>
+                                          <select id="state" formControlName="state" class="form-control">
+                                          <option selected disabled>Select State</option>
+                                          <option *ngFor="let state of states" [value]="state.abbreviation">{{state.name}}</option>
+                                          </select>
+                                          <div class="invalid-feedback" *ngIf="state?.invalid && (state?.dirty || state?.touched)"
+                                            class="text-danger">
+                                            <div *ngIf="state?.errors?.required">State is required.</div>
+                                          </div>
+                                    </div>
+                            </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="col">
+                          <div class="form-group">
+
+                                  <label>Zip Code</label>
+                                      <input type="text" id="zipcode" formControlName="zipcode" class="form-control" />
+                                      <div class="invalid-feedback" *ngIf="zipcode?.invalid && (zipcode?.dirty || zipcode?.touched)"
+                                        class="text-danger">
+                                        <div *ngIf="zipcode?.errors?.required">Zip Code is required.</div>
+                                      </div>
+
+                          </div>
+                    </div>
+
+                    <div class="col">
+                          <div class="form-group">
+
+                            <label>Primary Phone</label>
+                            <input type="text" id="primary_phone" formControlName="primary_phone" class="form-control" />
+                            <div class="invalid-feedback" *ngIf="primary_phone?.invalid && (primary_phone?.dirty || primary_phone?.touched)"
+                              class="text-danger">
+                              <div *ngIf="primary_phone?.errors?.required">Primary Phone is required.</div>
+                            </div>
+
+
+                    </div>
+                   </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="col">
+                          <div class="form-group">
+                            <label>Primary Fax</label>
+                            <input type="text" id="primary_fax" formControlName="primary_fax" class="form-control" />
+                            <div class="invalid-feedback" *ngIf="primary_fax?.invalid && (primary_fax?.dirty || primary_fax?.touched)"
+                              class="text-danger">
+                              <div *ngIf="primary_fax?.errors?.required">Primary Fax is required.</div>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="col">
+                          <div class="form-group">
+                            <label>Clinic Code</label>
+                            <input type="text" id="clinic_code" formControlName="clinic_code" class="form-control" />
+                            <div class="invalid-feedback" *ngIf="clinic_code?.invalid && (clinic_code?.dirty || clinic_code?.touched)"
+                              class="text-danger">
+                              <div *ngIf="clinic_code?.errors?.required">Clinic Code is required.</div>
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+
+                    <div class="col">
+                          <div class="form-group">
+                            <label for="inputEmail4">Clinic Status</label>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" id="is_active" formControlName="is_active">
+                                <label class="custom-control-label" for="is_active">
+                                    Active
+                                </label>
+                              </div>
+                          </div>
+                    </div>
+                  </div>
+
+
+              <button type="submit" class="btn btn-block btn-success">Save</button>
+        </form>
+    </div>
+
+</div>

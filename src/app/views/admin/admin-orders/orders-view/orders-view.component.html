@@ -1,0 +1,677 @@
+<mat-tab-group>
+    <mat-tab label="Info">
+        <div class="container-fluid details">
+            <ng-container *ngIf="orderDetails; else noOrderDetails">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5 class="mb-3">Order : #{{orderDetails.order_number + '
+                            ('+orderDetails.order_number_text+')'}}</h5>
+                        <p class="mb-1"><strong class="mr-2">Order Type : </strong>{{orderDetails.order_type}}</p>
+                        <p class="mb-1"><strong class="mr-2">Order Created By : </strong> <span
+                                [innerHTML]="getOrderCreatedWay(orderDetails.created_by)"></span></p>
+                        <p class="mb-1"><strong class="mr-2">Created Date : </strong>{{orderDetails.created |
+                            date:'MM/dd/yyyy'}}</p>
+                        <p class="mb-1"><strong class="mr-2">Completed Date :
+                            </strong>{{orderDetails.order_place_datetime | date:'MM/dd/yyyy'}}</p>
+                        <p>
+                            <strong class="mr-2">System Status: </strong>
+                            <span class="m-0"
+                                [innerHTML]="_orderHelper.getSystemStatus(orderDetails.system_status)"></span>
+                            <span class="mt-2 badge badge-pill badge-warning p-2"
+                                *ngIf="orderDetails.is_payment_authorization_required == 1">Payment Authorization
+                                Required</span>
+                        </p>
+
+                        <p *ngIf="orderDetails.system_status == 0 || orderDetails.system_status == null"
+                            class="float-right">
+                            <button (click)="sendMail(orderDetails.id)" type="button"
+                                [ngClass]="{'btn btn-primary': true, 'disabled': loadingReminderButton}">
+                                <span class="pr-2"><i class="fa fa-envelope-o" *ngIf="!loadingReminderButton"></i><i
+                                        class="fa fa-spinner" *ngIf="loadingReminderButton"></i></span>{{
+                                !loadingReminderButton ? 'Send Remineder Mail' : 'Sending...'}} </button>
+                        </p>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="mb-3">Patient Details</h5>
+                        <h6 class="mb-2">{{patient.first_name}} {{patient.last_name}}</h6>
+                        <p class="mb-1"><strong> DOB: </strong>{{ patient.dob_formatted }} | Age: {{patient.age}}</p>
+                        <p class="mb-0"><strong>Email: </strong>{{patient.email}}</p>
+                        <p class="mb-0"><strong>Phone: </strong>{{patient.cell_phone_number | mask: '(000) 000-0000'}}
+                        </p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h5 class="mb-3">Shipping Address</h5>
+                        <div *ngIf="orderDetails.address">
+                            <p class="mb-0">{{orderDetails.address &&
+                                orderDetails.address.address_line_1?orderDetails.address.address_line_1:''}}{{
+                                orderDetails.address && orderDetails.address.address_line_2 ? ', ':''
+                                }}<br />{{orderDetails.address?.address_line_2}}</p>
+                            <p class="mb-0">{{orderDetails.address &&
+                                orderDetails.address.city_name?orderDetails.address.city_name:''}}{{orderDetails.address
+                                && orderDetails.address.state_name?', '+orderDetails.address.state_name:''}}
+                                {{orderDetails.address.zip_code?orderDetails.address.zip_code:''}}</p>
+                        </div>
+                        <div *ngIf="!orderDetails.address">
+                            <p class="mb-0">Address not added yet.</p>
+                        </div>
+                        <div class="text-500" *ngIf="orderDetails.is_express_shipping!=1"><strong> Shipping Method :
+                            </strong>FREE USPS First Class</div>
+                        <div class="text-500" *ngIf="orderDetails.is_express_shipping==1"><strong> Shipping Method :
+                            </strong>USPS Priority Mail</div>
+                        <button *ngIf="showChangeAddressBtn" class="btn btn-warning btn-sm" type="button" (click)="openEditAddressModal()"><i class="fa fa-pencil mr-2"></i>Change Address</button>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row justify-content-end align-items-center  mt-2">
+                    <button type="button"
+                        *ngIf="orderDetails.is_payment_authorization_required != 1 && orderDetails.system_status && orderDetails.system_status >0"
+                        class="btn btn-sm btn-success" (click)="downloadReceipt('billing_statement')"><i
+                            class="mr-2 fa fa-download"></i>Billing Statement</button>
+                    <button type="button" *ngIf="orderDetails.system_status && orderDetails.system_status == 15"
+                        class="btn btn-sm btn-primary" (click)="downloadReceipt('refund_receipt')"><i
+                            class="mr-2 fa fa-download"></i>Refund Receipt</button>
+                    <button type="button" *ngIf="orderDetails.order_type == 'main' && orderDetails.prescribed_on"
+                        class="btn btn-sm btn-primary" (click)="downloadOrderSummary()"><i
+                            class="mr-2 fa fa-download"></i>Order Summary</button>
+                    <button type="button" *ngIf="orderDetails.system_status != 15" (click)="openRefundOrderModal()" class="btn btn-sm btn-danger"><i class="fa fa-refresh mr-2" aria-hidden="true"></i>Refund</button>
+                </div>
+
+                <div class="d-flex flex-row justify-content-start align-items-center  mt-2">
+                    <div *ngIf="orderDetails.is_transferred" class="alert alert-warning">This Order has been Transferred
+                        to Pharmacy : {{orderDetails.transferred_pharmacy.pharmacy_name}} on date
+                        {{orderDetails.order_transfer_datetime | date: 'MM/dd/yyyy'}}</div>
+                    <div *ngIf="orderDetails.is_closed" class="ml-2 alert alert-dark">This Order has been Closed on date
+                        {{orderDetails.order_closed_datetime | date: 'MM/dd/yyyy'}} , Reason :
+                        {{orderDetails.order_closed_reason }}</div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <table class="table table-sm">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Consent Given</th>
+                                    <th>Drugs</th>
+                                    <th>Illnesses</th>
+                                    <th>Allergies</th>
+                                    <th>Health Questions</th>
+                                    <th>Face Photo</th>
+                                    <th>License Photo</th>
+                                    <th>Payment Completed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="orderCurrentStatus.consent_given"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="!orderCurrentStatus.consent_given"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="orderCurrentStatus.order_drugs_saved"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="!orderCurrentStatus.order_drugs_saved"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="orderCurrentStatus.order_illnesses_saved"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="!orderCurrentStatus.order_illnesses_saved"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="orderCurrentStatus.order_allergies_saved"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="!orderCurrentStatus.order_allergies_saved"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="orderCurrentStatus.questions_saved"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="!orderCurrentStatus.questions_saved"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="orderCurrentStatus.face_photo_uploaded"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="!orderCurrentStatus.face_photo_uploaded"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="orderCurrentStatus.license_uploaded"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="!orderCurrentStatus.license_uploaded"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="orderCurrentStatus.payment_complete"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="!orderCurrentStatus.payment_complete"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table border-bottom table-borderless table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="border-0">Products</th>
+                                        <th class="border-0 text-center">Quantity</th>
+                                        <th class="border-0 text-right">Rate</th>
+                                        <th class="border-0 text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle">
+                                            <h6 class="mb-0 text-nowrap font-weight-bold">
+                                                {{orderDetails.medicine_kit_name}}</h6>
+                                        </td>
+                                        <td class="align-middle text-center">{{orderDetails.quantity}}</td>
+                                        <td class="align-middle text-right">{{ orderDetails.medicine_kit_price |
+                                            currency}}</td>
+                                        <td class="align-middle text-right">{{ orderDetails.medicine_kit_price |
+                                            currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row no-gutters justify-content-end">
+                            <div class="col-auto" *ngIf="orderDetails.is_payment_completed==1">
+                                <table class="table table-sm table-borderless text-right">
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-900">Coupon Discount {{ orderDetails.payment &&
+                                                orderDetails.payment.coupon_code?'( Coupon Code Used :
+                                                '+orderDetails.payment.coupon_code+' )':'' }}</th>
+                                            <td class="font-weight-semi-bold text-right">
+                                                {{(orderDetails.coupon_discount||0) | currency}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-900">Referral Discount {{ orderDetails.referral_code_details
+                                                ? '( Referral Code Used :
+                                                '+orderDetails.referral_code_details.referral_code+' )':''}}</th>
+                                            <td class="font-weight-semi-bold text-right">
+                                                {{(orderDetails.referral_discount||0) | currency}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-900">Shipping Charges</th>
+                                            <td class="font-weight-semi-bold text-right">{{(orderDetails.shipping_charge
+                                                || 0) | currency }}</td>
+                                        </tr>
+                                        <tr class="border-top">
+                                            <th class="font-weight-bold">Total</th>
+                                            <td class="font-weight-bold text-right">{{orderDetails.total_amount |
+                                                currency }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table border-bottom table-borderless table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Charged From Stripe</th>
+                                        <th>Charged From Wallet</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <p class="font-weight-bold">{{orderDetails.charged_from_stripe | currency }}
+                                            </p>
+                                            <div class="media"
+                                                *ngIf="orderDetails.used_payment_card && orderDetails.used_payment_card.card">
+                                                <div class="media-body">
+                                                    <h6 class="mb-0">
+                                                        {{orderDetails.used_payment_card.card.brand.toUpperCase()}}</h6>
+                                                    <p class="mb-0">**** **** ****
+                                                        {{orderDetails.used_payment_card.card.last4 + ' (Expires :
+                                                        '+orderDetails.used_payment_card.card.exp_month+'/'+orderDetails.used_payment_card.card.exp_year+')'}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <a *ngIf="orderDetails.stripe_receipt_url" class="btn btn-sm btn-primary"
+                                                target="_blank" [href]="orderDetails.stripe_receipt_url">Stripe
+                                                Receipt</a>
+                                        </td>
+                                        <td class="font-weight-bold">{{orderDetails.charged_from_wallet | currency }}
+                                        </td>
+                                        <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive" *ngIf="orderDetails.refunded_total > 0">
+                            <table class="table border-bottom table-borderless table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Refunded to Stripe</th>
+                                        <th>Refunded to Wallet</th>
+                                        <th class="text-right">Refunded Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-weight-bold">{{orderDetails.refunded_in_stripe | currency }}
+                                        </td>
+                                        <td class="font-weight-bold">{{orderDetails.refunded_in_wallet | currency }}
+                                        </td>
+                                        <td class="font-weight-bold text-right">{{orderDetails.refunded_total |
+                                            currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h5 class="mt-3">All Payment Transactions</h5>
+                        <div class="table-responsive" *ngIf="orderDetails.all_payment_transactions">
+                            <table class="table table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Transaction Type</th>
+                                        <th>Payment Source</th>
+                                        <th>Amount Charged</th>
+                                        <th>Charge Id</th>
+                                        <th>Amount Refund</th>
+                                        <th>Refund Id</th>
+                                        <th>Datetime</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr [ngClass]="{'alert-success':transaction.transaction_type=='CHARGE' || transaction.transaction_type=='AUTHORIZE_AND_CAPTURE'}"
+                                        *ngFor="let transaction of orderDetails.all_payment_transactions;let i=index;">
+                                        <td>{{i+1}}</td>
+                                        <td>{{transaction.transaction_type}}</td>
+                                        <td>{{transaction.payment_source}}</td>
+                                        <td>{{transaction.charged_amount | currency}}</td>
+                                        <td>
+                                            <a *ngIf="transaction.payment_source=='STRIPE'" target="_blank"
+                                                href="https://dashboard.stripe.com/payments/{{transaction.charge_id}}">{{transaction.charge_id}}</a>
+                                            <span *ngIf="transaction.payment_source=='WALLET'"> {{transaction.charge_id
+                                                ? 'Wallet Transaction #'+transaction.charge_id :''}}</span>
+                                        </td>
+                                        <td>{{transaction.refunded_amount | currency}}</td>
+                                        <td>
+                                            <span
+                                                *ngIf="transaction.refund_id && transaction.payment_source=='STRIPE'">{{transaction.refund_id}}</span>
+                                            <span
+                                                *ngIf="transaction.refund_id && transaction.payment_source=='WALLET'">{{'Wallet
+                                                Transaction #'+transaction.refund_id}}</span>
+                                        </td>
+                                        <td>{{transaction.created | date:'MM/dd/yyyy HH:mm a'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Customer Status</th>
+                                        <th>Technician Status</th>
+                                        <th>Doctor Status</th>
+                                        <th>Pharmacy Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <p class="m-0"
+                                                [innerHTML]="_orderHelper.getCustomerStatus(orderDetails.customer_status)">
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="m-0"
+                                                [innerHTML]="_orderHelper.getTechnicianStatus(orderDetails.technician_status)">
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="m-0"
+                                                [innerHTML]="_orderHelper.getDoctorStatus(orderDetails.doctor_status)">
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="m-0"
+                                                [innerHTML]="_orderHelper.getPharmacyStatus(orderDetails.pharmacy_status)">
+                                            </p>
+                                            <p *ngIf="orderDetails.is_transferred ==1" class="mt-2"><span
+                                                    class="p-2 badge badge-pill badge-warning">Transferred</span></p>
+                                            <p *ngIf="orderDetails.is_closed ==1" class="mt-2"><span
+                                                    class="p-2 badge badge-pill badge-dark">Closed</span></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p class="mb-1"><strong class="mr-2">Created Date :
+                                                </strong>{{orderDetails.created | date:'MM/dd/yyyy'}}</p>
+                                            <p class="mb-1"><strong class="mr-2">Completed Date :
+                                                </strong>{{orderDetails.order_place_datetime | date:'MM/dd/yyyy'}}</p>
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <p class="mb-1"><strong class="mr-2">Prescribed On : </strong>{{
+                                                (orderDetails.prescribed_on | date:'MM/dd/yyyy') || '--' }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-1"><strong class="mr-2">Shipped On : </strong>{{
+                                                (orderDetails.shipped_on | date:'MM/dd/yyyy') || '--' }}</p>
+                                            <p class="mb-1"><strong class="mr-2">Pickedup On : </strong>{{
+                                                (orderDetails.picked_up_on | date:'MM/dd/yyyy') || '--' }}</p>
+                                            <p class="mb-1" *ngIf="orderDetails.is_transferred ==1"><strong
+                                                    class="mr-2">Transferred On : </strong>{{
+                                                (orderDetails.order_transfer_datetime | date:'MM/dd/yyyy') || '--' }}
+                                            </p>
+                                            <p class="mb-1" *ngIf="orderDetails.is_closed ==1"><strong
+                                                    class="mr-2">Closed On : </strong>{{
+                                                (orderDetails.order_closed_datetime | date:'MM/dd/yyyy') || '--' }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <p class="mb-1" *ngIf="orderDetails.tracking_url"><strong
+                                                    class="mr-2">Tracking Id : </strong><a
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    [href]="orderDetails.tracking_url" target="_blank">{{
+                                                    orderDetails.tracking_id }}</a></p>
+                                            <p class="mb-1" *ngIf="orderDetails.label_url"><strong class="mr-2">Shipping
+                                                    Label : </strong><button class="btn btn-sm btn-primary"
+                                                    type="button"
+                                                    (click)="openShippingLabelToPrint(orderDetails.label_url)">View
+                                                    Label</button></p>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <ng-container *ngIf="orderDetails.doctor_details; else elseTemplate">
+                                                <p class="mb-1"><strong class="mr-2">Name :
+                                                    </strong>{{orderDetails.doctor_details.display_name}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Email :
+                                                    </strong>{{orderDetails.doctor_details.email}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Phone :
+                                                    </strong>{{orderDetails.doctor_details.cell_phone_number | mask:
+                                                    '(000) 000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">NPI Number
+                                                        :</strong>{{orderDetails.doctor_details.npi_number}}</p>
+                                                <p class="mb-1"><strong class="mr-2">DEA Number:
+                                                    </strong>{{orderDetails.doctor_details.dea_number}}</p>
+                                            </ng-container>
+                                            <ng-template #elseTemplate>
+                                                <div class="text-center text-muted">
+                                                    <h4><i class="fa fa-info-circle"></i></h4>
+                                                    <h6>Not Assigned Yet</h6>
+                                                </div>
+                                            </ng-template>
+                                        </td>
+                                        <td>
+                                            <ng-container
+                                                *ngIf="orderDetails.assigned_to_pharmacy_id && orderDetails.pharmacy_details">
+                                                <p class="mb-1"><strong class="mr-2">Name :
+                                                    </strong>{{orderDetails.pharmacy_details.pharmacy_name}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Phone:
+                                                    </strong>{{orderDetails.pharmacy_details.phone_number | mask: '(000)
+                                                    000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Fax:
+                                                    </strong>{{orderDetails.pharmacy_details.fax_number | mask: '(000)
+                                                    000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">NPI Number:
+                                                    </strong>{{orderDetails.pharmacy_details.npi_number}}</p>
+                                                <p class="mb-1"><strong class="mr-2">DEA Number:
+                                                    </strong>{{orderDetails.pharmacy_details.dea_number}}</p>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="orderDetails.special_pharmacy">
+                                                <p class="mb-1"><strong class="mr-2">Name :
+                                                    </strong>{{orderDetails.special_pharmacy.name}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Phone :
+                                                    </strong>{{orderDetails.special_pharmacy.primary_phone | mask:
+                                                    '(000) 000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Fax:
+                                                    </strong>{{orderDetails.special_pharmacy.primary_fax | mask: '(000)
+                                                    000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Address :
+                                                    </strong>{{orderDetails.special_pharmacy.address_line1}} <br />{{
+                                                    orderDetails.special_pharmacy.address_line2
+                                                    }}<br />{{orderDetails.special_pharmacy.city}}, {{
+                                                    orderDetails.special_pharmacy.state }} , {{
+                                                    orderDetails.special_pharmacy.zip_code }}</p>
+                                            </ng-container>
+
+                                            <div class="mt-4" *ngIf="orderDetails.transferred_pharmacy">
+                                                <p class="font-weight-bold text-warning">Transferred Pharmacy</p>
+                                                <ng-container>
+                                                    <p class="mb-1"><strong class="mr-2">Name :
+                                                        </strong>{{orderDetails.transferred_pharmacy.pharmacy_name}}</p>
+                                                    <p class="mb-1"><strong class="mr-2">Pharmacist:
+                                                        </strong>{{orderDetails.transferred_pharmacy.contact_name }}</p>
+                                                    <p class="mb-1"><strong class="mr-2">Address: </strong>
+                                                        {{orderDetails.transferred_pharmacy.address_line_1 }}
+                                                        <span
+                                                            *ngIf="orderDetails.transferred_pharmacy.address_line_1">,<br /></span>
+                                                        {{orderDetails.transferred_pharmacy.address_line_2 }}
+                                                        <span
+                                                            *ngIf="orderDetails.transferred_pharmacy.address_line_2">,<br /></span>
+                                                        {{orderDetails.transferred_pharmacy.city }}
+                                                        <span *ngIf="orderDetails.transferred_pharmacy.city">,</span>
+                                                        {{orderDetails.transferred_pharmacy.state }}
+                                                        <span *ngIf="orderDetails.transferred_pharmacy.state">,</span>
+                                                        {{orderDetails.transferred_pharmacy.zip }}
+                                                    </p>
+
+                                                    <p class="mb-1"
+                                                        *ngIf="orderDetails.transferred_pharmacy.phone_number"><strong
+                                                            class="mr-2">Phone:
+                                                        </strong>{{orderDetails.transferred_pharmacy.phone_number |
+                                                        mask: '(000) 000-0000' || '-'}}</p>
+                                                    <p class="mb-1"
+                                                        *ngIf="orderDetails.transferred_pharmacy.fax_number"><strong
+                                                            class="mr-2">Fax:
+                                                        </strong>{{orderDetails.transferred_pharmacy.fax_number | mask:
+                                                        '(000) 000-0000' || '-'}}</p>
+                                                    <p class="mb-1"
+                                                        *ngIf="orderDetails.transferred_pharmacy.npi_number"><strong
+                                                            class="mr-2">NPI Number:
+                                                        </strong>{{orderDetails.transferred_pharmacy.npi_number}}</p>
+                                                    <p class="mb-1"
+                                                        *ngIf="orderDetails.transferred_pharmacy.dea_number"><strong
+                                                            class="mr-2">DEA Number:
+                                                        </strong>{{orderDetails.transferred_pharmacy.dea_number}}</p>
+                                                    <p class="mb-1" *ngIf="orderDetails.transferred_pharmacy.ncpdp">
+                                                        <strong class="mr-2">NCPDP Number:
+                                                        </strong>{{orderDetails.transferred_pharmacy.ncpdp}}</p>
+                                                </ng-container>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noOrderDetails>
+                <div class="text-center text-muted">
+                    <h2><i class="fa fa-info-circle"></i></h2>
+                    <h4>No Order Details!</h4>
+                </div>
+            </ng-template>
+        </div>
+    </mat-tab>
+    <mat-tab label="Patient">
+        <div class="container-fluid details">
+            <ng-container *ngIf="patient; else noDetails ">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Patient Details</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="javascript:void(0);" class="link" (click)="gotoPatientDetails()">
+                            <h5># {{patientUinqueNumber}}</h5>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>First Name</label>
+                        <h5>{{patient.first_name}}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Last Name</label>
+                        <h5>{{patient.last_name}}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Gender</label>
+                        <h5>{{patient.gender==1?"Male":"Female"}}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Date Of Birth</label>
+                        <h5>{{ patient.dob_formatted }}
+                            <br> Age: {{patient.age}}
+                        </h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Email</label>
+                        <h5>{{patient.email}}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Mobile No</label>
+                        <h5>{{patient.cell_phone_number | mask: '(000) 000-0000'}}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Shipping Addresses</label>
+
+                        <div *ngIf="orderDetails && orderDetails.address">
+                            <h5 class="m-0">
+                                {{orderDetails.address.address_line_1?orderDetails.address.address_line_1:''}}{{orderDetails.address.address_line_2
+                                ? ', ' + orderDetails.address.address_line_2:''}}</h5>
+                            <h5 class="m-0">
+                                {{orderDetails.address.city_name?orderDetails.address.city_name:''}}{{orderDetails.address.state_name?',
+                                '+orderDetails.address.state_name:''}}
+                                {{orderDetails.address.zip_code?orderDetails.address.zip_code:''}}</h5>
+                        </div>
+
+                        <button class="btn btn-primary" (click)="loadMapIframe()" data-toggle="collapse"
+                            data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">View
+                            Shipping Address on Map<i class="ml-2 fa fa-map-marker" aria-hidden="true"></i></button>
+                        <div class="collapse" id="collapseExample">
+                            <iframe #mapIframe style="display: none;" width="100%" height="450" frameborder="0"
+                                style="border:0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="accordion td-accordian mt-4" id="licenseAccordian">
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h3 class="mb-0">
+                                        <button class="btn btn-link waves-effect waves-light" type="button"
+                                            data-toggle="collapse" data-target="#license" aria-expanded="true"
+                                            aria-controls="collapseTwo">License</button>
+                                    </h3>
+                                </div>
+                                <div id="license" class="collapse show" aria-labelledby="headingTwo"
+                                    data-parent="#licenseAccordian">
+                                    <div class="card-body">
+                                        <div class="mt-2" *ngIf="profileLicense && profileLicense.license_photo">
+                                            <div class="allergies">
+                                                <app-image-preview [imgPath]="profileLicense.license_photo" height="250"
+                                                    width="350" caption="License Image"></app-image-preview>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="accordion td-accordian mt-4" id="fullFaceAccordian">
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h3 class="mb-0"><button class="btn btn-link waves-effect waves-light" type="button"
+                                            data-toggle="collapse" data-target="#license" aria-expanded="true"
+                                            aria-controls="collapseTwo">Full Face Image</button></h3>
+                                </div>
+                                <div id="license" class="collapse show" aria-labelledby="headingTwo"
+                                    data-parent="#fullFaceAccordian">
+                                    <div class="card-body">
+                                        <div class="mt-2" *ngIf="profileLicense && profileLicense.profile_photo">
+                                            <div class="allergies">
+                                                <app-image-preview [imgPath]="profileLicense.profile_photo" height="250"
+                                                    width="350" caption="Full Face Image"></app-image-preview>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noDetails>
+                <div class="text-center text-muted">
+                    <h2><i class="fa fa-info-circle"></i></h2>
+                    <h4>No Details!</h4>
+                </div>
+            </ng-template>
+        </div>
+    </mat-tab>
+    <mat-tab label="Kit" *ngIf="orderDetails">
+        <app-order-medicine-kit [orderDetails]="orderDetails"></app-order-medicine-kit>
+    </mat-tab>
+    <mat-tab label="Questionnaire">
+        <div class="container-fluid doctorDetails">
+            <app-order-question-answer [orderDetails]="orderDetails" (reloadOrderDetails)="getOrderDetailsAgain()">
+            </app-order-question-answer>
+        </div>
+    </mat-tab>
+    <mat-tab label="Logs">
+        <app-order-logs></app-order-logs>
+    </mat-tab>
+</mat-tab-group>
+<div class="form-group mt-1">
+    <div class="text-center">
+        <a routerLink="/admin/orders/list" routerLinkActive="active" class="btn btn-primary"><i
+                class="fa fa-arrow-left mr-2" aria-hidden="true"></i>Back To Orders</a>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<div *ngIf="showHeaderAndFilter" class="w-100 p-3 bg-dark-grey">
+    <h4 class="text-white font-weight-bold mb-0">Select Condition and Medicine Kit to Continue</h4>
+</div>
+<div *ngIf="showHeaderAndFilter" class="p-3">
+  <div class="row">
+    <div class="col-md-4">
+      <label>Question Category</label>
+      <mat-form-field class="w-100">
+        <mat-select placeholder="Select Question Category" (selectionChange)="handleChange($event.value)" [(ngModel)]="selectedCategory">
+          <mat-option *ngFor="let flow of categoryList" [value]="flow.value">{{flow.type}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-md-4" *ngIf="selectedCategory == 'ORDER'">
+      <label for="kits">Medicine Kits</label>
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Select Medicine Kits" [(ngModel)]="selectedKitId">
+            <mat-option color="primary" *ngFor="let mk of medicineKits" [value]="mk._id">{{mk.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-md-4" *ngIf="selectedCategory == 'CONSULTATION'">
+      <label for="chc">Health Condition</label>
+      <mat-form-field class="w-100">
+        <mat-select placeholder="Select Health Condition" [(ngModel)]="selectedConditionId">
+          <mat-option *ngFor="let condition of conditions" [(value)]="condition._id">{{condition.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-3">
+      <button class="btn btn-primary" (click)="getQuestionsList()">Get Sequence
+      </button>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="questions.length;">
+  <hr>
+  <div class="pad">
+    <div class="row">
+      <div class="col-sm-6 text-left">
+        <button class="btn btn-default" [disabled]="!isSequenceUpdated" (click)="resetSequence()">Reset Sequence</button>
+      </div>
+      <div class="col-sm-6 text-right">
+        <button class="btn btn-primary" [disabled]="!isSequenceUpdated" (click)="saveUpdatedSequence()">Save Sequence</button>
+      </div>
+    </div>
+    <br>
+    <div class="row text-center heading">
+      <div class="col-sm-2">
+        <h6>New Sequence</h6>
+      </div>
+      <div class="col-sm-8">
+        <h6>Question</h6>
+      </div>
+      <div class="col-sm-2">
+        <h6>Previous Sequence</h6>
+      </div>
+    </div>
+    <div cdkDropList class="questions-list" (cdkDropListDropped)="drop($event)">
+      <div class="questions-box" *ngFor="let question of questions;let i = index" cdkDrag>
+        <div class="row">
+          <div class="col-sm-2 text-center">
+            <h4>{{(i+1)}}</h4>
+          </div>
+          <div class="col-sm-8">
+            <h6>{{question.question_id.text}}</h6>
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4>{{question.sequence}}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

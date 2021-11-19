@@ -1,0 +1,14 @@
+.row div {
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+}
+
+.choice .badge {
+    width: 100%;
+}
+
+.choice.hover:hover {
+    background: #fdfdfd;
+    cursor: pointer;
+}

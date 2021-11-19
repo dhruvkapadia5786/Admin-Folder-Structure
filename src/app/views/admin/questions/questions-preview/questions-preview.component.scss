@@ -1,0 +1,287 @@
+@import "../../../../../variables.scss";
+ul {
+    list-style-type: none;
+}
+
+.list-group-item {
+    user-select: none;
+}
+
+.list-group input[type="radio"] {
+    display: none;
+}
+
+.list-group input[type="radio"]+.list-group-item {
+    cursor: pointer;
+}
+
+.list-group input[type="radio"]+.list-group-item:before {
+    color: transparent;
+    font-weight: bold;
+    margin-right: 1em;
+}
+
+.list-group input[type="radio"]:checked+.list-group-item {
+    background-color: #eee;
+    color: #444454;
+}
+
+.list-group input[type="radio"]:checked+.list-group-item:before {
+    color: inherit;
+}
+
+.list-group-item span {
+    margin-top: -3px;
+}
+
+.list-group input[type="radio"]:checked+.list-group-item button {
+    border-color: #555555 !important;
+}
+
+.list-group input[type="radio"]:checked+.list-group-item button i {
+    color: #555555 !important;
+}
+
+.ans-border-width {
+    border-width: 1.5px !important;
+}
+
+.answer-check-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.error-container {
+    border: 2px solid #d75a4a;
+    padding: 15px 0;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    .error-header {
+        color: #d75a4a;
+        display: grid;
+        grid-template-columns: 26px auto;
+        justify-content: center;
+        align-items: center;
+        grid-gap: 8px;
+        img {
+            width: 26px;
+        }
+        h2 {
+            color: #d75a4a;
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+    }
+    .error-content {
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        padding: 0 24px;
+        text-align: center;
+        p {
+            color: #d75a4a;
+            margin: 10px 0 0 0px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+    }
+}
+
+.question-header {
+    margin-bottom: 40px;
+    text-align: center;
+    margin-top: 30px;
+    h1 {
+        font-size: 22px;
+        font-weight: 600;
+    }
+    p {
+        color: #777;
+        font-weight: 500;
+    }
+}
+
+.progress {
+    height: 0.5rem !important;
+    background-color: #f7f7f7 !important;
+    border-radius: 0 !important;
+    /* .progress-bar {
+    background-color: #548220 !important;
+  } */
+}
+
+.card-body {
+    .card-title {
+        white-space: pre-wrap;
+        text-decoration: none;
+    }
+}
+
+.drugCard .card {
+    margin: 0 0 10px 0px;
+}
+
+.StripeElement {
+    background-color: #fff;
+    padding: 10px 12px;
+    border-radius: 3px;
+    border: 1px solid #ced4da;
+    height: calc(2.25rem + 2px);
+}
+
+.StripeElement--focus {
+    border-color: $primary-color;
+}
+
+.StripeElement--invalid {
+    border-color: #ced4da;
+}
+
+.StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+}
+
+.CardField-cvc input {
+    -webkit-text-security: disc !important;
+}
+
+.ccblock .show {
+    display: block;
+}
+
+.ccblock.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+label.upload-btn {
+    height: calc(2.25rem + 2px);
+}
+
+.inputfile:focus+label,
+.inputfile+label:hover {
+    background-color: $danger-color;
+}
+
+.image-preview {
+    margin-top: 20px;
+}
+
+.image-preview label {
+    line-height: 1;
+}
+
+.image-preview img {
+    width: 100%;
+    object-fit: contain;
+}
+
+.upload-box {
+    border: 2px dashed rgba(0, 0, 0, 0.25);
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.qq-gallery .qq-file-info {
+    padding: 0 8px;
+    margin-top: 0;
+    border-radius: 0 0 2px 2px;
+    text-align: left;
+    overflow: hidden;
+}
+
+.qq-gallery .qq-upload-file {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+.qq-gallery .qq-edit-filename-icon.qq-editable {
+    display: inline-block;
+    cursor: pointer;
+    position: absolute;
+    right: -18px;
+    top: 0;
+}
+
+.qq-gallery .qq-upload-list li {
+    display: flex;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    line-height: 16px;
+    font-size: 13px;
+    color: #424242;
+    background-color: #FFFFFF;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.22);
+    vertical-align: top;
+    height: auto;
+}
+
+.qq-gallery .qq-upload-cancel {
+    background-color: #525252;
+    color: #F7F7F7;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 12px;
+    border: none;
+    height: 22px;
+    width: 22px;
+    padding: 4px;
+    position: absolute;
+    right: 0;
+    top: -6px;
+    margin: 0;
+    line-height: 15px;
+}
+
+.qq-gallery .qq-upload-button {
+    background: #111;
+    border: 1px solid #111;
+}
+
+.qq-gallery .qq-upload-cancel {
+    background-color: #111;
+    &:hover {
+        background-color: #111;
+    }
+}
+
+.qq-gallery .qq-thumbnail-wrapper {
+    width: 200px;
+}
+
+.qq-gallery .qq-thumbnail-selector {
+    width: 100%;
+}

@@ -1,0 +1,21 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="font-weight-bold modal-title w-100" id="RequestRefundModalTitle">
+            Request Refund
+        </h4>
+        <button (click)="closeModal()" type="button" id="closeRequestRefundModalBtn" class="close float-right" aria-label="Close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="refundRequestForm" (ngSubmit)="refundRequestFormSubmit(refundRequestForm.valid)">
+            <div class="form-group">
+                <label>Enter Reason For Refund</label>
+                <textarea class="form-control" id="refund_reason" rows="3" formControlName="refund_reason" required></textarea>
+            </div>
+            <div class="text-center">
+                  <button class="btn btn-primary" [disabled]="refundRequestForm.invalid" type="submit">Request Refund</button>
+            </div>
+      </form>
+    </div>
+</div>

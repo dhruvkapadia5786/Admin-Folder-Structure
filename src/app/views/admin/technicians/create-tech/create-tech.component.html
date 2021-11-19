@@ -1,0 +1,121 @@
+<div class="w-100 p-3 bg-dark-grey">
+    <h4 class="text-white font-weight-bold mb-0">Add Technician</h4>
+</div>
+<div class="p-3">
+  <form  (ngSubmit)="saveTechnician()" [formGroup]="addTechnician">
+    <div class="form-group">
+      <div class="form-row">
+        <div class="col-md-6">
+          <label class="float-left">First Name</label>
+          <input type="text" id="first_name" class="form-control" placeholder="Enter First Name" formControlName="first_name"
+          />
+          <div class="invalid-feedback" *ngIf="first_name?.invalid && (first_name?.dirty || first_name?.touched)" class="text-danger">
+            <div *ngIf="first_name?.errors?.required">First name is required.</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="float-left">Last Name</label>
+          <input type="text" id="last_name" formControlName="last_name" class="form-control input-lg" placeholder="Enter Last Name"/>
+          <div class="invalid-feedback" *ngIf="last_name?.invalid && (last_name?.dirty || last_name?.touched)" class="text-danger">
+            <div *ngIf="last_name?.errors?.required">Last name is required.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-row">
+       <div class="col-md-6">
+          <label class="d-block">Gender</label>&nbsp;&nbsp;
+          <mat-radio-group formControlName="gender">
+            <mat-radio-button value="male" color='primary'>Male</mat-radio-button>&nbsp;&nbsp;
+            <mat-radio-button value="female" color='primary'>Female</mat-radio-button>
+          </mat-radio-group>
+          <div class="invalid-feedback" *ngIf="gender?.invalid && (gender?.dirty || gender?.touched)" class="text-danger">
+            <div *ngIf="gender?.errors?.required">Gender is required.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-row">
+        <div class="col-md-6">
+          <label class="float-left">Email</label>
+          <input type="email" id="email" formControlName="email" class="form-control input-lg" placeholder="Enter Email" />
+          <div class="invalid-feedback" *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="text-danger">
+            <div *ngIf="email?.errors?.required">Email is required.</div>
+            <div *ngIf="email?.errors?.email">Email must be a valid email address.</div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="float-left">Cell Phone Number</label>
+          <input type="text" id="cell_phone_number" formControlName="cell_phone_number" class="form-control input-lg" placeholder="Enter Cell Phone Number"/>
+          <div class="invalid-feedback" *ngIf="cell_phone_number?.invalid && (cell_phone_number?.dirty || cell_phone_number?.touched)"
+            class="text-danger">
+            <div *ngIf="cell_phone_number?.errors?.required">Cell phone number is required.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-row">
+        <div class="col-md-6">
+          <label class="float-left">Password</label>
+          <input type="password" id="password" formControlName="password" class="form-control input-lg" placeholder="Enter Password" autocomplete="off" />
+          <div class="invalid-feedback" *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="text-danger">
+            <div *ngIf="password?.errors?.required">Password is required.</div>
+            <div *ngIf="password?.errors?.pattern">Password must conatain Following:
+              <ul>
+                <li>
+                  At least 8 to 16 characters in length
+                </li>
+                <li>Lowercase letters</li>
+                <li>Uppercase letters</li>
+                <li>Numbers</li>
+                <li>Special characters</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="d-block">Confirm Password</label>
+          <input type="password" id="confirm_password" formControlName="confirm_password" autocomplete="off" class="form-control input-lg" placeholder="Enter Confirm Password" />
+          <div class="invalid-feedback" *ngIf="confirm_password?.invalid && (confirm_password?.dirty || confirm_password?.touched)" class="text-danger">
+            <div *ngIf="confirm_password?.errors?.required">Confirm password is required.</div>
+            <div *ngIf="confirm_password?.errors?.ConfirmPassword">Passwords does not match.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-row">
+        <div class="col-md-4">
+          <label class="d-block">Notifications for Email and Text </label>
+          <mat-checkbox id="email_phone_consent" formControlName="email_phone_consent" color="primary">Notifications for Email and Text</mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <label class="d-block">Active </label>
+          <mat-checkbox id="is_active" formControlName="is_active" color="primary">Active</mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <label class="d-block">Add Memo Tab</label>
+          <mat-checkbox color="primary" formControlName="add_memo_tab" [checked]="true">
+            Add Memo Tab
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mt-1">
+      <div class="row">
+        <div class="col">
+          <div class="text-center">
+            <button type="submit" class="btn btn-info mr-2">Submit</button>
+            <a routerLink="/admin/technicians/list" routerLinkActive="active" class="btn btn-primary">Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

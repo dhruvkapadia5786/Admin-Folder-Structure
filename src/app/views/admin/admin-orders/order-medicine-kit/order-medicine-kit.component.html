@@ -1,0 +1,69 @@
+<div class="tab-pane mt-4">
+
+<ng-container>
+ <h4 class="mb-3 font-weight-normal" *ngIf="medicineKit">{{medicineKit.name}}</h4>
+
+ <div class="table-responsive">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th class="py-1" scope="col">Medicine Name</th>
+        <th class="py-1" scope="col">Dosage</th>
+        <th class="py-1" scope="col">Quantity</th>
+        <th class="py-1" scope="col">Doseform</th>
+        <th class="py-1" scope="col">Route</th>
+        <th class="py-1" scope="col">Refills</th>
+        <th class="py-1" scope="col">Prescibed</th>
+      </tr>
+    </thead>
+    <tbody  *ngIf="medicineKit">
+      <tr *ngFor="let medicine of medicineKit.medicines">
+          <td class="font-weight-normal">
+              <a class="text-primary" target="_blank" [href]="kitUrl"><h5 class="font-weight-normal">{{medicine.medicine_name}}</h5></a>
+              
+                <p class="mb-0">Fax Send to Pharmacy : <span *ngIf="medicine.is_prescribed_by_fax==1"><i class="fa fa-check text-success"></i></span><span *ngIf="medicine.is_prescribed_by_fax!=1"><i class="fa fa-times text-danger"></i></span></p>
+                <p class="mb-0">E-Prescribed (DS): <span *ngIf="medicine.is_prescribed_by_doesspot==1"><i class="fa fa-check text-success"></i></span><span *ngIf="medicine.is_prescribed_by_doesspot!=1"><i class="fa fa-times text-danger"></i></span></p>
+                <p class="mb-0">E-Prescribed (W): <span *ngIf="medicine.is_prescribed_by_weno==1"><i class="fa fa-check text-success"></i></span><span *ngIf="medicine.is_prescribed_by_weno!=1"><i class="fa fa-times text-danger"></i></span></p>
+                       
+                <p class="mt-3 mb-0" *ngIf="medicine.is_prescribed_by_weno && medicine.weno_prescription">
+                    MessageId :  {{medicine.weno_prescription.message_id}} <br/>
+                    Status : {{ medicine.weno_prescription.status }}<br/>
+                    Status Text : {{ medicine.weno_prescription.status_text }}
+                </p>  
+
+              <p class="mt-3 mb-0">DIRECTION : {{medicine.direction}}</p>
+
+              <div class="mt-3" *ngIf="medicine.prescription_send_to_pharmacy">
+                <p class="font-weight-bold mb-0">Prescription Send To Pharmacy</p>
+                <p class="mb-0">{{ medicine.prescription_send_to_pharmacy.name }}</p>
+                <p class="mb-0">{{ medicine.prescription_send_to_pharmacy.address_line1 }}</p>
+                <p class="mb-0" *ngIf="medicine.prescription_send_to_pharmacy">{{ medicine.prescription_send_to_pharmacy.address_line2 }}</p>
+                <p class="mb-0">{{ medicine.prescription_send_to_pharmacy.city +' , '+  medicine.prescription_send_to_pharmacy.state +' , '+medicine.prescription_send_to_pharmacy.zip_code}}</p>
+                <p class="mb-0">Phone : {{ medicine.prescription_send_to_pharmacy.primary_phone }}</p>
+            </div>
+          </td>    
+          <td class="font-weight-normal">{{medicine.strength}}</td> 
+          <td class="font-weight-normal">{{medicine.quantity}}</td>  
+          <td class="font-weight-normal">{{medicine.doseform}}</td> 
+          <td class="font-weight-normal">{{medicine.route}}</td>   
+          <td class="font-weight-normal">{{medicine.refills || '-'}}</td>    
+          <td class="font-weight-normal">
+            <span class="text-warning" *ngIf="medicine.is_prescribed!=1">Not Prescribed</span>
+            <a *ngIf="medicine.is_prescribed==1 && medicine.prescription_url" target="_blank" class="btn btn-primary btn-sm mb-1 text-white" href="{{api_url + medicine.prescription_url }}">View Rx</a>
+            <a *ngIf="orderDetails && orderDetails.user && medicine.is_prescribed_by_doesspot==1" target="_blank" class="btn btn-success btn-sm text-white" routerLink="/admin/prescription/{{orderDetails.user.doesspot_patient_id}}/{{medicine.doesspot_prescription_id}}">View E-Rx #{{medicine.doesspot_prescription_id}}</a> 
+            <a *ngIf="medicine.weno_prescription && medicine.weno_prescription.message_id != null" target="_blank" class="btn btn-success btn-sm" [href]="'/admin/e-prescription/'+medicine.weno_prescription.message_id">View E-Rx #{{medicine.weno_prescription.message_id}}</a>
+ 
+          </td>
+      </tr>
+     </tbody>
+      
+  </table>
+ </div>
+</ng-container>
+<ng-template #medicinesNotAvailable>
+  <div class="text-center text-muted">
+    <h3><i class="fa fa-info-circle"></i></h3>
+    <h4>No Medicines !</h4>
+  </div>
+</ng-template>
+</div>

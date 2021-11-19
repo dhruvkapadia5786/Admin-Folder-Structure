@@ -1,0 +1,27 @@
+<div class="w-100 p-3 bg-dark-grey d-flex justify-content-between align-items-center">
+      <h4 class="text-white font-weight-bold mb-0">Settings</h4>
+</div>
+<div class="container-fluid py-3">
+      <div class="row">
+            <div class="col-md-3">
+                  <div class="card">
+                  <div class="card-header"><h5>Manage Shipping Charge</h5></div>
+                  <div class="card-body">
+                        <form (ngSubmit)="saveCharge()" [formGroup]="shippingChargeSettings">
+                              <label>Shipping Charge Amount</label>
+                              <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                              <span class="input-group-text">$</span>
+                              </div>
+                              <input type="number" id="amount" formControlName="amount" class="form-control"/>
+                              <div class="invalid-feedback" *ngIf="amount?.invalid && (amount?.dirty || amount?.touched)" class="text-danger">
+                              <div *ngIf="amount?.errors?.required">Delivery amount is required</div>
+                              </div>
+                              </div>
+                              <button class="btn btn-block btn-primary btn-sm" type="submit">Update</button>
+                        </form>
+                  </div>
+                  </div>
+            </div>
+      </div>
+</div>
