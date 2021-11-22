@@ -11,17 +11,7 @@
                 <a *ngIf="stripeCustomerId" class="btn btn-info" target="_blank"
                     [href]="'https://dashboard.stripe.com/customers/'+stripeCustomerId">View Details</a>
             </div>
-            <div class="col-md-6 text-right">
-                <label>DS Patient ID</label>
-                <h5 *ngIf="customerDetails.doesspot_patient_id">{{customerDetails.doesspot_patient_id}}</h5>
-                <a *ngIf="customerDetails.doesspot_patient_id" class="btn btn-success" target="_blank"
-                    routerLink="/admin/patients/doesspot/{{customerId}}/{{ customerDetails.doesspot_patient_id }}">View
-                    DS Details</a>
-                <h5 *ngIf="!customerDetails.doesspot_patient_id">Patient is not registered on DS</h5>
-                <div *ngIf="customerDetails.doesspot_error" class="alert alert-danger" role="alert">
-                    {{ customerDetails.doesspot_error}}
-                </div>
-            </div>
+
         </div>
         <hr class="my-2">
 

@@ -315,7 +315,7 @@ export class CreateMedicineKitsComponent implements OnInit {
 
   get name() { return this.addMedicineKit.get('name'); }
   get treatment_condition_ids() { return this.addMedicineKit.get('treatment_condition_ids'); }
-  
+
   get generic_name() { return this.addMedicineKit.get('generic_name'); }
   get brand_id() { return this.addMedicineKit.get('brand_id'); }
   get description(){return this.addMedicineKit.get('description');}
@@ -438,7 +438,7 @@ export class CreateMedicineKitsComponent implements OnInit {
   public medicinesControls(){
     return (this.addMedicineKit.get('medicines') as FormArray)['controls'];
   }
- 
+
   public removeMedicine(index: any) {
     const medicinesControl = this.addMedicineKit.get('medicines') as FormArray;
     medicinesControl.removeAt(index);
@@ -493,11 +493,13 @@ export class CreateMedicineKitsComponent implements OnInit {
       return;
     }
     const fd: FormData = new FormData();
-    let icd10Obj: any = {}
+    let icd10Obj: any = [];
     for (let item of this.selectedSimilarDrugs) {
-      icd10Obj.code = item[0];
-      icd10Obj.description = item[1];
-    } 
+      let obj:any={};
+      obj.code = item[0];
+      obj.description = item[1];
+      icd10Obj.push(obj);
+    }
     this.addMedicineKit.value.icd10_code = icd10Obj;
     fd.append('medicinekit', JSON.stringify(this.addMedicineKit.value));
     if(this.selectedFiles.length>0){
