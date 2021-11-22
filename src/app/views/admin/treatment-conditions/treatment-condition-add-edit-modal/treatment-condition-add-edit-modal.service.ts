@@ -17,11 +17,11 @@ export class TreatmentConditionAddEditModalService {
     return this.editDataObj;
   }
 
-  async addNewHealthCondition(bodyData: any):Promise<any>{
-    return await this._http.post('api/health_conditions/create', bodyData).toPromise();
+  async addNewTreatmentCondition(bodyData: any):Promise<any>{
+    return await this._http.post('api/treatment_conditions/create', bodyData).toPromise();
   }
 
-  async editHealthCondition(id: number, bodyData: any):Promise<any>{
-		return await this._http.post('api/health_conditions/update/'+id, bodyData).toPromise();
+  async editTreatmentCondition(id: number, bodyData: any):Promise<any>{
+		return await this._http.post('api/treatment_conditions/update/'+id, bodyData).toPromise();
   }
 }

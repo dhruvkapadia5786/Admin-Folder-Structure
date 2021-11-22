@@ -63,7 +63,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
 
   openAddModal(){
     this._hcAddEditModalService.setData({event:'ADD'})
-    this.modalRef = this.modalService.show(TreatmentConditionAddEditModalComponent);
+    this.modalRef = this.modalService.show(TreatmentConditionAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
     });
@@ -72,7 +72,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
   openEditModal(id:any){
     let data = this.healthConditionList.find((item:any)=>item._id == id);
     this._hcAddEditModalService.setData({event:'EDIT',data:data});
-    this.modalRef = this.modalService.show(TreatmentConditionAddEditModalComponent);
+    this.modalRef = this.modalService.show(TreatmentConditionAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();
     });
@@ -93,7 +93,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/health_conditions/list',
+            'api/treatment_conditions/list',
             dataTablesParameters,
             {}
           )
