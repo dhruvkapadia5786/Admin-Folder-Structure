@@ -130,10 +130,9 @@ export class TreatmentConditionAddEditModalComponent implements OnInit {
   async saveTreatmentCondition(formValid:boolean){
     if(formValid){
       const formData: FormData = new FormData();
-      formData.append('name', this.treatmentConditionForm.value.name);
-      formData.append('description', this.treatmentConditionForm.value.description);
+      
+      formData.append('treatment', JSON.stringify(this.treatmentConditionForm.value));
       formData.append('image_url', this.selectedImageFile);
-      formData.append('is_active', this.treatmentConditionForm.value.is_active);
 
       if(this.modalEvent == 'ADD') {
         let create = await  this._tcAddEditModalService.addNewTreatmentCondition(formData);

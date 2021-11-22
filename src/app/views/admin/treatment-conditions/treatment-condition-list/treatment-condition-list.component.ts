@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DataTableDirective } from 'angular-datatables';
@@ -109,6 +110,20 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
           });
       },
       columns: [
+        {
+          data:'image_url',
+          title: 'Image',
+          orderable: false,
+          className: 'text-left  font-weight-normal',
+          render: (data: any) => {
+            if (data) {
+              let url = environment.api_url + data;
+              return `<img src=${url} height="80" width="80" />`;
+            } else {
+              return ``;
+            }
+          }
+        },
         {
           data: 'name',
           title: 'Condition Name',
