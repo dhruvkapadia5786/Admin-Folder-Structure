@@ -19,14 +19,6 @@
           </mat-select>
         </mat-form-field>
     </div>
-    <div class="col-md-4" *ngIf="selectedCategory == 'CONSULTATION'">
-      <label for="chc">Health Condition</label>
-      <mat-form-field class="w-100">
-        <mat-select placeholder="Select Health Condition" [(ngModel)]="selectedConditionId">
-          <mat-option *ngFor="let condition of conditions" [(value)]="condition._id">{{condition.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
     
     <div class="col-sm-2">
       <label for="state">States</label>

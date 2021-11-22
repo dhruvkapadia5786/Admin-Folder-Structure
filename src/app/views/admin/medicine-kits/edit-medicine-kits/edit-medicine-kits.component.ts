@@ -25,17 +25,9 @@ export class EditMedicineKitsComponent implements OnInit {
   videoIcon: string = '../../../../../assets/img/video-play-icon.png'
   medicineKitId:any;
   medicineKitDetails:any;
-  public petTypeList: any[]=[];
   public brandsList: any[]=[];
   public statesList:any[]=[];
-  public drugTypesList:any[]=[];
-  public productFormsList:any[]=[];
-
-  public breedsList:any[]=[];
-  public breedSizeList:any[]=[];
-  public lifeStageList:any[]=[];
-  public healthConditionsList:any[]=[];
-  public shopCategoriesList:any[]=[];
+  public treatmentConditionList:any[]=[];
 
   public addMedicineKit: FormGroup;
   public medicineError: boolean = false;
@@ -76,38 +68,19 @@ export class EditMedicineKitsComponent implements OnInit {
     this.medicineKitId = activatedRoute.parent.snapshot.paramMap.get('kit_id');
 
     this.addMedicineKit = new FormGroup({
-      'drug_type': new FormControl('', []),
-      'product_form':new FormControl('', [Validators.required]),
+      'treatment_condition_ids': new FormControl([], []),
       'name': new FormControl('', [Validators.required]),
       'generic_name': new FormControl('', []),
       'brand_id':new FormControl('', [Validators.required]),
-      'pet_type':new FormControl('', [Validators.required]),
-      'min_weight':new FormControl('', []),
-      'max_weight':new FormControl('', []),
-      'shop_categories':new FormControl([], []),
-      'breeds':new FormControl([], []),
-      'health_conditions':new FormControl([], []),
-      'breed_size':new FormControl([], []),
-      'lifestage':new FormControl([], []),
       'description': new FormControl('', []),
       'is_active': new FormControl(true, []),
       'is_coming_soon': new FormControl(false, []),
       'states':new FormControl([], [Validators.required]),
-      'max_order_quantity': new FormControl(50, [Validators.required]),
       'price': new FormControl('', [Validators.required]),
       'pharmacy_price': new FormControl('', [Validators.required]),
       'is_offer': new FormControl(false, []),
       'offer_price': new FormControl('',[]),
       'doctor_price': new FormControl([], [Validators.required]),
-      'ndc_number': new FormControl('',[]),
-      'dispense_unit_id': new FormControl('',[Validators.required]),
-      'quantity':new FormControl('',[Validators.required]),
-      'strength':new FormControl('',[Validators.required]),
-      'shipping_weight':new FormControl('',[Validators.required]),
-      'doseform':new FormControl('',[Validators.required]),
-      'ncpdp_unit_code':new FormControl('',[Validators.required]),
-      'default_direction':new FormControl('',[]),
-      'days_supply':new FormControl('', [Validators.required]),
       'tab_name': new FormControl('', [Validators.required]),
       'tab_url': new FormControl('', [Validators.required]),
       'is_auto_refill': new FormControl(true, [Validators.required]),
@@ -119,7 +92,8 @@ export class EditMedicineKitsComponent implements OnInit {
       'faqs':new FormArray([]),
       'attributes':new FormArray([]),
       'icd10_code': new FormControl([]),
-      'custom_icd10_codes':new FormArray([])
+      'custom_icd10_codes':new FormArray([]),
+      'medicines':new FormArray([])
     });
 
       // listen for search field value changes
@@ -349,21 +323,10 @@ export class EditMedicineKitsComponent implements OnInit {
 
 
   get name() { return this.addMedicineKit.get('name'); }
-  get drug_type() { return this.addMedicineKit.get('drug_type'); }
-  get product_form() { return this.addMedicineKit.get('product_form'); }
-
+  get treatment_condition_ids() { return this.addMedicineKit.get('treatment_condition_ids'); }
   get generic_name() { return this.addMedicineKit.get('generic_name'); }
   get brand_id() { return this.addMedicineKit.get('brand_id'); }
-  get pet_type() { return this.addMedicineKit.get('pet_type'); }
-  get min_weight() { return this.addMedicineKit.get('min_weight'); }
-  get max_weight() { return this.addMedicineKit.get('max_weight'); }
-  get breeds() { return this.addMedicineKit.get('breeds'); }
-  get shop_categories(){ return this.addMedicineKit.get('shop_categories'); }
-  get health_conditions(){return this.addMedicineKit.get('health_conditions');}
-  get breed_size() { return this.addMedicineKit.get('breed_size'); }
-  get lifestage() { return this.addMedicineKit.get('lifestage'); }
   get description(){return this.addMedicineKit.get('description');}
-  get max_order_quantity(){return this.addMedicineKit.get('max_order_quantity');}
   get price() { return this.addMedicineKit.get('price'); }
   get pharmacy_price() { return this.addMedicineKit.get('pharmacy_price'); }
   get tab_name() { return this.addMedicineKit.get('tab_name'); }
@@ -377,26 +340,12 @@ export class EditMedicineKitsComponent implements OnInit {
   get is_offer() { return this.addMedicineKit.get('is_offer'); }
   get offer_price() { return this.addMedicineKit.get('offer_price'); }
   get doctor_price() { return this.addMedicineKit.get('doctor_price'); }
-
-  get ndc_number() { return this.addMedicineKit.get('ndc_number'); }
-  get dispense_unit_id() { return this.addMedicineKit.get('dispense_unit_id'); }
-  get quantity() { return this.addMedicineKit.get('quantity'); }
-  get strength() { return this.addMedicineKit.get('strength'); }
-  get shipping_weight() { return this.addMedicineKit.get('shipping_weight'); }
-  get doseform() { return this.addMedicineKit.get('doseform'); }
-  get ncpdp_unit_code() { return this.addMedicineKit.get('ncpdp_unit_code'); }
-  get default_direction() { return this.addMedicineKit.get('default_direction'); }
-  get days_supply() { return this.addMedicineKit.get('days_supply'); }
-
   get icd10_code(){return this.addMedicineKit.get('icd10_code')}
 
   ngOnInit() {
     this.getStateList();
     this.getBrandsList();
-    this.getPetTypeList();
-    this.getDrugTypeList();
-    this.getProductFormsList();
-    this.getDoesspotDispenseUnits();
+    this.getTreatmentConditionList();
     this.getMedicineKitDetails();
   }
 
@@ -431,41 +380,21 @@ export class EditMedicineKitsComponent implements OnInit {
     const url = 'api/medicine_kits/view/' + this.medicineKitId;
     this.http.get(url).subscribe((res: any) => {
         this.medicineKitDetails = res;
-        this.getPetDetails(res.pet_type._id);
 
         this.addMedicineKit.patchValue({
-          'drug_type': res.drug_type._id,
-          'product_form':res.product_form._id,
+          'treatment_condition_ids': res.treatment_condition_ids,
           'name': res.name,
           'generic_name': res.generic_name,
           'brand_id':res.brand_id._id,
-          'pet_type':res.pet_type._id,
-          'min_weight':res.min_weight,
-          'max_weight':res.max_weight,
-          'shop_categories':res.shop_categories,
-          'breeds': res.breeds.map((itm: any) => itm.id),
-          'health_conditions': res.health_conditions,
-          'breed_size':res.breed_size.map((itm: any) => itm.size),
-          'lifestage':res.lifestage,
           'description':res.description,
           'is_active':res.is_active,
           'is_coming_soon':res.is_coming_soon,
           'states': res.states,
-          'max_order_quantity':res.max_order_quantity,
           'price': res.price,
           'pharmacy_price': res.pharmacy_price,
           'is_offer': res.is_offer,
           'offer_price': res.offer_price,
           'doctor_price': res.doctor_price,
-          'ndc_number': res.ndc_number,
-          'dispense_unit_id': res.dispense_unit_id,
-          'quantity':res.quantity,
-          'strength':res.strength,
-          'shipping_weight':res.shipping_weight,
-          'doseform':res.doseform,
-          'ncpdp_unit_code':res.ncpdp_unit_code,
-          'default_direction':res.default_direction,
-          'days_supply':res.days_supply,
           'tab_name': res.tab_name,
           'tab_url': res.tab_url,
           'is_auto_refill': res.is_auto_refill,
@@ -476,7 +405,7 @@ export class EditMedicineKitsComponent implements OnInit {
         const icd10CodeControl = this.addMedicineKit.get('custom_icd10_codes') as FormArray;
         res.icd10_codes.forEach((item:any)=>{
           let icd10FormGroup = new FormGroup({
-            'code':new FormControl(item.icd10_code, [Validators.required]),
+            'code':new FormControl(item.code, [Validators.required]),
             'description':new FormControl(item.description)
           });
           icd10CodeControl.push(icd10FormGroup);
@@ -501,6 +430,31 @@ export class EditMedicineKitsComponent implements OnInit {
           });
           attributesControl.push(attrFormGroup);
         });
+        
+        const medicinesControl = this.addMedicineKit.get('medicines') as FormArray;
+        res.medicines.forEach((item:any)=>{
+          let medFormGroup = new FormGroup({
+            'name': new FormControl(item.name, [Validators.required]),
+            'quantity': new FormControl(item.quantity, [Validators.required]),
+            'quantity_unit': new FormControl(item.quantity_unit, [Validators.required]),
+            'ndc_number': new FormControl(item.ndc_number, []),
+            'default_direction': new FormControl(item.default_direction, [Validators.required, Validators.maxLength(140)]),
+            'rxcui': new FormControl(item.rxcui, []),
+            'strength':new FormControl(item.strength, [Validators.required]),
+            'is_shippable': new FormControl(item.is_shippable, []),
+            'shipping_weight': new FormControl(item.shipping_weight, []),
+            'shipping_weight_unit': new FormControl(item.shipping_weight_unit, []),
+            'doseform':new FormControl(item.doseform,[]),
+            'ncpdp_unit_code':new FormControl(item.ncpdp_unit_code,[Validators.required]),
+            'days_supply': new FormControl(item.days_supply,[Validators.required]),
+            'route':new FormControl(item.route, []),
+            'is_active': new FormControl(item.is_active, []),
+            'substitutions': new FormControl(item.substitutions,[Validators.required])
+          });
+          medicinesControl.push(medFormGroup);
+        });
+
+
 
       },(err:any) => {
 
@@ -546,6 +500,53 @@ export class EditMedicineKitsComponent implements OnInit {
     ICD10CodeControl.removeAt(index);
   }
 
+  get medicinesGrup(): FormGroup {
+    return new FormGroup({
+      'name': new FormControl(null, [Validators.required]),
+      'quantity': new FormControl(null, [Validators.required]),
+      'quantity_unit': new FormControl(null, [Validators.required]),
+      'ndc_number': new FormControl(null, []),
+      'default_direction': new FormControl(null, [Validators.required, Validators.maxLength(140)]),
+      'rxcui': new FormControl(null, []),
+      'strength':new FormControl(null, [Validators.required]),
+      'is_shippable': new FormControl(false, []),
+      'shipping_weight': new FormControl(null, []),
+      'shipping_weight_unit': new FormControl(null, []),
+      'doseform':new FormControl(null,[]),
+      'ncpdp_unit_code':new FormControl(null,[Validators.required]),
+      'days_supply': new FormControl(null,[Validators.required]),
+      'route':new FormControl(null, []),
+      'is_active': new FormControl(true, []),
+      'substitutions': new FormControl(false,[Validators.required])
+    });
+  }
+
+  public addNewMedicine() {
+    const medicinesControl = this.addMedicineKit.get('medicines') as FormArray;
+    medicinesControl.push(this.medicinesGrup);
+    this.hasMedicineLengthError();
+  }
+
+  public medicinesControls(){
+    return (this.addMedicineKit.get('medicines') as FormArray)['controls'];
+  }
+ 
+  public removeMedicine(index: any) {
+    const medicinesControl = this.addMedicineKit.get('medicines') as FormArray;
+    medicinesControl.removeAt(index);
+    this.hasMedicineLengthError();
+  }
+
+  public hasMedicineLengthError() {
+    const licenseControl = this.addMedicineKit.get('medicines') as FormArray;
+    if (licenseControl.length < 1) {
+      this.medicineError = true;
+    } else {
+      this.medicineError = false;
+    }
+    return this.medicineError;
+  }
+
   public handleCheckAll (event:any, flag:any) {
     if (flag == 'state') {
       if (event.checked) {
@@ -557,81 +558,10 @@ export class EditMedicineKitsComponent implements OnInit {
     }
   }
 
-  public getPetTypeList() {
-    const url = 'api/pets/all';
-    this.http.get(url).subscribe((pets:any) => {
-      this.petTypeList = pets;
-      this.changeDetectorRef.detectChanges();
-    },(err:any) => {
-
-    });
-  }
-
-  public getPetDetails(id:any){
-    const url = 'api/pets/view/'+id;
-    this.http.get(url).subscribe((pet:any) => {
-      var sizes=[
-        {
-          key:"Unknown",
-          value:"UNKNOWN_SIZE"
-        },
-        {
-          key:"Extra Small",
-          value:"XS"
-        },
-        {
-          key:"Small",
-          value:"SM"
-        },
-        {
-          key:"Medium",
-          value:"M"
-        },
-        {
-          key:"Large",
-          value:"L"
-        },
-        {
-          key:"Extra Large",
-          value:"XL"
-        },
-        {
-          key:"Giant",
-          value:"G"
-        }
-      ];
-      this.breedsList=pet.breeds;
-      let BreedSizes =pet.breeds.slice().map((item:any)=> {
-        let size_Found = sizes.find((si:any)=>si.value == item.size);
-        let size_text = size_Found ? size_Found.key : 'Unknown';
-        return {size:item.size, size_text: size_text }
-      });
-      this.breedSizeList =  BreedSizes.filter((value:any, index:number, self:any) => self.findIndex((m:any) => m.size === value.size) === index);
-
-      this.lifeStageList=pet.life_stages;
-      this.healthConditionsList=pet.health_conditions;
-      this.shopCategoriesList = pet.shop_categories;
-      this.changeDetectorRef.detectChanges();
-    },(err:any) =>{
-
-    });
-
-  }
-
-  public getDrugTypeList() {
-    const url = 'api/drug_types/all';
-    this.http.get(url).subscribe((pets:any) => {
-      this.drugTypesList = pets;
-      this.changeDetectorRef.detectChanges();
-    },(err:any) => {
-
-    });
-  }
-
-  public getProductFormsList(){
-    const url = 'api/product_forms/all';
-    this.http.get(url).subscribe((pets:any) => {
-      this.productFormsList = pets;
+  public getTreatmentConditionList() {
+    const url = 'api/treatment_conditions/all';
+    this.http.get(url).subscribe((listData:any) => {
+      this.treatmentConditionList = listData;
       this.changeDetectorRef.detectChanges();
     },(err:any) => {
 
@@ -654,10 +584,15 @@ export class EditMedicineKitsComponent implements OnInit {
       return;
     }
     const fd: FormData = new FormData();
-    this.addMedicineKit.value.breeds = this.breedsList.filter((breed: any) => this.addMedicineKit.value.breeds.some((breedId: any) => breedId === breed.id))
-    this.addMedicineKit.value.breed_size = this.breedSizeList.filter((itm: any) => this.addMedicineKit.value.breed_size.some((size: any) => size === itm.size))
 
-    this.addMedicineKit.value.icd10_code = this.selectedSimilarDrugs;
+    let icd10Obj: any = []
+    for (let item of this.selectedSimilarDrugs) {
+      icd10Obj.push({
+        code: item[0], 
+        description: item[1]
+      })
+    } 
+    this.addMedicineKit.value.icd10_code = icd10Obj;
     this.addMedicineKit.value.oldImages = this.medicineKitDetails.images;
     this.addMedicineKit.value.oldDocuments = this.medicineKitDetails.documents;
     this.addMedicineKit.value.oldVideos = this.medicineKitDetails.videos;
@@ -699,23 +634,16 @@ export class EditMedicineKitsComponent implements OnInit {
     );
   }
 
-  public NCITCodeSearch(){
-    this.ncpdpDrugFormsService.setFormData({index:0});
+  public NCITCodeSearch(index:number){
+    this.ncpdpDrugFormsService.setFormData({index:index});
     this.modalRef = this.modalService.show(NcpdpDrugFormsComponent,{class: 'modal-lg'});
     this.modalRef.content.closeBtnName = 'Close';
     this.modalRef.content.selectedDrug.subscribe((receivedEntry:any) => {
-      this.addMedicineKit.patchValue({
+      let controls = this.addMedicineKit.get('medicines') as FormArray;
+      controls.at(index).patchValue({
         ncpdp_unit_code:receivedEntry.ncit_code
       });
       this.modalRef.hide();
-    });
-  }
-
-  getDoesspotDispenseUnits(){
-    const apiURL = 'api/doesspot/listDispenseUnitTypes';
-    this.http.get(apiURL).subscribe((data:any) => {
-        this.dispenseUnits = data.Items;
-    }, (err:any) => {
     });
   }
 

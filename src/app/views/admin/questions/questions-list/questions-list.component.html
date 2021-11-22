@@ -20,18 +20,6 @@
          </mat-form-field>
       </div>
       <div class="col-md-4">
-        <label for="chc">Health Condition</label>
-        <mat-form-field class="w-100">
-          <mat-select placeholder="Select Health Condition" (selectionChange)="handleChange($event.value)" [(ngModel)]="selectedCHC" multiple>
-            <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
-              (change)="handleCheckAll($event, 'HC')"
-              [indeterminate]="selectedCHC.length > 0 && notSelectedConditions"
-              [checked]="!notSelectedConditions">Select All</mat-checkbox>
-            <mat-option *ngFor="let condition of chcList" [(value)]="condition._id">{{condition.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="col-md-4">
         <label>Question Category</label>
         <mat-form-field class="w-100">
           <mat-select placeholder="Select Question Category" (selectionChange)="handleChange($event.value)" [(ngModel)]="selectedCategory">
@@ -49,7 +37,6 @@
               <th>Type</th>
               <th>Question</th>
               <th width="400">Medicine Kits</th>
-              <th width="400">Health Conditions</th>
               <th width="150">States</th>
               <th>Active</th>
               <th width="180">Action</th>
@@ -71,12 +58,7 @@
               </td>
               <td>
                 <ul>
-                  <li *ngFor="let kit of que.pet_dtc_medicine_kits">{{kit.name}}</li>
-                </ul>
-              </td>
-              <td>
-                <ul>
-                  <li *ngFor="let chc of que.pet_consultation_health_conditions">{{chc.name}}</li>
+                  <li *ngFor="let kit of que.dtc_medicine_kits">{{kit.name}}</li>
                 </ul>
               </td>
               <td>

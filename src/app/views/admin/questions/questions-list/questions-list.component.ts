@@ -16,17 +16,13 @@ export class QuestionsListComponent implements OnInit, OnDestroy {
   kitList: any = [];
   chcList: any = [];
   selectedKits: any = [];
-  selectedCHC: any = [];
   selectedCategory: any = '';
 
   public categoryList: any = [
-    { type: 'Order', value: 'ORDER' },
-    { type: 'Consultation', value: 'CONSULTATION' },
-    { type: 'General', value: 'GENERAL' }
+    { type: 'Order', value: 'ORDER' }
   ]
 
   medicineKitId: any;
-  chcId: any;
   showHeaderAndFilter: boolean = true;
 
   constructor(public http: HttpClient,
@@ -35,9 +31,8 @@ export class QuestionsListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute) {
     this.medicineKitId = this.route.parent?.parent?.snapshot.paramMap.get('kit_id');
-    this.chcId = this.route.parent?.parent?.snapshot.paramMap.get('chc_id');
 
-    if (this.medicineKitId && this.chcId) {
+    if (this.medicineKitId) {
       this.showHeaderAndFilter = false
       this.selectedKits.push(this.medicineKitId)
     }
@@ -54,7 +49,6 @@ export class QuestionsListComponent implements OnInit, OnDestroy {
     };
     this.getAllQuestions();
     this.getMedicineKits();
-    this.getConsultationHealthCondition();
   }
 
   ngOnDestroy(): void {
@@ -65,7 +59,7 @@ export class QuestionsListComponent implements OnInit, OnDestroy {
   }
 
   getAllQuestions() {
-    const url = `api/questions/list?kits=${this.selectedKits}&chc=${this.selectedCHC}&category=${this.selectedCategory}`;
+    const url = `api/questions/list?kits=${this.selectedKits}&category=${this.selectedCategory}`;
     this.http.get(url).subscribe((questions: any) => {
       this.questions = questions.data;
     }, err => {
@@ -74,7 +68,6 @@ export class QuestionsListComponent implements OnInit, OnDestroy {
   }
 
   viewQuestion(questionID: number) {
-    console.log('questionID >> ', questionID)
     this.router.navigate(['admin', 'questions', 'view-question', questionID]);
   }
 
@@ -85,22 +78,11 @@ export class QuestionsListComponent implements OnInit, OnDestroy {
   get notSelectedMedicineKit() {
     return this.kitList.filter((data: any) => !this.selectedKits.some((b: any) => b === data._id)).length;
   }
-  
-  get notSelectedConditions() {
-    return this.chcList.filter((data: any) => !this.selectedCHC.some((b: any) => b === data._id)).length;
-  }
 
   public getMedicineKits() {
     const url = 'api/medicine_kits/all';
     this.http.get(url).subscribe((medicineKitList: any) => {
       this.kitList = medicineKitList;
-    }, err => {});
-  }
-
-  public getConsultationHealthCondition() {
-    const url = 'api/consultation_health_conditions/all';
-    this.http.get(url).subscribe((healthConditionList: any) => {
-      this.chcList = healthConditionList;
     }, err => {});
   }
 
@@ -110,12 +92,6 @@ export class QuestionsListComponent implements OnInit, OnDestroy {
         this.selectedKits = this.kitList.map((data: any) => data.id);
       } else {
         this.selectedKits = [];
-      }
-    } else if (flag == 'HC') {
-      if (event.checked) {
-        this.selectedCHC = this.chcList.map((data: any) => data.id);
-      } else {
-        this.selectedCHC = [];
       }
     }
     this.getAllQuestions();

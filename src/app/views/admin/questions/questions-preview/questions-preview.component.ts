@@ -133,8 +133,8 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
   } 
 
   public getQuestionsList() {
-    if (this.selectedConditionId != null || this.selectedKitId != null || this.selectedKitId.length > 0 ) {
-      let url: string = this.selectedCategory == 'ORDER' ? `api/medicine_kits/questions/${this.selectedKitId}?states=${this.selectedStateId}` : `api/consultation_health_conditions/questions/${this.selectedConditionId}?states=${this.selectedStateId}` 
+    if (this.selectedKitId != null || this.selectedKitId.length > 0 ) {
+      let url: string = `api/medicine_kits/questions/${this.selectedKitId}?states=${this.selectedStateId}` 
   
       this.http.get(url)
         .subscribe((data: any) => {

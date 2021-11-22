@@ -1,18 +1,18 @@
-import { Component, OnInit, ChangeDetectorRef,ElementRef ,Inject,ViewChild} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Toastr } from 'src/app/services/toastr.service';
 
 import {COMMA,ENTER} from '@angular/cdk/keycodes';
-import { ReplaySubject, Subject,Observable } from 'rxjs';
-import { take,debounceTime, delay, tap, filter, map,startWith,switchMap, takeUntil,distinctUntilChanged } from 'rxjs/operators';
-import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
-import {MatChipInputEvent} from '@angular/material/chips';
+import { ReplaySubject, Subject } from 'rxjs';
+import { debounceTime, delay, tap, filter,switchMap, takeUntil } from 'rxjs/operators';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import {NcpdpDrugFormsComponent} from '../../ncpdp-drug-forms/ncpdp-drug-forms.component';
-import {NcpdpDrugFormsService} from '../../ncpdp-drug-forms/ncpdp-drug-forms.service';
+import { NcpdpDrugFormsComponent } from '../../ncpdp-drug-forms/ncpdp-drug-forms.component';
+import { NcpdpDrugFormsService } from '../../ncpdp-drug-forms/ncpdp-drug-forms.service';
 
 @Component({
   selector: 'app-create-medicine-kits',
@@ -20,23 +20,13 @@ import {NcpdpDrugFormsService} from '../../ncpdp-drug-forms/ncpdp-drug-forms.ser
   styleUrls: ['./create-medicine-kits.component.scss']
 })
 export class CreateMedicineKitsComponent implements OnInit {
-  public petTypeList: any[]=[];
   public brandsList: any[]=[];
   public statesList:any[]=[];
-  public drugTypesList:any[]=[];
-  public productFormsList:any[]=[];
-
-
-  public breedsList:any[]=[];
-  public breedSizeList:any[]=[];
-  public lifeStageList:any[]=[];
-  public healthConditionsList:any[]=[];
-  public shopCategoriesList:any[]=[];
+  public treatmentConditionList:any[]=[];
 
   public addMedicineKit: FormGroup;
   public medicineError: boolean = false;
   modalRef!: BsModalRef;
-  dispenseUnits:any[]=[];
 
   visible = true;
   selectable = true;
@@ -44,14 +34,14 @@ export class CreateMedicineKitsComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
    /* Similar Drugs */
-   searchingDrug:boolean=false;
-   SimilarDrugsCtrl = new FormControl();
-   filteredSimilarDrugs: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
-   filteredSimilarDrugsValues: any[] = [];
-   selectedSimilarDrugs: any[] = [];
-   @ViewChild('similarDrugsInput') similarDrugsInput!: ElementRef<HTMLInputElement>;
-   @ViewChild('autoSimilarDrug') matAutocompleteSimilarDrug!: MatAutocomplete;
-   protected _onDestroy = new Subject<void>();
+  searchingDrug:boolean=false;
+  SimilarDrugsCtrl = new FormControl();
+  filteredSimilarDrugs: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  filteredSimilarDrugsValues: any[] = [];
+  selectedSimilarDrugs: any[] = [];
+  @ViewChild('similarDrugsInput') similarDrugsInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('autoSimilarDrug') matAutocompleteSimilarDrug!: MatAutocomplete;
+  protected _onDestroy = new Subject<void>();
 
   selectedFiles:File[]=[];
   selectedDocuments:File[]=[];
@@ -68,53 +58,34 @@ export class CreateMedicineKitsComponent implements OnInit {
     private _toastr: Toastr){
 
     this.addMedicineKit = new FormGroup({
-      'drug_type': new FormControl('', []),
-      'product_form':new FormControl('', [Validators.required]),
+      'treatment_condition_ids': new FormControl([], [Validators.required]),
       'name': new FormControl('', [Validators.required]),
       'generic_name': new FormControl('', []),
       'brand_id':new FormControl('', [Validators.required]),
-      'pet_type':new FormControl('', [Validators.required]),
-      'min_weight':new FormControl('', []),
-      'max_weight':new FormControl('', []),
-      'shop_categories':new FormControl([], []),
-      'breeds':new FormControl([], []),
-      'health_conditions':new FormControl([], []),
-      'breed_size':new FormControl([], []),
-      'lifestage':new FormControl([], []),
       'description': new FormControl('', []),
       'is_active': new FormControl(true, []),
       'is_coming_soon': new FormControl(false, []),
       'states':new FormControl([], [Validators.required]),
-      'max_order_quantity': new FormControl(50, [Validators.required]),
       'price': new FormControl('', [Validators.required]),
       'pharmacy_price': new FormControl('', [Validators.required]),
       'is_offer': new FormControl(false, []),
       'offer_price': new FormControl('',[]),
       'doctor_price': new FormControl([], [Validators.required]),
-      'ndc_number': new FormControl('',[]),
-      'dispense_unit_id': new FormControl('',[Validators.required]),
-      'quantity':new FormControl('',[Validators.required]),
-      'strength':new FormControl('',[Validators.required]),
-      'shipping_weight':new FormControl('',[Validators.required]),
-      'doseform':new FormControl('',[Validators.required]),
-      'ncpdp_unit_code':new FormControl('',[Validators.required]),
-      'default_direction':new FormControl('',[]),
-      'days_supply':new FormControl('', [Validators.required]),
       'tab_name': new FormControl('', [Validators.required]),
       'tab_url': new FormControl('', [Validators.required]),
-      'is_auto_refill': new FormControl(true, [Validators.required]),
-      'default_refill': new FormControl('', [Validators.required]),
-      'refill_frequency': new FormControl('', [Validators.required]),
+      'is_auto_refill': new FormControl(false, [Validators.required]),
+      'default_refill': new FormControl('', []),
+      'refill_frequency': new FormControl('', []),
       'images':new FormArray([]),
       'documents':new FormArray([]),
       'videos':new FormArray([]),
       'faqs':new FormArray([]),
       'attributes':new FormArray([]),
-      'icd10_code': new FormControl([]),
-      'custom_icd10_codes':new FormArray([])
+      'custom_icd10_codes':new FormArray([]),
+      'medicines':new FormArray([])
     });
 
-     this.images().push(this.newFileInput(1));
+    this.images().push(this.newFileInput(1));
 
       // listen for search field value changes
       this.SimilarDrugsCtrl.valueChanges
@@ -343,21 +314,11 @@ export class CreateMedicineKitsComponent implements OnInit {
 
 
   get name() { return this.addMedicineKit.get('name'); }
-  get drug_type() { return this.addMedicineKit.get('drug_type'); }
-  get product_form() { return this.addMedicineKit.get('product_form'); }
-
+  get treatment_condition_ids() { return this.addMedicineKit.get('treatment_condition_ids'); }
+  
   get generic_name() { return this.addMedicineKit.get('generic_name'); }
   get brand_id() { return this.addMedicineKit.get('brand_id'); }
-  get pet_type() { return this.addMedicineKit.get('pet_type'); }
-  get min_weight() { return this.addMedicineKit.get('min_weight'); }
-  get max_weight() { return this.addMedicineKit.get('max_weight'); }
-  get shop_categories(){ return this.addMedicineKit.get('shop_categories'); }
-  get breeds() { return this.addMedicineKit.get('breeds'); }
-  get health_conditions(){return this.addMedicineKit.get('health_conditions');}
-  get breed_size() { return this.addMedicineKit.get('breed_size'); }
-  get lifestage() { return this.addMedicineKit.get('lifestage'); }
   get description(){return this.addMedicineKit.get('description');}
-  get max_order_quantity(){return this.addMedicineKit.get('max_order_quantity');}
   get price() { return this.addMedicineKit.get('price'); }
   get pharmacy_price() { return this.addMedicineKit.get('pharmacy_price'); }
   get tab_name() { return this.addMedicineKit.get('tab_name'); }
@@ -371,26 +332,13 @@ export class CreateMedicineKitsComponent implements OnInit {
   get is_offer() { return this.addMedicineKit.get('is_offer'); }
   get offer_price() { return this.addMedicineKit.get('offer_price'); }
   get doctor_price() { return this.addMedicineKit.get('doctor_price'); }
-
-  get ndc_number() { return this.addMedicineKit.get('ndc_number'); }
-  get dispense_unit_id() { return this.addMedicineKit.get('dispense_unit_id'); }
-  get quantity() { return this.addMedicineKit.get('quantity'); }
-  get strength() { return this.addMedicineKit.get('strength'); }
-  get shipping_weight() { return this.addMedicineKit.get('shipping_weight'); }
-  get doseform() { return this.addMedicineKit.get('doseform'); }
-  get ncpdp_unit_code() { return this.addMedicineKit.get('ncpdp_unit_code'); }
-  get default_direction() { return this.addMedicineKit.get('default_direction'); }
-  get days_supply() { return this.addMedicineKit.get('days_supply'); }
-
   get icd10_code(){return this.addMedicineKit.get('icd10_code')}
 
   ngOnInit() {
     this.getStateList();
     this.getBrandsList();
-    this.getPetTypeList();
-    this.getDrugTypeList();
-    this.getProductFormsList();
-    this.getDoesspotDispenseUnits();
+    this.getTreatmentConditionList();
+    this.addNewMedicine();
   }
 
    /*--- Similar Drug Helpers ---*/
@@ -460,6 +408,53 @@ export class CreateMedicineKitsComponent implements OnInit {
     ICD10CodeControl.removeAt(index);
   }
 
+  get medicinesGrup(): FormGroup {
+    return new FormGroup({
+      'name': new FormControl(null, [Validators.required]),
+      'quantity': new FormControl(null, [Validators.required]),
+      'quantity_unit': new FormControl(null, [Validators.required]),
+      'ndc_number': new FormControl(null, []),
+      'default_direction': new FormControl(null, [Validators.required, Validators.maxLength(140)]),
+      'rxcui': new FormControl(null, []),
+      'strength':new FormControl(null, [Validators.required]),
+      'is_shippable': new FormControl(false, []),
+      'shipping_weight': new FormControl(null, []),
+      'shipping_weight_unit': new FormControl(null, []),
+      'doseform':new FormControl(null,[]),
+      'ncpdp_unit_code':new FormControl(null,[Validators.required]),
+      'days_supply': new FormControl(null,[Validators.required]),
+      'route':new FormControl(null, []),
+      'is_active': new FormControl(true, []),
+      'substitutions': new FormControl(false,[Validators.required])
+    });
+  }
+
+  public addNewMedicine() {
+    const medicinesControl = this.addMedicineKit.get('medicines') as FormArray;
+    medicinesControl.push(this.medicinesGrup);
+    this.hasMedicineLengthError();
+  }
+
+  public medicinesControls(){
+    return (this.addMedicineKit.get('medicines') as FormArray)['controls'];
+  }
+ 
+  public removeMedicine(index: any) {
+    const medicinesControl = this.addMedicineKit.get('medicines') as FormArray;
+    medicinesControl.removeAt(index);
+    this.hasMedicineLengthError();
+  }
+
+  public hasMedicineLengthError() {
+    const licenseControl = this.addMedicineKit.get('medicines') as FormArray;
+    if (licenseControl.length < 1) {
+      this.medicineError = true;
+    } else {
+      this.medicineError = false;
+    }
+    return this.medicineError;
+  }
+
   public handleCheckAll (event:any, flag:any) {
     if (flag == 'state') {
       if (event.checked) {
@@ -471,81 +466,10 @@ export class CreateMedicineKitsComponent implements OnInit {
     }
   }
 
-  public getPetTypeList() {
-    const url = 'api/pets/all';
-    this.http.get(url).subscribe((pets:any) => {
-      this.petTypeList = pets;
-      this.changeDetectorRef.detectChanges();
-    },(err:any) => {
-
-    });
-  }
-
-  public getPetDetails(id:any){
-    const url = 'api/pets/view/'+id;
-    this.http.get(url).subscribe((pet:any) => {
-      var sizes=[
-        {
-          key:"Unknown",
-          value:"UNKNOWN_SIZE"
-        },
-        {
-          key:"Extra Small",
-          value:"XS"
-        },
-        {
-          key:"Small",
-          value:"SM"
-        },
-        {
-          key:"Medium",
-          value:"M"
-        },
-        {
-          key:"Large",
-          value:"L"
-        },
-        {
-          key:"Extra Large",
-          value:"XL"
-        },
-        {
-          key:"Giant",
-          value:"G"
-        }
-      ];
-      this.breedsList=pet.breeds;
-      let BreedSizes =pet.breeds.slice().map((item:any)=> {
-        let size_Found = sizes.find((si:any)=>si.value == item.size);
-        let size_text = size_Found ? size_Found.key : 'Unknown';
-        return {size:item.size, size_text: size_text }
-      });
-      this.breedSizeList =  BreedSizes.filter((value:any, index:number, self:any) => self.findIndex((m:any) => m.size === value.size) === index);
-      this.lifeStageList = pet.life_stages;
-      this.healthConditionsList = pet.health_conditions;
-      this.shopCategoriesList = pet.shop_categories;
-
-      this.changeDetectorRef.detectChanges();
-    },(err:any) =>{
-
-    });
-
-  }
-
-  public getDrugTypeList() {
-    const url = 'api/drug_types/all';
-    this.http.get(url).subscribe((pets:any) => {
-      this.drugTypesList = pets;
-      this.changeDetectorRef.detectChanges();
-    },(err:any) => {
-
-    });
-  }
-
-  public getProductFormsList(){
-    const url = 'api/product_forms/all';
-    this.http.get(url).subscribe((pets:any) => {
-      this.productFormsList = pets;
+  public getTreatmentConditionList() {
+    const url = 'api/treatment_conditions/all';
+    this.http.get(url).subscribe((listData:any) => {
+      this.treatmentConditionList = listData;
       this.changeDetectorRef.detectChanges();
     },(err:any) => {
 
@@ -569,7 +493,12 @@ export class CreateMedicineKitsComponent implements OnInit {
       return;
     }
     const fd: FormData = new FormData();
-    this.addMedicineKit.value.icd10_code = this.selectedSimilarDrugs;
+    let icd10Obj: any = {}
+    for (let item of this.selectedSimilarDrugs) {
+      icd10Obj.code = item[0];
+      icd10Obj.description = item[1];
+    } 
+    this.addMedicineKit.value.icd10_code = icd10Obj;
     fd.append('medicinekit', JSON.stringify(this.addMedicineKit.value));
     if(this.selectedFiles.length>0){
       for(let file of this.selectedFiles){
@@ -607,44 +536,16 @@ export class CreateMedicineKitsComponent implements OnInit {
     );
   }
 
-  public NCITCodeSearch(){
-    this.ncpdpDrugFormsService.setFormData({index:0});
+  public NCITCodeSearch(index:number){
+    this.ncpdpDrugFormsService.setFormData({index:index});
     this.modalRef = this.modalService.show(NcpdpDrugFormsComponent,{class: 'modal-lg'});
     this.modalRef.content.closeBtnName = 'Close';
     this.modalRef.content.selectedDrug.subscribe((receivedEntry:any) => {
-      this.addMedicineKit.patchValue({
+      let controls = this.addMedicineKit.get('medicines') as FormArray;
+      controls.at(index).patchValue({
         ncpdp_unit_code:receivedEntry.ncit_code
       });
       this.modalRef.hide();
     });
   }
-
-  getDoesspotDispenseUnits(){
-    const apiURL = 'api/doesspot/listDispenseUnitTypes';
-    this.http.get(apiURL).subscribe((data:any) => {
-        this.dispenseUnits = data.Items;
-    }, (err:any) => {
-    });
-  }
-
-  handleSelectionChange(event:any){
-     let findObj=  this.dispenseUnits.find((item:any)=>item.StandardDispenseUnitTypeID==event.value);
-     if(findObj){
-        this.addMedicineKit.patchValue({
-          ncpdp_unit_code:findObj.PotencyUnitCode,
-          doseform:findObj.Name
-        });
-     }
-  }
-
-  findDispenseUnitByNCPDPForm(ncpdp_form:string){
-    let findObj=  this.dispenseUnits.find((item:any)=>item.PotencyUnitCode==ncpdp_form);
-    if(findObj){
-       this.addMedicineKit.patchValue({
-        dispense_unit_id:findObj.StandardDispenseUnitTypeID,
-         doseform:findObj.Name
-       });
-    }
-  }
-
 }

@@ -2,140 +2,22 @@
   <h4 class="text-white font-weight-bold mb-0">Edit Medicine Kit</h4>
 </div>
 <form class="p-5 add-medicine-kit" (ngSubmit)="saveMedicineKit()" [formGroup]="addMedicineKit">
-  <!-- Display Information -->
-  <div class="alert alert-warning my-3">
-    <h5 class="font-weight-bold mb-5">Pet Information</h5>
-    <div class="row">
-
-        <div class="col-md-4 col-12">
-          <label>Pet Type :</label>
-          <mat-select placeholder="Select Pet" class="form-control" formControlName="pet_type" (selectionChange)="getPetDetails($event.value)">
-            <mat-option *ngFor="let pet of petTypeList" [value]="pet._id">
-              {{pet.name}}
-            </mat-option>
-          </mat-select>
-          <div class="invalid-feedback" *ngIf="pet_type?.invalid && (pet_type?.dirty || pet_type?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="pet_type?.errors?.required">Pet Type is required.</div>
-          </div>
-        </div>
-
-        <div class="col-md-4 col-12">
-          <label>Pet Breeds :</label>
-          <mat-select placeholder="Select Pet Breeds" class="form-control" formControlName="breeds" multiple>
-            <mat-option *ngFor="let breed of breedsList" [value]="breed.id">
-              {{breed.name}}
-            </mat-option>
-          </mat-select>
-          <div class="invalid-feedback" *ngIf="breeds?.invalid && (breeds?.dirty || breeds?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="breeds?.errors?.required">Pet Breeds is required.</div>
-          </div>
-        </div>
-
-        <div class="col-md-4 col-12">
-          <label>Pet Breeds Size :</label>
-          <mat-select placeholder="Select Pet Breed Size" class="form-control" formControlName="breed_size" multiple>
-            <mat-option *ngFor="let bs of breedSizeList" [value]="bs.size">
-              {{bs.size_text}}
-            </mat-option>
-          </mat-select>
-          <div class="invalid-feedback" *ngIf="breed_size?.invalid && (breed_size?.dirty || breed_size?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="breed_size?.errors?.required">Pet Breeds Size is required.</div>
-          </div>
-        </div>
-
-        <div class="col-md-4 col-12" *ngIf="lifeStageList.length>0">
-          <label>Pet LifeStage :</label>
-          <mat-select placeholder="Select Pet LifeStage" class="form-control" formControlName="lifestage" multiple>
-            <mat-option *ngFor="let ls of lifeStageList" [value]="ls">
-              {{ls}}
-            </mat-option>
-          </mat-select>
-          <div class="invalid-feedback" *ngIf="lifestage?.invalid && (lifestage?.dirty || lifestage?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="lifestage?.errors?.required">Pet LifeStage is required.</div>
-          </div>
-        </div>
-
-        <div class="col-md-4 col-12">
-          <label>Pet Health Conditions :</label>
-          <mat-select placeholder="Select Pet Health Conditions" class="form-control" formControlName="health_conditions" multiple>
-            <mat-option *ngFor="let hc of healthConditionsList" [value]="hc._id">
-              {{hc.name}}
-            </mat-option>
-          </mat-select>
-          <div class="invalid-feedback" *ngIf="health_conditions?.invalid && (health_conditions?.dirty || health_conditions?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="health_conditions?.errors?.required">Pet Health Conditions is required.</div>
-          </div>
-        </div>
-
-        <div class="col-md-4 col-12">
-          <label>Shop Category :</label>
-          <mat-select placeholder="Select Shop Category" class="form-control" formControlName="shop_categories" multiple>
-            <mat-option *ngFor="let category of shopCategoriesList" [value]="category._id">
-              {{category.name}}
-            </mat-option>
-          </mat-select>
-          <div class="invalid-feedback" *ngIf="shop_categories?.invalid && (shop_categories?.dirty || shop_categories?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="shop_categories?.errors?.required">Pet Shop Category is required.</div>
-          </div>
-        </div>
-
-        <div class="col-md-3 col-12">
-             <div class="form-group">
-                <label>Pet Min Weight (lbs):</label>
-                <input type="number" class="form-control" min="1" max="100" placeholder="Pet Min Weight" formControlName="min_weight" />
-                <div class="invalid-feedback" *ngIf="min_weight?.invalid && (min_weight?.dirty || min_weight?.touched)" class="text-danger font-weight-bold">
-                  <div *ngIf="min_weight?.errors?.required">Pet Min Weight is required.</div>
-                </div>
-             </div>
-        </div>
-
-        <div class="col-md-3 col-12">
-             <div class="form-group">
-                <label>Pet Max Weight  (lbs):</label>
-                <input type="number" class="form-control" min="1" max="100" placeholder="Pet Max Weight" formControlName="max_weight" />
-                <div class="invalid-feedback" *ngIf="max_weight?.invalid && (max_weight?.dirty || max_weight?.touched)" class="text-danger font-weight-bold">
-                  <div *ngIf="max_weight?.errors?.required">Pet Max Weight is required.</div>
-                </div>
-             </div>
-        </div>
-
-    </div>
-  </div>
   <div class="alert alert-primary my-3">
     <h5 class="font-weight-bold mb-5">Display Information</h5>
     <div class="row">
 
-    <div class="col-md-4 col-12">
-       <label>Drug Type :</label>
-        <mat-select placeholder="Select Drug Type" class="form-control" formControlName="drug_type">
-          <mat-option *ngFor="let drugType of drugTypesList" [value]="drugType._id">
-            {{drugType.name}}
-          </mat-option>
-        </mat-select>
-        <div class="invalid-feedback" *ngIf="drug_type?.invalid && (drug_type?.dirty || drug_type?.touched)"
-          class="text-danger font-weight-bold">
-          <div *ngIf="drug_type?.errors?.required">Drug Type is required.</div>
-        </div>
-    </div>
-
-     <div class="col-md-4 col-12">
-       <label>Product Form :</label>
-        <mat-select placeholder="Select Product Form" class="form-control" formControlName="product_form">
-          <mat-option *ngFor="let productForm of productFormsList" [value]="productForm._id">
-            {{productForm.name}}
-          </mat-option>
-        </mat-select>
-        <div class="invalid-feedback" *ngIf="product_form?.invalid && (product_form?.dirty || product_form?.touched)"
-          class="text-danger font-weight-bold">
-          <div *ngIf="product_form?.errors?.required">Product Form is required.</div>
-        </div>
-    </div>
+      <div class="col-md-4 col-12">
+        <label>Treatment Condition :</label>
+         <mat-select placeholder="Select Treatment Condition" class="form-control" formControlName="treatment_condition_ids" multiple>
+           <mat-option *ngFor="let TC of treatmentConditionList" [value]="TC._id">
+             {{TC.name}}
+           </mat-option>
+         </mat-select>
+         <div class="invalid-feedback" *ngIf="treatment_condition_ids?.invalid && (treatment_condition_ids?.dirty || treatment_condition_ids?.touched)"
+           class="text-danger font-weight-bold">
+           <div *ngIf="treatment_condition_ids?.errors?.required">Treatment Condition is required.</div>
+         </div>
+     </div>
 
     <div class="col-md-4 col-12">
        <label>Brand :</label>
@@ -155,13 +37,6 @@
         <input type="text" class="form-control" placeholder="Enter Kit Name" formControlName="name" />
         <div class="invalid-feedback" *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="text-danger font-weight-bold">
           <div *ngIf="name?.errors?.required">Name is required.</div>
-        </div>
-      </div>
-      <div class="col-md-4 col-12">
-        <label>Strength :</label>
-        <input type="text" class="form-control" placeholder="Enter Strength" formControlName="strength" />
-        <div class="invalid-feedback" *ngIf="strength?.invalid && (strength?.dirty || strength?.touched)" class="text-danger font-weight-bold">
-          <div *ngIf="strength?.errors?.required">Strength is required.</div>
         </div>
       </div>
       <div class="col-md-8 col-12">
@@ -436,15 +311,6 @@
     <h5 class="font-weight-bold mb-5">Pricing</h5>
     <div class="row">
       <div class="col-md-3 col-12">
-        <label>Maximum Order Quantity :</label>
-        <input type="number" class="form-control" min="1" placeholder="Enter Maximum Order Quantity "
-          formControlName="max_order_quantity" />
-        <div class="invalid-feedback" *ngIf="max_order_quantity?.invalid && (max_order_quantity?.dirty || max_order_quantity?.touched)"
-          class="text-danger font-weight-bold">
-          <div *ngIf="max_order_quantity?.errors?.required">Maximum Order Quantity is required.</div>
-        </div>
-      </div>
-      <div class="col-md-3 col-12">
         <label>Actual Price:</label>
         <input type="number" class="form-control" min="0" placeholder="Enter Actual Price"
           formControlName="price" />
@@ -494,21 +360,6 @@
     </div>
   </div>
 
-  <div class="alert alert-danger my-3">
-    <h5 class="font-weight-bold mb-5">Shipping</h5>
-        <div class="row">
-            <div class="col-md-4">
-              <label>Shipping Weight (Ounce):</label>
-              <input type="number" min="0" class="form-control" placeholder="Enter Shipping Weight"
-                formControlName="shipping_weight" />
-              <div class="invalid-feedback" *ngIf="shipping_weight?.invalid && (shipping_weight?.dirty || shipping_weight?.touched)"
-                class="text-danger font-weight-bold">
-                <div *ngIf="shipping_weight?.errors?.required">Shipping Weight is required.</div>
-              </div>
-            </div>
-        </div>
-  </div>
-
   <!-- Subscription -->
   <div class="alert alert-secondary my-3">
     <h5 class="font-weight-bold mb-5">Subscription</h5>
@@ -539,85 +390,9 @@
     </div>
   </div>
 
-  <!-- Prescribe Information ICD10 Code -->
+  <!-- ICD10 Code -->
   <div class="alert alert-info my-3">
-    <h5 class="font-weight-bold mb-5">Prescribe Information</h5>
-
-
-        <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>NDC Number</label>
-                <input type="text" class="form-control" placeholder="Enter NDC Number" formControlName="ndc_number" />
-              </div>
-            </div>
-
-            <div class="col-md-4">
-                  <label>Dispense Unit Id</label>
-                    <mat-select placeholder="Select Dispense Unit Id" class="form-control w-100" formControlName="dispense_unit_id" (selectionChange)="handleSelectionChange($event)">
-                      <mat-option *ngFor="let st of dispenseUnits" [value]="st.StandardDispenseUnitTypeID" color="primary">{{st.Name}}</mat-option>
-                    </mat-select>
-                    <div class="invalid-feedback" *ngIf="dispense_unit_id?.invalid && (dispense_unit_id?.dirty || dispense_unit_id?.touched)" class="text-danger font-weight-bold">
-                      <div *ngIf="dispense_unit_id?.errors?.required">Please select Dispense Unit Id.</div>
-                    </div>
-            </div>
-
-
-            <div class="col-md-4">
-                <label>Doseform</label>
-                  <input type="text" class="form-control" placeholder="Enter Doseform" formControlName="doseform" />
-                  <div class="invalid-feedback" *ngIf="doseform?.invalid && (doseform?.dirty || doseform?.touched)" class="text-danger font-weight-bold">
-                    <div *ngIf="doseform?.errors?.required">Doseform is required.</div>
-                  </div>
-            </div>
-
-
-            <div class="col-md-4">
-                  <label>NCIT Code</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Enter NCIT Code" formControlName="ncpdp_unit_code" />
-                    <div class="input-group-prepend">
-                          <button type="button" class="m-0 btn btn-outline-primary" (click)="NCITCodeSearch()"><i class="fa fa-search" aria-hidden="true"></i></button>
-                    </div>
-                  </div>
-            </div>
-
-             <div class="col-md-6">
-              <div class="form-group">
-                  <label>Quantity</label>
-                  <input type="text" class="form-control" placeholder="Enter Quantity" formControlName="quantity" />
-                  <div class="invalid-feedback"
-                    *ngIf="quantity?.invalid && (quantity?.dirty || quantity?.touched)"
-                    class="text-danger font-weight-bold">
-                    <div *ngIf="quantity?.errors?.required">Quantity is required.</div>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                  <label>Supply Days</label>
-                    <input type="number" class="form-control" placeholder="Enter Days Supply" formControlName="days_supply" />
-                    <div class="invalid-feedback"
-                    *ngIf="days_supply?.invalid && (days_supply?.dirty || days_supply?.touched)"
-                    class="text-danger font-weight-bold">
-                    <div *ngIf="days_supply?.errors?.required">Supply Days is required.</div>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-md-12">
-              <div class="form-group">
-                  <label>Default Direction</label>
-                  <textarea formControlName="default_direction" class="form-control" placeholder="Enter Default Direction"></textarea>
-                  <div class="invalid-feedback" *ngIf="default_direction?.invalid && (default_direction?.dirty || default_direction?.touched)"
-                    class="text-danger font-weight-bold">
-                    <div *ngIf="default_direction?.errors?.required"> Default direction is required.</div>
-                    <div *ngIf="default_direction?.errors?.maxlength"> Maximum 140 characters allowed.</div>
-                  </div>
-              </div>
-            </div>
-        </div>
+    <h5 class="font-weight-bold mb-5">ICD10 Code</h5>
 
     <div class="row">
       <div class="col-12">
@@ -674,6 +449,181 @@
       </div>
     </div>
   </div>
+
+    <!-- Medicines -->
+    <div class="alert alert-dark my-3">
+      <h5 class="font-weight-bold mb-5">Medicines</h5>
+      <div class="alert alert-danger" *ngIf="medicineError">
+        <h5>Atleast one medicine is required!</h5>
+      </div>
+      <div formArrayName="medicines">
+        <div *ngFor="let kit of medicinesControls(); let medicineIndex = index"
+          [formGroupName]="medicineIndex">
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <label class="float-left">Name</label>
+                <input type="text" class="form-control" placeholder="Enter Name" formControlName="name" />
+                <div class="invalid-feedback"
+                  *ngIf="kit.get('name')?.invalid && (kit.get('name')?.dirty || kit.get('name')?.touched)" class="text-danger font-weight-bold">
+                  <div *ngIf="kit.get('name')?.errors?.required">Name is required.</div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label>Strength: 10 mg</label>
+                <input type="text" class="form-control" placeholder="Enter Strength" formControlName="strength" />
+                <div class="invalid-feedback"
+                  *ngIf="kit.get('strength')?.invalid && (kit.get('strength')?.dirty || kit.get('strength')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="kit.get('strength')?.errors?.required">Strength is required.</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label>NDC Number</label>
+                <input type="text" class="form-control" placeholder="Enter NDC Number" formControlName="ndc_number" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <label class="float-left">Quantity</label>
+                <input type="number" class="form-control" min="0" placeholder="Enter Quantity" formControlName="quantity" />
+                <div class="invalid-feedback"
+                  *ngIf="kit.get('quantity')?.invalid && (kit.get('quantity')?.dirty || kit.get('quantity')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="kit.get('quantity')?.errors?.required"> Quantity is required.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="float-left">Quantity Unit</label>
+                <mat-select placeholder="Enter Quantity Unit" min="0" class="form-control" formControlName="quantity_unit">
+                  <mat-option value="1">
+                    Number
+                  </mat-option>
+                </mat-select>
+                <div class="invalid-feedback"
+                  *ngIf="kit.get('quantity_unit')?.invalid && (kit.get('quantity_unit')?.dirty || kit.get('quantity_unit')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="kit.get('quantity_unit')?.errors?.required"> Quantity unit is required.</div>
+                </div>
+              </div>
+  
+            </div>
+            <br>
+            <div class="form-row">
+              <div class="col-md-6">
+                <label>Default Direction</label>
+                <textarea formControlName="default_direction" class="form-control"
+                  placeholder="Enter Default Direction"></textarea>
+                <div class="invalid-feedback"
+                  *ngIf="kit.get('default_direction')?.invalid && (kit.get('default_direction')?.dirty || kit.get('default_direction')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="kit.get('default_direction')?.errors?.required"> Default direction is required.</div>
+                  <div *ngIf="kit.get('default_direction')?.errors?.maxlength"> Maximum 140 characters allowed.</div>
+                </div>
+              </div>
+            </div><br>
+  
+            <div class="form-row">
+              <div class="col-md-3">
+                <label>Route</label>
+                <input type="text" class="form-control" placeholder="Enter Route" formControlName="route" />
+              </div>
+  
+              <div class="col-md-3">
+                <label>RXCUI</label>
+                <input type="text" class="form-control" placeholder="Enter RXCUI" formControlName="rxcui" />
+              </div>
+  
+              <div class="col-md-3">
+                <label>Days Supply</label>
+                <input type="number" class="form-control" placeholder="Enter Days Supply" min="0"
+                  formControlName="days_supply" />
+                <div class="invalid-feedback"
+                  *ngIf="kit.get('days_supply')?.invalid && (kit.get('days_supply')?.dirty || kit.get('days_supply')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="kit.get('days_supply')?.errors?.required">Days Supply is required.</div>
+                </div>
+              </div>
+            </div><br />
+  
+            <div class="form-row">
+              <div class="col-md-3">
+                <label class="d-block">Is Shippable?</label>
+                <mat-checkbox color="primary" formControlName="is_shippable">is shippable?</mat-checkbox>
+              </div>
+  
+              <div class="col-md-3" *ngIf="kit.get('is_shippable')?.value==true">
+                <label>Shipping Weight</label>
+                <input type="number" class="form-control" placeholder="Enter Shipping Weight" formControlName="shipping_weight" />
+                <div class="invalid-feedback" *ngIf="kit.get('shipping_weight')?.invalid && (kit.get('shipping_weight')?.dirty || kit.get('shipping_weight')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="kit.get('shipping_weight')?.errors?.required">Shipping Weight is required.</div>
+                </div>
+              </div>
+  
+              <div class="col-md-3" *ngIf="kit.get('is_shippable')?.value==true">
+                <label>Shipping Weight Unit</label>
+                <input type="text" class="form-control" placeholder="Enter Days Supply" min="0" formControlName="shipping_weight_unit" />
+                <div class="invalid-feedback" *ngIf="kit.get('shipping_weight_unit')?.invalid && (kit.get('shipping_weight_unit')?.dirty || kit.get('shipping_weight_unit')?.touched)"
+                  class="text-danger font-weight-bold">
+                  <div *ngIf="kit.get('shipping_weight_unit')?.errors?.required">Shipping Weight Unit is required.</div>
+                </div>
+              </div>
+            </div><br />
+  
+            <div class="form-row">
+  
+              <div class="col-md-3">
+                <label>Substitutions</label><br />
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                  formControlName="substitutions" required>
+                  <mat-radio-button class="example-radio-button" [value]="true" color='primary'>
+                    Allow Substitutions
+                  </mat-radio-button> &nbsp;
+                  <mat-radio-button class="example-radio-button" [value]="false" color='primary'>
+                    No Substitutions
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <div class="col-md-3">
+                <label>Doseform</label>
+                <input type="text" class="form-control" placeholder="Enter Doseform" formControlName="doseform" />
+              </div>
+              <div class="col-md-3">
+                <label>NCIT Code</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Enter NCIT Code" formControlName="ncpdp_unit_code" />
+                  <div class="input-group-prepend">
+                    <button type="button" class="m-0 btn btn-outline-primary" (click)="NCITCodeSearch(medicineIndex)"><i
+                        class="fa fa-search" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div><br />
+  
+            <div class="form-row">
+              <div class="col-md-6">
+                <label class="d-block">Active</label>
+                <mat-checkbox formControlName="is_active" color="primary">Active</mat-checkbox>
+              </div>
+              <div class="col-md-6">
+                <label class="d-block"></label>
+                <button class="btn-sm btn-danger float-right" (click)="removeMedicine(medicineIndex)"><i
+                    class="fa fa-trash"></i> Remove</button>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-sm btn-success" (click)="addNewMedicine()">Add New Medicine</button>
+        </div>
+      </div>
+    </div>
 
   <div class="text-center mt-3">
       <button class="btn btn-block btn-success" type="submit">Update Medicine Kit</button>

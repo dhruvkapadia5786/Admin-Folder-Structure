@@ -21,18 +21,14 @@ export class QuestionEditComponent implements OnInit {
 
   public editQuestionFormGroup!: FormGroup;
   public choiceFormGroup!: FormGroup;
-  public healthConditionsList: any = [];
   public flowTypeList: any = [
-    { type: 'Order', value: 'ORDER' },
-    { type: 'Consultation', value: 'CONSULTATION' },
-    { type: 'General', value: 'GENERAL' }
+    { type: 'Order', value: 'ORDER' }
   ]
 
   public choiceError = false;
   public medicineKitList: any;
   public statesList: any = [];
   public selectedMedicineKit: any = [];
-  public selectedHealthCondition: any = [];
   public selectedStates: any = [];
   constructor(
     public http: HttpClient,
@@ -49,7 +45,6 @@ export class QuestionEditComponent implements OnInit {
   
   ngOnInit() {
     this.getAllMedicineKitList();
-    this.getAllHealthConditionList();
     this.getStateList();
     this.getQuestion();
   }
@@ -62,12 +57,8 @@ export class QuestionEditComponent implements OnInit {
 
   get notSelectedKits() {
     if (this.medicineKitList) {
-      return this.medicineKitList.filter((data: any) => !this.editQuestionFormGroup.get('pet_dtc_medicine_kits')?.value.some((b: any) => b === data._id)).length;
+      return this.medicineKitList.filter((data: any) => !this.editQuestionFormGroup.get('dtc_medicine_kits')?.value.some((b: any) => b === data._id)).length;
     }
-  }
-
-  get notSelectedConditions() {
-    return this.healthConditionsList.filter((data: any) => !this.editQuestionFormGroup.get('pet_consultation_health_conditions')?.value.some((b: any) => b === data._id)).length;
   }
 
   public handleCheckAll(event: any, flag: string) {
@@ -80,19 +71,12 @@ export class QuestionEditComponent implements OnInit {
       this.editQuestionFormGroup.get('states')?.patchValue(this.questionObj.states);
     } else if (flag == 'kit') {
       if (event.checked) {
-        this.questionObj.pet_dtc_medicine_kits = this.medicineKitList.map((data: any) => data._id);
+        this.questionObj.dtc_medicine_kits = this.medicineKitList.map((data: any) => data._id);
         
       } else {
-        this.questionObj.pet_dtc_medicine_kits = [];
+        this.questionObj.dtc_medicine_kits = [];
       } 
-      this.editQuestionFormGroup.get('pet_dtc_medicine_kits')?.patchValue(this.questionObj.pet_dtc_medicine_kits);
-    } else if (flag == 'conditions') {
-      if (event.checked) {
-        this.questionObj.pet_consultation_health_conditions =  this.healthConditionsList.map((data:any) => data._id);
-      } else {
-        this.questionObj.pet_consultation_health_conditions = []
-      }
-      this.editQuestionFormGroup.get('pet_consultation_health_conditions')?.patchValue(this.questionObj.pet_consultation_health_conditions);
+      this.editQuestionFormGroup.get('dtc_medicine_kits')?.patchValue(this.questionObj.dtc_medicine_kits);
     }
   }
 
@@ -102,8 +86,7 @@ export class QuestionEditComponent implements OnInit {
   public initializeFormGroup() {
     this.editQuestionFormGroup = new FormGroup({
       'question_type': new FormControl('main', [Validators.required]),
-      'pet_dtc_medicine_kits': new FormControl(null, [Validators.required]),
-      'pet_consultation_health_conditions': new FormControl(null, [Validators.required]),
+      'dtc_medicine_kits': new FormControl(null, [Validators.required]),
       'text': new FormControl(null, [Validators.required]),
       'category': new FormControl('', [Validators.required]),
       'states': new FormControl(null),
@@ -146,8 +129,7 @@ export class QuestionEditComponent implements OnInit {
     });
   }
 
-  get pet_dtc_medicine_kits() { return this.editQuestionFormGroup.get('pet_dtc_medicine_kits'); }
-  get pet_consultation_health_conditions() { return this.editQuestionFormGroup.get('pet_consultation_health_conditions'); }
+  get dtc_medicine_kits() { return this.editQuestionFormGroup.get('dtc_medicine_kits'); }
   get text() { return this.editQuestionFormGroup.get('text'); }
   get category() { return this.editQuestionFormGroup.get('category'); }
   get question_type() { return this.editQuestionFormGroup.get('question_type'); }
@@ -266,8 +248,7 @@ export class QuestionEditComponent implements OnInit {
         /* patch values to form group */
         this.editQuestionFormGroup.patchValue({
           question_type: data.question_type,
-          pet_dtc_medicine_kits: data.pet_dtc_medicine_kits.map((kit: any) => kit._id),
-          pet_consultation_health_conditions: data.pet_consultation_health_conditions.map((CHC: any) => CHC._id),
+          dtc_medicine_kits: data.dtc_medicine_kits.map((kit: any) => kit._id),
           text: data.text,
           category: data.category,
           states: data.states.map((state: any) => state._id),
@@ -344,20 +325,6 @@ export class QuestionEditComponent implements OnInit {
           this.medicineKitList = [];
         }
         this.cdr.detectChanges();
-      }, err => {
-
-      });
-  }
-
-  public getAllHealthConditionList() {
-    const url = 'api/consultation_health_conditions/all';
-    this.http.get(url)
-      .subscribe((conditionsList: any) => {
-        if (conditionsList != null) {
-          this.healthConditionsList = conditionsList;
-        } else {
-          this.healthConditionsList = [];
-        }
       }, err => {
 
       });
