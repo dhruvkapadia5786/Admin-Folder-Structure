@@ -3,13 +3,9 @@
     <div class="container-fluid tech-details">
       <ng-container *ngIf="techDetails; else noDetails ">
         <div class="row">
-          <div class="col-md-4">
-            <label>Uinque ID</label>
-            <h5># {{customerUinqueNumber }}</h5>
-          </div>
-          <div class="col-md-8 text-right">
-            <button *ngIf="techDetails.is_active == 1" (click)="manageAccountLogin(0)" type="button" class="btn btn-danger"><i class="fa fa-ban mr-2" aria-hidden="true"></i>Disable Account Login</button>
-            <button *ngIf="techDetails.is_active == 0" (click)="manageAccountLogin(1)" type="button" class="btn btn-success"><i class="fa fa-play mr-2" aria-hidden="true"></i>Enable Account Login</button>
+          <div class="col-md-12 text-right">
+            <button *ngIf="techDetails.is_active" (click)="manageAccountLogin(false)" type="button" class="btn btn-danger mr-2"><i class="fa fa-ban mr-2" aria-hidden="true"></i>Disable Account Login</button>
+            <button *ngIf="!techDetails.is_active" (click)="manageAccountLogin(true)" type="button" class="btn btn-success"><i class="fa fa-play mr-2" aria-hidden="true"></i>Enable Account Login</button>
 
             <a routerLink="/admin/technicians/edit/{{techId}}" routerLinkActive="active" class="btn btn-primary">Edit</a>
             <a (click)="loginAsUser()" routerLinkActive="active" class="d-none btn btn-warning float-right">Login To Account<i class="ml-2 fa fa-sign-in" aria-hidden="true"></i></a>
@@ -25,11 +21,15 @@
             <label>Last Name</label>
             <h5>{{techDetails.last_name}}</h5>
           </div>
+          <div class="col-md-3">
+            <label>Gender</label>
+            <h5>{{techDetails.gender}}</h5>
+          </div>
         </div>
         <div class="row">
           <div class="col-md-3">
             <label>Registration Date</label>
-            <h5>{{techDetails.date_joined }}</h5> <!-- | date:'MM/dd/yyyy' -->
+            <h5>{{helper.getFormattedDateFromUnixTimestamp(techDetails.created_at) }}</h5>
           </div>
           <div class="col-md-3">
             <label>Email</label>
@@ -39,16 +39,21 @@
         <div class="row">
           <div class="col-md-3">
             <label>Mobile No</label>
-            <!-- <h5>{{techDetails.cell_phone_number | mask: '(000) 000-0000'}}</h5> -->
+            <h5>{{techDetails.cell_phone_number | mask: '(000) 000-0000'}}</h5>
           </div>
           <div class="col-md-3">
             <label>Last Login At</label>
-            <!-- <h5>{{helper.getUTCtoLocalDateTime(techDetails.last_login)}}</h5> -->
+            <h5>{{helper.getFormattedDateFromUnixTimestamp(techDetails.last_login)}}</h5>
           </div>
           <div class="col-md-3">
-            <label>Active</label>
+            <label>Login Enabled?</label>
             <h5> <i class="fa fa-check text-success" *ngIf="techDetails.is_active"></i>
               <i class="fa fa-times text-danger" *ngIf="!techDetails.is_active"></i></h5>
+          </div>
+          <div class="col-md-3">
+            <label>Account Service Enabled?</label>
+            <h5> <i class="fa fa-check text-success" *ngIf="techDetails.account_service_enabled"></i>
+              <i class="fa fa-times text-danger" *ngIf="!techDetails.account_service_enabled"></i></h5>
           </div>
         </div>
       </ng-container>

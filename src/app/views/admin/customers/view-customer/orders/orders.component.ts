@@ -94,7 +94,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
           className: 'text-right',
           render: function (data) {
             let _helper = new Helper();
-            return _helper.getInDollarFormat('USD', data);
+            return _helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -145,7 +145,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
           title: 'Order Date',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
@@ -162,7 +162,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
       this.dtTrigger.next();
     });
   }
- 
+
   ngAfterViewInit(): void {
     this.dtTrigger.next();
     this._renderer.listen('document', 'click', (event) => {

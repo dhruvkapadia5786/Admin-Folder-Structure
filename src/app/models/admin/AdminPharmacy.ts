@@ -14,7 +14,6 @@ export interface AdminPharmacyDetails {
     practice_addresses: Array<AdminAddress>;
     llc_name: string;
     check_payable_to_name: string;
-    doesspot_pharmacy_id?:number;
     is_default_pharmacy?:number;
     is_in_weno?:number;
     ncpdp:any;

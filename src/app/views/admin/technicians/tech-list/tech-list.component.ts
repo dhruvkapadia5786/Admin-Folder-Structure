@@ -6,6 +6,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Helper } from 'src/app/services/helper.service';
 import Hashids from 'hashids';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ChangePasswordModalComponent } from 'src/app/components/change-password-modal/change-password-modal.component';
+import { ChangePasswordModalService } from 'src/app/components/change-password-modal/change-password-modal.service';
 
 @Component({
   selector: 'app-tech-list',
@@ -13,6 +16,7 @@ import Hashids from 'hashids';
   styleUrls: ['./tech-list.component.scss']
 })
 export class TechListComponent implements OnInit, AfterViewInit,OnDestroy {
+  modalRef!: BsModalRef;
   techniciansTableData = new Array();
   dtOptions!: DataTables.Settings;
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
@@ -23,7 +27,9 @@ export class TechListComponent implements OnInit, AfterViewInit,OnDestroy {
     private _http: HttpClient,
     public _helper: Helper,
     private router: Router,
-    private _renderer: Renderer2) {
+    private modalService: BsModalService,
+    private _renderer: Renderer2,
+    private _changePasswordModalService: ChangePasswordModalService) {
     this.getDTOptions();
   }
 
@@ -77,12 +83,12 @@ export class TechListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center  font-weight-normal'
         },
         {
-          data: 'date_joined',
+          data: 'created_at',
           title: 'Date Join',
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'MM/DD/YYYY');
             } else {
               return '<span></span>';
             }
@@ -159,7 +165,9 @@ export class TechListComponent implements OnInit, AfterViewInit,OnDestroy {
   goToPasswordChangePage(technicianChangePasswordID: any): any {
     const hashids = new Hashids('', 10);
     const hashid = hashids.encode(technicianChangePasswordID);
-    this.router.navigate(['admin', 'changePassword', hashid]);
+    
+    this._changePasswordModalService.setFormData({id: hashid});
+    this.modalRef = this.modalService.show(ChangePasswordModalComponent,{class:'modal-md'});
   }
 
 }

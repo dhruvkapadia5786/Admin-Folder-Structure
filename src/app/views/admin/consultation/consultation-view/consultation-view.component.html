@@ -1,0 +1,739 @@
+<mat-tab-group>
+    <mat-tab label="Consultation">
+        <div class="container-fluid details">
+            <ng-container *ngIf="consultationDetails; else noConsultationDetails">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5 class="mb-3"> #{{'C-'+consultationDetails.consultation_number + '
+                            ('+'C-'+consultationDetails.consultation_number_text+')'}}</h5>
+                        <p class="mb-1"><strong class="mr-2">Consultation Type : </strong>
+                            <span *ngIf="consultationDetails.consultation_type=='NEW'"
+                                class="badge badge-success badge-pill p-2">New</span>
+                            <span *ngIf="consultationDetails.consultation_type=='FOLLOWUP'"
+                                class="badge badge-primary  badge-pill p-2">Followup</span>
+                        </p>
+
+                        <p class="mb-1"><strong class="mr-2"> Type : </strong>
+                            <span *ngIf="consultationDetails.type=='REFERRED_BY_PHYSICIAN'">Referred By Physician</span>
+                            <span *ngIf="consultationDetails.type=='FIRST_AVAILABLE_PHYSICIAN'">First Available
+                                Physician</span>
+                        </p>
+
+                        <p class="mb-1"><strong class="mr-2">Created Date : </strong>{{consultationDetails.created_at |
+                            date:'MM/dd/yyyy'}}</p>
+                        <p class="mb-1"><strong class="mr-2">Completed Date :
+                            </strong>{{consultationDetails.completed_by_customer_at | date:'MM/dd/yyyy'}}</p>
+                        <p>
+                            <strong class="mr-2">System Status: </strong>
+                            <span class="m-0" [innerHTML]="getSystemStatus(consultationDetails.system_status)"></span>
+                        </p>
+
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="mb-3">Patient Details</h5>
+                        <h6 class="mb-2">{{consultationDetails.patient_details.first_name}}
+                            {{consultationDetails.patient_details.last_name}}</h6>
+                        <p class="mb-1"><strong> DOB: </strong>{{consultationDetails.patient_details.dob_formatted }} |
+                            Age: {{patient.age}}</p>
+                        <p class="mb-0"><strong>Email: </strong>{{consultationDetails.patient_details.email}}</p>
+                        <p class="mb-0"><strong>Phone: </strong>{{consultationDetails.patient_details.cell_phone_number
+                            | mask: '(000) 000-0000'}}</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h5 class="mb-3">Shipping Address</h5>
+                        <div *ngIf="consultationDetails.address">
+                            <p class="mb-0">
+                                {{consultationDetails.address.address_line_1?consultationDetails.address.address_line_1:''}}{{
+                                consultationDetails.address.address_line_2 ? ', ':''
+                                }}<br />{{consultationDetails.address?.address_line_2}}</p>
+                            <p class="mb-0">
+                                {{consultationDetails.address.city_name?consultationDetails.address.city_name:''}}{{consultationDetails.address.state_name?',
+                                '+consultationDetails.address.state_name:''}}
+                                {{consultationDetails.address.zip_code?consultationDetails.address.zip_code:''}}</p>
+                        </div>
+                        <div *ngIf="!consultationDetails.address">
+                            <p class="mb-0">Address not added yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row justify-content-end align-items-center  mt-2">
+                    <button class="btn btn-sm btn-success mr-2" *ngIf="consultationDetails?.customer_status != 'INCOMPLETE'"
+                        (click)="downloadReceipt()"><i class="mr-2 fa fa-download"></i>Consultation Receipt</button>
+                    <button class="btn btn-sm btn-primary mr-2" *ngIf="consultationDetails?.customer_status == 'COMPLETED'"
+                        (click)="downloadConsultationSummary()"><i class="mr-2 fa fa-download"></i>Consultation
+                        Summary</button>
+                    <button class="btn btn-sm btn-danger" *ngIf="consultationDetails?.customer_status != 'REFUNDED'"
+                    (click)="openRefundOrderModal()" type="button"><i class="fa fa-refresh mr-2" aria-hidden="true"></i>Refund</button><!-- data-target="#refundConsultationModal" -->
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <table class="table table-sm">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Diagnosis Interview</th>
+                                    <th>Health Questions</th>
+                                    <th>Blood Pressure</th>
+                                    <th>BMI</th>
+                                    <th>Face Photo</th>
+                                    <th>License Photo</th>
+                                    <th>Payment Completed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="consultationDetails.is_diagnosis_questions_completed==1"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="consultationDetails.is_diagnosis_questions_completed!=1"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="consultationDetails.is_health_questions_completed==1"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="consultationDetails.is_health_questions_completed!=1"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="consultationDetails.is_bp_completed==1"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="consultationDetails.is_bp_completed!=1"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="consultationDetails.is_bmi_completed==1"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="consultationDetails.is_bmi_completed!=1"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="consultationDetails.is_profile_upload_completed==1"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="consultationDetails.is_profile_upload_completed!=1"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="consultationDetails.is_license_upload_completed==1"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="consultationDetails.is_license_upload_completed!=1"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check text-success"
+                                            *ngIf="consultationDetails.is_payment_completed==1"></i>
+                                        <i class="fa fa-times text-danger"
+                                            *ngIf="consultationDetails.is_payment_completed!=1"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table border-bottom table-borderless table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="border-0">Service</th>
+                                        <th class="border-0 text-right">Charge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle">
+                                            <h6 class="mb-0 text-nowrap font-weight-bold">
+                                                {{consultationDetails.health_condition_id ? 'Consultation For
+                                                '+consultationDetails.health_condition.name:'Consulation with
+                                                physician'}}</h6>
+                                        </td>
+                                        <td class="align-middle text-right">{{ consultationDetails.consultation_charge |
+                                            currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row no-gutters justify-content-end">
+                            <div class="col-auto" *ngIf="consultationDetails.is_payment_completed==1">
+                                <table class="table table-sm table-borderless text-right">
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-900">Coupon Discount {{
+                                                consultationDetails.coupon_details?'( Coupon Code Used :
+                                                '+consultationDetails.coupon_details.coupon_code+' )':'' }}</th>
+                                            <td class="font-weight-semi-bold text-right">
+                                                {{(consultationDetails.coupon_discount||0) | currency}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-900">Referral Discount {{
+                                                consultationDetails.referral_code_details ? '( Referral Code Used :
+                                                '+consultationDetails.referral_code_details.referral_code+' )':''}}</th>
+                                            <td class="font-weight-semi-bold text-right">
+                                                {{(consultationDetails.referral_discount||0) | currency}}</td>
+                                        </tr>
+                                        <tr class="border-top">
+                                            <th class="font-weight-bold">Total</th>
+                                            <td class="font-weight-bold text-right">
+                                                {{consultationDetails.consultation_charge | currency }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table border-bottom table-borderless table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Charged From Stripe</th>
+                                        <th>Charged From Wallet</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <p class="font-weight-bold">{{consultationDetails.charged_from_stripe |
+                                                currency }}</p>
+                                            <div class="media"
+                                                *ngIf="consultationDetails.payment_details && consultationDetails.payment_details.details && consultationDetails.payment_details.details.card">
+                                                <div class="media-body">
+                                                    <h6 class="mb-0">
+                                                        {{consultationDetails.payment_details.details.card.brand.toUpperCase()}}
+                                                    </h6>
+                                                    <p class="mb-0">**** **** ****
+                                                        {{consultationDetails.payment_details.details.card.last4 + '
+                                                        (Expires :
+                                                        '+consultationDetails.payment_details.details.card.exp_month+'/'+consultationDetails.payment_details.details.card.exp_year+')'}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <a *ngIf="consultationDetails.payment_details && consultationDetails.payment_details.receipt_url"
+                                                class="btn btn-sm btn-primary" target="_blank"
+                                                [href]="consultationDetails.payment_details.receipt_url">Stripe
+                                                Receipt</a>
+                                        </td>
+                                        <td class="font-weight-bold">{{consultationDetails.charged_from_wallet |
+                                            currency }}</td>
+                                        <td class="font-weight-bold text-right">
+                                            {{consultationDetails.consultation_charge | currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive" *ngIf="consultationDetails.refunded_total > 0">
+                            <table class="table border-bottom table-borderless table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Refunded to Stripe</th>
+                                        <th>Refunded to Wallet</th>
+                                        <th class="text-right">Refunded Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-weight-bold">{{consultationDetails.refunded_in_stripe | currency
+                                            }}</td>
+                                        <td class="font-weight-bold">{{consultationDetails.refunded_in_wallet | currency
+                                            }}</td>
+                                        <td class="font-weight-bold text-right">{{consultationDetails.refunded_total |
+                                            currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <h5 class="mt-3">All Payment Transactions</h5>
+                        <div class="table-responsive" *ngIf="consultationDetails.all_payment_transactions">
+                            <table class="table table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Transaction Type</th>
+                                        <th>Payment Source</th>
+                                        <th>Amount Charged</th>
+                                        <th>Charge Id</th>
+                                        <th>Amount Refund</th>
+                                        <th>Refund Id</th>
+                                        <th>Datetime</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr [ngClass]="{'alert-success':transaction.transaction_type=='CHARGE' || transaction.transaction_type=='AUTHORIZE_AND_CAPTURE'}"
+                                        *ngFor="let transaction of consultationDetails.all_payment_transactions;let i=index;">
+                                        <td>{{i+1}}</td>
+                                        <td>{{transaction.transaction_type}}</td>
+                                        <td>{{transaction.payment_source}}</td>
+                                        <td>{{transaction.charged_amount | currency}}</td>
+                                        <td>
+                                            <a *ngIf="transaction.payment_source=='STRIPE'" target="_blank"
+                                                href="https://dashboard.stripe.com/payments/{{transaction.charge_id}}">{{transaction.charge_id}}</a>
+                                            <span *ngIf="transaction.payment_source=='WALLET'"> {{transaction.charge_id
+                                                ? 'Wallet Transaction #'+transaction.charge_id :''}}</span>
+                                        </td>
+                                        <td>{{transaction.refunded_amount | currency}}</td>
+                                        <td>
+                                            <span
+                                                *ngIf="transaction.refund_id && transaction.payment_source=='STRIPE'">{{transaction.refund_id}}</span>
+                                            <span
+                                                *ngIf="transaction.refund_id && transaction.payment_source=='WALLET'">{{'Wallet
+                                                Transaction #'+transaction.refund_id}}</span>
+                                        </td>
+                                        <td>{{transaction.created_at | date:'MM/dd/yyyy HH:mm a'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Customer Status</th>
+                                        <th>Technician Status</th>
+                                        <th>Doctor Status</th>
+                                        <th>Pharmacy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <p class="m-0"
+                                                [innerHTML]="getCustomerStatus(consultationDetails.customer_status)">
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="m-0"
+                                                [innerHTML]="getTechnicianStatus(consultationDetails.technician_status)">
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="m-0"
+                                                [innerHTML]="getDoctorStatus(consultationDetails.doctor_status)"></p>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p class="mb-1"><strong class="mr-2">Created Date :
+                                                </strong>{{consultationDetails.created_at | date:'MM/dd/yyyy'}}</p>
+                                            <p class="mb-1"><strong class="mr-2">Completed Date :
+                                                </strong>{{consultationDetails.completed_by_customer_at |
+                                                date:'MM/dd/yyyy'}}</p>
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <p class="mb-1"><strong class="mr-2">Is Schedule ? : </strong>
+                                                <span *ngIf="consultationDetails.is_scheduled==1"><i
+                                                        class="text-success fa fa-check"></i></span><span
+                                                    *ngIf="consultationDetails.is_scheduled==0"><i
+                                                        class="text-danger fa fa-close"></i></span>
+                                            </p>
+                                            <p class="mb-1"><strong class="mr-2">Schedule Type : </strong><span
+                                                    *ngIf="consultationDetails.schedule_type=='MANUAL'"
+                                                    class="badge badge-primary badge-pill p-2">Manually
+                                                    Scheduled</span><span
+                                                    *ngIf="consultationDetails.schedule_type=='AUTO'"
+                                                    class="badge badge-success  badge-pill p-2">Auto Scheduled</span>
+                                            </p>
+                                            <p class="mb-1"><strong class="mr-2">Visit Type : </strong><span
+                                                    *ngIf="consultationDetails.schedule_execution_type=='FIX_DATE_TIME'"
+                                                    class="badge badge-primary  badge-pill p-2">In Person
+                                                    Visit</span><span
+                                                    *ngIf="consultationDetails.schedule_execution_type=='TWO_HOUR_WINDOW_TIMESLOT'"
+                                                    class="badge badge-warning  badge-pill p-2">Telemedicine
+                                                    Visit</span></p>
+                                            <p class="mb-1"><strong class="mr-2">Scheduled On : </strong><span
+                                                    *ngIf="consultationDetails.schedule_note">{{consultationDetails.schedule_note}}</span>
+                                            </p>
+                                            <p class="mb-1"><strong class="mr-2">Completed Date :
+                                                </strong>{{consultationDetails.completed_at | date:'MM/dd/yyyy'}}</p>
+
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <ng-container
+                                                *ngIf="consultationDetails.clinic_details; else clinicNotAssigned">
+                                                <p class="mb-1"><strong class="mr-2">Name :
+                                                    </strong>{{consultationDetails.clinic_details.clinic_name}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Address Line 1 :
+                                                    </strong>{{consultationDetails.clinic_details.address_line_1}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Address Line 2 :
+                                                    </strong>{{consultationDetails.clinic_details.address_line_2}}</p>
+                                                <p class="mb-1"><strong class="mr-2">City - State
+                                                        :</strong>{{consultationDetails.clinic_details.city +'
+                                                    '+consultationDetails.pharmacy_details.state +' , '+
+                                                    consultationDetails.pharmacy_details.zip_code}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Phone :
+                                                    </strong>{{consultationDetails.clinic_details.primary_phone | mask:
+                                                    '(000) 000-0000' || '-'}}</p>
+                                            </ng-container>
+                                            <ng-template #clinicNotAssigned>
+                                                <div class="text-center text-muted">
+                                                    <h4><i class="fa fa-info-circle"></i></h4>
+                                                    <h6>Clinic Not Assigned Yet</h6>
+                                                </div>
+                                            </ng-template>
+                                            <br />
+                                            <ng-container
+                                                *ngIf="consultationDetails.physician_details; else elseTemplate">
+                                                <p class="mb-1"><strong class="mr-2">Name :
+                                                    </strong>{{consultationDetails.physician_details.first_name+'
+                                                    '+consultationDetails.physician_details.last_name}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Email :
+                                                    </strong>{{consultationDetails.physician_details.email}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Phone :
+                                                    </strong>{{consultationDetails.physician_details.cell_phone_number |
+                                                    mask: '(000) 000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">NPI Number
+                                                        :</strong>{{consultationDetails.physician_details.npi_number}}
+                                                </p>
+                                                <p class="mb-1"><strong class="mr-2">DEA Number:
+                                                    </strong>{{consultationDetails.physician_details.dea_number}}</p>
+                                            </ng-container>
+                                            <ng-template #elseTemplate>
+                                                <div class="text-center text-muted">
+                                                    <h4><i class="fa fa-info-circle"></i></h4>
+                                                    <h6>Not Assigned Yet</h6>
+                                                </div>
+                                            </ng-template>
+                                        </td>
+                                        <td>
+                                            <ng-container *ngIf="consultationDetails.pharmacy_details;">
+                                                <p class="mb-1"><strong class="mr-2">Name :
+                                                    </strong>{{consultationDetails.pharmacy_details.name}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Phone:
+                                                    </strong>{{consultationDetails.pharmacy_details.primary_phone |
+                                                    mask: '(000) 000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Fax:
+                                                    </strong>{{consultationDetails.pharmacy_details.primary_fax | mask:
+                                                    '(000) 000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Address 1 :
+                                                    </strong>{{consultationDetails.pharmacy_details.address_line1}}</p>
+                                                <p class="mb-1"
+                                                    *ngIf="consultationDetails.pharmacy_details.address_line2"><strong
+                                                        class="mr-2">Address 2 :
+                                                    </strong>{{consultationDetails.pharmacy_details.address_line2+','}}
+                                                </p>
+                                                <p class="mb-1"><strong class="mr-2">City - State : </strong>{{
+                                                    consultationDetails.pharmacy_details.city+' ,
+                                                    '+consultationDetails.pharmacy_details.state+' ,
+                                                    '+consultationDetails.pharmacy_details.zip_code }}</p>
+                                            </ng-container>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noConsultationDetails>
+                <div class="text-center text-muted">
+                    <h2><i class="fa fa-info-circle"></i></h2>
+                    <h4>No Consultation Details!</h4>
+                </div>
+            </ng-template>
+        </div>
+    </mat-tab>
+    <mat-tab label="Patient">
+        <div class="container-fluid details">
+            <ng-container *ngIf="patient; else noDetails ">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Patient Details</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="javascript:void(0);" class="link" (click)="gotoPatientDetails()">
+                            <h5># {{patientUinqueNumber}}</h5>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>First Name</label>
+                        <h5>{{patient.first_name}}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Last Name</label>
+                        <h5>{{patient.last_name}}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Gender</label>
+                        <h5>{{patient.gender==1?"Male":"Female"}}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Date Of Birth</label>
+                        <h5>{{patient.dob_formatted || '-'}} <br> Age: {{patient.age}}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Email</label>
+                        <h5>{{patient.email}}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Mobile No</label>
+                        <h5>{{patient.cell_phone_number | mask: '(000) 000-0000'}}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Shipping Addresses</label>
+                        <h5 class="m-0">
+                            {{consultationDetails.address.address_line_1?consultationDetails.address.address_line_1:''}}{{consultationDetails.address.address_line_2
+                            ? ', ' + consultationDetails.address.address_line_2:''}}</h5>
+                        <h5 class="m-0">
+                            {{consultationDetails.address.city_name?consultationDetails.address.city_name:''}}{{consultationDetails.address.state_name?',
+                            '+consultationDetails.address.state_name:''}}
+                            {{consultationDetails.address.zip_code?consultationDetails.address.zip_code:''}}
+                        </h5>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="accordion td-accordian mt-4" id="licenseAccordian">
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h3 class="mb-0">
+                                        <button class="btn btn-link waves-effect waves-light" type="button"
+                                            data-toggle="collapse" data-target="#license" aria-expanded="true"
+                                            aria-controls="collapseTwo">License</button>
+                                    </h3>
+                                </div>
+                                <div id="license" class="collapse show" aria-labelledby="headingTwo"
+                                    data-parent="#licenseAccordian">
+                                    <div class="card-body">
+                                        <div class="mt-2" *ngIf="profileLicense && profileLicense.license_photo">
+                                            <div class="allergies">
+                                                <app-image-preview [imgPath]="profileLicense.license_photo" height="250"
+                                                    width="350" caption="License Image"></app-image-preview>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="accordion td-accordian mt-4" id="fullFaceAccordian">
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h3 class="mb-0"><button class="btn btn-link waves-effect waves-light" type="button"
+                                            data-toggle="collapse" data-target="#license" aria-expanded="true"
+                                            aria-controls="collapseTwo">Full Face Image</button></h3>
+                                </div>
+                                <div id="license" class="collapse show" aria-labelledby="headingTwo"
+                                    data-parent="#fullFaceAccordian">
+                                    <div class="card-body">
+                                        <div class="mt-2" *ngIf="profileLicense && profileLicense.profile_photo">
+                                            <div class="allergies">
+                                                <app-image-preview [imgPath]="profileLicense.profile_photo" height="250"
+                                                    width="350" caption="Full Face Image"></app-image-preview>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noDetails>
+                <div class="text-center text-muted">
+                    <h2><i class="fa fa-info-circle"></i></h2>
+                    <h4>No Details!</h4>
+                </div>
+            </ng-template>
+        </div>
+    </mat-tab>
+    <mat-tab label="Questions">
+        <div class="container-fluid" *ngIf="consultationDetails">
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <table *ngIf="healthQueAndAnswers && healthQueAndAnswers.length > 0" class="table table-hover">
+                        <thead>
+                            <tr style="background-color:#fff3cd">
+                                <th class="mb-0" colspan="3">
+                                    <p class="font-weight-bold mb-0">Health Questions</p>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let questions of healthQueAndAnswers">
+                            <tr>
+                                <td>
+                                    <p class="mb-0 font-weight-bold">{{questions.text}}</p>
+                                    <p *ngFor="let ans of questions.choices" class="mb-0 font-weight-bold text-primary">
+                                        {{ans.text}}</p>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let sub_question of questions.sub_questions">
+                                <td>
+                                    <p class="mb-0 font-weight-bold">{{sub_question.text}}</p>
+                                    <div *ngIf="sub_question.custom_input!=1">
+                                        <p class="mb-0 font-weight-bold text-primary"
+                                            *ngFor="let ans of sub_question.choices">
+                                            {{ans.text}}
+                                        </p>
+                                    </div>
+                                    <div *ngIf="sub_question.custom_input==1">
+                                        <p class="mb-0 font-weight-bold text-primary" *ngIf="sub_question.custom_input">
+                                            {{sub_question.custom_input}}
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Diagnosis & Treatment">
+        <div class="container-fluid" *ngIf="consultationDetails && consultationDetails.details">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <table class="table table-hover mt-3" *ngIf="consultationDetails.diagnosis_details">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Diagnosis Result</th>
+                                <th>Comment</th>
+                                <th>CPT & HCPCS Code</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of consultationDetails.diagnosis_details">
+                                <td>{{item.doctor_diagnosis_result}}</td>
+                                <td>{{item.doctor_comment}}</td>
+                                <td>{{item.doctor_cpt_hcpcs_code}}</td>
+                                <td>{{item.created_at | date:'MM/dd/yyyy HH:mm a'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-hover mt-3"
+                        *ngIf="consultationDetails && consultationDetails.medications.length>0">
+                        <thead style="background-color:#e2e3e5">
+                            <tr>
+                                <th scope="col">Medicine Name</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Doseform</th>
+                                <th scope="col">Refills</th>
+                                <th scope="col">Route</th>
+                                <th scope="col">Prescribed</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let medicine of consultationDetails.medications">
+                                <td>
+                                    <p>{{medicine.name}}</p>
+                                </td>
+                                <td>
+                                    <p>{{medicine.quantity}}</p>
+                                </td>
+                                <td>
+                                    <p>{{medicine.doseform}}</p>
+                                </td>
+                                <td>
+                                    <p>{{medicine.refills}}</p>
+                                </td>
+                                <td>
+                                    <p>{{medicine.route}}</p>
+                                </td>
+                                <td>
+                                    <i *ngIf="medicine.is_prescribed==1" class="text-success fa fa-check"
+                                        aria-hidden="true"></i>
+                                    <i *ngIf="medicine.is_prescribed==0" class="text-danger fa fa-close"
+                                        aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <button
+                                        (click)="viewERx(consultationDetails.patient_details.doesspot_patient_id,medicine.prescription_id)"
+                                        class="btn btn-sm btn-success" *ngIf="medicine.is_prescribed==1">{{'View ERx
+                                        #'+medicine.prescription_id}}</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="History">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 p-2">
+                    <div class="table-responsive-md">
+                        <table mdbTable hover="true" id="consultationList" datatable [dtOptions]="dtOptions"
+                            [dtTrigger]="dtTrigger"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Logs">
+        <div class="container-fluid">
+            <app-order-logs></app-order-logs>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+
+
+<!-- Refund Consultation Modal HTML -->
+<!-- <div mdbModal #refundConsultationModal="mdbModal" class="modal fade" id="refundConsultationModal" tabindex="-1"
+    role="dialog" aria-labelledby="refundConsultationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form (ngSubmit)="refundConsultationFormSubmit(refundConsultationForm.valid,refundConsultationModal)"
+                [formGroup]="refundConsultationForm" novalidate>
+                <div class="modal-header p-2 pl-3">
+                    <h4 class="modal-title">Request for Refund Consultation</h4>
+                    <button id="hiderefundModal" type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        (click)="refundConsultationModal.hide()">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Enter Reason For Refund Consultation</label>
+                        <textarea class="form-control" id="refund_reason" rows="3" formControlName="refund_reason"
+                            required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="submit" [disabled]="refundConsultationForm.invalid || formSubmitting"
+                        class="btn btn-sm btn-success waves-effect m-0 mr-2">Request Refund</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->

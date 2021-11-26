@@ -25,10 +25,10 @@
 
                 <div class="custom-control custom-radio">
                     <input type="radio" name="radioName" class="custom-control-input cursor-pointer"
-                        id="{{ 'radio_'+doctor.teledaddyuser_ptr_id }}" [(ngModel)]="selectedDoctorId"
-                        [value]="doctor.teledaddyuser_ptr_id" (change)="setDoctor(doctor)" />
+                        id="{{ 'radio_'+doctor._id }}" [(ngModel)]="selectedDoctorId"
+                        [value]="doctor._id" />
                     <label class="custom-control-label cursor-pointer w-100"
-                        for="{{ 'radio_'+doctor.teledaddyuser_ptr_id }}">
+                        for="{{ 'radio_'+doctor._id }}">
                         {{doctor.doctor_name }}
                     </label>
                 </div>
@@ -40,7 +40,7 @@
     </div>
     <div class="modal-footer d-block" *ngIf="selectedDoctorId">
         <button type="button"
-            (click)="addToClinic(clinic.doesspot_clinic_id,clinic.doesspot_clinic_key,selectedDoctor.teledaddyuser_ptr_id,selectedDoctor.doesspot_clinician_id)"
+            (click)="addToClinic(clinic._id,selectedDoctor._id)"
             class="btn btn-block btn-success btn-sm" [disabled]="loading">Add To Clinic</button>
     </div>
 </div>

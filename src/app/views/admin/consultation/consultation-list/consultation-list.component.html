@@ -1,0 +1,37 @@
+<div *ngIf="showHeaderAndFilter" class="w-100 p-3 bg-dark-grey">
+      <h4 class="text-white font-weight-bold mb-0">Consultation</h4>
+</div>
+<!-- Filter Fields Box -->
+  <div class="card-body bg-transparent">
+    <div class="row">
+      <div class="col-md-3">
+        <mat-label>Consultation Status</mat-label>
+        <mat-select placeholder="Consultation Status" [(ngModel)]="consultation_config.filter.CONSULTATION_STATUS" (selectionChange)="handleChange('CS', $event.value)">
+          <mat-option color="primary" *ngFor="let cs of consultationStatusList" [value]="cs.id">{{cs.name}}</mat-option>
+        </mat-select>
+      </div>
+      <div class="col-md-3">
+        <mat-label>States</mat-label>
+        <mat-select placeholder="Select States" (selectionChange)="handleChange('STATE', $event.value)" [(ngModel)]="consultation_config.filter.STATE" multiple>
+          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'STATE')"
+          [indeterminate]="consultation_config.filter.STATE.length && notSelectedStates"
+          [checked]="!notSelectedStates">All</mat-checkbox>
+          <mat-option color="primary" *ngFor="let st of stateList" [value]="st.abbreviation">{{st.name}}</mat-option>
+        </mat-select>
+      </div>
+      <div class="col-md-3">
+        <mat-label>Health Conditions</mat-label>
+        <mat-select placeholder="Select Health Conditions" (selectionChange)="handleChange('HC', $event.value)" [(ngModel)]="consultation_config.filter.HEALTH_CONDITION" [disabled]="disableHealthConditionSelect" multiple>
+          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'HC')"
+          [indeterminate]="consultation_config.filter.HEALTH_CONDITION.length && notSelectedHealthConditions"
+          [checked]="!notSelectedHealthConditions">All</mat-checkbox>
+          <mat-option color="primary" *ngFor="let hc of healthConditionList" [value]="hc.id">{{hc.name}}</mat-option>
+        </mat-select>
+      </div>
+    </div>
+  </div>
+<div class="p-3">
+    <div class="table-responsive">
+      <table mdbTable hover="true" id="consultationList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"></table>
+    </div>
+</div>

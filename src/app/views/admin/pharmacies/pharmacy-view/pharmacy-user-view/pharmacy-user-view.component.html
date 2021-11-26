@@ -5,14 +5,14 @@
     </div>
     <div class="card-body px-0 py-1">
         <button type="button" class="btn btn-warning d-none" (click)="loginAsUser(pharmacyUserId)">Login</button>
-        <button type="button" [disabled]="pharmacyUser.is_active==0" (click)="manageAccountService()" [ngClass]="{ 'float-right':true,'btn':true,'btn-dark':pharmacyUser && pharmacyUser.account_service_enabled==1,'btn-success':pharmacyUser && pharmacyUser.account_service_enabled==0}">
-          <span *ngIf="pharmacyUser && pharmacyUser.account_service_enabled==0">Enable Account Service</span>
-          <span *ngIf="pharmacyUser && pharmacyUser.account_service_enabled==1">Disable Account Service</span>
+        <button type="button" [disabled]="pharmacyUser.is_active==0" (click)="manageAccountService()" [ngClass]="{ 'float-right':true,'btn':true,'btn-dark':pharmacyUser && pharmacyUser.account_service_enabled==true,'btn-success':pharmacyUser && pharmacyUser.account_service_enabled==false}">
+          <span *ngIf="pharmacyUser && pharmacyUser.account_service_enabled==false">Enable Account Service</span>
+          <span *ngIf="pharmacyUser && pharmacyUser.account_service_enabled==true">Disable Account Service</span>
         </button>
-        <button type="button" *ngIf="pharmacyUser.is_active == 1" (click)="manageAccount()" type="button" class="btn btn-danger float-right"><i class="fa fa-ban mr-2" aria-hidden="true"></i>Disable Account</button>
-        <button type="button" *ngIf="pharmacyUser.is_active == 0" (click)="manageAccount()" type="button" class="btn btn-success float-right"><i class="fa fa-play mr-2" aria-hidden="true"></i>Enable Account</button>
-        <a routerLink="/admin/document-upload/{{pharmacyUserId}}" routerLinkActive="active" class="btn btn-primary float-right">UploadDoument <i class="ml-2 fa fa-upload" aria-hidden="true"></i></a>
-        <a (click)="goToPasswordChangePage(pharmacyUserId)" href="javascript:void(0)" class="btn btn-primary float-right">Change Account Password <i class="ml-2 fa fa-key" aria-hidden="true"></i></a>
+        <button type="button" *ngIf="pharmacyUser.is_active == true" (click)="manageAccount(false)" type="button" class="btn btn-danger float-right mr-2"><i class="fa fa-ban mr-2" aria-hidden="true"></i>Disable Account</button>
+        <button type="button" *ngIf="pharmacyUser.is_active == false" (click)="manageAccount(true)" type="button" class="btn btn-success float-right mr-2"><i class="fa fa-play mr-2" aria-hidden="true"></i>Enable Account</button>
+        <a routerLink="/admin/document-upload/{{pharmacyUserId}}" routerLinkActive="active" class="btn btn-primary float-right mr-2">Upload Document <i class="ml-2 fa fa-upload" aria-hidden="true"></i></a>
+        <a (click)="goToPasswordChangePage(pharmacyUserId)" href="javascript:void(0)" class="btn btn-primary float-right mr-2">Change Account Password <i class="ml-2 fa fa-key" aria-hidden="true"></i></a>
     </div>
   </div>
   <div class="row">
@@ -23,12 +23,12 @@
               <div class="card-header bg-dark-grey">
                 <h5 class="font-weight-bold text-white mb-0">Personal Details</h5>
               </div>
-              <div class="card-body" *ngIf="pharmacyUser && pharmacyDetails">
+              <div class="card-body" *ngIf="pharmacyUser">
                 <div class="row">
                   <div class="col">
                     <div class="form-group">
                       <label class="font-weight-bold">Pharmacy User Id</label>
-                      <p>{{pharmacyUser.id}}</p>
+                      <p>{{pharmacyUser._id}}</p>
                     </div>
                   </div>
                   <div class="col">
@@ -53,7 +53,7 @@
                   </div>
 
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col">
                     <div class="form-group">
                       <label class="font-weight-bold">Pharmacy Name</label>
@@ -73,7 +73,7 @@
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
@@ -152,20 +152,17 @@
             </div>
           </div>
 
-          <div class="col-md-6 mb-3">
+          <!-- <div class="col-md-6 mb-3">
             <div class="card h-100">
               <div class="card-header bg-dark-grey">
                 <h5 class="font-weight-bold text-white mb-0">User Devices</h5>
               </div>
               <ng-container class="card-body" *ngIf="devices.length; else emptyDevicesTemplate">
-                    <!-- <button *ngIf="!isCurrentDeviceAdded" class="btn btn-primary" type="button" (click)="openAddPharmacyDeviceModal('CREATE')" ><i class="fa fa-plus"></i>Add Current Device</button> -->
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item" *ngFor="let device of devices">
                           <p class="mb-0">Device Name : {{ device.device_name }} </p>
                           <p class="mb-0">Device Id : {{ device.unique_device_id}}</p>
                           <p class="mb-0">Print After Every : {{ device.refresh_time_minutes}} Minutes</p>
-                          <!-- <button type="button" class="btn btn-sm btn-warning" (click)="openAddPharmacyDeviceModal('EDIT',device)"><i class="fas fa-pen"></i></button>
-                          <button type="button" class="btn btn-sm btn-danger" (click)="removeMyDevice(device.unique_device_id)"><i class="fas fa-trash"></i></button> -->
                       </li>
                     </ul>
               </ng-container>
@@ -176,7 +173,7 @@
                 </div>
               </ng-template>
             </div>
-          </div>
+          </div> -->
       </div>
   </div>
 </div>

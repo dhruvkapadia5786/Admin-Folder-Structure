@@ -1,0 +1,60 @@
+<ng-container *ngIf="healthCondition; else nohealthCondition">
+  <div class="row">
+    <div class="col-md-6">
+      <label>Name:</label>
+      <h5>{{healthCondition.name}} <span *ngIf="healthCondition.is_coming_soon" class="ml-2 badge badge-success badge-pill p-2">Coming Soon</span></h5>
+    </div>
+    <div class="col-md-6">
+      <label>Pet Type</label>
+      <ul>
+        <li *ngFor="let speciality of healthCondition.specialities">{{speciality.speciality_path}}</li>
+      </ul>
+    </div>
+  </div>
+
+  <br>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="float-left">Image</label><br>
+        <div class="float-left w-100">
+            <img class="rounded shadow" id="blah" [(src)]="imageUrl" alt="your image"
+                style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label>Description:</label>
+      <h5>{{healthCondition.description}}</h5>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-2">
+      <label>State</label>
+      <ul>
+        <li *ngFor="let state of healthCondition.states">{{state.name}}</li>
+      </ul>
+    </div>
+    <div class="col-md-2">
+      <label>Is Active:</label>
+      <h5 class="font-weight-bold text-success" *ngIf="healthCondition.is_active == 1"><i class="fa fa-check"></i></h5>
+      <h5 class="font-weight-bold text-danger" *ngIf="healthCondition.is_active != 1"><i class="fa fa-times"></i></h5>
+    </div>
+    <div class="col-md-2">
+      <label>Price:</label>
+      <h5>{{healthCondition.price}}</h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+      <label>Doctor Consultation Charge (Doctor Price):</label>
+      <h5>{{healthCondition.doctor_price}}</h5>
+    </div>
+  </div>
+
+</ng-container>
+<ng-template #nohealthCondition>
+  No Health Conditions
+</ng-template>

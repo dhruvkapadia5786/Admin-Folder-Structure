@@ -6,27 +6,27 @@ import { FormGroup } from '@angular/forms';
 @Injectable()
 export class Helper {
 
-    public EST_DATE_TIME_FORMAT = 'MM/DD/YYYY hh:mm:ss A';
-    public EST_DATE_FORMAT = 'MM/DD/YYYY';
+    public IST_DATE_TIME_FORMAT = 'DD-MM-YYYY hh:mm:ss A';
+    public IST_DATE_FORMAT = 'DD-MM-YYYY';
 
-    calculateAge(dateOfBirth: string, format: string = "MM/DD/YYYY") {
+    calculateAge(dateOfBirth: string, format: string = "DD-MM-YYYY") {
         var curDate = moment();
         var bDate = moment(dateOfBirth, format);
         return curDate.diff(bDate, 'years');
     }
 
-    public getFormattedDateFromUnixTimestamp(timestamp:number,format=this.EST_DATE_TIME_FORMAT){
+    public getFormattedDateFromUnixTimestamp(timestamp:number,format=this.IST_DATE_TIME_FORMAT){
       return moment.unix(timestamp).local().format(format);
     }
 
-    getFormattedDate(date: string, format: string = 'MM/DD/YYYY') {
+    getFormattedDate(date: string, format: string = 'DD-MM-YYYY') {
         return moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format(format);
     }
 
-    getInDollarFormat(currency: string, data: number) {
+    getInINRFormat(currency: string, data: number) {
         switch (currency) {
-            case 'USD':
-                return Number(data).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+            case 'INR':
+                return Number(data).toLocaleString('en-US', { style: 'currency', currency: 'INR' })
             default:
                 return "";
         }
@@ -35,18 +35,18 @@ export class Helper {
     getLocalDate(date: Date | string, format?: string) {
         if (format) {
             if (moment(date).isValid()) {
-                return moment.utc(date).tz("America/New_York").format(format);
+                return moment.utc(date).tz("Asia/Culcutta").format(format);
             }
         }
         else {
             if (moment(date).isValid()) {
-                return moment.utc(date).tz("America/New_York");
+                return moment.utc(date).tz("Asia/Culcutta");
             }
         }
         return date;
     }
 
-    public getUTCtoLocalDateTime(date: any, format: string = this.EST_DATE_TIME_FORMAT) {
+    public getUTCtoLocalDateTime(date: any, format: string = this.IST_DATE_TIME_FORMAT) {
         if (date != null && moment(date).isValid()) {
             return moment.utc(date).local().format(format);
         } else {
@@ -57,7 +57,7 @@ export class Helper {
     /* DIDN'T GIVE EXPECTED OUTPUT */
     public getUserLocalDate(date: any) {
         if (date != null && moment(date).isValid()) {
-            return moment(date).format(this.EST_DATE_TIME_FORMAT);
+            return moment(date).format(this.IST_DATE_TIME_FORMAT);
         } else {
             return date;
         }
@@ -66,7 +66,7 @@ export class Helper {
     /* DIDN'T GIVE EXPECTED OUTPUT */
     public getESTDateTime(date: any) {
         if (date != null && moment(date).isValid()) {
-            return moment.tz(date, 'America/New_York').format(this.EST_DATE_TIME_FORMAT);
+            return moment.tz(date, 'Asia/Calcutta').format(this.IST_DATE_TIME_FORMAT);
         } else {
             return date;
         }
@@ -74,7 +74,7 @@ export class Helper {
 
     public getESTDate(date: any) {
         if (date != null && moment(date).isValid()) {
-            return moment.tz(date, 'America/New_York').format(this.EST_DATE_FORMAT);
+            return moment.tz(date, 'Asia/Calcutta').format(this.IST_DATE_FORMAT);
         } else {
             return date;
         }

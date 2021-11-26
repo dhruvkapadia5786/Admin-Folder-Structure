@@ -3,7 +3,7 @@
       <h4 class="text-white font-weight-bold mb-0">Edit Pharmacy Information</h4>
    </div>
   <div class="form-container px-3 pt-3">
-    <form [formGroup]="addPharmacyForm" (submit)="addPharmacySubmit()">
+    <form [formGroup]="addPharmacyForm" (submit)="editPharmacySubmit()">
 
       <div class="mb-3 p-2">
           <div class="row">
@@ -112,7 +112,7 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="lb_policy_document">Professional Liability Policy Document</label>
-                <app-image-preview *ngIf="professionalLiabilityDocumentImg" [imgPath]="professionalLiabilityDocumentImg" placeholder="Professional Liability Policy Document" height="250" width="350" caption="Professional Liability Document"></app-image-preview>
+                <img class="rounded shadow" id="image_url" [(src)]="lbDocImageUrl" alt="image" style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
                 <input type="file" class="form-control" id="lb_policy_document" formControlName="professional_liability_document" (change)="onFileSelect($event)">
                 <div class="invalid-feedback" *ngIf="professional_liability_document?.invalid && (professional_liability_document?.dirty || professional_liability_document?.touched)"
                   class="text-danger font-weight-bold">
@@ -228,6 +228,11 @@
                         Active
                       </mat-checkbox>
                     </div>
+                    <div class="form-group">
+                      <mat-radio-button name="isDefaultRbtn" color="primary" formControlName="is_default">
+                        Is Default?
+                      </mat-radio-button>
+                    </div>
                   </div>
               </div>
           </div>
@@ -312,7 +317,7 @@
 
       <div class="row mt-5 p-3 bg-dark-grey">
         <div class="col-sm-12 text-center">
-          <button type="submit" class="btn btn-success"><i class="fa fa-save mr-2"></i> Save Pharmacy Information</button>
+          <button type="submit" class="btn btn-success mr-2"><i class="fa fa-save mr-2"></i> Save Pharmacy Information</button>
           <a routerLink="/admin/pharmacies/list" routerLinkActive="active" class="btn btn-primary">Back</a>
         </div>
       </div>

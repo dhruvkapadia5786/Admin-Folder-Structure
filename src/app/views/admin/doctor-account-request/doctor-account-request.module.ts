@@ -8,7 +8,6 @@ import { DoctorAccountRequestRoutingModule } from './doctor-account-request-rout
 import { AccountRequestListComponent} from './account-request-list/account-request-list.component';
 import { AccountRequestViewComponent } from './account-request-view/account-request-view.component';
 import { AccountRequestEditComponent } from './account-request-edit/account-request-edit.component';
-import { AccountRequestRegistrationComponent } from './account-request-registration/account-request-registration.component';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.module';
 import { ClinicService } from '../clinic/clinic.service';
@@ -20,7 +19,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
-  declarations: [DoctorAccountRequestComponent,AccountRequestListComponent,AccountRequestViewComponent, AccountRequestEditComponent, AccountRequestRegistrationComponent],
+  declarations: [DoctorAccountRequestComponent,AccountRequestListComponent,AccountRequestViewComponent, AccountRequestEditComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -28,7 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
     NgxMaskModule,
     DataTablesModule,
     MatTabsModule,MatRadioModule,
-    MatDatepickerModule, MatNativeDateModule, 
+    MatDatepickerModule, MatNativeDateModule,
     MatCheckboxModule, MatSelectModule ,
     FormsModule,ReactiveFormsModule,
     ImagePreviewModule

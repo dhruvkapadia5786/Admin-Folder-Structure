@@ -130,16 +130,16 @@ export class DoctorConsultationsComponent implements OnInit, AfterViewInit {
 					return '-'
 				  }
 				}
-			  }, 
+			  },
 			  {
 				data:'consultation_charge',
 				title:'Consultation Charge',
 				className: 'text-center',
 				render: function (data) {
 					const _helper = new Helper();
-					return _helper.getInDollarFormat('USD', data);
+					return _helper.getInINRFormat('INR', data);
 				}
-			  }, 
+			  },
 			  {
 				data:'system_status',
 				title: 'Status',
@@ -159,7 +159,7 @@ export class DoctorConsultationsComponent implements OnInit, AfterViewInit {
 				className: 'text-center',
 				render: (data) => {
 				  if (data) {
-					return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+					return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
 				  } else {
 					return '<span></span>';
 				  }

@@ -8,11 +8,10 @@ import { PharmacyDetailsComponent } from './pharmacy-details/pharmacy-details.co
 import { PharmacyViewComponent } from './pharmacy-view.component';
 
 import { DataTablesModule } from 'angular-datatables';
-import { ImagePreviewModule } from '../../../../shared/image-preview/image-preview.module';
+import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LightboxModule } from 'ngx-lightbox';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [PharmacyViewComponent, PharmacyDetailsComponent],
@@ -20,7 +19,6 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     MatTabsModule,
     NgxMaskModule,
     DataTablesModule,

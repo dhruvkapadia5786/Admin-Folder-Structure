@@ -20,10 +20,10 @@ export class PharmacyUserManagementComponent implements OnInit, AfterViewInit, O
 
   userListData = new Array();
   userTypes: any = {
-    7: 'Manager',
-    8: 'Pharmacist',
-    9: 'Technician',
-    10: 'Cashier'
+    pharmacy_manager: 'Manager',
+    pharmacist: 'Pharmacist',
+    pharmacy_technician: 'Technician',
+    pharmacy_cashier: 'Cashier'
   }
   currentUrl:string;
   sub1: any;
@@ -134,14 +134,12 @@ export class PharmacyUserManagementComponent implements OnInit, AfterViewInit, O
       },
       columns: [
         {
-          data: 'user_id',
-          title: 'ID',
-          className: 'text-center font-weight-normal',
-        },
-        {
-          data: 'full_name',
+          data: 'first_name',
           title: 'Name',
           className: 'text-center font-weight-normal',
+          render: (data: any, type: any, full: any) => {
+            return full.first_name + ' ' + full.last_name; 
+          } 
         },
         {
           data: 'email',
@@ -166,7 +164,7 @@ export class PharmacyUserManagementComponent implements OnInit, AfterViewInit, O
           }
         },
         {
-          data: 'type',
+          data: 'role',
           title: 'Role',
           className: 'text-center font-weight-normal',
           render: (data: any) => {
@@ -177,9 +175,9 @@ export class PharmacyUserManagementComponent implements OnInit, AfterViewInit, O
           title: 'Action',
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
-            return `<div class="btn-group"><button class="btn btn-default btn-sm m-0" userViewId=${full.user_id}>View</button>
+            return `<div class="btn-group"><button class="btn btn-default btn-sm m-0" userViewId=${full._id}>View</button>
              &nbsp;&nbsp;
-             <button class="btn btn-sm btn-primary m-0" userEditId=${full.user_id}>Edit</button></div>`;
+             <button class="btn btn-sm btn-primary m-0" userEditId=${full._id}>Edit</button></div>`;
           },
           orderable: false
         }

@@ -47,7 +47,7 @@ export class RefundProcessedOrdersComponent implements OnInit,AfterViewInit {
             {}
           )
           .subscribe((resp) => {
-            
+
             this.ordersTableData = resp.data;
             this.blockDataTable.stop();
             callback({
@@ -88,7 +88,7 @@ export class RefundProcessedOrdersComponent implements OnInit,AfterViewInit {
           title: 'Total Amount',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -96,7 +96,7 @@ export class RefundProcessedOrdersComponent implements OnInit,AfterViewInit {
           title: 'Charged From Stripe',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -104,7 +104,7 @@ export class RefundProcessedOrdersComponent implements OnInit,AfterViewInit {
           title: 'Charged From Wallet',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -126,7 +126,7 @@ export class RefundProcessedOrdersComponent implements OnInit,AfterViewInit {
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

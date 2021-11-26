@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { AccountRequestListComponent } from './account-request-list/account-request-list.component';
 import { AccountRequestViewComponent } from './account-request-view/account-request-view.component';
 import { AccountRequestEditComponent } from './account-request-edit/account-request-edit.component';
-import { AccountRequestRegistrationComponent } from './account-request-registration/account-request-registration.component';
 
 const routes: Routes = [
   {
@@ -15,7 +14,6 @@ const routes: Routes = [
       { path: 'list', component: AccountRequestListComponent },
       { path: 'view/:id', component: AccountRequestViewComponent},
       { path: 'edit/:id', component: AccountRequestEditComponent},
-      { path: 'registration/:id', component: AccountRequestRegistrationComponent},
     ]
   }
 ];

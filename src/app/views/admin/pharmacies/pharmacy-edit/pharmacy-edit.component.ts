@@ -4,6 +4,7 @@ import { Toastr } from '../../../../services/toastr.service';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AdminPharmacyDetails } from '../../../../models/admin/AdminPharmacy';
+import { environment } from 'src/environments/environment'; 
 
 @Component({
   selector: 'app-pharmacy-edit',
@@ -19,6 +20,7 @@ export class PharmacyEditComponent implements OnInit {
   public states!: any[];
   public pharmacyId: any;
   selectedFile!:File;
+  lbDocImageUrl!: any;
   public professionalLiabilityDocumentImg: any;
   public pharmacyTypes = [
     {
@@ -106,10 +108,20 @@ export class PharmacyEditComponent implements OnInit {
 
   }
 
+  getLocalImage(path:any) {
+    if(path!=null){
+      return environment.api_url+path;
+    }else{
+      return '/src/assets/img/no_preview.png';
+    }
+  }
+
   public getPharmacy() {
     this.http.get('api/pharmacies/view/' + this.pharmacyId).subscribe((data: any) => {
         this.pharmacyObj = data;
         this.professionalLiabilityDocumentImg = this.pharmacyObj.professional_liability_document;
+
+        this.lbDocImageUrl = this.getLocalImage(this.pharmacyObj.professional_liability_document);
         this.pharmacyObjClone = JSON.parse(JSON.stringify(this.pharmacyObj));
 
         this.pharmacyObjClone.professional_liability_document = '';
@@ -140,7 +152,8 @@ export class PharmacyEditComponent implements OnInit {
             'city': new FormControl(address.city, [Validators.required]),
             'state_id': new FormControl(address.state_id, [Validators.required]),
             'zip_code': new FormControl(address.zip_code, [Validators.required]),
-            'is_active': new FormControl(address.is_active, [])
+            'is_active': new FormControl(address.is_active, []),
+            'is_default': new FormControl(true, [])
           });
           addressControl.push(aControl);
         });
@@ -170,7 +183,7 @@ export class PharmacyEditComponent implements OnInit {
   public getStateList(currentStateId: number) {
     let selectedStateIds = (this.addPharmacyForm.get('licenses') as FormArray)['value'].map((e: any) => isNaN(parseInt(e.state_id)) ? '' : parseInt(e.state_id))
     selectedStateIds.splice(selectedStateIds.indexOf(currentStateId), 1)
-    var filtered = this.states.filter(({ id }) => !selectedStateIds.includes(id));
+    var filtered = this.states.filter(({ _id }) => !selectedStateIds.includes(_id));
     return filtered;
   }
 
@@ -196,7 +209,8 @@ export class PharmacyEditComponent implements OnInit {
       'city': new FormControl(null, [Validators.required]),
       'state_id': new FormControl(null, [Validators.required]),
       'zip_code': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, [])
+      'is_active': new FormControl(null, []),
+      'is_default': new FormControl(null, [])
     });
   }
 
@@ -276,13 +290,19 @@ export class PharmacyEditComponent implements OnInit {
   }
 
   onFileSelect(event:any){
+    const reader = new FileReader();
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.selectedFile = file;
+
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+          this.lbDocImageUrl = reader.result;
+      }
     }
   }
 
-  addPharmacySubmit(){
+  editPharmacySubmit(){
     if (this.addPharmacyForm.invalid) {
       this.markFormGroupTouched(this.addPharmacyForm);
       window.scrollTo(0, 0);
@@ -291,21 +311,21 @@ export class PharmacyEditComponent implements OnInit {
     const fd: FormData = new FormData();
     let formVal= this.addPharmacyForm.value;
     formVal.licenses = formVal.licenses.map((item:any)=>{
-       let stFound:any = this.states.find((st:any)=>st._id == item.state_id);
-       item.state_name  =stFound.name;
-       return item;
+      let stFound:any = this.states.find((st:any)=>st._id == item.state_id);
+      item.state_name  =stFound.name;
+      return item;
     });
     formVal.practice_addresses = formVal.practice_addresses.map((item:any)=>{
       let stFound:any = this.states.find((st:any)=>st._id == item.state_id);
       item.state  =stFound.name;
       return item;
-   });
+  });
 
     fd.append('pharmacy', JSON.stringify(formVal));
     if (formVal.professional_liability_document == null){
-      fd.append('lb_policy_document', this.professionalLiabilityDocumentImg);
+      fd.append('professional_liability_document', this.professionalLiabilityDocumentImg);
     } else {
-      fd.append('lb_policy_document',this.selectedFile);
+      fd.append('professional_liability_document',this.selectedFile);
     }
     this.http.post('api/pharmacies/update/' + this.pharmacyId, fd)
       .subscribe((data: any) => {

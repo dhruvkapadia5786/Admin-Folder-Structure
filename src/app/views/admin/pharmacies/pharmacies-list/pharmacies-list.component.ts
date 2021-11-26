@@ -71,14 +71,32 @@ export class PharmaciesListComponent implements OnInit, AfterViewInit,OnDestroy 
           className: 'text-center  font-weight-normal',
         },
         {
-          data: 'city_name',
+          data: 'practice_addresses',
           title: 'City',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, full: any) => {
+            let addressObj = full.practice_addresses.find((ADD: any) => ADD.is_default == true)
+            if (data && addressObj) {
+              return `<span>${addressObj.city}</span>`
+            } else {
+              return `<span>-</span>`
+            }
+
+          }
         },
         {
-          data: 'state_name',
+          data: 'practice_addresses',
           title: 'State',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, full: any) => {
+            let addressObj = full.practice_addresses.find((ADD: any) => ADD.is_default == true)
+            if (data && addressObj) {
+              return `<span>${addressObj.state}</span>`
+            } else {
+              return `<span>-</span>`
+            }
+
+          }
         },
         {
           data: 'is_active',
@@ -93,22 +111,10 @@ export class PharmaciesListComponent implements OnInit, AfterViewInit,OnDestroy 
           }
         },
         {
-          data: 'doesspot_pharmacy_id',
-          title: 'DS Linked',
-          className: 'text-center  font-weight-normal',
-          render: (data) => {
-            if (data) {
-              return `<i class="fa fa-check text-success"></i>`;
-            } else {
-              return `<i class="fa fa-times text-danger"></i>`;
-            }
-          }
-        },
-        {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<button class="btn btn-default btn-sm m-0" pharmId=${full._id}>Add<i class="ml-2 fas fa-eye"></i></button>
+            return `<button class="btn btn-default btn-sm m-0" pharmId=${full._id}>View<i class="ml-2 fas fa-eye"></i></button>
              &nbsp;&nbsp;
              <button class="btn btn-sm btn-primary m-0" pharmEditId=${full._id}>Edit<i class="ml-2 fas fa-edit"></i></button>`;
           },

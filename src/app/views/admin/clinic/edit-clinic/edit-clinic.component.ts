@@ -51,7 +51,6 @@ export class EditClinicComponent implements OnInit {
        'primary_phone': new FormControl(null,[Validators.required]),
        'primary_fax': new FormControl(null,[]),
        'is_active':new FormControl(null,[]),
-       'doesspot_clinic_id':new FormControl(null,[]),
        'clinic_code': new FormControl(null,[Validators.required])
      });
    }
@@ -66,7 +65,6 @@ export class EditClinicComponent implements OnInit {
   get primary_phone(){ return this.clinicForm.get('primary_phone');}
   get primary_fax(){ return this.clinicForm.get('primary_fax');}
   get is_active(){return this.clinicForm.get('is_active');}
-  get doesspot_clinic_id(){return this.clinicForm.get('doesspot_clinic_id');}
   get clinic_code(){return this.clinicForm.get('clinic_code');}
 
   async loadDetails(){
@@ -84,7 +82,6 @@ export class EditClinicComponent implements OnInit {
         'primary_phone': details.primary_phone,
         'primary_fax': details.primary_fax?details.primary_fax:'',
         'is_active':details.is_active,
-        'doesspot_clinic_id':details.doesspot_clinic_id,
         'clinic_code':details.clinic_code
      });
     }

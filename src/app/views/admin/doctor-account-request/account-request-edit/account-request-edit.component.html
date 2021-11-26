@@ -194,7 +194,7 @@
                 <mat-option *ngFor="let condition of treatmentConditionsList" [(value)]="condition.id" color='primary'>{{condition.name}}</mat-option>
               </mat-select>
               <div class="invalid-feedback" *ngIf="conditions?.invalid && (conditions?.dirty || conditions?.touched)" class="text-danger">
-                <div *ngIf="conditions?.errors?.required">Pet Type is required.</div>
+                <div *ngIf="conditions?.errors?.required">Treatment is required.</div>
               </div>
             </div>
           </div>
@@ -298,8 +298,8 @@
         </div>
       </div>
     </div>
-    
-   
+
+
     <hr>
     <h4>Residential Address</h4>
     <hr>

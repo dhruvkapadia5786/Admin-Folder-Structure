@@ -128,7 +128,7 @@ export class DoctorRegistrationCodeComponent implements OnInit, AfterViewInit,On
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

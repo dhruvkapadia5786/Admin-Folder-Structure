@@ -81,11 +81,6 @@ export class ListClinicComponent implements OnInit, AfterViewInit,OnDestroy {
       },
       columns: [
         {
-          data: 'doesspot_clinic_id',
-          title: 'Clinic ID',
-          className: 'text-center  font-weight-normal',
-        },
-        {
           data: 'clinic_name',
           title: 'Clinic Name',
           className: 'text-center  font-weight-normal',
@@ -121,9 +116,9 @@ export class ListClinicComponent implements OnInit, AfterViewInit,OnDestroy {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<button class="btn btn-default btn-sm m-0" clinicID=${full.doesspot_clinic_id}>View</button>
+            return `<button class="btn btn-default btn-sm m-0" clinicID=${full._id}>View</button>
              &nbsp;&nbsp;
-             <button class="btn btn-sm btn-primary m-0" clinicEditID=${full.doesspot_clinic_id}>Edit</button>`;
+             <button class="btn btn-sm btn-primary m-0" clinicEditID=${full._id}>Edit</button>`;
           },
           orderable: false
         }

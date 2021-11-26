@@ -112,6 +112,7 @@
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="professional_liability_document">Professional Liability Policy Document</label>
+                <img class="rounded shadow" id="image_url" [(src)]="lbDocImageUrl" alt="image" style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
                 <input type="file" class="form-control" id="professional_liability_document" placeholder="Professional Liability Policy Document" formControlName="professional_liability_document"
                   (change)="onFileSelect($event)">
                 <div class="invalid-feedback" *ngIf="professional_liability_document?.invalid && (professional_liability_document?.dirty || professional_liability_document?.touched)"
@@ -225,6 +226,11 @@
                       <mat-checkbox color="primary" formControlName="is_active">
                         Active
                       </mat-checkbox>
+                    </div>
+                    <div class="form-group">
+                      <mat-radio-button name="isDefaultRbtn" color="primary" formControlName="is_default">
+                        Is Default?
+                      </mat-radio-button>
                     </div>
                   </div>
               </div>

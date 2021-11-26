@@ -74,6 +74,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			},
 			{ route: '/admin/medicine-kits', iconName: 'fa-cubes', displayName: 'Medicine Kits' },
 			{ route: '/admin/orders', iconName: 'fa-shopping-cart', displayName: 'Orders' },
+      {
+				displayName: 'Consultation',
+				iconName: 'fa-user-md',
+				children: [
+					{ route: '/admin/consultation', iconName: 'fa-user-md', displayName: 'Consultation' },
+					{ route: '/admin/consultation-health-conditions', iconName: 'fa-medkit', displayName: 'Health Conditions' },
+					{ route: '/admin/consultation-questions', iconName: 'fa-question', displayName: 'Consultation Questions' }
+				]
+			},
 			{
 				displayName: 'Questions',
 				iconName: 'fa-question',
@@ -189,10 +198,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	}
 
 	getDateForNotification(date: any) {
-		var startDate = moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').tz('America/New_York');
-		var endDate = moment.tz('America/New_York');
+		var startDate = moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').tz('Asia/Calcutta');
+		var endDate = moment.tz('Asia/Calcutta');
 		var result = endDate.diff(startDate, 'days');
-		return result <= 3 ? moment.tz(date, 'America/New_York').fromNow() : moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MM/DD/YYYY HH:mm:ss A');
+		return result <= 3 ? moment.tz(date, 'Asia/Calcutta').fromNow() : moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MM/DD/YYYY HH:mm:ss A');
 	}
 
 }

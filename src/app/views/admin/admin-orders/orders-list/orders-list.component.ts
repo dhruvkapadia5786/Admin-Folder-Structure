@@ -121,7 +121,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
@@ -133,7 +133,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
@@ -158,7 +158,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           title: 'Total Amount',
           className: 'text-center font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {

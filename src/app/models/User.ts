@@ -27,9 +27,6 @@ export class User extends BaseModel {
   practiceAddresses!: Array<Address>;
   pharmacy_name!: string;
 
-  doesspot_patient_id?:number|null;
-  doesspot_clinician_id?:number|null;
-  doesspot_error?:string|null;
   portal_usage?:string|null;
   all_agreement_signed?:boolean|null;
 
@@ -55,8 +52,6 @@ export class User extends BaseModel {
     this.dateOfBirth = null;
     this.address = new Address();
     this.practiceAddresses = new Array<Address>();
-    this.doesspot_patient_id=null;
-    this.doesspot_error=null;
     this.profile_bmi = null;
     this.profile_bp = null;
     this.profile_surgical_history =null;
@@ -64,7 +59,6 @@ export class User extends BaseModel {
     this.profile_family_history =null;
     this.portal_usage=null;
     this.all_agreement_signed = null;
-    this.doesspot_clinician_id = null;
   }
 
 }

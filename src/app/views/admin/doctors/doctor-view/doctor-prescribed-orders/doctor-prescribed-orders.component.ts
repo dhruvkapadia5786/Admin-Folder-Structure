@@ -134,7 +134,7 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
           title: 'Order Date',
           render: (data) => {
             if (data) {
-              return this.helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this.helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

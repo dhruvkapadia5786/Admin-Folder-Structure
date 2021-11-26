@@ -73,14 +73,15 @@ export class PharmacyUserCreateComponent implements OnInit, OnDestroy {
     }
 
     this.userForm = new FormGroup({
-      system_pharmacy_id: new FormControl(this.pharmacyId),
+      pharmacy_id: new FormControl(this.pharmacyId),
       role: new FormControl(null, [Validators.required]),
       first_name: new FormControl(null, [Validators.required]),
       last_name: new FormControl(null, [Validators.required]),
       email: new FormControl(null, [Validators.required, Validators.email]),
-      phone_number: new FormControl(null, [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]),
+      cell_phone_number: new FormControl(null, [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]),
       email_phone_consent: new FormControl(true, []),
       add_memo_tab: new FormControl(true, []),
+      gender: new FormControl(null, [Validators.required]),
       is_active: new FormControl(true, []),
       licenses: new FormArray([])
     });
@@ -101,10 +102,11 @@ export class PharmacyUserCreateComponent implements OnInit, OnDestroy {
   get first_name() { return this.userForm.get('first_name'); }
   get last_name() { return this.userForm.get('last_name'); }
   get email() { return this.userForm.get('email'); }
-  get phone_number() { return this.userForm.get('phone_number'); }
+  get cell_phone_number() { return this.userForm.get('cell_phone_number'); }
   get password() { return this.userForm.get('password'); }
   get email_phone_consent() { return this.userForm.get('email_phone_consent'); }
   get add_memo_tab() { return this.userForm.get('add_memo_tab'); }
+  get gender() { return this.userForm.get('gender'); }
   get is_active() { return this.userForm.get('is_active'); }
 
   get licenses(): FormGroup {
@@ -179,9 +181,7 @@ export class PharmacyUserCreateComponent implements OnInit, OnDestroy {
 
   handleChangeRole(value: any) {
     let roleFound = this.userRoles.find((item: any) => item.value == value);
-    this.userForm.patchValue({
-      role: roleFound.key
-    });
+    
     let licenseFormArray = this.userForm.get('licenses') as FormArray;
     this.clearFormArray(licenseFormArray);
     if (roleFound.key == 'PHARMACY_CASHIER') {
@@ -210,21 +210,22 @@ export class PharmacyUserCreateComponent implements OnInit, OnDestroy {
   public getStateList(currentStateId: number) {
     let selectedStateIds = (this.userForm.get('licenses') as FormArray)['value'].map((e: any) => e.state_id)
     selectedStateIds.splice(selectedStateIds.indexOf(currentStateId), 1)
-    var filtered = this.states.filter(({ id }) => !selectedStateIds.includes(id));
+    var filtered = this.states.filter(({ _id }) => !selectedStateIds.includes(_id));
     return filtered;
   }
 
   public patchFormValue() {
-    let url = `api/v1/pharmacy/profile?userId=${this.pharmacyUserId}`
+    let url = `api/pharmacies/view_user/${this.pharmacyUserId}`
     this.http.get(url).subscribe((data: any) => {
       this.userForm.patchValue({
         role: data.role,
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        phone_number: data.cell_phone_number,
+        cell_phone_number: data.cell_phone_number,
         email_phone_consent: true,
         add_memo_tab: data.add_memo_tab,
+        gender: data.gender,
         is_active: data.is_active
       });
       if (data.licenses && data.licenses.length > 0) {

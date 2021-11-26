@@ -27,8 +27,6 @@ export class ViewClinicComponent implements OnInit, AfterViewInit {
   selectedDoctorId: any = null;
   loading: boolean = false;
 
-  doesspot_notification_counts: any;
-  doesspot_error_notification: any;
 
   dtOptions: any = {};
   patientsTableData = new Array<any>();
@@ -65,7 +63,7 @@ export class ViewClinicComponent implements OnInit, AfterViewInit {
     let url = 'api/v1/admin/clinics/all_doctors_list';
     this.http.get(url).subscribe((res: any) => {
       this.doctorList = res.filter((doc: any) => {
-        return this.clinic.doctors.filter((clinic_doctor: any) => { return clinic_doctor.is_deleted != 1 && clinic_doctor.teledaddyuser_ptr_id == doc.teledaddyuser_ptr_id }).length > 0 ? false : true;
+        return this.clinic.doctors.filter((clinic_doctor: any) => { return clinic_doctor.is_deleted != 1 && clinic_doctor._id == doc.teledaddyuser_ptr_id }).length > 0 ? false : true;
       });
     }, (err: any) => {
 
@@ -84,7 +82,7 @@ export class ViewClinicComponent implements OnInit, AfterViewInit {
     });
   }
 
-  manageAccountUsage(doctorId: number, is_active: any) {
+  manageAccountUsage(doctorId: any, is_active: any) {
     let url = 'api/v1/admin/doctors/manage_account_usage';
     this.http.post(url, {
       doctor_id: doctorId,
@@ -96,12 +94,11 @@ export class ViewClinicComponent implements OnInit, AfterViewInit {
     });
   }
 
-  removeFromClinic(doesspot_clinic_id: number, doctor_id: number, doctor_doesspot_id: number) {
+  removeFromClinic(clinic_id: any, doctor_id: any) {
     let url = 'api/v1/doesspot/removeClinicianFromClinic';
     this.http.post(url, {
       doctor_id: doctor_id,
-      doesspot_clinic_id: doesspot_clinic_id,
-      doesspot_clinician_id: doctor_doesspot_id
+      clinic_id: clinic_id,
     }).subscribe((res: any) => {
       this.loadDetails();
     }, (err: any) => {
@@ -116,7 +113,7 @@ export class ViewClinicComponent implements OnInit, AfterViewInit {
 
   setDoctor(doctor: any) {
     this.selectedDoctor = doctor;
-    this.selectedDoctorId = doctor.teledaddyuser_ptr_id;
+    this.selectedDoctorId = doctor._id;
   }
 
   setDoctorNOpenModal(doctor: any) {

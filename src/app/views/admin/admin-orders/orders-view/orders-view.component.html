@@ -10,9 +10,9 @@
                         <p class="mb-1"><strong class="mr-2">Order Created By : </strong> <span
                                 [innerHTML]="getOrderCreatedWay(orderDetails.created_by)"></span></p>
                         <p class="mb-1"><strong class="mr-2">Created Date : </strong>{{orderDetails.created |
-                            date:'MM/dd/yyyy'}}</p>
+                            date:'DD-MM-YYYY'}}</p>
                         <p class="mb-1"><strong class="mr-2">Completed Date :
-                            </strong>{{orderDetails.order_place_datetime | date:'MM/dd/yyyy'}}</p>
+                            </strong>{{orderDetails.order_place_datetime | date:'DD-MM-YYYY'}}</p>
                         <p>
                             <strong class="mr-2">System Status: </strong>
                             <span class="m-0"
@@ -82,9 +82,9 @@
                 <div class="d-flex flex-row justify-content-start align-items-center  mt-2">
                     <div *ngIf="orderDetails.is_transferred" class="alert alert-warning">This Order has been Transferred
                         to Pharmacy : {{orderDetails.transferred_pharmacy.pharmacy_name}} on date
-                        {{orderDetails.order_transfer_datetime | date: 'MM/dd/yyyy'}}</div>
+                        {{orderDetails.order_transfer_datetime | date: 'DD-MM-YYYY'}}</div>
                     <div *ngIf="orderDetails.is_closed" class="ml-2 alert alert-dark">This Order has been Closed on date
-                        {{orderDetails.order_closed_datetime | date: 'MM/dd/yyyy'}} , Reason :
+                        {{orderDetails.order_closed_datetime | date: 'DD-MM-YYYY'}} , Reason :
                         {{orderDetails.order_closed_reason }}</div>
                 </div>
 
@@ -211,7 +211,7 @@
                                         <tr>
                                             <th class="text-900">Shipping Charges</th>
                                             <td class="font-weight-semi-bold text-right">{{(orderDetails.shipping_charge
-                                                || 0) | currency }}</td>
+                                                || 0) | currency:'INR'}}</td>
                                         </tr>
                                         <tr class="border-top">
                                             <th class="font-weight-bold">Total</th>
@@ -235,7 +235,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <p class="font-weight-bold">{{orderDetails.charged_from_stripe | currency }}
+                                            <p class="font-weight-bold">{{orderDetails.charged_from_stripe | currency:'INR'}}
                                             </p>
                                             <div class="media"
                                                 *ngIf="orderDetails.used_payment_card && orderDetails.used_payment_card.card">
@@ -252,7 +252,7 @@
                                                 target="_blank" [href]="orderDetails.stripe_receipt_url">Stripe
                                                 Receipt</a>
                                         </td>
-                                        <td class="font-weight-bold">{{orderDetails.charged_from_wallet | currency }}
+                                        <td class="font-weight-bold">{{orderDetails.charged_from_wallet | currency:'INR'}}
                                         </td>
                                         <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency}}
                                         </td>
@@ -271,9 +271,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="font-weight-bold">{{orderDetails.refunded_in_stripe | currency }}
+                                        <td class="font-weight-bold">{{orderDetails.refunded_in_stripe | currency:'INR'}}
                                         </td>
-                                        <td class="font-weight-bold">{{orderDetails.refunded_in_wallet | currency }}
+                                        <td class="font-weight-bold">{{orderDetails.refunded_in_wallet | currency:'INR'}}
                                         </td>
                                         <td class="font-weight-bold text-right">{{orderDetails.refunded_total |
                                             currency}}</td>
@@ -365,29 +365,29 @@
                                     <tr>
                                         <td>
                                             <p class="mb-1"><strong class="mr-2">Created Date :
-                                                </strong>{{orderDetails.created | date:'MM/dd/yyyy'}}</p>
+                                                </strong>{{orderDetails.created | date:'DD-MM-YYYY'}}</p>
                                             <p class="mb-1"><strong class="mr-2">Completed Date :
-                                                </strong>{{orderDetails.order_place_datetime | date:'MM/dd/yyyy'}}</p>
+                                                </strong>{{orderDetails.order_place_datetime | date:'DD-MM-YYYY'}}</p>
                                         </td>
                                         <td>
 
                                         </td>
                                         <td>
                                             <p class="mb-1"><strong class="mr-2">Prescribed On : </strong>{{
-                                                (orderDetails.prescribed_on | date:'MM/dd/yyyy') || '--' }}</p>
+                                                (orderDetails.prescribed_on | date:'DD-MM-YYYY') || '--' }}</p>
                                         </td>
                                         <td>
                                             <p class="mb-1"><strong class="mr-2">Shipped On : </strong>{{
-                                                (orderDetails.shipped_on | date:'MM/dd/yyyy') || '--' }}</p>
+                                                (orderDetails.shipped_on | date:'DD-MM-YYYY') || '--' }}</p>
                                             <p class="mb-1"><strong class="mr-2">Pickedup On : </strong>{{
-                                                (orderDetails.picked_up_on | date:'MM/dd/yyyy') || '--' }}</p>
+                                                (orderDetails.picked_up_on | date:'DD-MM-YYYY') || '--' }}</p>
                                             <p class="mb-1" *ngIf="orderDetails.is_transferred ==1"><strong
                                                     class="mr-2">Transferred On : </strong>{{
-                                                (orderDetails.order_transfer_datetime | date:'MM/dd/yyyy') || '--' }}
+                                                (orderDetails.order_transfer_datetime | date:'DD-MM-YYYY') || '--' }}
                                             </p>
                                             <p class="mb-1" *ngIf="orderDetails.is_closed ==1"><strong
                                                     class="mr-2">Closed On : </strong>{{
-                                                (orderDetails.order_closed_datetime | date:'MM/dd/yyyy') || '--' }}</p>
+                                                (orderDetails.order_closed_datetime | date:'DD-MM-YYYY') || '--' }}</p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -597,7 +597,7 @@
                                 style="border:0" allowfullscreen></iframe>
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="row">
                     <div class="col-md-6">

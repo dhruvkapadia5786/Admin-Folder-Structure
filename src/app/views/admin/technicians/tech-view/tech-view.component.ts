@@ -19,7 +19,6 @@ import { Toastr } from 'src/app/services/toastr.service';
 export class TechViewComponent implements OnInit, AfterViewInit {
   techId: any;
   techDetails: any;
-  customerUinqueNumber: any;
 
   techOrderTableData = new Array();
   dtOptions: any = {};
@@ -34,7 +33,7 @@ export class TechViewComponent implements OnInit, AfterViewInit {
 
   constructor(public http: HttpClient,
     private route: ActivatedRoute,
-    private helper: Helper,
+    public helper: Helper,
     private router: Router,
     private _toastr: Toastr,
     private _renderer: Renderer2) {
@@ -52,9 +51,7 @@ export class TechViewComponent implements OnInit, AfterViewInit {
   getTechDetails(){
     const url = 'api/technicians/view/' + this.techId;
     this.http.get(url).subscribe((tech: any) => {
-        console.log('tech >> ', tech)
         this.techDetails = tech;
-        this.getCutomerUniqueNumber(this.techId, this.techDetails.type);
       },(err:any) => {
 
       });
@@ -71,10 +68,6 @@ export class TechViewComponent implements OnInit, AfterViewInit {
 
   getDocumentUrl(documentURL: any){
     return environment.api_url + documentURL.substring(3);
-  }
-
-  getCutomerUniqueNumber(id: any, type: any){
-    this.customerUinqueNumber = this.helper.getUserUniqueId(id, type);
   }
 
   getGender(gender: any) {
@@ -197,7 +190,7 @@ export class TechViewComponent implements OnInit, AfterViewInit {
 				className: 'text-center',
 				render: function (data: any) {
 					const _helper = new Helper();
-					return _helper.getInDollarFormat('USD', data);
+					return _helper.getInINRFormat('INR', data);
 				}
 			  },
 			  {
@@ -219,7 +212,7 @@ export class TechViewComponent implements OnInit, AfterViewInit {
 				className: 'text-center',
 				render: (data: any) => {
 				  if (data) {
-					return this.helper.getLocalDate(data, 'MM/DD/YYYY');
+					return this.helper.getFormattedDateFromUnixTimestamp(data, 'MM/DD/YYYY');
 				  } else {
 					return '<span></span>';
 				  }
@@ -355,9 +348,9 @@ export class TechViewComponent implements OnInit, AfterViewInit {
     this.router.navigate(['admin','consultation','view',consultationID]);
   }
 
-  manageAccountLogin(status:number){
-      const url = 'api/v1/users/manage-account-login/' + this.techId+'/'+status;
-      this.http.get(url).subscribe((result: any) => {
+  manageAccountLogin(status:boolean){
+      const url = 'api/general/manage-account-login';
+      this.http.post(url, {user_id: this.techId, is_active: status}).subscribe((result: any) => {
         this._toastr.showSuccess('Account Login Status Successfully Updated');
         this.getTechDetails();
       }, (err:any) => {

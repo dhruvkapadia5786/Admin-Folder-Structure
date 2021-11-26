@@ -6,7 +6,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Helper } from 'src/app/services/helper.service';
 import { CurrencyPipe  } from '@angular/common';
-import {environment} from 'src/environments/environment'; 
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'app-list-medicine-kits',
@@ -133,7 +133,7 @@ export class ListMedicineKitsComponent implements OnInit, AfterViewInit, OnDestr
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this.cp.transform(data, 'USD');
+              return this.cp.transform(data, 'INR');
             } else {
               return '<span>-</span>';
             }
@@ -145,7 +145,7 @@ export class ListMedicineKitsComponent implements OnInit, AfterViewInit, OnDestr
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this.cp.transform(data, 'USD');
+              return this.cp.transform(data, 'INR');
             } else {
               return '<span>-</span>';
             }
@@ -182,7 +182,7 @@ export class ListMedicineKitsComponent implements OnInit, AfterViewInit, OnDestr
           render: (data: any, type: any, full: any) => {
             if (data) {
               return ''
-              //this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              //this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

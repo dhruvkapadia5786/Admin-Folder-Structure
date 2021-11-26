@@ -11,6 +11,8 @@ const routes: Routes = [
   { path: 'patients', loadChildren:()=>import('../../views/admin/customers/customers.module').then(cust=>cust.CustomersModule) },
   { path: 'technicians', loadChildren:()=>import('../../views/admin/technicians/technicians.module').then(technicians=>technicians.TechniciansModule) },
   { path: 'medicine-kits', loadChildren:()=>import('../../views/admin/medicine-kits/medicine-kits.module').then(medicinekit=>medicinekit.MedicineKitsModule) },
+  { path: 'consultation', loadChildren:()=>import('../../views/admin/consultation/consultation.module').then(consultation=>consultation.ConsultationModule)},
+  { path: 'consultation-health-conditions', loadChildren:()=>import('../../views/admin/consultation-health-conditions/consultation-health-conditions.module').then(HC=>HC.ConsultationHealthConditionsModule) },
   { path: 'pharmacies', loadChildren:()=>import('../../views/admin/pharmacies/pharmacies.module').then(pharmacies=>pharmacies.PharmaciesModule) },
   { path: 'orders', loadChildren:()=>import('../../views/admin/admin-orders/admin-orders.module').then(AO=>AO.AdminOrdersModule) },
   { path: 'brands', loadChildren:()=>import('../../views/admin/brands/brands.module').then(brand=>brand.BrandsModule) },

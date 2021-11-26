@@ -13,11 +13,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./refunded-orders.component.scss']
 })
 export class RefundedOrdersComponent implements OnInit,AfterViewInit {
-  
+
   ordersTableData:any[]=[];
   selectedOrder:any;
   refund_processing:boolean=false;
- 
+
   dtOptions!: DataTables.Settings;
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
@@ -53,7 +53,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
             {}
           )
           .subscribe((resp) => {
-            
+
             this.ordersTableData = resp.data;
             this.blockDataTable.stop();
             callback({
@@ -94,7 +94,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
           title: 'Total Amount',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -112,7 +112,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
           title: 'Charged From Stripe',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -120,7 +120,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
           title: 'Charged From Wallet',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -152,16 +152,16 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
     };
   }
 
- 
+
   refundOrder(orderId: number,event:string,full_refund:number) {
       let url:string = 'api/v1/admin/orders/processRefund';
       this.refund_processing=true;
       this._http.post(url, { order_id: orderId,event:event,full_refund_in_wallet:full_refund })
         .subscribe((res: any) => {
-         
+
           this.refund_processing=false;
           this.selectedOrder.result = res;
-          
+
           if (res.refunded) {
             let stripeRefund= res.stripeRefund ? res.stripeRefund.id:'N/A';
             let walletRefund= res.walletRefund ? 'Yes':'N/A';
@@ -173,7 +173,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
         },(err) => {
           this.refund_processing=false;
           this._toaster.error('Unable to refund order. Please try again');
-        });  
+        });
   }
 
   ngOnInit() {
@@ -203,7 +203,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
       }
       if(event.target.hasAttribute('refundOrderId')){
         event.stopPropagation();
-        this.callProcessrefund(event.target.getAttribute('refundOrderId')); 
+        this.callProcessrefund(event.target.getAttribute('refundOrderId'));
       }
     });
   }

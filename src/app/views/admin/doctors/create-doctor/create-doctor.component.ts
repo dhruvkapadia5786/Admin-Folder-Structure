@@ -183,7 +183,7 @@ export class CreateDoctorComponent implements OnInit {
   }
 
   getClinicChange(value: number) {
-    this.selectedClinic = this.clinics.find((clinic: any) => clinic.doesspot_clinic_id = value);
+    this.selectedClinic = this.clinics.find((clinic: any) => clinic._id = value);
   }
 
   get pet_types() { return this.addDoctor.get('pet_types'); }

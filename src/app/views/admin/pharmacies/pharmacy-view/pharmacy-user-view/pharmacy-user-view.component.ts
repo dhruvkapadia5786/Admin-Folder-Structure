@@ -6,6 +6,11 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Toastr } from 'src/app/services/toastr.service';
 import Hashids from 'hashids';
+
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ChangePasswordModalComponent } from 'src/app/components/change-password-modal/change-password-modal.component';
+import { ChangePasswordModalService } from 'src/app/components/change-password-modal/change-password-modal.service';
+
 import { Helper } from 'src/app/services/helper.service';
 
 @Component({
@@ -14,6 +19,7 @@ import { Helper } from 'src/app/services/helper.service';
   styleUrls: ['./pharmacy-user-view.component.scss']
 })
 export class PharmacyUserViewComponent implements OnInit, AfterViewInit, OnDestroy {
+  modalRef!: BsModalRef;
   pharmacyUserId: any;
   pharmacyUser: any = { licenses: [] };
   pharmacyDetails: any;
@@ -31,11 +37,14 @@ export class PharmacyUserViewComponent implements OnInit, AfterViewInit, OnDestr
     public helper: Helper,
     private http: HttpClient,
     private route: ActivatedRoute,
-    public router: Router
+    public router: Router,
+    private modalService: BsModalService,
+    private _changePasswordModalService: ChangePasswordModalService
   ) {
     this.sub1 = this.route?.parent?.paramMap.subscribe((params:any) => {
       this.pharmacyUserId = params.get('userid');
     });
+    this.getProfile(this.pharmacyUserId);
   }
 
   ngOnInit() {
@@ -47,18 +56,18 @@ export class PharmacyUserViewComponent implements OnInit, AfterViewInit, OnDestr
       searching: true,
       autoWidth: false
     }
-    this.getProfile(this.pharmacyUserId);
-    this.getMyDevices();
+    // this.getMyDevices();
   }
 
   ngAfterViewInit(): void {
     this.dtTrigger.next();
   }
 
-  async getProfile(id: number) {
+  async getProfile(id: any) {
     this.profileBlockUI.start();
     let result = await this.http.get<any>(`api/pharmacies/view_user/${id}`).toPromise();
     if (result && !result.error) {
+      console.log('result >>', result)
       this.pharmacyUser = result;
       this.pharmacyDetails = result.pharmacy_details;
       this.rerender();
@@ -68,12 +77,12 @@ export class PharmacyUserViewComponent implements OnInit, AfterViewInit, OnDestr
     this.profileBlockUI.stop();
   }
 
-  async getMyDevices(){
+/*   async getMyDevices(){
     await this.http.get(`api/v1/pharmacy/devices?userId=${this.pharmacyUserId}`)
     .subscribe((result: any) => {
       this.devices = result;
     }, err => {});
-  }
+  } */
 
   rerender(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
@@ -82,10 +91,10 @@ export class PharmacyUserViewComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
-  manageAccount(){
-    let status = this.pharmacyUser.is_active == 0 ? 1 : 0
-    const url = 'api/v1/users/manage-account-login/' + this.pharmacyUserId+'/'+status;
-    this.http.get(url)
+  manageAccount(status: any){
+    // let status = this.pharmacyUser.is_active == 0 ? 1 : 0
+    const url = 'api/general/manage-account-login'
+    this.http.post(url, {user_id: this.pharmacyUserId, is_active: status})
     .subscribe((result: any) => {
       this._toastr.showSuccess('Account Status Updated!');
 
@@ -97,9 +106,9 @@ export class PharmacyUserViewComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   manageAccountService(){
-    let status: any = this.pharmacyUser.account_service_enabled==0?1:0
-    let url = `api/v1/users/manage-account-service/${this.pharmacyUserId}/${status}`;
-    this.http.get(url).subscribe((res: any) => {
+    let status: any = !this.pharmacyUser.account_service_enabled;
+    let url = `api/general/manage-account-service`;
+    this.http.post(url, {user_id: this.pharmacyUserId, account_service_enabled: status}).subscribe((res: any) => {
         this.getProfile(this.pharmacyUserId);
     },(err: any) => {});
   }
@@ -107,7 +116,10 @@ export class PharmacyUserViewComponent implements OnInit, AfterViewInit, OnDestr
   goToPasswordChangePage(userChangePasswordID: any): any {
     const hashids = new Hashids('', 10);
     const hashid = hashids.encode(userChangePasswordID);
-    this.router.navigate(['admin', 'changePassword', hashid]);
+    // this.router.navigate(['admin', 'changePassword', hashid]);
+
+    this._changePasswordModalService.setFormData({id: hashid});
+    this.modalRef = this.modalService.show(ChangePasswordModalComponent,{class:'modal-md'});
   }
 
   ngOnDestroy(){

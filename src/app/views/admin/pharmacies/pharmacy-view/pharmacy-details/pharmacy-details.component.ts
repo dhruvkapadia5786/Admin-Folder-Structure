@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Lightbox } from 'ngx-lightbox';
 import { Toastr } from 'src/app/services/toastr.service';
+import { environment } from 'src/environments/environment';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-pharmacy-details',
@@ -33,6 +35,7 @@ export class PharmacyDetailsComponent implements OnInit {
     public http: HttpClient,
     private route: ActivatedRoute,
     public toastr: Toastr,
+    public helper: Helper,
     private router: Router,
     private sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
@@ -49,31 +52,25 @@ export class PharmacyDetailsComponent implements OnInit {
     this.getPharmDetails();
   }
 
-  onSelectPharmacyclick(pharmacy: any) {
-    this.selectedDoesspotPharmacy = pharmacy;
-    const url = 'api/v1/doesspot/linkPharmacy';
-    this.http.post(url, {
-      doesspot_id: this.selectedDoesspotPharmacy.PharmacyId,
-      pharmacy_id: this.pharmId
-    }).subscribe((result: any) => {
-      this.toastr.showSuccess('Pharmacy has been linked successfully');
-    }, (err: any) => {
-      this.toastr.showError('Error Occuared');
-    });
-  }
-
-
-
   getPharmDetails() {
     const url = 'api/pharmacies/view/' + this.pharmId;
     this.http.get(url).subscribe((details: any) => {
         this.pharmDetails = details;
         if (this.pharmDetails.professional_liability_document != null) {
-          this.getImage(this.pharmDetails.professional_liability_document);
+          this.pharmDetails.professional_liability_document = this.getLocalImage(this.pharmDetails.professional_liability_document);
         }
+        this.changeDetectorRef.detectChanges();
       }, (err: any) => {
-
+        console.log('Error > ', err)
       });
+  }
+
+  getLocalImage(path:any) {
+    if(path!=null){
+      return environment.api_url+path;
+    }else{
+      return '/src/assets/img/no_preview.png';
+    }
   }
 
 
@@ -87,7 +84,7 @@ export class PharmacyDetailsComponent implements OnInit {
 
   async getImage(path: string) {
     this.blockLicenseImageUI.start();
-    await this.http.post('api/v1/admin/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
+    await this.http.post('api/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
       const fr = new FileReader();
       fr.readAsDataURL(result);
       fr.onloadend = () => {

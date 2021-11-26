@@ -43,7 +43,7 @@
             <!-- <h5>{{helper.getUTCtoLocalDateTime(doctorDetails.last_login)}}</h5> -->
           </div>
         </div>
-        
+
         <div class="row">
           <div class="col-md-6">
             <div class="p-2 bg-dark-grey">
@@ -81,7 +81,7 @@
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Registration Date</td>
-                  <td class="font-weight-normal">{{(doctorDetails.date_joined | date:'MM/dd/yyyy')}}</td>
+                  <td class="font-weight-normal">{{(doctorDetails.created_at | date:'MM/dd/yyyy')}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Email</td>
@@ -110,24 +110,8 @@
             </div>
             <div class="table-responsive">
               <table class="table table-hover">
-                <tr>
-                  <td class="font-weight-bold">DS Doctor ID</td>
-                  <td class="font-weight-normal">
-                    <p *ngIf="doctorDetails.doesspot_clinician_id">
-                      {{doctorDetails.doesspot_clinician_id}}</p>
-                    <label *ngIf="doctorDetails.doesspot_error">DS Error</label>
-                    <div *ngIf="doctorDetails.doesspot_error" class="alert alert-danger" role="alert">
-                      {{doctorDetails?.doesspot_error}}</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">WN Doctor ID</td>
-                  <td class="font-weight-normal">
-                    <p *ngIf="doctorDetails.weno_clinician_id">
-                      {{doctorDetails.weno_clinician_id}}
-                    </p>
-                  </td>
-                </tr>
+
+
                 <tr>
                   <td class="font-weight-bold">NPI Number</td>
                   <td class="font-weight-normal">

@@ -16,6 +16,7 @@ export class PharmacyAddComponent implements OnInit {
   public states: any[]=[];
   public licenseFormGroup!: FormGroup;
   selectedFile!:File;
+  lbDocImageUrl!: any;
   public pharmacyTypes = [
     {
       key:"Retail",
@@ -85,14 +86,15 @@ export class PharmacyAddComponent implements OnInit {
       'practice_addresses': new FormArray([this.practice_addresses]),
       'licenses': new FormArray([this.licenses])
     });
-
+    
     this.practiceAddressFormGroup = new FormGroup({
       'address_line_1': new FormControl(null, [Validators.required]),
       'address_line_2': new FormControl(null, []),
       'city': new FormControl(null, [Validators.required]),
       'state_id': new FormControl(null, [Validators.required]),
       'zip_code': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
+      'is_active': new FormControl(true, []),
+      'is_default': new FormControl(true, [])
     });
   }
 
@@ -109,7 +111,7 @@ export class PharmacyAddComponent implements OnInit {
     let selectedStateIds = (this.addPharmacyForm.get('licenses') as FormArray)['value'].map((e: any) => e.state_id)
     selectedStateIds.splice(selectedStateIds.indexOf(currentStateId), 1)
 
-    var filtered = this.states.filter(({ id }) => !selectedStateIds.includes(id));
+    var filtered = this.states.filter(({ _id }) => !selectedStateIds.includes(_id));
     return filtered;
   }
 
@@ -135,7 +137,8 @@ export class PharmacyAddComponent implements OnInit {
       'city': new FormControl(null, [Validators.required]),
       'state_id': new FormControl(null, [Validators.required]),
       'zip_code': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, [])
+      'is_active': new FormControl(true, []),
+      'is_default': new FormControl(true, [])
     });
   }
 
@@ -215,9 +218,15 @@ export class PharmacyAddComponent implements OnInit {
   }
 
   onFileSelect(event:any){
+    const reader = new FileReader();
     if (event.target.files.length > 0){
       const file = event.target.files[0];
       this.selectedFile = file;
+
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+          this.lbDocImageUrl = reader.result;
+      }
     }
   }
 

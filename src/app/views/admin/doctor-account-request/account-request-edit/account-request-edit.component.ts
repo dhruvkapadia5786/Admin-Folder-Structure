@@ -258,7 +258,7 @@ export class AccountRequestEditComponent implements OnInit {
           fax_number: doctor.fax_number,
           gender: doctor.gender,
           email: doctor.email,
-          dateOfBirth: moment(doctor.dateOfBirth, 'MM/DD/YYYY').format('YYYY-MM-DD'),
+          dateOfBirth: moment(doctor.dateOfBirth, 'DD-MM-YYYY').format('YYYY-MM-DD'),
           residential_address_1: doctor.residential_address_1,
           residential_address_2: doctor.residential_address_2,
           residential_city: doctor.residential_city,

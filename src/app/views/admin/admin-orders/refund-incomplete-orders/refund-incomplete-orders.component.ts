@@ -14,13 +14,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './refund-incomplete-orders.component.html'
 })
 export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
- 
+
   ordersTableData:any[]=[];
   selectedOrder:any;
   refund_processing:boolean=false;
 
   // @ViewChild(ModalDirective) modal: ModalDirective;
-  
+
   dtOptions!: DataTables.Settings;
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
@@ -36,13 +36,13 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
     this.getDTOptions();
   }
 
- 
+
 
   refundOrder(orderId: number,total_amount:number) {
     this.refund_processing=true;
     const url1 = 'api/v1/new_orders/refund';
     this._http.post(url1,{order_id:orderId,initiated_by:''}) .subscribe((res: any) => {
-      
+
       if(total_amount>0){
         const process_refund_url = 'api/v1/admin/orders/processRefund';
         this._http.post(process_refund_url, { order_id: orderId }).subscribe((res: any) => {
@@ -55,10 +55,10 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
           } else {
             this._toaster.warning('Unable to refund order. Please Check Payment Method!');
           }
-          this.rerender(); 
+          this.rerender();
         }, (err) => {
             this.refund_processing=false;
-            
+
             this._toaster.error('Unable to refund order. Please try again');
         });
       }else{
@@ -67,11 +67,11 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
         };
         this.refund_processing=false;
         this._toaster.success(`Order Refunded Successfully.`);
-        this.rerender(); 
+        this.rerender();
       }
     }, (err) => {
           this.refund_processing=false;
-          
+
           this._toaster.error('Unable to refund order. Please try again');
     });
   }
@@ -98,7 +98,7 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
             {}
           )
           .subscribe((resp) => {
-            
+
             this.ordersTableData = resp.data;
             this.blockDataTable.stop();
             callback({
@@ -139,7 +139,7 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
           title: 'Total Amount',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -152,7 +152,7 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
           title: 'Charged From Stripe',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -160,7 +160,7 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
           title: 'Charged From Wallet',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-            return this._helper.getInDollarFormat('USD', data);
+            return this._helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -202,7 +202,7 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
       }
       if(event.target.hasAttribute('refundOrderId')){
         event.stopPropagation();
-        this.callProcessrefund(event.target.getAttribute('refundOrderId')); 
+        this.callProcessrefund(event.target.getAttribute('refundOrderId'));
       }
     });
   }

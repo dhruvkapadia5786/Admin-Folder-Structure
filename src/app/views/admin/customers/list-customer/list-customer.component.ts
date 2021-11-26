@@ -214,23 +214,12 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           }
         },
         {
-          data: 'doesspot_patient_id',
-          title: 'DS',
-          className: 'text-center  font-weight-normal',
-          render: (data: any,type:any,record:any) => {
-            if (data) {
-              return `<a href="/admin/patients/doesspot/${record._id}/${data}" target="_blank">${data}</a>`;
-            } else {
-              return `<i class="fa fa-times text-danger"></i>`;
-            }
-          }
-        },{
-          data: 'date_joined',
+          data: 'created_at',
           title: 'Member Since',
           className: 'text-center  font-weight-normal',
           render: (data: any) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

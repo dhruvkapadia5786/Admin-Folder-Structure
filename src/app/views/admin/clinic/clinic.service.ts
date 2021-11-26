@@ -9,16 +9,16 @@ export class ClinicService {
   constructor(private _http: HttpClient){ }
 
 
-  async viewClinic(doesspot_clinic_id:number){
-    return await this._http.get(`api/clinics/view/${doesspot_clinic_id}`).toPromise();
+  async viewClinic(clinic_id:any){
+    return await this._http.get(`api/clinics/view/${clinic_id}`).toPromise();
   }
 
-  async viewClinicByDoesspotClinicId(clinic_by_doesspot_id:number){
+  async viewClinicByDoesspotClinicId(clinic_by_doesspot_id:any){
     return await this._http.get(`api/clinics/clinic_by_doesspot_id/${clinic_by_doesspot_id}`).toPromise();
   }
 
-  async updateClinic(doesspot_clinic_id:number,data:any){
-    return await this._http.post(`api/clinics/update/${doesspot_clinic_id}`,data).toPromise();
+  async updateClinic(clinic_id:any,data:any){
+    return await this._http.post(`api/clinics/update/${clinic_id}`,data).toPromise();
   }
 
   async addClinic(data:any){

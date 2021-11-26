@@ -34,7 +34,7 @@
             <div class="col-md-4">
               <p class="mb-0"><span><small class="mb-0 mr-5 font-weight-bold">Name</small><a class="text-primary font-weight-bold" (click)="goToDetailsPage(doctor.id)" href="javascript:void(0);">{{doctor.doctor_name}}</a></span></p>
               <p class="mb-0"><span><small class="mb-0 mr-5 font-weight-bold">Email</small>{{doctor.email}}</span></p>
-              <p class="mb-0"><span><small class="mb-0 mr-4 font-weight-bold">Date Join</small>{{doctor.date_joined | date: 'MM/dd/yyyy'}}</span></p>
+              <p class="mb-0"><span><small class="mb-0 mr-4 font-weight-bold">Date Join</small>{{doctor.created_at | date: 'MM/dd/yyyy'}}</span></p>
               <p class="mb-0"><span><small class="mb-0 mr-5 font-weight-bold">Login</small><i *ngIf="doctor.is_active" class="fa fa-check text-success"></i><i *ngIf="!doctor.is_active" class="fa fa-times text-danger"></i></span></p>
               <p class="mb-0"><span><small class="mb-0 mr-4 font-weight-bold">Service&nbsp;&nbsp;&nbsp;&nbsp;</small><i *ngIf="doctor.account_service_enabled" class="fa fa-check text-success"></i><i *ngIf="!doctor.account_service_enabled" class="fa fa-times text-danger"></i></span></p>
             </div>
