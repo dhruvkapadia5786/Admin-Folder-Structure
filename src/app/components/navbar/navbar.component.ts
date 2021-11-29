@@ -72,6 +72,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/pharmacies', iconName: 'fa-ambulance', displayName: 'Pharmacies' }
 				]
 			},
+      {
+				displayName: 'Manufacturers & Brands',
+				iconName: 'fa-id-badge',
+				children: [
+            { route: '/admin/manufacturers', iconName: 'fa-list', displayName: 'Manufacturers' },
+            { route: '/admin/brands', iconName: 'fa-list', displayName: 'Brands' }
+          ]
+      },
+			{ route: '/admin/treatment-conditions', iconName: 'fa-medkit', displayName: 'Treatment Conditions' },
 			{ route: '/admin/medicine-kits', iconName: 'fa-cubes', displayName: 'Medicine Kits' },
 			{ route: '/admin/orders', iconName: 'fa-shopping-cart', displayName: 'Orders' },
       {
@@ -92,9 +101,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/questions/preview', iconName: 'fa-eye', displayName: 'Questions Preview' }
 				]
 			},
-			{ route: '/admin/brands', iconName: 'fa-list', displayName: 'Brands' },
-			{ route: '/admin/treatment-conditions', iconName: 'fa-medkit', displayName: 'Treatment Conditions' },
-			{ route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' },
+			{
+				displayName: 'OTC Drug',
+				iconName: 'fa-medkit',
+				children: [
+					{ route: '/admin/otc-categories', iconName: 'fa-bars', displayName: 'OTC Categories' },
+					{ route: '/admin/otc-drugs', iconName: 'fa-medkit', displayName: 'OTC Drugs' },
+				]
+			},
+      { route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' },
 			{
 				displayName: 'Others',
 				iconName: 'fa-info-circle',

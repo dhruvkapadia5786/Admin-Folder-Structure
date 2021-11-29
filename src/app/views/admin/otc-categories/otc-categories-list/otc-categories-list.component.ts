@@ -6,16 +6,16 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
-import { TreatmentConditionAddEditModalComponent } from '../treatment-condition-add-edit-modal/treatment-condition-add-edit-modal.component';
-import { TreatmentConditionAddEditModalService } from '../treatment-condition-add-edit-modal/treatment-condition-add-edit-modal.service';
+import { OtcCategoriesAddEditModalComponent } from '../otc-categories-add-edit-modal/otc-categories-add-edit-modal.component';
+import { OtcCategoriesAddEditModalService } from '../otc-categories-add-edit-modal/otc-categories-add-edit-modal.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-treatment-condition-list',
-  templateUrl: './treatment-condition-list.component.html',
-  styleUrls: ['./treatment-condition-list.component.scss']
+  selector: 'app-otc-categories-list',
+  templateUrl: './otc-categories-list.component.html',
+  styleUrls: ['./otc-categories-list.component.scss']
 })
-export class TreatmentConditionListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class OtcCategoriesListComponent implements OnInit, AfterViewInit, OnDestroy {
   modalRef!: BsModalRef;
   healthConditionList: any[] = [];
 
@@ -29,7 +29,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
     private _renderer:Renderer2,
     private _http: HttpClient,
     private modalService: BsModalService,
-    private _hcAddEditModalService: TreatmentConditionAddEditModalService
+    private _hcAddEditModalService: OtcCategoriesAddEditModalService
   ) {
      this.getDTOptions();
   }
@@ -43,18 +43,16 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
     this.dtTrigger.next();
     let that=this;
     this.listenerFn = this._renderer.listen('document', 'click', (event) => {
-      if (event.target.hasAttribute('tcEditId')) {
-         that.openEditModal(event.target.getAttribute('tcEditId'));
-      }
-      else if (event.target.hasAttribute('tcViewId')) {
-        let id =event.target.getAttribute('tcViewId');
-        that.goToTreatmentDetailsPage(id);
+      if (event.target.hasAttribute('hcEditId')) {
+         that.openEditModal(event.target.getAttribute('hcEditId'));
+      }else if (event.target.hasAttribute('hcViewId')) {
+        that.goToDetailsPage(event.target.getAttribute('hcViewId'));
       }
     });
   }
 
-  goToTreatmentDetailsPage(treatmentId: any): any {
-    this.router.navigate(['admin', 'treatment-conditions', 'view', treatmentId]);
+  goToDetailsPage(categoryId: any): any {
+    this.router.navigate(['admin', 'otc-categories', 'view', categoryId]);
   }
 
   ngOnDestroy() {
@@ -74,7 +72,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
 
   openAddModal(){
     this._hcAddEditModalService.setData({event:'ADD'})
-    this.modalRef = this.modalService.show(TreatmentConditionAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef = this.modalService.show(OtcCategoriesAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
     });
@@ -83,7 +81,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
   openEditModal(id:any){
     let data = this.healthConditionList.find((item:any)=>item._id == id);
     this._hcAddEditModalService.setData({event:'EDIT',data:data});
-    this.modalRef = this.modalService.show(TreatmentConditionAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef = this.modalService.show(OtcCategoriesAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();
     });
@@ -104,7 +102,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/treatment_conditions/list',
+            'api/otc_categories/list',
             dataTablesParameters,
             {}
           )
@@ -136,7 +134,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
         },
         {
           data: 'name',
-          title: 'Condition Name',
+          title: 'Name',
           className: 'text-left  font-weight-normal'
         },
         {
@@ -160,8 +158,8 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<button type="button" class="btn btn-sm btn-primary"  tcEditId="${full._id}">Edit</button>
-            <button type="button" class="ml-2 btn btn-sm btn-primary"  tcViewId="${full._id}">View</button>`;
+            return `<button type="button" class="btn btn-sm btn-primary"  hcEditId="${full._id}">Edit</button>
+            <button type="button" class="ml-2 btn btn-sm btn-primary"  hcViewId="${full._id}">View</button>`;
           },
           orderable: false
         }

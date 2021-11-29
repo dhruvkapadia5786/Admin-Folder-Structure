@@ -88,7 +88,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            `api/v1/admin/orders/all`,
+            `api/orders/list`,
             dataTablesParameters,
             {}
           )

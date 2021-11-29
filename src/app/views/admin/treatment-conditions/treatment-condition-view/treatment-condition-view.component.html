@@ -1,1 +1,33 @@
-<p>health-condition-view works!</p>
+<div class="w-100 p-2 bg-dark-grey">
+    <div class="d-flex justify-content-between align-items-center">
+        <h4 class="text-white font-weight-bold mb-0">View Treatment Conditions</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-3 col-12">
+            <mat-label class="text-white font-weight-bold">Treatment Condition</mat-label>
+            <mat-select class="form-control" placeholder="Condition" (selectionChange)="onTreatmentChange($event.value)" [(ngModel)]="selectedConditionId">
+                <mat-option *ngFor="let condition of conditions" [value]="condition._id">
+                    {{condition.name}}
+                </mat-option>
+            </mat-select>
+        </div>
+    </div>
+</div>
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLinkActive="active" routerLink="./info">Info</a>
+    </li>
+  </ul>
+
+  <div class="tab-content p-3">
+    <router-outlet></router-outlet>
+  </div>
+
+  <div class="view-question-footer">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <a routerLink="/admin/treatment-conditions" [replaceUrl]="true" routerLinkActive="active" class="btn btn-primary">Back</a>
+      </div>
+    </div>
+  </div>

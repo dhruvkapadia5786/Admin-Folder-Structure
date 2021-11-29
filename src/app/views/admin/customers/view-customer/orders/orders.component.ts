@@ -145,7 +145,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
           title: 'Order Date',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
+              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
             } else {
               return '<span></span>';
             }

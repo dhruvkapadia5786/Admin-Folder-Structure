@@ -1,0 +1,70 @@
+<ng-container *ngIf="conditionDetails">
+    <div class="row">
+        <div class="col-md-6">
+            <label>Treatment Condition Name</label>
+            <h5>{{conditionDetails.name}}
+                <span *ngIf="conditionDetails.is_active" class="ml-2 badge badge-success badge-pill p-2">Active</span>
+                <span *ngIf="!conditionDetails.is_active" class="ml-2 badge badge-danger badge-pill p-2">Inactive</span>
+            </h5>
+        </div>
+        <div class="col-md-6">
+            <label>Slug</label>
+            <h5>{{conditionDetails.slug}}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label>Description</label>
+            <h5>{{conditionDetails.description}}</h5>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="float-left">Image</label><br>
+                <div class="float-left w-100">
+                    <img class="rounded shadow" id="blah" [(src)]="imageUrl" alt="logo image"
+                        style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="bg-dark text-white p-2 mt-3">Attributes</h4>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-responsive">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Value</th>
+              <th scope="col">Sequence</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let attr of conditionDetails.attributes">
+            <td>{{attr.name}}</td>
+            <td>{{attr.value}}</td>
+            <td>{{attr.sequence}}</td>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <h4 class="bg-dark text-white p-2 mt-3">FAQ</h4>
+    <div class="row">
+      <div class="col-md-12">
+        <ol *ngFor="let que of conditionDetails.faqs; let i = index;" class="list-group">
+          <li class="list-group-item">
+            {{i+1}}. {{que.question}}<br />
+            <span class="ml-3">{{que.answer}}</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+</ng-container>
+<ng-template #noconditionDetails>
+    No Treatment Condition Details
+</ng-template>

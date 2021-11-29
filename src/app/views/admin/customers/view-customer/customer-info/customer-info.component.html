@@ -2,10 +2,6 @@
     <ng-container *ngIf="customerDetails; else noCustomerDetails">
         <div class="row">
             <div class="col-md-3">
-                <label>Unique ID</label>
-                <h5># {{customerUinqueNumber}}</h5>
-            </div>
-            <div class="col-md-3">
                 <label>Stripe Customer</label>
                 <h5>{{stripeCustomerId?stripeCustomerId:'Not Found'}}</h5>
                 <a *ngIf="stripeCustomerId" class="btn btn-info" target="_blank"
@@ -18,12 +14,12 @@
         <div class="row">
             <div class="col-md-12">
                 <label>Account Actions</label><br />
-                <button *ngIf="customerDetails.is_active == 1" (click)="manageAccount('disable')" type="button"
+                <button *ngIf="customerDetails.is_active == true" (click)="manageAccount(false)" type="button"
                     class="btn btn-danger"><i class="fa fa-ban m-1" aria-hidden="true"></i>Disable Account</button>
-                <button *ngIf="customerDetails.is_active == 0" (click)="manageAccount('enabled')" type="button"
+                <button *ngIf="customerDetails.is_active == false" (click)="manageAccount(true)" type="button"
                     class="btn btn-success"><i class="fa fa-play m-1" aria-hidden="true"></i>Enable Account</button>
                 <a (click)="loginAsUser()" routerLinkActive="active" class="btn d-none btn-warning m-1">Login As
-                    {{customerDetails?.firstName}} {{customerDetails?.lastName || '-' }} <i class="ml-2 fa fa-sign-in"
+                    {{customerDetails?.first_name}} {{customerDetails?.last_name || '-' }} <i class="ml-2 fa fa-sign-in"
                         aria-hidden="true"></i></a>
                 <a (click)="openChangePasswordModal()" class="btn btn-primary m-1">Change Account Password <i class="ml-2 fa fa-key" aria-hidden="true"></i></a>
             </div>
@@ -34,22 +30,22 @@
         <div class="row">
             <div class="col-md-6">
                 <label>Full Name:</label>
-                <h5>{{customerDetails.firstName}} {{customerDetails.lastName || '-' }}</h5>
+                <h5>{{customerDetails.first_name}} {{customerDetails.last_name || '-' }}</h5>
             </div>
             <div class="col-md-6">
                 <label>Gender</label>
-                <h5>{{getGender(customerDetails.gender) || '-'}}</h5>
+                <h5>{{customerDetails.gender || '-'}}</h5>
             </div>
         </div>
         <br>
         <div class="row">
             <div class="col-md-6">
                 <label>Date Of Birth </label>
-                <h5>{{customerDetails.dateOfBirth || '-' }}</h5>
+                <h5>{{customerDetails.date_of_birth || '-' }}</h5>
             </div>
             <div class="col-md-6">
                 <label>Cell Phone Number:</label>
-                <h5>{{ customerDetails.phoneNumber | mask: '(000) 000-0000' || '-'}}</h5>
+                <h5>{{ customerDetails.cell_phone_number | mask: '(000) 000-0000' || '-'}}</h5>
             </div>
 
         </div>
@@ -59,21 +55,16 @@
                 <label>Email:</label>
                 <h5>{{customerDetails.email || '-'}}</h5>
             </div>
-            <div class="col-md-6">
-                <label>User Name</label>
-                <h5>{{customerDetails.name|| '-'}}</h5>
-            </div>
-
         </div>
         <br>
         <div class="row">
             <div class="col-md-6">
                 <label>Registration Date</label>
-                <h5>{{customerDetails.dateJoined | date:'DD-MM-YYYY'}}</h5>
+                <h5>{{helper.getFormattedDateFromUnixTimestamp(customerDetails.created_at)}}</h5>
             </div>
             <div class="col-md-6">
                 <label>Last Login At</label>
-                <h5>{{helper.getUTCtoLocalDateTime(customerDetails.lastLoginOn)}}</h5>
+                <h5>{{helper.getFormattedDateFromUnixTimestamp(customerDetails.last_login)}}</h5>
             </div>
         </div>
         <br>
@@ -81,8 +72,8 @@
             <div class="col-md-6">
                 <label>Email Phone Consent </label>
                 <h5 class="ml-2">
-                    <i class="fa fa-check text-success" *ngIf="customerDetails.emailConsent"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!customerDetails.emailConsent"></i>
+                    <i class="fa fa-check text-success" *ngIf="customerDetails.email_phone_consent"></i>
+                    <i class="fa fa-times text-danger" *ngIf="!customerDetails.email_phone_consent"></i>
                 </h5>
             </div>
         </div>
@@ -115,19 +106,19 @@
                                 }}</p>
                         </td>
                         <td>
-                            <p class="font-weight-normal mb-0">{{address.city_name }}</p>
+                            <p class="font-weight-normal mb-0">{{address.city }}</p>
                         </td>
                         <td>
-                            <p class="font-weight-normal mb-0">{{address.state_name }}</p>
+                            <p class="font-weight-normal mb-0">{{address.state }}</p>
                         </td>
                         <td>
                             <p class="font-weight-normal mb-0">{{address.zip_code }}</p>
                         </td>
                         <td class="text-right">
                             <button type="button" class="btn btn-sm btn-primary"
-                                (click)="openEditAddressModal(address)"><i class="fa fa-pencil"
+                                (click)="openEditAddressModal(address)"><i class="fa fa-edit"
                                     aria-hidden="true"></i></button>
-                            <button *ngIf="address.is_default!=1" type="button" class="btn btn-sm btn-danger"
+                            <button *ngIf="address.is_default!=true" type="button" class="btn btn-sm btn-danger"
                                 (click)="deleteAddress(address.id)"><i class="fas fa-trash"
                                     aria-hidden="true"></i></button>
                         </td>
@@ -219,11 +210,11 @@
                 <tbody>
                     <tr>
                         <td>
-                            <app-image-preview [imgPath]="customerDetails.profileImage" height="250" width="350"
+                            <app-image-preview [imgPath]="customerDetails.profile_picture" height="250" width="350"
                                 caption="Full Face Image"></app-image-preview>
                         </td>
                         <td>
-                            <app-image-preview [imgPath]="customerDetails.licenseImage" height="250" width="350"
+                            <app-image-preview [imgPath]="customerDetails.license_image" height="250" width="350"
                                 caption="License Image"></app-image-preview>
                         </td>
                     </tr>

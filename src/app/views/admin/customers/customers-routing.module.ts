@@ -10,8 +10,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', loadChildren:()=>import('./list-customer/list-customer.module').then(LC=>LC.ListCustomerModule) },
       { path: 'edit/:id', loadChildren:()=>import('./edit-customer/edit-customer.module').then(EC=>EC.EditCustomerModule) },
-      { path: 'view/:id', loadChildren:()=>import('./view-customer/view-customer.module').then(VC=>VC.ViewCustomerModule) },
-      { path: 'password/:id', loadChildren: './view-customer/change-password/change-password.module#ChangePasswordModule' }
+      { path: 'view/:id', loadChildren:()=>import('./view-customer/view-customer.module').then(VC=>VC.ViewCustomerModule) }
     ]
   }
 ];

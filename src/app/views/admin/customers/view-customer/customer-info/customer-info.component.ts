@@ -26,7 +26,6 @@ export class CustomerInfoComponent implements OnInit {
   public customerDetails: any;
   public customerId: any;
   public stripeCustomerId: any;
-  public customerUinqueNumber: any;
   userCards: any[] = [];
 
   addresses: any[] = [];
@@ -77,7 +76,6 @@ export class CustomerInfoComponent implements OnInit {
     this.http.get(url).subscribe(async (customer: any) => {
       this.customerDetails = customer;
       this.addresses = this.customerDetails.addresses;
-      this.getCutomerUniqueNumber(this.customerId, this.customerDetails.type);
       // this.orignalFullFaceImage = await this.loadImage(customer.profileImage);
       // this.orignalLicenseImage = await this.loadImage(customer.licenseImage);
     }, err => {
@@ -85,9 +83,6 @@ export class CustomerInfoComponent implements OnInit {
     });
   }
 
-  getCutomerUniqueNumber(id: any, type: any) {
-    this.customerUinqueNumber = this.helper.getUserUniqueId(id, type);
-  }
 
   getUserCards() {
     const url = 'api/v1/admin/customer/stripe_profile/' + this.customerId;
@@ -121,19 +116,9 @@ export class CustomerInfoComponent implements OnInit {
     });
   }
 
-  getGender(gender: any) {
-    if (gender == '1') {
-      return 'Male';
-    } else if (gender == '2') {
-      return 'Female';
-    } else {
-      return gender;
-    }
-  }
-
-  manageAccount(stauts: string) {
-    const url = 'api/v1/users/manage-account/' + this.customerId + '/' + stauts;
-    this.http.get(url)
+  manageAccount(stauts: any) {
+    const url = 'api/general/manage-account-login';
+    this.http.post(url, {user_id: this.customerId, is_active: stauts})
       .subscribe((result: any) => {
         this._toastr.showSuccess(result.message);
         // reload user details only
@@ -191,7 +176,7 @@ export class CustomerInfoComponent implements OnInit {
   }
 
   async loadImage(path: string) {
-    return await this.http.post('api/v1/document/preview', { path: path }, { responseType: 'blob' }).toPromise();
+    return await this.http.post('api/document/preview', { path: path }, { responseType: 'blob' }).toPromise();
   }
 
   uploadFullFaceImage(file: any) {
@@ -252,15 +237,16 @@ export class CustomerInfoComponent implements OnInit {
   }
 
   openEditAddressModal(address: any) {
+    console.log('address passing to modal >> ', address)
     this._changeAddressModalService.setFormData({
       type: 'EDIT_ADDRESS',
       addressModalTitle: 'Edit Address',
       user_id: this.customerId,
-      address_id: address.id,
+      address_id: address._id,
       address_line_1: address.address_line_1,
       address_line_2: address.address_line_2 ? address.address_line_2 : '',
-      city: address.city_name,
-      state_id: address.state_id,
+      city: address.city,
+      state_id: address.state,
       zip_code: address.zip_code,
       is_default: address.is_default
     });
