@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router, NavigationEnd, Event } from '@angular/router';
 import { ConsultationHealthConditionsService } from '../../consultation-health-conditions.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
+import { Toastr } from 'src/app/services/toastr.service';
 
 @Component({
   selector: 'app-info-health-condition',
@@ -10,9 +12,12 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./info-health-condition.component.scss']
 })
 export class InfoHealthConditionComponent implements OnInit, OnDestroy {
+  environmentUrl: any = environment
   healthCondition: any;
   healthconditionId: any;
   public imageUrl: any = '../../../../assets/img/no-image.png';
+  pdfIcon: string = '../../../../../../assets/img/pdf_file_icon.png'
+  videoIcon: string = '../../../../../../assets/img/video-play-icon.png'
 
   routeSubscribe: any;
   constructor(
@@ -20,6 +25,7 @@ export class InfoHealthConditionComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _http: HttpClient,
+    public _toastr: Toastr,
     private router: Router,
     private _consultationHealthtConditions: ConsultationHealthConditionsService
   ) {
@@ -34,6 +40,26 @@ export class InfoHealthConditionComponent implements OnInit, OnDestroy {
 
   ngOnInit(){
 
+  }
+
+  updateSequence (event: any) {
+    let dataToSend: any = []
+
+    if (event.mode == 'IMAGES' || event.mode == 'FAQS' || event.mode == 'ATTRIBUTES' || event.mode == 'DOCUMENTS' || event.mode == 'VIDEOS') {
+      event.data.forEach((obj: any) => {
+        dataToSend.push({ ...obj.item, sequence:obj.sequence });
+      });
+    } else {
+      event.data.forEach((obj: any) => {
+        dataToSend.push({ question_id: obj.item.question_id._id, sequence: obj.sequence, _id: obj.item._id });
+      });
+    }
+    let url: string = `api/consultation_health_conditions/update_sequence/${this.healthconditionId}`;
+    this._http.post(url, { mode: event.mode, sequences: dataToSend }).subscribe(data => {
+        this._toastr.showSuccess('Sequence Updated Successfully');
+      }, err => {
+        this._toastr.showError('Unable to update sequence. Please try again');
+      });
   }
 
   ngOnDestroy(){

@@ -12,7 +12,7 @@ import { MedicineKitsService } from '../medicine-kits.service';
 export class ViewMedicineKitsComponent implements OnInit {
   medicineKitDetails: any;
   medicineKitId: any;
-  treatmentConditionId: any;
+  selectedTreatmentConditionId: any;
   treatmentConditionList:any[] = []
   medicineKits: any[] = [];
 
@@ -34,26 +34,31 @@ export class ViewMedicineKitsComponent implements OnInit {
   }
 
   getMedicineKitDetails() {
-    const url = 'api/v1/admin/medicinekits/details/' + this.medicineKitId;
+    const url = 'api/medicine_kits/view/' + this.medicineKitId;
     this._http.get(url).subscribe((res: any) => {
         this.medicineKitDetails = res;
-      },(err:any) => {
+    },(err:any) => {
 
-      });
+    });
   }
 
-  getTreatmentConditionList() {
-    this._http.get<any>('api/v1/admin/conditions/all').subscribe((resp:any) => {
-      this.treatmentConditionList = resp;
-      if (this.treatmentConditionId) {
-        this.getMedicineKits(this.treatmentConditionId)
+
+  public getTreatmentConditionList() {
+    const url = 'api/treatment_conditions/all';
+    this._http.get(url).subscribe((data:any) => {
+      this.treatmentConditionList = data;
+      this.selectedTreatmentConditionId = this.medicineKitDetails.treatment_condition_ids[0]._id;
+      if (this.selectedTreatmentConditionId) {
+        this.getMedicineKits(this.selectedTreatmentConditionId)
       }
-    }, (err:any)=> {});
+    },(err:any) => {
+
+    });
   }
 
-  public getMedicineKits(conditionId: number) {
-    const url = 'api/v1/admin/medicinekits/by_conditions';
-    this._http.post(url, { condition_ids: [conditionId] }).subscribe((medicineKitList: any) => {
+  public getMedicineKits(id: any) {
+    const url = `api/medicine_kits/all?treatment_condition_id=${id}`;
+    this._http.get(url).subscribe((medicineKitList: any) => {
         this.medicineKits = medicineKitList;
         this.cdr.detectChanges();
       },(err:any) => {
@@ -61,8 +66,8 @@ export class ViewMedicineKitsComponent implements OnInit {
       });
   }
 
-  public onKitChange (kitId: number) {
-    this.router.navigate(['admin/medicine-kits/view/treatment',this.treatmentConditionId,'kit',kitId,'info'])
+  public onKitChange (kitId: any) {
+    this.router.navigate(['admin/medicine-kits/view/',kitId,'info'])
     this.medicineKitId = kitId;
     this.getMedicineKitDetails();
   }

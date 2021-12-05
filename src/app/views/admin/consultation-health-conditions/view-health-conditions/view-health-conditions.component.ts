@@ -37,6 +37,6 @@ export class ViewHealthConditionsComponent implements OnInit {
   }
 
   public onHealthConditionChange(conditionId: any){
-    this.router.navigate(['admin/health-conditions/view/condition',conditionId,'info'])
+    this.router.navigate(['admin/consultation-health-conditions/view',conditionId,'info'])
   }
 }

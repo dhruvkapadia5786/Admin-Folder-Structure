@@ -7,7 +7,7 @@
       <div class="col-sm-3">
         <label>Flow Type:</label>
         <mat-form-field>
-          <mat-select formControlName="category" (selectionChange)="onFlowTypeChange($event.value)">
+          <mat-select formControlName="category">
             <mat-option *ngFor="let flow of flowTypeList" [value]="flow.value">{{flow.type}}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -16,18 +16,33 @@
           <div *ngIf="category?.errors?.required">Flow type is required.</div>
         </div><br>
       </div>
-      <div *ngIf="addQuestion.get('category')?.value == 'ORDER'" class="col-sm-3">
+      <div *ngIf="addQuestion.get('category')?.value == 'ORDER' || addQuestion.get('category')?.value == 'GENERAL'" class="col-sm-3">
         <label>Medicine Kit:</label>
         <mat-form-field>
-          <mat-select formControlName="dtc_medicine_kits" multiple>
+          <mat-select formControlName="pet_dtc_medicine_kits" multiple>
           <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'kit')"
-              [indeterminate]="dtc_medicine_kits?.value.length > 0 && notSelectedKits"
+              [indeterminate]="addQuestion.get('pet_dtc_medicine_kits')?.value.length > 0 && notSelectedKits"
               [checked]="!notSelectedKits">All</mat-checkbox>
             <mat-option *ngFor="let medicineKit of medicineKitList" [value]="medicineKit._id">{{medicineKit.name}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="invalid-feedback" *ngIf="dtc_medicine_kits?.invalid && (dtc_medicine_kits?.dirty || dtc_medicine_kits?.touched)" class="text-danger">
-          <div *ngIf="dtc_medicine_kits?.errors?.required">Medicine kit is required.</div>
+        <div class="invalid-feedback" *ngIf="pet_dtc_medicine_kits?.invalid && (pet_dtc_medicine_kits?.dirty || pet_dtc_medicine_kits?.touched)" class="text-danger">
+          <div *ngIf="pet_dtc_medicine_kits?.errors?.required">Medicine kit is required.</div>
+        </div>
+      </div>
+      <div *ngIf="addQuestion.get('category')?.value == 'CONSULTATION' || addQuestion.get('category')?.value == 'GENERAL'" class="col-sm-6">
+        <label>Health Condition:</label>
+        <mat-form-field>
+          <mat-select formControlName="pet_consultation_health_conditions"  multiple>
+            <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
+              (change)="handleCheckAll($event, 'pet_consultation_health_conditions')"
+              [indeterminate]="addQuestion.get('pet_consultation_health_conditions')?.value.length > 0 && notSelectedConditions"
+              [checked]="!notSelectedConditions">Select All Health Conditions</mat-checkbox>
+            <mat-option *ngFor="let condition of healthConditionsList" [(value)]="condition._id">{{condition.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="invalid-feedback" *ngIf="pet_consultation_health_conditions?.invalid && (pet_consultation_health_conditions?.dirty || pet_consultation_health_conditions?.touched)" class="text-danger">
+          <div *ngIf="pet_consultation_health_conditions?.errors?.required">Health Conditions is required.</div>
         </div>
       </div>
       <div class="col-sm-3">

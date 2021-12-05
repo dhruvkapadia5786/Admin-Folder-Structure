@@ -40,6 +40,7 @@ export class EditHealthConditionsComponent implements OnInit {
     this.addHealthConditionsForm = new FormGroup({
       'name': new FormControl(null, [Validators.required]),
       'description': new FormControl(null, [Validators.required]),
+      'for_gender':new FormControl(null, [Validators.required]),
       'is_active': new FormControl(null, []),
       'is_coming_soon': new FormControl(null, []),
       'specialities': new FormControl([], [Validators.required]),
@@ -98,6 +99,7 @@ export class EditHealthConditionsComponent implements OnInit {
 
   get name() { return this.addHealthConditionsForm.get('name'); }
   get slug() { return this.addHealthConditionsForm.get('slug'); }
+  get for_gender(){return this.addHealthConditionsForm.get('for_gender'); }
   get description() { return this.addHealthConditionsForm.get('description'); }
   get is_active() { return this.addHealthConditionsForm.get('is_active'); }
   get is_coming_soon() { return this.addHealthConditionsForm.get('is_coming_soon'); }
@@ -166,6 +168,7 @@ export class EditHealthConditionsComponent implements OnInit {
       this.addHealthConditionsForm.patchValue({
         name: obj.name,
         slug: obj.slug,
+        for_gender:obj.for_gender,
         description: obj.description,
         image_url: obj.image_url,
         is_active: obj.is_active,

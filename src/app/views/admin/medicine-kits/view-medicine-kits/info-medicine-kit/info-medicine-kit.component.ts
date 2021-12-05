@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Toastr } from 'src/app/services/toastr.service';
 import { Lightbox } from 'ngx-lightbox';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import Hashids from 'hashids';
 import { MedicineKitsService } from '../../medicine-kits.service';
 
@@ -14,9 +15,12 @@ import { MedicineKitsService } from '../../medicine-kits.service';
   styleUrls: ['./info-medicine-kit.component.scss']
 })
 export class InfoMedicineKitComponent implements OnInit, OnDestroy {
+  environmentUrl: any = environment
   medicineKitId: any;
   medicineKitDetails: any;
-  public imageUrl: any = '../../../../assets/img/no-image.png';
+  pdfIcon: string = '../../../../../../../assets/img/pdf_file_icon.png'
+  videoIcon: string = '../../../../../../../assets/img/video-play-icon.png'
+  public imageUrl: any = '../../../../../../../assets/img/no_preview.png';
   _albums = [{
     src: this.imageUrl,
     caption: 'Medicien Kit',
@@ -62,14 +66,14 @@ export class InfoMedicineKitComponent implements OnInit, OnDestroy {
   }
 
   getMedicineKitDetails() {
-    const url = 'api/v1/admin/medicinekits/details/' + this.medicineKitId;
+    const url = 'api/medicine_kits/view/' + this.medicineKitId;
     this.http.get(url)
       .subscribe((res: any) => {
         this.medicineKitDetails = res;
         if (this.medicineKitDetails.image_url) {
           this.getImage(this.medicineKitDetails.image_url);
         } else {
-          this.imageUrl = 'assets/img/no-image.png';
+          this.imageUrl = '../../../../../../../assets/img/no_preview.png';
           this._albums = [];
           this._albums.push({
             src: this.imageUrl,
@@ -83,6 +87,29 @@ export class InfoMedicineKitComponent implements OnInit, OnDestroy {
       });
   }
 
+  updateSequence (event: any) {
+    let dataToSend: any = []
+
+    if (event.mode == 'IMAGES' || event.mode == 'FAQS' || event.mode == 'ATTRIBUTES' || event.mode == 'DOCUMENTS' || event.mode == 'VIDEOS') {
+      event.data.forEach((obj: any) => {
+        dataToSend.push({ ...obj.item, sequence:obj.sequence });
+      });
+    } else {
+      event.data.forEach((obj: any) => {
+        dataToSend.push({ question_id: obj.item.question_id._id, sequence: obj.sequence, _id: obj.item._id });
+      });
+    }
+
+    let url: string = `api/medicine_kits/update_sequence/${this.medicineKitId}`;
+    this.http.post(url, { mode: event.mode, sequences: dataToSend })
+      .subscribe(data => {
+        this._toastr.showSuccess('Sequence Updated Successfully');
+
+      }, err => {
+        this._toastr.showError('Unable to update sequence. Please try again');
+      });
+  }
+
   getAgeGroup(ageGroup: string) {
     if (ageGroup == 'PLUS18') { return 'Age 18 + '; }
     else if (ageGroup == 'PLUS21') { return 'Age 21 + '; }
@@ -91,7 +118,7 @@ export class InfoMedicineKitComponent implements OnInit, OnDestroy {
   }
 
   async getImage(path: string) {
-    await this.http.post('api/v1/admin/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
+    await this.http.post('api/documents/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
       const fr = new FileReader();
       fr.readAsDataURL(result);
       fr.onloadend = () => {
@@ -104,7 +131,7 @@ export class InfoMedicineKitComponent implements OnInit, OnDestroy {
         });
       }
     }).catch(err => {
-      this.imageUrl = 'assets/img/no-image.png';
+      this.imageUrl = '../../../../../../../assets/img/no_preview.png';
       this._albums = [];
       this._albums.push({
         src: this.imageUrl,
@@ -120,18 +147,5 @@ export class InfoMedicineKitComponent implements OnInit, OnDestroy {
 
   close() {
     this._lightbox.close();
-  }
-
-  updateStateStatus(event: any, state: any) {
-    const url = 'api/v1/admin/medicinekits/manage_kit_states';
-    const obj = {
-      'kit_id': this.medicineKitId,
-      'state_id': state.state_id,
-      'is_active': state.is_active
-    }
-    this.http.post(url, obj).subscribe((data: any) => {
-      this._changeDetectorRef.detectChanges();
-    }, err => {
-    });
   }
 }

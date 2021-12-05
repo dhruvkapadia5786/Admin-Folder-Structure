@@ -52,9 +52,8 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
 
 
   getImage(imageName:string){
-    let url = imageName ? imageName.substr(imageName.indexOf('uploads')):null;
-    if (url) {
-      this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(environment.api_url + url);
+    if (imageName) {
+      this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(environment.api_url + imageName);
       this._albums = [];
       this._albums.push({
         src: this.imageUrl,

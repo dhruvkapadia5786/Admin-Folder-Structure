@@ -19,6 +19,14 @@
           </mat-select>
         </mat-form-field>
     </div>
+    <div class="col-md-4" *ngIf="selectedCategory == 'CONSULTATION'">
+      <label for="chc">Health Condition</label>
+      <mat-form-field class="w-100">
+        <mat-select placeholder="Select Health Condition" [(ngModel)]="selectedConditionId">
+          <mat-option *ngFor="let condition of conditions" [(value)]="condition._id">{{condition.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     
     <div class="col-sm-2">
       <label for="state">States</label>
@@ -36,7 +44,7 @@
 </div>
 
 <!-- Default form register -->
-<ng-container *ngIf="questions.length;">
+<ng-container *ngIf="questions.length; else noQuestions">
 <div class="row registration-wrapper mt-3 mb-5 pb-5 mx-2">
   <div class="col-md-12 col-lg-7">
     <div class="card shadow-light" *ngIf="screen_mode=='QUESTION_ANSWER'">
@@ -165,3 +173,9 @@
   </div>
 </div>
 </ng-container>
+<ng-template #noQuestions>
+  <div class="text-center text-muted">
+    <h2><i class="fa fa-info-circle"></i></h2>
+    <h4>No Questions!</h4>
+  </div>
+</ng-template>

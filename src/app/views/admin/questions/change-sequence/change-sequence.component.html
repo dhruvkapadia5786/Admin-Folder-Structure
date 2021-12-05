@@ -33,7 +33,7 @@
     </div>
   </div>
 </div>
-<ng-container *ngIf="questions.length;">
+<ng-container *ngIf="questions.length; else noQuestions">
   <hr>
   <div class="pad">
     <div class="row">
@@ -73,3 +73,9 @@
     </div>
   </div>
 </ng-container>
+<ng-template #noQuestions>
+  <div class="text-center text-muted">
+    <h2><i class="fa fa-info-circle"></i></h2>
+    <h4>No Questions!</h4>
+  </div>
+</ng-template>

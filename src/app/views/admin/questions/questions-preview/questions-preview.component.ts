@@ -99,14 +99,25 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
     this.getMedicineKits();
     this.getAllHealthConditions();
 
-    // this.medicineKitId = this.route.parent?.parent?.snapshot.paramMap.get('kit_id');
-    // this.healthConditionId = this.route.parent?.parent?.snapshot.paramMap.get('treatment_id');
+    this.medicineKitId = this.route.parent?.parent?.snapshot.paramMap.get('kit_id');
+    this.healthConditionId = this.route.parent?.parent?.snapshot.paramMap.get('condition_id');
+
     let self= this
-    if (this.medicineKitId && this.healthConditionId) {
+    if (this.medicineKitId) {
       self.getAllStates().then((result) => {
         self.stateList = result;
         self.showHeaderAndFilter = false;
         self.selectedKitId = self.medicineKitId;
+        self.handleCheckAll({checked: true}, 'STATE');
+        this.getQuestionsList();
+      });
+    }
+    
+    if (this.healthConditionId) {
+      self.getAllStates().then((result) => {
+        self.selectedCategory = 'CONSULTATION';
+        self.stateList = result;
+        self.showHeaderAndFilter = false;
         self.selectedConditionId = self.healthConditionId;
         self.handleCheckAll({checked: true}, 'STATE');
         this.getQuestionsList();
@@ -123,7 +134,6 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
   ngOnInit(){
     if (this.stateList.length == 0) {
       this.getAllStates().then((result) => {
-        console.log('result >> ', result)
         this.stateList = result;
       });
     }
@@ -133,12 +143,11 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
   } 
 
   public getQuestionsList() {
-    if (this.selectedKitId != null || this.selectedKitId.length > 0 ) {
-      let url: string = `api/medicine_kits/questions/${this.selectedKitId}?states=${this.selectedStateId}` 
+    if (this.selectedConditionId != null || this.selectedKitId != null || this.selectedKitId.length > 0 ) {
+      let url: string = this.selectedCategory == 'ORDER' ? `api/medicine_kits/questions/${this.selectedKitId}?states=${this.selectedStateId}` : `api/consultation_health_conditions/questions/${this.selectedConditionId}?states=${this.selectedStateId}` 
   
       this.http.get(url)
         .subscribe((data: any) => {
-          console.log(data)
           this.questions = data
           this.currentQuestionIndex = 0;
           this.currentQuestion = this.questions[this.currentQuestionIndex];
@@ -242,7 +251,7 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
             let preventedQuestionIds=[33,34,35];
             let previousQuestionId = this.questions[this.currentQuestionIndex-1].id;
             if(preventedQuestionIds.indexOf(previousQuestionId)==-1){
-               this.blockQuestionAnswerUI.stop();
+              this.blockQuestionAnswerUI.stop();
             }
           }else{
             this.screen_mode= 'QUESTION_COMPLETED';

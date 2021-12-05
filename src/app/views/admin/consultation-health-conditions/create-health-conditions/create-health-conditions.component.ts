@@ -30,6 +30,7 @@ export class CreateHealthConditionsComponent implements OnInit {
     this.addHealthConditionsForm = new FormGroup({
       'name': new FormControl(null, [Validators.required]),
       'description': new FormControl(null, [Validators.required]),
+      'for_gender':new FormControl(null, [Validators.required]),
       'is_active': new FormControl(null, []),
       'is_coming_soon':new FormControl(null, []),
       'specialities': new FormControl(null, [Validators.required]),
@@ -89,6 +90,7 @@ export class CreateHealthConditionsComponent implements OnInit {
 
   get name() { return this.addHealthConditionsForm.get('name'); }
   get slug() { return this.addHealthConditionsForm.get('slug'); }
+  get for_gender(){return this.addHealthConditionsForm.get('for_gender'); }
   get description() { return this.addHealthConditionsForm.get('description'); }
   get image_url() { return this.addHealthConditionsForm.get('image_url'); }
   get is_active() { return this.addHealthConditionsForm.get('is_active'); }

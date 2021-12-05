@@ -9,9 +9,9 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'info', pathMatch: 'full' },
       { path: 'info', loadChildren:()=>import('./info-medicine-kit/info-medicine-kit.module').then(MK=>MK.InfoMedicineKitModule) },
-      /* { path: 'question-list', loadChildren: '../../questions/questions-list/questions-list.module#QuestionsListModule' },
-      { path: 'question-sequence', loadChildren: '../../questions/change-sequence/change-sequence.module#ChangeSequenceModule' },
-      { path: 'question-preview', loadChildren: '../../questions/questions-preview/questions-preview.module#QuestionPreviewModule' }, */
+      { path: 'question-list', loadChildren:()=>import('../../questions/questions-list/questions-list.module').then(QL=>QL.QuestionsListModule) },
+      { path: 'question-sequence', loadChildren:()=>import('../../questions/change-sequence/change-sequence.module').then(CS=>CS.ChangeSequenceModule) },
+      { path: 'question-preview', loadChildren:()=>import('../../questions/questions-preview/questions-preview.module').then(QP=>QP.QuestionPreviewModule) }
     ]
   }
 ];

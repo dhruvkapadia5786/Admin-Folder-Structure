@@ -80,6 +80,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
             { route: '/admin/brands', iconName: 'fa-list', displayName: 'Brands' }
           ]
       },
+			{
+				displayName: 'Contact Lenses',
+				iconName: 'fa-eye',
+				children: [
+					{ route: '/admin/contactlenses-types', iconName: 'fa-bars', displayName: 'Lens Types' },
+					{ route: '/admin/contactlenses-colors', iconName: 'fa-bars', displayName: 'Colors' },
+					{ route: '/admin/contactlenses-brands', iconName: 'fa-bars', displayName: 'Brands' },
+					{ route: '/admin/contactlenses-products', iconName: 'fa-medkit', displayName: 'Products' },
+				]
+			},
 			{ route: '/admin/treatment-conditions', iconName: 'fa-medkit', displayName: 'Treatment Conditions' },
 			{ route: '/admin/medicine-kits', iconName: 'fa-cubes', displayName: 'Medicine Kits' },
 			{ route: '/admin/orders', iconName: 'fa-shopping-cart', displayName: 'Orders' },
@@ -109,7 +119,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/otc-drugs', iconName: 'fa-medkit', displayName: 'OTC Drugs' },
 				]
 			},
+      { route: '/admin/products', iconName: 'fa-pills', displayName: 'Products' },
       { route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' },
+      { route: '/admin/wallets', iconName: 'fa-rupee-sign', displayName: 'Wallets' },
 			{
 				displayName: 'Others',
 				iconName: 'fa-info-circle',

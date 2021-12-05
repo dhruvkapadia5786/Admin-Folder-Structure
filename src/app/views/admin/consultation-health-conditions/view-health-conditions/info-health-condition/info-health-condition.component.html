@@ -1,58 +1,149 @@
 <ng-container *ngIf="healthCondition; else nohealthCondition">
-  <div class="row">
-    <div class="col-md-6">
-      <label>Name:</label>
-      <h5>{{healthCondition.name}} <span *ngIf="healthCondition.is_coming_soon" class="ml-2 badge badge-success badge-pill p-2">Coming Soon</span></h5>
-    </div>
-    <div class="col-md-6">
-      <label>Pet Type</label>
-      <ul>
-        <li *ngFor="let speciality of healthCondition.specialities">{{speciality.speciality_path}}</li>
-      </ul>
-    </div>
-  </div>
 
-  <br>
+  <h4 class="bg-dark text-white p-2 mt-3">Display Information</h4>
   <div class="row">
     <div class="col-md-6">
-      <div class="form-group">
-        <label class="float-left">Image</label><br>
-        <div class="float-left w-100">
-            <img class="rounded shadow" id="blah" [(src)]="imageUrl" alt="your image"
-                style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
+        <div class="table-responsive">
+          <table class="table table-hover">
+                <tr>
+                  <td class="font-weight-bold">Health Condition Name</td>
+                  <td class="font-weight-normal">{{healthCondition.name || '-'}} <span class="ml-2 badge badge-success badge-pill p-2" *ngIf="healthCondition.is_coming_soon">Comming Soon</span></td>
+                </tr>
+                <tr>
+                  <td  class="font-weight-bold">Active</td>
+                  <td  class="font-weight-normal">
+                    <i class="fa fa-check text-success" *ngIf="healthCondition.is_active"></i>
+                    <i class="fa fa-times text-danger" *ngIf="!healthCondition.is_active"></i>
+                  </td>
+                </tr>
+          </table>
         </div>
-      </div>
     </div>
     <div class="col-md-6">
-      <label>Description:</label>
-      <h5>{{healthCondition.description}}</h5>
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-md-2">
-      <label>State</label>
-      <ul>
-        <li *ngFor="let state of healthCondition.states">{{state.name}}</li>
-      </ul>
-    </div>
-    <div class="col-md-2">
-      <label>Is Active:</label>
-      <h5 class="font-weight-bold text-success" *ngIf="healthCondition.is_active == 1"><i class="fa fa-check"></i></h5>
-      <h5 class="font-weight-bold text-danger" *ngIf="healthCondition.is_active != 1"><i class="fa fa-times"></i></h5>
-    </div>
-    <div class="col-md-2">
-      <label>Price:</label>
-      <h5>{{healthCondition.price}}</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <tr>
+                  <td class="font-weight-bold">Health Condition Description</td>
+                  <td class="font-weight-normal">
+                    {{healthCondition.description}}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">State</td>
+                  <td class="font-weight-normal">
+                    <span class="badge badge-primary mr-2" *ngFor="let state of healthCondition.states">{{state.name}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Coming Soon</td>
+                  <td class="font-weight-normal">
+                    <i class="fa fa-check text-success" *ngIf="healthCondition.is_coming_soon"></i>
+                    <i class="fa fa-times text-danger" *ngIf="!healthCondition.is_coming_soon"></i>
+                  </td>
+                </tr>
+            </table>
+        </div>
     </div>
   </div>
 
+  <h4 class="bg-dark text-white p-2 mt-3">Pricing</h4>
   <div class="row">
-    <div class="col-md-2">
-      <label>Doctor Consultation Charge (Doctor Price):</label>
-      <h5>{{healthCondition.doctor_price}}</h5>
+    <div class="col-md-6">
+        <div class="table-responsive">
+          <table class="table table-hover">
+                <tr>
+                  <td class="font-weight-bold">Actual Price</td>
+                  <td class="font-weight-normal"> {{(healthCondition.price | currency) || '-' }} </td>
+                </tr>
+                <tr *ngIf="healthCondition.is_offer">
+                  <td class="font-weight-bold"><i class="fa fa-tag mr-1"></i> Offer Price</td>
+                  <td class="font-weight-normal">
+                    {{(healthCondition.offer_price | currency) || '-' }}
+                  </td>
+                </tr>
+          </table>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <tr>
+                  <td class="font-weight-bold">Doctor Price</td>
+                  <td class="font-weight-normal">
+                    {{(healthCondition.doctor_price | currency) || '-'}}
+                  </td>
+                </tr>
+            </table>
+        </div>
     </div>
   </div>
+
+  <h4 class="bg-dark text-white p-2 mt-3">
+    Attributes
+  </h4>
+  <div class="row" *ngIf="healthCondition?.attributes.length > 0; else noAttributes">
+    <div class="col-md-12">
+      <app-change-sequence [mode]="'ATTRIBUTES'" [data]="healthCondition.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+      </div>
+  </div>
+  <ng-template #noAttributes>
+    <div class="text-center text-muted">
+      <h2><i class="fa fa-info-circle"></i></h2>
+      <h4>No Attributes!</h4>
+    </div>
+  </ng-template>
+
+  <h4 class="bg-dark text-white p-2 mt-3">FAQ</h4>
+  <div class="row" *ngIf="healthCondition?.faqs.length > 0; else noFaqs">
+    <div class="col-md-12">
+      <app-change-sequence [mode]="'FAQS'" [data]="healthCondition.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+    </div>
+  </div>
+  <ng-template #noFaqs>
+    <div class="text-center text-muted">
+      <h2><i class="fa fa-info-circle"></i></h2>
+      <h4>No FAQs!</h4>
+    </div>
+  </ng-template>
+
+   <h4 class="bg-dark text-white p-2 mt-3">Images</h4>
+  <div class="row" *ngIf="healthCondition?.images.length > 0; else noImgs">
+    <div class="col-md-12">
+      <app-change-sequence [mode]="'IMAGES'" [data]="healthCondition.images" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+    </div>
+  </div>
+  <ng-template #noImgs>
+    <div class="text-center text-muted">
+      <h2><i class="fa fa-info-circle"></i></h2>
+      <h4>No Images!</h4>
+    </div>
+  </ng-template>
+
+  <h4 class="bg-dark text-white p-2 mt-3">PDF Documents</h4>
+  <div class="row" *ngIf="healthCondition?.documents.length > 0; else noDocs">
+    <div class="col-md-12">
+      <app-change-sequence [mode]="'DOCUMENTS'" [data]="healthCondition.documents" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+    </div>
+  </div>
+  <ng-template #noDocs>
+    <div class="text-center text-muted">
+      <h2><i class="fa fa-info-circle"></i></h2>
+      <h4>No Documents!</h4>
+    </div>
+  </ng-template>
+
+  <h4 class="bg-dark text-white p-2 mt-3">Videos</h4>
+  <div class="row" *ngIf="healthCondition?.videos.length > 0; else noVideos">
+    <div class="col-md-12">
+      <app-change-sequence [mode]="'VIDEOS'" [data]="healthCondition.videos" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+    </div>
+  </div>
+  <ng-template #noVideos>
+    <div class="text-center text-muted">
+      <h2><i class="fa fa-info-circle"></i></h2>
+      <h4>No Videos!</h4>
+    </div>
+  </ng-template>
 
 </ng-container>
 <ng-template #nohealthCondition>

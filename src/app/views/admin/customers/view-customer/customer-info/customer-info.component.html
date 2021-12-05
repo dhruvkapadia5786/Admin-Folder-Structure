@@ -87,6 +87,7 @@
                         <th>City</th>
                         <th>State</th>
                         <th>ZipCode</th>
+                        <th>Default</th>
                         <th>Action
                             <button class="float-right btn btn-sm btn-outline-primary m-0" type="button"
                                 (click)="openAddAddressModal()">Add New</button>
@@ -106,20 +107,24 @@
                                 }}</p>
                         </td>
                         <td>
-                            <p class="font-weight-normal mb-0">{{address.city }}</p>
+                            <p class="font-weight-normal mb-0">{{ address.city }}</p>
                         </td>
                         <td>
-                            <p class="font-weight-normal mb-0">{{address.state }}</p>
+                            <p class="font-weight-normal mb-0">{{ address.state }}</p>
                         </td>
                         <td>
-                            <p class="font-weight-normal mb-0">{{address.zip_code }}</p>
+                            <p class="font-weight-normal mb-0">{{ address.zip_code }}</p>
                         </td>
-                        <td class="text-right">
-                            <button type="button" class="btn btn-sm btn-primary"
+                        <td>
+                            <i class="fa fa-check text-success" *ngIf="address.is_default"></i>
+                            <i class="fa fa-times text-danger" *ngIf="!address.is_default"></i>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary mr-2"
                                 (click)="openEditAddressModal(address)"><i class="fa fa-edit"
                                     aria-hidden="true"></i></button>
                             <button *ngIf="address.is_default!=true" type="button" class="btn btn-sm btn-danger"
-                                (click)="deleteAddress(address.id)"><i class="fas fa-trash"
+                                (click)="deleteAddress(address._id)"><i class="fas fa-trash"
                                     aria-hidden="true"></i></button>
                         </td>
                     </tr>

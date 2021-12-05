@@ -35,13 +35,19 @@ export class ChangeSequenceComponent implements OnInit {
     public toaster: ToastrService,
     public cdr: ChangeDetectorRef
   ) {
-    // this.medicineKitId = this.route.parent?.parent?.snapshot.paramMap.get('kit_id');
-    // this.healthConditionId = this.route.parent?.parent?.snapshot.paramMap.get('chc_id');
-
-    if (this.medicineKitId && this.healthConditionId) {
+    this.medicineKitId = this.route.parent?.parent?.snapshot.paramMap.get('kit_id');
+    this.healthConditionId = this.route.parent?.parent?.snapshot.paramMap.get('condition_id');
+    
+    if (this.medicineKitId) {
       this.showHeaderAndFilter = false
-      this.selectedConditionId = this.healthConditionId;
       this.selectedKitId = this.medicineKitId;
+      this.getQuestionsList();
+    }
+    
+    if (this.healthConditionId) {
+      this.showHeaderAndFilter = false
+      this.selectedCategory = 'CONSULTATION';
+      this.selectedConditionId = this.healthConditionId;
       this.getQuestionsList();
     }
   }
@@ -63,7 +69,6 @@ export class ChangeSequenceComponent implements OnInit {
   }
 
   public getMedicineKits() {
-    this.resetValues();
     const url = 'api/medicine_kits/all';
     this.http.get(url)
       .subscribe((medicineKitList: any) => {
@@ -75,11 +80,10 @@ export class ChangeSequenceComponent implements OnInit {
   }
 
   public getQuestionsList() {
-    if (this.selectedConditionId != null || this.selectedKitId != null) {
+    if (this.selectedKitId != null || this.selectedConditionId != null) {
       let url: string = this.selectedCategory == 'ORDER' ? 'api/medicine_kits/questions/' + this.selectedKitId : 'api/consultation_health_conditions/questions/' + this.selectedConditionId;
       this.http.get(url)
         .subscribe((data: any) => {
-          console.log('Data >>> ', data)
           this.questions = data;
           this.originalQuestions = data.slice(0);
           this.cdr.detectChanges();
@@ -113,7 +117,7 @@ export class ChangeSequenceComponent implements OnInit {
     this.questions.forEach((que: any, index: any) => {
       sequenceArray.push({ question_id: que.question_id._id, sequence: (index + 1), _id: que._id });
     });
-    console.log('Updating Record', this.questions, sequenceArray)
+    
     let url: string = this.selectedCategory == 'ORDER' ? `api/medicine_kits/update_question_sequence/${this.selectedKitId}` : `api/consultation_health_conditions/update_question_sequence/${this.selectedConditionId}`;
     this.http.post(url, { sequences: sequenceArray })
       .subscribe(data => {
@@ -122,11 +126,13 @@ export class ChangeSequenceComponent implements OnInit {
         this.isSequenceUpdated = false;
         
         /* Redirect to parent when this component used as child */
-        if (this.healthConditionId && this.medicineKitId) {
-          this.redirectTo(`/admin/medicine-kits/view/treatment/${this.healthConditionId}/kit/${this.medicineKitId}/question-sequence`)
+        if (this.medicineKitId) {
+          this.redirectTo(`/admin/medicine-kits/view/${this.medicineKitId}/question-sequence`)
+        }
+        if (this.healthConditionId) {
+          this.redirectTo(`/admin/consultation-health-conditions/view/${this.healthConditionId}/question-sequence`)
         }
       }, err => {
-        
         this.toaster.error('Unable to update sequence. Please try again');
       });
   }

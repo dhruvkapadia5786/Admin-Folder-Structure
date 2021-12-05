@@ -157,8 +157,32 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-center  font-weight-normal'
         },
         {
+          data: 'manufacturer_id',
+          title: 'Manufacturer Name',
+          className: 'text-left  font-weight-normal',
+          render: function (data: any, type: any, full: any){
+            if (data){
+              return `${full.manufacturer_id.name}`;
+            }else{
+              return '-'
+            }
+          }
+        },
+        {
           data: 'is_active',
           title: 'Active',
+          className: 'text-center  font-weight-normal',
+          render: (data: any) => {
+            if (data) {
+              return `<i class="fa fa-check text-success"></img>`;
+            } else {
+              return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data: 'is_lens_brand',
+          title: 'Lens Brand',
           className: 'text-center  font-weight-normal',
           render: (data: any) => {
             if (data) {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-otc-categories-view',
@@ -7,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OtcCategoriesViewComponent implements OnInit {
 
-  constructor() { }
+  public categoryId: any;
+  constructor(private route: ActivatedRoute){
+      this.categoryId = this.route.snapshot.params.id;
+  }
 
   ngOnInit(): void {
   }

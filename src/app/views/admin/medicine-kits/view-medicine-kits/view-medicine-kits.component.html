@@ -10,8 +10,8 @@
     <div class="col-md-3 col-12">
       <div class="form-group">
         <mat-label class="text-white font-weight-bold">Treatment Condition</mat-label>
-        <mat-select class="form-control" placeholder="Treatment Condition" (selectionChange)="getMedicineKits($event.value)" [(ngModel)]="treatmentConditionId">
-          <mat-option color="primary" *ngFor="let tc of treatmentConditionList" [value]="tc.id">{{tc.name}}</mat-option>
+        <mat-select class="form-control" placeholder="Treatment Condition" (selectionChange)="getMedicineKits($event.value)" [(ngModel)]="selectedTreatmentConditionId">
+          <mat-option color="primary" *ngFor="let tc of treatmentConditionList" [value]="tc._id">{{tc.name}}</mat-option>
         </mat-select>
       </div>
     </div>
@@ -19,7 +19,7 @@
       <div class="form-group">
         <mat-label class="text-white font-weight-bold">Medicine Kit</mat-label>
         <mat-select class="form-control" placeholder="Medicine Kit" (selectionChange)="onKitChange($event.value)" [(ngModel)]="medicineKitId">
-          <mat-option *ngFor="let kit of medicineKits" [value]="kit.id">
+          <mat-option *ngFor="let kit of medicineKits" [value]="kit._id">
             {{kit.name}}
           </mat-option>
         </mat-select>

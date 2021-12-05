@@ -182,7 +182,7 @@ export class ListMedicineKitsComponent implements OnInit, AfterViewInit, OnDestr
           render: (data: any, type: any, full: any) => {
             if (data) {
               return ''
-              //this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
+              this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

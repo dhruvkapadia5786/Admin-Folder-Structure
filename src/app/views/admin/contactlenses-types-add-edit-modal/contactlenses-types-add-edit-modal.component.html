@@ -1,0 +1,49 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="w-100 d-flex flex-row justify-content-between align-items-center">
+            <p class="font-weight-bold mb-0">{{ modalEvent =='EDIT' ? 'Edit Lens Type' : 'Add Lens Type' }}</p>
+            <button (click)="closeModal()" type="button"  class="close float-right" aria-label="Close" data-dismiss="modal">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="saveType(typeForm.valid)"
+            [formGroup]="typeForm" autocomplete="off">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Name</label><br />
+                        <input type="hidden" id="id" formControlName="id" />
+                        <input type="text" id="name" class="form-control" placeholder="Enter Name" formControlName="name" />
+                        <div class="invalid-feedback" *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+                            class="text-danger">
+                            <div *ngIf="name?.errors?.required">Name is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Description</label><br />
+                        <textarea type="text" rows="2" id="description" class="form-control" formControlName="description"></textarea>
+                        <div class="invalid-feedback" *ngIf="description?.invalid && (description?.dirty || description?.touched)"
+                            class="text-danger">
+                            <div *ngIf="description?.errors?.required">Description is required.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <mat-checkbox id="is_active" formControlName="is_active" color="primary">Active</mat-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success btn-block btn-sm mt-2" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

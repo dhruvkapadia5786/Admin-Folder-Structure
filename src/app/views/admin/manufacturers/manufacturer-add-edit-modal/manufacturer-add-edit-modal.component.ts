@@ -26,6 +26,7 @@ export class ManufacturerAddEditModalComponent implements OnInit {
       'name': new FormControl(null, [Validators.required]),
       'address':new FormControl(null,[]),
       'contact_number':new FormControl(null,[]),
+      'country':new FormControl('India',[]),
       'is_active':new FormControl(null)
     });
   }
@@ -34,6 +35,7 @@ export class ManufacturerAddEditModalComponent implements OnInit {
   get name() { return this.manufacturerForm.get('name'); }
   get is_active(){return this.manufacturerForm.get('is_active');}
   get address(){return this.manufacturerForm.get('address');}
+  get country(){return this.manufacturerForm.get('country');}
   get contact_number(){return this.manufacturerForm.get('contact_number');}
 
   ngOnInit(): void {
@@ -44,6 +46,7 @@ export class ManufacturerAddEditModalComponent implements OnInit {
         id:details.data._id,
         name:details.data.name,
         address:details.data.address,
+        country:details.data.country,
         contact_number:details.data.contact_number,
         is_active:details.data.is_active
       });

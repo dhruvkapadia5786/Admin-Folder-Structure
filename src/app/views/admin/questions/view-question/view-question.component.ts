@@ -46,7 +46,7 @@ export class ViewQuestionComponent implements OnInit {
   updateStateStatus(event: any, state: any) {
     const url = 'api/v1/admin/questions/manage_question_states';
     const obj = {
-      'id': state.id,
+      'id': state._id,
       'is_active': state.is_active
     }
     this.http.post(url, obj)

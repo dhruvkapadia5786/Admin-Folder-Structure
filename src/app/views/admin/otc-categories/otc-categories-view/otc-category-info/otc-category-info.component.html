@@ -1,0 +1,25 @@
+
+<ng-container *ngIf="OTCCategoryDetails; else noOTCCategoryDetails">
+  <div class="p-2">
+
+        <table class="table">
+          <tbody>
+            <tr><td class="font-weight-normal border-top-0">Category ID</td><td class="font-weight-normal border-top-0">{{OTCCategoryDetails._id}}</td></tr>
+            <tr><td class="font-weight-normal">Name</td><td class="font-weight-normal">{{OTCCategoryDetails.name || '-'}} <span class="ml-2 badge badge-success badge-pill p-2" *ngIf="OTCCategoryDetails.is_coming_soon==1">Comming Soon</span></td></tr>
+            <tr><td class="font-weight-normal">Gender</td><td class="font-weight-normal">{{OTCCategoryDetails.for_gender || '-' }}</td></tr>
+            <tr><td class="font-weight-normal">URL</td><td class="font-weight-normal">{{ OTCCategoryDetails.slug || '-' }}</td></tr>
+            <tr><td class="font-weight-normal">Active</td><td class="font-weight-normal"><h5><i class="fa fa-check text-success" *ngIf="OTCCategoryDetails.is_active"></i><i class="fa fa-times text-danger" *ngIf="!OTCCategoryDetails.is_active"></i></h5></td></tr>
+            <tr><td class="font-weight-normal">Description</td><td class="font-weight-normal">{{OTCCategoryDetails.description}}</td></tr>
+            <tr>
+              <td class="font-weight-normal">Image</td>
+              <td class="font-weight-normal">
+                  <app-image-preview [imgPath]="OTCCategoryDetails.image_url" height="200" width="200" caption="Image"></app-image-preview>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  </div>
+</ng-container>
+<ng-template #noOTCCategoryDetails>
+  No OTC Category Details
+</ng-template>

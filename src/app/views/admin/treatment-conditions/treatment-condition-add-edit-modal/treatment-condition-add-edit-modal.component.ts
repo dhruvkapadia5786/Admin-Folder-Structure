@@ -28,6 +28,7 @@ export class TreatmentConditionAddEditModalComponent implements OnInit {
     this.treatmentConditionForm = this.formBuilder.group({
       'id':new FormControl(null, []),
       'name': new FormControl(null, [Validators.required]),
+      'for_gender': new FormControl(null, [Validators.required]),
       'is_active': new FormControl(null, []),
       'description': new FormControl(null, []),
       'image_url': new FormControl(null, []),
@@ -38,6 +39,7 @@ export class TreatmentConditionAddEditModalComponent implements OnInit {
 
   get id() { return this.treatmentConditionForm.get('id'); }
   get name() { return this.treatmentConditionForm.get('name'); }
+  get for_gender(){return this.treatmentConditionForm.get('for_gender');}
   get is_active() { return this.treatmentConditionForm.get('is_active'); }
   get description() { return this.treatmentConditionForm.get('description'); }
   get image_url() { return this.treatmentConditionForm.get('image_url'); }
@@ -49,6 +51,7 @@ export class TreatmentConditionAddEditModalComponent implements OnInit {
       this.treatmentConditionForm.patchValue({
         id:details.data._id,
         name:details.data.name,
+        for_gender:details.for_gender,
         is_active:details.data.is_active,
         description:details.data.description
       });
@@ -130,7 +133,7 @@ export class TreatmentConditionAddEditModalComponent implements OnInit {
   async saveTreatmentCondition(formValid:boolean){
     if(formValid){
       const formData: FormData = new FormData();
-      
+
       formData.append('treatment', JSON.stringify(this.treatmentConditionForm.value));
       formData.append('image_url', this.selectedImageFile);
 

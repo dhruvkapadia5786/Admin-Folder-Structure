@@ -8,18 +8,20 @@ import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.m
 import { MatTabsModule } from '@angular/material/tabs';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { ChangeSequenceModule } from 'src/app/shared/change-sequence/change-sequence.module';
 
 @NgModule({
   declarations: [InfoMedicineKitComponent],
   imports: [
-    CommonModule,
+  CommonModule,
     FormsModule,
     InfoMedicineKitRoutingModule,
     NgxMaskModule,
     DataTablesModule,
     MatSlideToggleModule,
     ImagePreviewModule,
-    MatTabsModule
+    MatTabsModule,
+    ChangeSequenceModule
   ]
 })
 export class InfoMedicineKitModule { }

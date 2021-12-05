@@ -1,4 +1,4 @@
-<div class="w-100 p-3 bg-dark-grey d-flex justify-content-between align-items-center">
+<div *ngIf="showHeaderAndFilter" class="w-100 p-3 bg-dark-grey d-flex justify-content-between align-items-center">
     <h4 class="text-white font-weight-bold mb-0">Questions
      <span class="ml-2 badge badge-success p-2">{{questions.length}}</span>
     </h4>
@@ -7,7 +7,7 @@
     </a>
 </div>
 <div class="p-3">
-    <div class="row">
+    <div class="row" *ngIf="showHeaderAndFilter">
       <div class="col-md-4">
         <label for="kits">Medicine Kits</label>
          <mat-form-field class="w-100">
@@ -18,6 +18,18 @@
              <mat-option color="primary" *ngFor="let mk of kitList" [value]="mk._id">{{mk.name}}</mat-option>
            </mat-select>
          </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <label for="chc">Health Condition</label>
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Select Health Condition" (selectionChange)="handleChange($event.value)" [(ngModel)]="selectedCHC" multiple>
+            <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
+              (change)="handleCheckAll($event, 'HC')"
+              [indeterminate]="selectedCHC.length > 0 && notSelectedConditions"
+              [checked]="!notSelectedConditions">Select All</mat-checkbox>
+            <mat-option *ngFor="let condition of chcList" [(value)]="condition._id">{{condition.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <div class="col-md-4">
         <label>Question Category</label>
@@ -37,6 +49,7 @@
               <th>Type</th>
               <th>Question</th>
               <th width="400">Medicine Kits</th>
+              <th width="400">Health Conditions</th>
               <th width="150">States</th>
               <th>Active</th>
               <th width="180">Action</th>
@@ -58,7 +71,12 @@
               </td>
               <td>
                 <ul>
-                  <li *ngFor="let kit of que.dtc_medicine_kits">{{kit.name}}</li>
+                  <li *ngFor="let kit of que.pet_dtc_medicine_kits">{{kit.name}}</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li *ngFor="let chc of que.pet_consultation_health_conditions">{{chc.name}}</li>
                 </ul>
               </td>
               <td>
@@ -71,8 +89,8 @@
                 <i *ngIf="!que.is_active" class="fa fa-times text-danger"></i>
               </td>
               <td>
-                <button (click)=viewQuestion(que._id) class="btn btn-sm btn-default"><i class="fa fa-eye"></i></button>
-                <button (click)=editQuestion(que._id) class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
+                <button (click)=viewQuestion(que._id) class="btn btn-sm btn-default">View</button>
+                <button (click)=editQuestion(que._id) class="btn btn-sm btn-primary">Edit</button>
               </td>
             </tr>
           </tbody>

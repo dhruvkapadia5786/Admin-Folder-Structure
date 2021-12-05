@@ -25,4 +25,8 @@ export class BrandAddEditModalService {
 		return await this._http.post('api/brands/update/'+id, bodyData).toPromise();
   }
 
+  async getAllManufacturers(searchTerm:string):Promise<any>{
+    return await this._http.get(`api/manufacturers/all`+`?search=${searchTerm}`).toPromise();
+  }
+
 }

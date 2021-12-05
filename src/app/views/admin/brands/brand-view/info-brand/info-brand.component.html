@@ -1,4 +1,4 @@
-<ng-container > <!-- *ngIf="brandDetails; else noBrandDetails" -->
+<ng-container  *ngIf="brandDetails; else noBrandDetails">
 
     <div class="row">
         <div class="col-md-6">
@@ -19,6 +19,7 @@
             <h5>{{brandDetails.description}}</h5>
         </div>
     </div>
+
     <br>
     <div class="row">
         <div class="col-md-6">
@@ -38,6 +39,18 @@
                         style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <label>Manufacturer Details</label>
+            <h5 *ngIf="brandDetails.manufacturer_id">
+              {{brandDetails.manufacturer_id.name}}
+               <br/>
+              {{brandDetails.manufacturer_id.address}}
+               <br/>
+              {{brandDetails.manufacturer_id.contact_number}}
+            </h5>
         </div>
     </div>
 </ng-container>

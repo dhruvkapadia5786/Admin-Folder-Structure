@@ -63,12 +63,15 @@ export class CustomerInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route?.parent?.parent?.params.subscribe(params => {
-      this.customerId = params['id'];
-      this.getCustomerDetails();
-      this.getUserCards();
-      this._getState();
-    });
+    let activeRoute:any = this.route;
+    if(activeRoute){
+      activeRoute.parent.parent.params.subscribe((params:any) => {
+        this.customerId = params['id'];
+        this.getCustomerDetails();
+        this.getUserCards();
+        this._getState();
+      });
+    }
   }
 
   getCustomerDetails() {
@@ -76,28 +79,23 @@ export class CustomerInfoComponent implements OnInit {
     this.http.get(url).subscribe(async (customer: any) => {
       this.customerDetails = customer;
       this.addresses = this.customerDetails.addresses;
-      // this.orignalFullFaceImage = await this.loadImage(customer.profileImage);
-      // this.orignalLicenseImage = await this.loadImage(customer.licenseImage);
+      this.stripeCustomerId = this.customerDetails.customer_stripe_token;
     }, err => {
 
     });
   }
 
 
-  getUserCards() {
-    const url = 'api/v1/admin/customer/stripe_profile/' + this.customerId;
+  getUserCards(){
+    const url = 'api/customers/get_all_cards/' + this.customerId;
     this.http.get(url).subscribe(
       (resp: any) => {
-        this.stripeCustomerId = resp.id;
-        this.userCards = resp.sources.data;
-      },
-      err => {
-
-      }
+        this.userCards = resp;
+      }, err => {}
     );
   }
 
-  private async _getState() {
+   _getState() {
     const url = 'api/system_states/all';
     this.http.get(url).subscribe(
       (data: any) => {
@@ -131,9 +129,10 @@ export class CustomerInfoComponent implements OnInit {
       });
   }
 
+
   deleteAddress(address_id: number) {
-    const url = 'api/v1/admin/customer/delete_address/' + address_id;
-    this.http.post(url, { user_id: this.customerId }).subscribe((data: any) => {
+    const url = 'api/customers/delete_address/' +  this.customerId;
+    this.http.post(url, { address_id: address_id }).subscribe((data: any) => {
       this.getMyAddresses();
     },
       (err) => {
@@ -141,17 +140,15 @@ export class CustomerInfoComponent implements OnInit {
   }
 
   getMyAddresses() {
-    const url = `api/v1/admin/customer/address/${this.customerId}`;
+    const url = `api/customers/address/${this.customerId}`;
     this.http.get(url).subscribe((data: any) => {
       this.addresses = data;
-    },
-      (err) => {
-      }
-    );
+      this._changeDetectorRef.detectChanges();
+    }, (err) => { });
   }
 
   async openImageCropperModal(eventName: string) {
-    let path_to_load = eventName == 'PROFILE' ? (this.customerDetails.profileImage ? this.customerDetails.profileImage : null) : (this.customerDetails.licenseImage ? this.customerDetails.licenseImage : null);
+    let path_to_load = eventName == 'PROFILE' ? (this.customerDetails.profile_picture ? this.customerDetails.profile_picture : null) : (this.customerDetails.license_image ? this.customerDetails.license_image : null);
     let field_name = eventName == 'PROFILE' ? 'profile_photo' : 'license_photo';
     let file_name: string = path_to_load ? path_to_load.split("/").pop() : null;
     this.loadImage(path_to_load).then((result) => {
@@ -176,19 +173,20 @@ export class CustomerInfoComponent implements OnInit {
   }
 
   async loadImage(path: string) {
-    return await this.http.post('api/document/preview', { path: path }, { responseType: 'blob' }).toPromise();
+    return await this.http.post('api/documents/preview', { path: path }, { responseType: 'blob' }).toPromise();
   }
 
   uploadFullFaceImage(file: any) {
     this.submitted = true;
     const formData: FormData = new FormData();
     this.fullFaceImage = file;
-    const url = `api/v1/admin/customer/profileImage/${this.customerId}`;
+    const url = `api/customers/update_profile_photo/${this.customerId}`;
     formData.append(
-      'profile_image',
+      'profile',
       this.fullFaceImage,
+      this.fullFaceImage.name
     );
-    this.http.patch(url, formData).subscribe(
+    this.http.post(url, formData).subscribe(
       (data: any) => {
         this.submitted = true;
         this.fullFaceEditMode = false;
@@ -204,14 +202,13 @@ export class CustomerInfoComponent implements OnInit {
     this.submitted = true;
     const formData: FormData = new FormData();
     this.licenseImage = file;
-    const url = `api/v1/admin/customer/licenseDetails/${this.customerId}`;
-    formData.append('userId', this.customerId.toString());
+    const url = `api/customers/update_license_photo/${this.customerId}`;
     formData.append(
-      'license_photo',
+      'license',
       this.licenseImage,
       this.licenseImage.name
     );
-    this.http.patch(url, formData).subscribe(
+    this.http.post(url, formData).subscribe(
       (data: any) => {
         this.licenseEntered = true;
         this.submitted = false;
@@ -231,13 +228,12 @@ export class CustomerInfoComponent implements OnInit {
       addressModalTitle: 'Add New Address'
     });
     this.modalRef = this.modalService.show(ChangeAddressModalComponent, { class: 'modal-lg' });
-    this.modalRef.content.onEventCompleted.subscribe((file: any) => {
-      /* CALL METHOD TO MAKE API CALL TO SAVE ADDRESS */
+    this.modalRef.content.onEventCompleted.subscribe((resp: any) => {
+      this.addNewAddress(resp);
     });
   }
 
   openEditAddressModal(address: any) {
-    console.log('address passing to modal >> ', address)
     this._changeAddressModalService.setFormData({
       type: 'EDIT_ADDRESS',
       addressModalTitle: 'Edit Address',
@@ -246,21 +242,43 @@ export class CustomerInfoComponent implements OnInit {
       address_line_1: address.address_line_1,
       address_line_2: address.address_line_2 ? address.address_line_2 : '',
       city: address.city,
-      state_id: address.state,
+      state_name: address.state,
+      state_id: address.state_id,
       zip_code: address.zip_code,
       is_default: address.is_default
     });
     this.modalRef = this.modalService.show(ChangeAddressModalComponent, { class: 'modal-lg' });
-    this.modalRef.content.onEventCompleted.subscribe((file: any) => {
-      /* CALL METHOD TO MAKE API CALL TO UPDATE ADDRESS */
+    this.modalRef.content.onEventCompleted.subscribe((resp: any) => {
+      this.updateAddress(resp);
     });
   }
 
+  updateAddress(formData: any) {
+    const url = 'api/customers/update_address/' + this.customerId;
+    this.http.post(url, formData).subscribe(
+      (resp: any) => {
+        this._toastr.showSuccess('Address updated successfully!')
+        this.getMyAddresses()
+      }, err => {}
+    );
+  }
+
+  addNewAddress(formData: any) {
+    const url = 'api/customers/add_address/' + this.customerId;
+    this.http.post(url, formData).subscribe(
+      (resp: any) => {
+        this._toastr.showSuccess('Address updated successfully!')
+        this.getMyAddresses()
+      }, err => {}
+    );
+  }
+
   openChangePasswordModal() {
-    this._changePasswordModalService.setFormData('Change Password');
+    this._changePasswordModalService.setFormData({user_id: this.customerId});
     this.modalRef = this.modalService.show(ChangePasswordModalComponent, { class: 'modal-lg' });
-    this.modalRef.content.onEventCompleted.subscribe((file: any) => {
+    this.modalRef.content.onEventCompleted.subscribe((resp: any) => {
       /* CALL METHOD TO MAKE API CALL TO SAVE PASSWORD */
+      console.log(resp)
     });
   }
 
