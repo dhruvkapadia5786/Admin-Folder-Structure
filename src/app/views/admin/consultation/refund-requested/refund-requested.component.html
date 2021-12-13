@@ -1,0 +1,81 @@
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link active" routerLink="/admin/consultation/refund_requested">Refund Requested Consultation</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" routerLink="/admin/consultation/refund_processed">Refund Processed Consultation</a>
+  </li>
+</ul>
+<div class="row p-3">
+  <div class="col-sm-12">
+    <h3>Refund Requested Consultation</h3>
+  </div>
+</div>
+<hr>
+
+<div class="p-2">
+    <div class="table-responsive-md" *blockUI="'datatable'">
+      <table mdbTable hover="true" id="ordersList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"></table>
+    </div>
+</div>
+
+<!-- Refund Details Modal -->
+<!--<div  class="modal fade" id="refundDetailsModal" tabindex="-1" role="dialog" aria-labelledby="refundDetailsModalLabel" aria-hidden="true"  [config]="{backdrop: 'static',keyboard:false}">
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content" *ngIf="selectedConsultation">
+        <div class="modal-header">
+        <h5 class="modal-title"> Refund Consultation {{ '#'+selectedConsultation.consultation_number }}</h5>
+        <button type="button" class="close"  (click)="closeModal(refundDetailsModal)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+        </div>
+        <div class="modal-body">
+            <p class="font-weight-bold">Are you sure to process refund for consultation : {{ '#'+selectedConsultation.consultation_number }} ?</p>
+            <table class="table table-sm">
+                <tbody>
+                  <tr>
+                      <td>Customer Name</td>
+                      <td>{{selectedConsultation.customer_name}}</td>
+                  </tr>
+                  <tr>
+                      <td>Health Condition</td>
+                      <td>{{selectedConsultation.health_condition}}</td>
+                  </tr>
+                  <tr>
+                      <td>Total Amount To Refund</td>
+                      <td>{{selectedConsultation.consultation_charge| currency:'INR'}}</td>
+                  </tr>
+                  <tr>
+                      <td>
+                        <p>Refund To Stripe</p>
+                        <p class="font-weight-bold">{{selectedConsultation.charged_from_stripe| currency:'INR'}}</p>
+                      </td>
+                      <td>
+                         <p>Refund To Wallet</p>
+                         <p class="font-weight-bold">{{selectedConsultation.charged_from_wallet| currency:'INR'}}</p>
+                      </td>
+                  </tr>
+                </tbody>
+            </table>
+
+            <div class="text-center" *ngIf="refund_processing">
+                Processing ...
+            </div>
+            <div class="alert alert-success font-weight-bold" role="alert" *ngIf="selectedConsultation.result && selectedConsultation.result.refunded">
+               Order Refunded Successfully.
+               <p class="mb-0">Refunded To Stripe : {{ selectedConsultation.result.stripeRefund ? selectedConsultation.result.stripeRefund.id:'N/A' }} </p>
+               <p> Refunded To Wallet : {{ selectedConsultation.result.walletRefund ? 'Yes':'N/A' }} </p>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="selectedConsultation.result && !selectedConsultation.result.refunded">
+               Unable to process refund order. Please Check Payment Method!
+            </div>
+            <button *ngIf="!(selectedConsultation.result && selectedConsultation.result.refunded)" class="btn btn-block btn-success" [disabled]="refund_processing" (click)="refundConsultation(selectedConsultation.id,0)">PROCESS REFUND (REGULAR)</button>
+            <button *ngIf="!(selectedConsultation.result && selectedConsultation.result.refunded) && selectedConsultation.wallet_id" class="btn btn-block btn-outline-success mt-2" [disabled]="refund_processing" (click)="refundConsultation(selectedConsultation.id,1)">PROCESS REFUND IN WALLET</button>
+            <p *ngIf="!selectedConsultation.wallet_id" class="text-info">This customer doesn't have wallet , so wallet refund option is not available</p>
+            <button *ngIf="selectedConsultation.result && selectedConsultation.result.refunded" class="btn btn-block btn-dark"  (click)="closeModal(refundDetailsModal)">CLOSE</button>
+
+        </div>
+    </div>
+  </div>
+</div>-->

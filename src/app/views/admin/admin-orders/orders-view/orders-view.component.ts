@@ -127,7 +127,7 @@ export class OrdersViewComponent implements OnInit {
   sendMail(orderId:number) {
     this.loadingReminderButton = true
     this.http
-    .post<any>(`api/v1/admin/orders/email/incompleteOrder/${orderId}`, {})
+    .post<any>(`api/orders/email/incompleteOrder/${orderId}`, {})
     .subscribe((response) => {
       this.toastr.showSuccess('Mail has been sent!')
       this.loadingReminderButton = false
@@ -211,7 +211,7 @@ validateShippingAddress(): Promise<boolean> {
     //postal_code: this.addressForm.value.zip_code,
     //state_province: state_name
   };
-  const url = 'api/v1/admin/states/validateShippingAddress';
+  const url = 'api/states/validateShippingAddress';
   let isValid = false;
   const obj = {
     address: [ValidationAddress]
@@ -240,7 +240,7 @@ validateShippingAddress(): Promise<boolean> {
 }
 
   getOrderDetails() {
-    const url = 'api/v1/admin/orders/info/' + this.orderId;
+    const url = 'api/orders/info/' + this.orderId;
     const req = '';
     this.http.post(url, req).subscribe((data: any) => {
       this.orderDetails = data;
@@ -254,7 +254,7 @@ validateShippingAddress(): Promise<boolean> {
       }else{
         this.showChangeAddressBtn =true;
       }
-      
+
       this.getUserLastOrderDrugs()
       if (this.patient.license_photo) {
         this.getImage(this.patient.license_photo);
@@ -279,7 +279,7 @@ validateShippingAddress(): Promise<boolean> {
   }
 
   getOrderCurrentStatus() {
-    const url = 'api/v1/admin/orders/status/' + this.orderId;
+    const url = 'api/orders/status/' + this.orderId;
     this.http.get(url).subscribe((data: any) => {
       this.orderCurrentStatus = data;
     });
@@ -302,7 +302,7 @@ validateShippingAddress(): Promise<boolean> {
     );
   }
   async getImage(path: string) {
-    await this.http.post('api/v1/admin/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
+    await this.http.post('api/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
       const fr = new FileReader();
       fr.readAsDataURL(result);
       fr.onloadend = () => {
@@ -364,7 +364,7 @@ validateShippingAddress(): Promise<boolean> {
 
   createRefillOrder(orderId:number){
     this.loadingCreateRefillOrderButton = true;
-      const url = 'api/v1/admin/subscription/create-refill-order';
+      const url = 'api/subscription/create-refill-order';
       this.http.post(url,{orders:[this.orderDetails.id]}).subscribe((data: any) => {
       this.loadingCreateRefillOrderButton = false;
       this.toastr.showSuccess('Refill Order Successfully Created');

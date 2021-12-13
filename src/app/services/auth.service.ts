@@ -27,7 +27,7 @@ export class AuthService {
 	}
 
   validateToken(_token: string) {
-		return this._http.post('api/v1/users/validate-token', {token:_token});
+		return this._http.post('api/auth/validate-token', {token:_token});
 	}
 
   removeAuthorizationToken() {
@@ -97,7 +97,7 @@ export class AuthService {
 
 	async load(): Promise<any> {
 		if (this.checkIfLoggedIn()) {
-			return this._http.get('api/v1/users/me').toPromise();
+			return this._http.get('api/auth/me').toPromise();
 		} else{
       return new Promise((res: any, rej: any) => {
 				rej({});
@@ -107,7 +107,7 @@ export class AuthService {
 
   async logout():Promise<any>{
     if (this.checkIfLoggedIn()) {
-       return this._http.post('api/v1/users/logout',{}).toPromise();
+       return this._http.post('api/auth/logout',{}).toPromise();
     } else{
       return new Promise((res: any, rej: any) => {
 				rej({});

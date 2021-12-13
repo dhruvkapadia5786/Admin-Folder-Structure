@@ -8,6 +8,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import {environment} from 'src/environments/environment';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { OtcSubcategoriesAddEditModalComponent } from '../otc-subcategories-add-edit-modal/otc-subcategories-add-edit-modal.component';
+import { OtcSubcategoriesAddEditModalService } from '../otc-subcategories-add-edit-modal/otc-subcategories-add-edit-modal.service';
 
 @Component({
   selector: 'app-otc-category-subcategories',
@@ -15,6 +18,7 @@ import {environment} from 'src/environments/environment';
   styleUrls: ['./otc-category-subcategories.component.scss']
 })
 export class OtcCategorySubcategoriesComponent implements OnInit,AfterViewInit,OnDestroy {
+  modalRef!: BsModalRef;
   CategoryTableData = [];
   dtOptions!: DataTables.Settings;
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
@@ -31,6 +35,8 @@ export class OtcCategorySubcategoriesComponent implements OnInit,AfterViewInit,O
     private _renderer: Renderer2,
     private _helper:Helper,
     private _changeDetectorRef: ChangeDetectorRef,
+    private modalService: BsModalService,
+    private _otcSubcategoryAddEditModalService: OtcSubcategoriesAddEditModalService,
     private _otcCategoriesService:OtcCategorySubcategoriesService){
 
       let activeRoute:any = this.route;
@@ -48,8 +54,22 @@ export class OtcCategorySubcategoriesComponent implements OnInit,AfterViewInit,O
     }); */
   }
 
-  openModal(modal:any){
+  openAddModal(){
+    this._otcSubcategoryAddEditModalService.setData({event:'ADD',data:{category_id:this.categoryId}})
+    this.modalRef = this.modalService.show(OtcSubcategoriesAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef.content.onEventCompleted.subscribe(()=>{
+        this.rerender();
+    });
+  }
 
+  openEditModal(id:any){
+    let data:any = this.CategoryTableData.find((item:any)=>item._id == id);
+    data.category_id=this.categoryId;
+    this._otcSubcategoryAddEditModalService.setData({event:'EDIT',data:data});
+    this.modalRef = this.modalService.show(OtcSubcategoriesAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef.content.onEventCompleted.subscribe(()=>{
+      this.rerender();
+    });
   }
 
 
@@ -69,7 +89,7 @@ export class OtcCategorySubcategoriesComponent implements OnInit,AfterViewInit,O
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/v1/admin/otc-categories/all-subcategories-by-category/'+this.categoryId,
+            'api/otc_subcategories/list/'+this.categoryId,
             dataTablesParameters,
             {})
           .subscribe((resp) => {
@@ -84,13 +104,13 @@ export class OtcCategorySubcategoriesComponent implements OnInit,AfterViewInit,O
       },
       columns: [
         {
-          data:'image',
+          data:'image_url',
           title: 'Image',
           orderable: false,
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              let url = environment.api_url + data.substring(3);
+              let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
               return ``;
@@ -115,22 +135,10 @@ export class OtcCategorySubcategoriesComponent implements OnInit,AfterViewInit,O
           }
         },
         {
-          data: 'is_coming_soon',
-          title: 'Coming Soon',
-          className: 'text-center  font-weight-normal',
-          render: (data) => {
-            if (data) {
-              return `<i class="fa fa-check text-success"></img>`;
-            } else {
-              return `<i class="fa fa-times text-danger"></i>`;
-            }
-          }
-        },
-        {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<button type="button" class="btn btn-sm btn-primary m-0"  categoryEditId="${full.id}">Edit</button>`;
+            return `<button type="button" class="btn btn-sm btn-primary m-0"  categoryEditId="${full._id}">Edit</button>`;
           },
           orderable: false
         }
@@ -150,11 +158,10 @@ export class OtcCategorySubcategoriesComponent implements OnInit,AfterViewInit,O
   listenerFn:any;
   ngAfterViewInit(): void {
     this.dtTrigger.next();
-
+    let that=this;
     this.listenerFn = this._renderer.listen('document', 'click', (event:any) => {
       if (event.target.hasAttribute('categoryEditId')) {
-       let obj:any=this.CategoryTableData.find((cat:any)=> cat._id==event.target.getAttribute('categoryEditId'));
-
+        that.openEditModal(event.target.getAttribute('categoryEditId'))
       }else{
 
       }

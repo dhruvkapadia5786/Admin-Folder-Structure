@@ -262,12 +262,12 @@ export class ConsultationListComponent implements OnInit,AfterViewInit,OnDestroy
 
   getAllFilterList() {
     // health conditions
-    this._http.post<any>('api/v1/admin/consultation/health_condition/all', {}).subscribe((resp) => {
+    this._http.post<any>('api/consultation/health_condition/all', {}).subscribe((resp) => {
       this.healthConditionList = resp.data;
     }, err=> {});
 
     // states
-    this._http.post<any>('api/v1/admin/states/all', {}).subscribe((resp) => {
+    this._http.post<any>('api/states/all', {}).subscribe((resp) => {
       this.stateList = resp.data;
     }, err=> {});
 

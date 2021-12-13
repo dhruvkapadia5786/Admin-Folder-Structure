@@ -48,7 +48,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            `api/v1/admin/orders/refund_requested`,
+            `api/orders/refund_requested`,
             dataTablesParameters,
             {}
           )
@@ -154,7 +154,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
 
 
   refundOrder(orderId: number,event:string,full_refund:number) {
-      let url:string = 'api/v1/admin/orders/processRefund';
+      let url:string = 'api/orders/processRefund';
       this.refund_processing=true;
       this._http.post(url, { order_id: orderId,event:event,full_refund_in_wallet:full_refund })
         .subscribe((res: any) => {

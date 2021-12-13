@@ -1,68 +1,48 @@
 <ng-container *ngIf="conditionDetails">
-    <div class="row">
-        <div class="col-md-6">
-            <label>Treatment Condition Name</label>
-            <h5>{{conditionDetails.name}}
-                <span *ngIf="conditionDetails.is_active" class="ml-2 badge badge-success badge-pill p-2">Active</span>
-                <span *ngIf="!conditionDetails.is_active" class="ml-2 badge badge-danger badge-pill p-2">Inactive</span>
-            </h5>
-        </div>
-        <div class="col-md-6">
-            <label>Slug</label>
-            <h5>{{conditionDetails.slug}}</h5>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <label>Description</label>
-            <h5>{{conditionDetails.description}}</h5>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="float-left">Image</label><br>
-                <div class="float-left w-100">
-                    <img class="rounded shadow" id="blah" [(src)]="imageUrl" alt="logo image"
-                        style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <h4 class="bg-dark text-white p-2 mt-3">Attributes</h4>
-    <div class="row">
-      <div class="col-md-12">
-        <table class="table table-responsive">
-          <thead class="thead-light">
+        <table class="table">
+          <tbody>
+            <tr><td class="font-weight-normal border-top-0"> ID</td><td class="font-weight-normal border-top-0">{{conditionDetails._id}}</td></tr>
+            <tr><td class="font-weight-normal">Name</td><td class="font-weight-normal">{{conditionDetails.name }} <span class="ml-2 badge badge-success badge-pill p-2" *ngIf="conditionDetails.is_coming_soon==1">Comming Soon</span></td></tr>
+            <tr><td class="font-weight-normal">URL</td><td class="font-weight-normal">{{ conditionDetails.slug  }}</td></tr>
+            <tr><td class="font-weight-normal">For Gender</td><td class="font-weight-normal">{{conditionDetails.for_gender }}</tr>
+            <tr><td class="font-weight-normal">Active</td><td class="font-weight-normal"><h5><i class="fa fa-check text-success" *ngIf="conditionDetails.is_active"></i><i class="fa fa-times text-danger" *ngIf="!conditionDetails.is_active"></i></h5></td></tr>
+            <tr><td class="font-weight-normal">Description</td><td class="font-weight-normal">{{conditionDetails.description}}</td></tr>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Value</th>
-              <th scope="col">Sequence</th>
+              <td class="font-weight-normal">Image</td>
+              <td class="font-weight-normal">
+                  <app-image-preview [imgPath]="conditionDetails.image_url" height="200" width="200" caption="Image"></app-image-preview>
+              </td>
             </tr>
-          </thead>
-          <tbody *ngFor="let attr of conditionDetails.attributes">
-            <td>{{attr.name}}</td>
-            <td>{{attr.value}}</td>
-            <td>{{attr.sequence}}</td>
           </tbody>
         </table>
-      </div>
-    </div>
 
-
-    <h4 class="bg-dark text-white p-2 mt-3">FAQ</h4>
-    <div class="row">
-      <div class="col-md-12">
-        <ol *ngFor="let que of conditionDetails.faqs; let i = index;" class="list-group">
-          <li class="list-group-item">
-            {{i+1}}. {{que.question}}<br />
-            <span class="ml-3">{{que.answer}}</span>
-          </li>
-        </ol>
+      <h4 class="bg-dark text-white p-2 mt-3">Attributes</h4>
+      <div class="row" *ngIf="conditionDetails?.attributes.length > 0; else noAttributes">
+        <div class="col-md-12">
+          <app-change-sequence [mode]="'ATTRIBUTES'" [data]="conditionDetails.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+          </div>
       </div>
-    </div>
+      <ng-template #noAttributes>
+        <div class="text-center text-muted">
+          <h2><i class="fa fa-info-circle"></i></h2>
+          <h4>No Attributes!</h4>
+        </div>
+      </ng-template>
+
+      <h4 class="bg-dark text-white p-2 mt-3">FAQ</h4>
+      <div class="row" *ngIf="conditionDetails?.faqs.length > 0; else noFaqs">
+        <div class="col-md-12">
+          <app-change-sequence [mode]="'FAQS'" [data]="conditionDetails.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+        </div>
+      </div>
+      <ng-template #noFaqs>
+        <div class="text-center text-muted">
+          <h2><i class="fa fa-info-circle"></i></h2>
+          <h4>No FAQs!</h4>
+        </div>
+      </ng-template>
+
 
 </ng-container>
 <ng-template #noconditionDetails>

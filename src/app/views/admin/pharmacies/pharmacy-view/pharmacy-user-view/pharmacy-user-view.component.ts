@@ -138,7 +138,7 @@ export class PharmacyUserViewComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   loginAsUser(userId:number) {
-    let url = 'api/v1/admin/users/temp-user/' + userId;
+    let url = 'api/users/temp-user/' + userId;
     this.http.get(url).subscribe((res: any) => {
     }, (err: any) => {
     });

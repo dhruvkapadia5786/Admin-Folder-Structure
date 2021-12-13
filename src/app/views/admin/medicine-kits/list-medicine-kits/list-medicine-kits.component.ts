@@ -181,8 +181,7 @@ export class ListMedicineKitsComponent implements OnInit, AfterViewInit, OnDestr
           className: 'text-center  font-weight-normal',
           render: (data: any, type: any, full: any) => {
             if (data) {
-              return ''
-              this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

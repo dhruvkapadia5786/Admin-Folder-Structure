@@ -5,6 +5,7 @@ import { RefundedOrdersRoutingModule } from './refunded-orders-routing.module';
 import { DataTablesModule } from 'angular-datatables';
 import { BlockUIModule } from 'ng-block-ui';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { Helper } from 'src/app/services/helper.service';
 
 @NgModule({
   declarations: [RefundedOrdersComponent],
@@ -13,7 +14,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     CommonModule,
     DataTablesModule,
     ModalModule.forRoot(),
-    BlockUIModule
-  ]
+    BlockUIModule.forRoot({message:'Loading ...'}),
+  ],
+  providers:[Helper]
 })
 export class RefundedOrdersModule { }

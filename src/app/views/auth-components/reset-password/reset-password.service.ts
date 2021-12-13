@@ -9,14 +9,14 @@ export class ResetPasswordService {
 
   async checkUsername(token: any) {
     var result = await this._http
-      .get<any>(`api/v1/users/exists/${token}`)
+      .get<any>(`api/auth/exists/${token}`)
       .toPromise();
     return result;
   }
 
   async resetPassword(token:string, password:string) {
     var result = await this._http
-      .post<any>(`api/v1/users/resetpassword`, {
+      .post<any>(`api/auth/resetpassword`, {
         token: token,
         password: password
       })

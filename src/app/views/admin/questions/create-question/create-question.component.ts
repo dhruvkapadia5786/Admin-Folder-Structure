@@ -39,9 +39,9 @@ export class CreateQuestionComponent implements OnInit {
     this.questionObj.is_active = true;
     this.questionObj.is_multi_select = false;
     this.questionObj.category = '';
-    this.questionObj.pet_consultation_health_conditions = [];
+    this.questionObj.consultation_health_conditions = [];
     this.questionObj.states = [];
-    this.questionObj.pet_dtc_medicine_kits = [];
+    this.questionObj.dtc_medicine_kits = [];
     this.choiceObj = {
       'text': '',
       'result': '',
@@ -59,11 +59,11 @@ export class CreateQuestionComponent implements OnInit {
     this.getAllHealthConditionList();
     this.getStateList();
   }
-  get pet_dtc_medicine_kits() { return this.addQuestion.get('pet_dtc_medicine_kits'); }
+  get dtc_medicine_kits() { return this.addQuestion.get('dtc_medicine_kits'); }
   get text() { return this.addQuestion.get('text'); }
   get category() { return this.addQuestion.get('category'); }
   get states() { return this.addQuestion.get('states'); }
-  get pet_consultation_health_conditions() { return this.addQuestion.get('pet_consultation_health_conditions'); }
+  get consultation_health_conditions() { return this.addQuestion.get('consultation_health_conditions'); }
   get is_multi_select() { return this.addQuestion.get('is_multi_select'); }
   get is_active() { return this.addQuestion.get('is_active'); }
 
@@ -87,12 +87,12 @@ export class CreateQuestionComponent implements OnInit {
 
   get notSelectedKits() {
     if (this.medicineKitList) {
-      return this.medicineKitList.filter((data: any) => !this.addQuestion.get('pet_dtc_medicine_kits')?.value.some((b: any) => b === data._id)).length;
+      return this.medicineKitList.filter((data: any) => !this.addQuestion.get('dtc_medicine_kits')?.value.some((b: any) => b === data._id)).length;
     }
   }
 
   get notSelectedConditions() {
-    return this.healthConditionsList.filter((data: any) => !this.addQuestion.get('pet_consultation_health_conditions')?.value.some((b: any) => b === data._id)).length;
+    return this.healthConditionsList.filter((data: any) => !this.addQuestion.get('consultation_health_conditions')?.value.some((b: any) => b === data._id)).length;
   }
 
   public handleCheckAll(event: any, flag: string) {
@@ -105,18 +105,18 @@ export class CreateQuestionComponent implements OnInit {
       this.addQuestion.get('states')?.patchValue(this.questionObj.states);
     } else if (flag == 'kit') {
       if (event.checked) {
-        this.questionObj.pet_dtc_medicine_kits = this.medicineKitList.map((data: any) => data._id);
+        this.questionObj.dtc_medicine_kits = this.medicineKitList.map((data: any) => data._id);
       } else {
-        this.questionObj.pet_dtc_medicine_kits = [];
+        this.questionObj.dtc_medicine_kits = [];
       }
-      this.addQuestion.get('pet_dtc_medicine_kits')?.patchValue(this.questionObj.pet_dtc_medicine_kits);
+      this.addQuestion.get('dtc_medicine_kits')?.patchValue(this.questionObj.dtc_medicine_kits);
     } else if (flag == 'conditions') {
       if (event.checked) {
-        this.questionObj.pet_consultation_health_conditions =  this.healthConditionsList.map((data:any) => data._id);
+        this.questionObj.consultation_health_conditions =  this.healthConditionsList.map((data:any) => data._id);
       } else {
-        this.questionObj.pet_consultation_health_conditions = [];
+        this.questionObj.consultation_health_conditions = [];
       }
-      this.addQuestion.patchValue({ pet_consultation_health_conditions: this.questionObj.pet_consultation_health_conditions });
+      this.addQuestion.patchValue({ consultation_health_conditions: this.questionObj.consultation_health_conditions });
     }
   }
 
@@ -182,8 +182,8 @@ export class CreateQuestionComponent implements OnInit {
   createForm() {
     this.addQuestion = this.formBuilder.group({
       'question_type': new FormControl(this.questionObj.question_type),
-      'pet_dtc_medicine_kits': new FormControl(this.questionObj.pet_dtc_medicine_kits),
-      'pet_consultation_health_conditions': new FormControl(this.questionObj.pet_consultation_health_conditions),
+      'dtc_medicine_kits': new FormControl(this.questionObj.dtc_medicine_kits),
+      'consultation_health_conditions': new FormControl(this.questionObj.consultation_health_conditions),
       'text': new FormControl(this.questionObj.text, [Validators.required]),
       'category': new FormControl(this.questionObj.category, [Validators.required]),
       'states': new FormControl(this.questionObj.states),

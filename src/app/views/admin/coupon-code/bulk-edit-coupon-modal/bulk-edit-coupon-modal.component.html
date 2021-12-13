@@ -1,0 +1,78 @@
+<div class="modal-content">
+    <div class="modal-header text-center d-flex justify-content-center">
+        <h5 class="font-weight-bold text-white">Bulk Edit Coupon Codes</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true" class="text-white">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="updateCouponCode()" [formGroup]="bulkUpdateCouponCode"
+            autocomplete="off">
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label class="float-left">Expiry Date</label>
+                        <input type="text" formControlName="expiry" placeholder="Enter Expiry Date" class="form-control"
+                            bsDatepicker [bsConfig]="{ isAnimated: true }">
+                        <div class="invalid-feedback" *ngIf="expiry?.invalid && (expiry?.dirty || expiry?.touched)"
+                            class="text-danger">
+                            <div *ngIf="expiry?.errors?.required">Expiry Date is required</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mt-5 pl-2">
+                        <mat-checkbox id="is_change_amount" formControlName="is_change_amount" color="primary"
+                            [(ngModel)]="is_change_amount_flag" (change)="setDiscountValidators()">Want to change
+                            amount?</mat-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row" *ngIf="is_change_amount_flag">
+                    <div class="col-md-6">
+                        <label class="d-block">Discount Type</label>
+                        <mat-radio-group formControlName="disccount_type" [(ngModel)]="discount_type"
+                            (change)="setDiscountValidators()">
+                            <mat-radio-button value="0" color='primary'>Discount In Amount</mat-radio-button>
+                            &nbsp;&nbsp;
+                            <mat-radio-button value="1" color='primary'>Discount In Percentage</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="divDiscountAmount" *ngIf="divDiscountAmount">
+                            <label class="float-left"> Discount Amount</label>
+                            <input type="text" id="discount_amount" formControlName="discount_amount"
+                                class="form-control input-lg" placeholder="Enter Discount Amount" />
+                            <div class="invalid-feedback"
+                                *ngIf="discount_amount?.invalid && (discount_amount?.dirty || discount_amount?.touched)"
+                                class="text-danger">
+                                <div *ngIf="discount_amount?.errors?.required">Discount Amount is required</div>
+                            </div>
+                        </div>
+
+                        <div id="divDiscountPercentage" *ngIf="divDiscountPercentage">
+                            <label class="float-left">Discount Percentage</label>
+                            <input type="text" id="discount_percent" formControlName="discount_percent"
+                                class="form-control input-lg" placeholder="Enter Discount Percent">
+                            <div class="invalid-feedback"
+                                *ngIf="discount_percent?.invalid && (discount_percent?.dirty || discount_percent?.touched)"
+                                class="text-danger">
+                                <div *ngIf="discount_percent?.errors?.required">Discount Percent is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-sm-6">
+                        <mat-checkbox id="is_active" color="primary" formControlName="is_active">Active</mat-checkbox>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group float-right">
+                <button class="btn btn-success btn-sm mt-2" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

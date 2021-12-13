@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: 'treatment-conditions', loadChildren:()=>import('../../views/admin/treatment-conditions/treatment-conditions.module').then(HC=>HC.TreatmentConditionsModule) },
   { path: 'questions', loadChildren:()=>import('../../views/admin/questions/questions.module').then(QE=>QE.QuestionsModule) },
   { path: 'otc-categories',loadChildren:()=>import('../../views/admin/otc-categories/otc-categories.module').then(otc=>otc.OtcCategoriesModule)},
+  { path:'otc-drugs',loadChildren:()=>import('../../views/admin/otc-drugs-list/otc-drugs-list.module').then(otcProducts=>otcProducts.OtcDrugsListModule)},
   { path: 'products',loadChildren:()=>import('../../views/admin/products/products.module').then(product=>product.ProductsModule)},
   { path: 'reports', loadChildren:()=>import('../../views/admin/reports/reports.module').then(Reports=>Reports.ReportsModule) },
   { path: 'wallets',loadChildren:()=>import('../../views/admin/wallet-list/wallet-list.module').then(wallet=>wallet.WalletListModule)},
@@ -31,8 +32,12 @@ const routes: Routes = [
   { path: 'settings', loadChildren:()=>import('../../views/admin/settings/settings.module').then(settings=>settings.SettingsModule) },
   { path:'contactlenses-types',loadChildren:()=>import('../../views/admin/contactlenses-types/contactlenses-types.module').then(lensType=>lensType.ContactlensesTypesModule)},
   { path:'contactlenses-colors',loadChildren:()=>import('../../views/admin/contactlenses-colors/contactlenses-colors.module').then(lensColor=>lensColor.ContactlensesColorsModule)},
-  { path:'contactlenses-brands',loadChildren:()=>import('../../views/admin/contactlenses-brands/contactlenses-brands.module').then(lensBrand=>lensBrand.ContactlensesBrandsModule)}
-
+  { path:'contactlenses-brands',loadChildren:()=>import('../../views/admin/contactlenses-brands/contactlenses-brands.module').then(lensBrand=>lensBrand.ContactlensesBrandsModule)},
+  { path: 'coupon-code', loadChildren:()=>import('../../views/admin/coupon-code/coupon-code.module').then(CC=>CC.CouponCodeModule) },
+  { path: 'coupon-transaction', loadChildren:()=>import('../../views/admin/coupon-transactions/coupon-transactions.module').then(couponTransaction=>couponTransaction.CouponTransactionsModule) },
+  { path: 'referral-transaction', loadChildren:()=>import('../../views/admin/referral-transactions/referral-transactions.module').then(referral=>referral.ReferralTransactionsModule) },
+  { path: 'drug-order',loadChildren:()=>import('../../views/admin/admin-drug-orders/admin-drug-orders.module').then(drugOrder=>drugOrder.AdminDrugOrdersModule)},
+  { path: 'user-cart-list', loadChildren:()=>import('../../views/admin/user-cart-list/user-cart-list.module').then(cart=>cart.UserCartListModule) }
 ];
 
 @NgModule({

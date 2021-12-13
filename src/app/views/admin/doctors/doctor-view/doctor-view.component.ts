@@ -26,7 +26,7 @@ export class DoctorViewComponent implements OnInit, AfterViewInit {
     this.doctorHashId = this.doctorId;
     this.getDoctorDetails();
   }
-  
+
   ngOnInit() {
   }
 
@@ -54,7 +54,7 @@ export class DoctorViewComponent implements OnInit, AfterViewInit {
   }
 
   async getImage(path: string) {
-    await this.http.post('api/v1/admin/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
+    await this.http.post('api/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
       const fr = new FileReader();
       fr.readAsDataURL(result);
       fr.onloadend = () => {

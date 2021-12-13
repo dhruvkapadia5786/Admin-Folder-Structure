@@ -58,7 +58,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 				iconName: 'fa-user-md',
 				children: [
 					{ route: '/admin/doctors', iconName: 'fa-user-md', displayName: 'Doctors' },
-					{ route: '/admin/clinic', iconName: 'fa-hospital-o', displayName: 'Clinics' },
+					{ route: '/admin/clinic', iconName: 'fa-clinic-medical', displayName: 'Clinics' },
 					{ route: '/admin/account-request', iconName: 'fa-stethoscope', displayName: 'Account Request' },
 					{ route: '/admin/doctor-registration-codes', iconName: 'fa-puzzle-piece', displayName: 'Doctors Registration Codes' }
 				]
@@ -80,26 +80,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
             { route: '/admin/brands', iconName: 'fa-list', displayName: 'Brands' }
           ]
       },
+
 			{
-				displayName: 'Contact Lenses',
-				iconName: 'fa-eye',
+				displayName: 'DTC',
+				iconName: 'fa-shopping-cart',
 				children: [
-					{ route: '/admin/contactlenses-types', iconName: 'fa-bars', displayName: 'Lens Types' },
-					{ route: '/admin/contactlenses-colors', iconName: 'fa-bars', displayName: 'Colors' },
-					{ route: '/admin/contactlenses-brands', iconName: 'fa-bars', displayName: 'Brands' },
-					{ route: '/admin/contactlenses-products', iconName: 'fa-medkit', displayName: 'Products' },
+					{ route: '/admin/orders', iconName: 'fa-shopping-cart', displayName: 'Orders' },
+					{ route: '/admin/medicine-kits', iconName: 'fa-cubes', displayName: 'Medicine Kits' },
+					{ route: '/admin/treatment-conditions', iconName: 'fa-medkit', displayName: 'Treatment Conditions' }
 				]
 			},
-			{ route: '/admin/treatment-conditions', iconName: 'fa-medkit', displayName: 'Treatment Conditions' },
-			{ route: '/admin/medicine-kits', iconName: 'fa-cubes', displayName: 'Medicine Kits' },
-			{ route: '/admin/orders', iconName: 'fa-shopping-cart', displayName: 'Orders' },
-      {
+			{
 				displayName: 'Consultation',
 				iconName: 'fa-user-md',
 				children: [
 					{ route: '/admin/consultation', iconName: 'fa-user-md', displayName: 'Consultation' },
-					{ route: '/admin/consultation-health-conditions', iconName: 'fa-medkit', displayName: 'Health Conditions' },
-					{ route: '/admin/consultation-questions', iconName: 'fa-question', displayName: 'Consultation Questions' }
+					{ route: '/admin/consultation-health-conditions', iconName: 'fa-medkit', displayName: 'Health Conditions' }
 				]
 			},
 			{
@@ -112,16 +108,53 @@ export class NavbarComponent implements OnInit, OnDestroy {
 				]
 			},
 			{
-				displayName: 'OTC Drug',
-				iconName: 'fa-medkit',
+				displayName: 'Pharmacy',
+				iconName: 'fa-pills',
 				children: [
-					{ route: '/admin/otc-categories', iconName: 'fa-bars', displayName: 'OTC Categories' },
-					{ route: '/admin/otc-drugs', iconName: 'fa-medkit', displayName: 'OTC Drugs' },
+					{ route: '/admin/drug-order', iconName: 'fa-shopping-cart', displayName: 'Pharmacy Orders' },
+          { route: '/admin/products', iconName: 'fa-pills', displayName: 'Products' },
+					{ route: '/admin/user-cart-list', iconName: 'fa-list-alt', displayName: 'User Cart' }
 				]
 			},
-      { route: '/admin/products', iconName: 'fa-pills', displayName: 'Products' },
+			{
+				displayName: 'OTC',
+				iconName: 'fa-tablets',
+				children: [
+					{ route: '/admin/otc-categories', iconName: 'fa-bars', displayName: 'OTC Categories' },
+					{ route: '/admin/otc-drugs', iconName: 'fa-tablets', displayName: 'OTC Drugs' }
+				]
+			},
+      {
+				displayName: 'Contact Lenses',
+				iconName: 'fa-eye',
+				children: [
+					{ route: '/admin/contactlenses-types', iconName: 'fa-bars', displayName: 'Lens Types' },
+					{ route: '/admin/contactlenses-colors', iconName: 'fa-palette', displayName: 'Colors' },
+					{ route: '/admin/contactlenses-brands', iconName: 'fa-bars', displayName: 'Brands' },
+					{ route: '/admin/contactlenses-products', iconName: 'fa-medkit', displayName: 'Products' }
+				]
+			},
       { route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' },
       { route: '/admin/wallets', iconName: 'fa-rupee-sign', displayName: 'Wallets' },
+      {
+				displayName: 'Refund',
+				iconName: 'fa-sync-alt',
+				children: [
+					{ route: '/admin/orders/refund_requested', iconName: 'fa-sync-alt', displayName: 'Refund Orders' },
+					{ route: '/admin/consultation/refund_requested', iconName: 'fa-user-md', displayName: 'Refund Consultations' },
+					{ route: '/admin/drug-order/refund-requested', iconName: 'fa-sync-alt', displayName: 'Refund Pharmacy Orders' }
+				]
+			},
+      {
+				displayName: 'Coupons & Offers',
+				iconName: 'fa-tags',
+				children: [
+					{ route: '/admin/coupon-code/list-coupon-code', iconName: 'fa-receipt', displayName: 'Coupon Codes' },
+					{ route: '/admin/offers', iconName: 'fa-tags', displayName: 'Offers' },
+					{ route: '/admin/coupon-transaction', iconName: 'fa-list-alt', displayName: 'Coupon Transactions' },
+					{ route: '/admin/referral-transaction', iconName: 'fa-handshake', displayName: 'Referral Program Transactions' }
+				]
+			},
 			{
 				displayName: 'Others',
 				iconName: 'fa-info-circle',
@@ -139,8 +172,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.menuItems = ROUTES;
 		this.userInfo = this._authService.getUser();
-		if (this.userInfo && this.userInfo.firstName && this.userInfo.lastName) {
-			this.userFullName = this.userInfo.firstName + ' ' + this.userInfo.lastName;
+		if (this.userInfo && this.userInfo.first_name && this.userInfo.last_name) {
+			this.userFullName = this.userInfo.first_name + ' ' + this.userInfo.last_name;
 		}
 
 		const that = this;

@@ -101,7 +101,7 @@ export class AccountRequestViewComponent implements OnInit{
   }
 
   async _getStates() {
-    const url = 'api/v1/admin/states/active';
+    const url = 'api/states/active';
     this.http.get(url).subscribe(
       (data: any) => {
         this.states = data;

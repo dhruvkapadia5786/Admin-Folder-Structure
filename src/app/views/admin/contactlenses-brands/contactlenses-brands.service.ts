@@ -6,23 +6,23 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ContactlensesBrandsService {
 
-  
+
 	constructor(private _http: HttpClient) {}
 
   async createContactlensesBrand(data:any):Promise<any>{
-    return await this._http.post(`api/v1/admin/contactlenses-brands/add`,data).toPromise();
+    return await this._http.post(`api/contactlenses-brands/add`,data).toPromise();
   }
 
   async updateContactlensesBrand(id:number,data:any):Promise<any>{
-    return await this._http.post(`api/v1/admin/contactlenses-brands/update/${id}`,data).toPromise();
+    return await this._http.post(`api/contactlenses-brands/update/${id}`,data).toPromise();
   }
 
   async findAllContactlensesBrands():Promise<any>{
-    return await this._http.get(`api/v1/admin/contactlenses-brands/all`).toPromise();
+    return await this._http.get(`api/contactlenses-brands/all`).toPromise();
   }
 
   async findByIdContactlensesBrand(id:number):Promise<any>{
-    return await this._http.get(`api/v1/admin/contactlenses-brands/details/${id}`).toPromise();
+    return await this._http.get(`api/contactlenses-brands/details/${id}`).toPromise();
   }
 
 

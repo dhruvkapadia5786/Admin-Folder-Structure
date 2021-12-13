@@ -62,7 +62,7 @@ export class PharmacyUserManagementComponent implements OnInit, AfterViewInit, O
 
 
   manageAccountLogin(userId:number,status:number){
-    const url = 'api/v1/users/manage-account-login/' + userId+'/'+status;
+    const url = 'api/auth/manage-account-login/' + userId+'/'+status;
     this.http.get(url).subscribe((result: any) => {
       this.toastr.showSuccess('Account Login Status Successfully Updated');
     },(err:any) => {
@@ -138,8 +138,8 @@ export class PharmacyUserManagementComponent implements OnInit, AfterViewInit, O
           title: 'Name',
           className: 'text-center font-weight-normal',
           render: (data: any, type: any, full: any) => {
-            return full.first_name + ' ' + full.last_name; 
-          } 
+            return full.first_name + ' ' + full.last_name;
+          }
         },
         {
           data: 'email',

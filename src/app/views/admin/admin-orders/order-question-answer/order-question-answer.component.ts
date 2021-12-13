@@ -343,8 +343,8 @@ export class OrderQuestionAnswerComponent implements OnInit {
       customer_id: this.patient.id,
       customer_email: this.patient.email,
       user_answers: this.redChoiceAnswerIds,
-      customer_first_name: this.patient.firstName,
-      customer_last_name: this.patient.lastName,
+      customer_first_name: this.patient.first_name,
+      customer_last_name: this.patient.last_name,
       order_id: this.orderId
     };
     this.http.post(url, req).subscribe(

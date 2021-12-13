@@ -11,7 +11,7 @@
                               <label>Shipping Charge Amount</label>
                               <div class="input-group mb-3">
                               <div class="input-group-prepend">
-                              <span class="input-group-text">$</span>
+                              <span class="input-group-text">₹</span>
                               </div>
                               <input type="number" id="amount" formControlName="amount" class="form-control"/>
                               <div class="invalid-feedback" *ngIf="amount?.invalid && (amount?.dirty || amount?.touched)" class="text-danger">
@@ -23,5 +23,60 @@
                   </div>
                   </div>
             </div>
+
+             <div class="col-md-5">
+                        <div class="card">
+                              <div class="card-header"><h5>Refferal Program</h5></div>
+                              <div class="card-body">
+                                          <form (ngSubmit)="saveRefferal()" [formGroup]="refferalSettings">
+
+                                                <label>Active</label><br/>
+                                                <mat-slide-toggle class="example-margin" color="primary" checked="checked" id="referral_program_is_active" formControlName="referral_program_is_active">
+                                                </mat-slide-toggle>
+
+                                                 <div class="form-group">
+                                                      <label class="float-left"> Reward for referrer in Amount</label>
+                                                      <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                  <span class="input-group-text">₹</span>
+                                                            </div>
+                                                            <input  min="0" step="1" type="number"  id="reward_for_referrer_amount" formControlName="reward_for_referrer_amount"  class="form-control" />
+                                                       </div>
+                                                       <div class="invalid-feedback" *ngIf="reward_for_referrer_amount?.invalid && (reward_for_referrer_amount?.dirty || reward_for_referrer_amount?.touched)" class="text-danger">
+                                                            <div *ngIf="reward_for_referrer_amount?.errors?.required">Reward for referrer Amount is required</div>
+                                                      </div>
+                                                </div>
+
+                                                 <div class="form-group">
+                                                      <label class="float-left"> Reward for referee in Amount</label>
+                                                      <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                  <span class="input-group-text">₹</span>
+                                                            </div>
+                                                            <input  min="0" step = "1" type="number"  id="reward_for_referee_amount" formControlName="reward_for_referee_amount"  class="form-control"/>
+                                                      </div>
+                                                      <div class="invalid-feedback" *ngIf="reward_for_referee_amount?.invalid && (reward_for_referee_amount?.dirty || reward_for_referee_amount?.touched)" class="text-danger">
+                                                            <div *ngIf="reward_for_referee_amount?.errors?.required">Reward for referee Amount is required</div>
+                                                      </div>
+                                                </div>
+
+                                                 <label>Max Referee Allowed </label>
+                                                <div class="input-group mb-3">
+                                                      <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fa fa-users"></i></span>
+                                                      </div>
+                                                            <input min="1" type="number" id="max_referee_allowed" formControlName="max_referee_allowed" class="form-control" />
+                                                      <div class="invalid-feedback" *ngIf="max_referee_allowed?.invalid && (max_referee_allowed?.dirty || max_referee_allowed?.touched)" class="text-danger">
+                                                            <div *ngIf="max_referee_allowed?.errors?.required">Max Referee Allowed Required</div>
+                                                      </div>
+                                                </div>
+
+
+                                                <button class="btn btn-block btn-primary btn-sm" type="submit">Update</button>
+                                          </form>
+                              </div>
+                        </div>
+            </div>
+
       </div>
 </div>

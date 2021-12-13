@@ -23,12 +23,12 @@ export class DoumentListComponent implements OnChanges {
   }
 
   getUserDocuments() {
-    const url = 'api/v1/admin/document/for_user/' + this.userId;
+    const url = 'api/document/for_user/' + this.userId;
     this.http.post(url, {})
       .subscribe((documents: any) => {
         this.userDocuments = documents.data;
       }, err => {
-        
+
       });
   }
 
@@ -42,20 +42,20 @@ export class DoumentListComponent implements OnChanges {
   }
 
   manageVisibilityDocument(document_id:number,status:number){
-    let url = `api/v1/admin/document/manage/${document_id}/${status}`;
+    let url = `api/document/manage/${document_id}/${status}`;
     this.http.post(url,{}).subscribe((res: any) => {
         this.getUserDocuments();
     }, (err: any) => {
-   
+
     });
   }
 
   deleteDocument(document_id:number){
-    let url = `api/v1/admin/document/delete/${document_id}`;
+    let url = `api/document/delete/${document_id}`;
     this.http.post(url,{}).subscribe((res: any) => {
       this.getUserDocuments();
     }, (err: any) => {
-   
+
     });
   }
 

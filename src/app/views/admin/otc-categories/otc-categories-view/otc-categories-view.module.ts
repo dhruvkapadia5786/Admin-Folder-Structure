@@ -10,7 +10,7 @@ import { OtcCategoriesViewComponent } from './otc-categories-view.component';
     OtcCategoriesViewComponent
   ],
   imports: [
-    CommonModule,
+   CommonModule,
     OtcCategoriesViewRoutingModule
   ]
 })

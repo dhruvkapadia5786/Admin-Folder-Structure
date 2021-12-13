@@ -4,6 +4,7 @@ import { RefundProcessedOrdersComponent } from './refund-processed-orders.compon
 import {RefundProcessedOrdersRoutingModule} from './refund-processed-orders-routing.module';
 import { DataTablesModule } from 'angular-datatables';
 import { BlockUIModule } from 'ng-block-ui';
+import { Helper } from 'src/app/services/helper.service';
 
 @NgModule({
   declarations: [RefundProcessedOrdersComponent],
@@ -11,7 +12,8 @@ import { BlockUIModule } from 'ng-block-ui';
     RefundProcessedOrdersRoutingModule,
     CommonModule,
     DataTablesModule,
-    BlockUIModule
-  ]
+    BlockUIModule.forRoot({message:'Loading ...'})
+  ],
+  providers:[Helper]
 })
 export class RefundProcessedOrdersModule { }

@@ -103,7 +103,7 @@ export class CreateDoctorComponent implements OnInit {
   }
 
   private async _getClinics() {
-    const url = 'api/v1/admin/clinics/available_clinics';
+    const url = 'api/clinics/available_clinics';
     this.http.get(url).subscribe(
       (data: any) => {
         this.clinics = data;

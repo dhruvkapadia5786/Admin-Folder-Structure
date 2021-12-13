@@ -6,6 +6,10 @@ import { TreatmentConditionViewComponent } from './treatment-condition-view.comp
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
+import { TreatmentConditionAddEditModalComponent } from '../treatment-condition-add-edit-modal/treatment-condition-add-edit-modal.component';
+import { TreatmentConditionAddEditModalModule } from '../treatment-condition-add-edit-modal/treatment-condition-add-edit-modal.module';
+
 
 @NgModule({
   declarations: [
@@ -15,7 +19,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     MatSelectModule,
     FormsModule, ReactiveFormsModule,
+    ModalModule.forRoot(),
+    TreatmentConditionAddEditModalModule,
     TreatmentConditionViewRoutingModule
-  ]
+  ],
+  providers: [BsModalService],
+  entryComponents: [TreatmentConditionAddEditModalComponent]
 })
 export class TreatmentConditionViewModule { }

@@ -1,0 +1,204 @@
+<div class="modal-content">
+    <div *ngIf="ModalEvent=='CREATE'">
+        <form (ngSubmit)="createSubscriptionSubmit(createSubscriptionForm.valid)" [formGroup]="createSubscriptionForm" autocomplete="off">              
+            <div class="modal-header">
+                <button (click)="closeModal()" type="button" id="closecreateSubscriptionModalBtn" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="font-weight-bold modal-title w-100" id="mycreateSubscriptionModalLabel">
+                    Start Subscription
+                </h4>
+            </div>
+            <div class="modal-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <p class="mb-0 font-weight-normal">Medicine</p>
+                            <p class="mb-0 font-weight-bold" *ngIf="selectedSubscription">{{ selectedSubscription.drug_name+' '+selectedSubscription.drug_dosage+' '+selectedSubscription.subscription_quantity+' '+selectedSubscription.drug_form}}</p>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <p class="mb-0 font-weight-normal">Amount to Charge</p>
+                            <p class="mb-0 font-weight-bold" *ngIf="priceObject">{{priceObject.price| currency:'INR' }}</p>
+                        </li>
+                        <li class="border-bottom-0 list-group-item d-flex justify-content-between align-items-center">
+                            <p class="mb-0 font-weight-normal">Refill Duration</p>
+                            <div class="form-group">
+                                <select name="customFrequency" class="form-control input-lg" formControlName="subscription_duration">
+                                    <option *ngFor="let option of customFrequencyOptions" [value]="option.days">{{ option.title }} </option>
+                                </select>
+                            </div>
+                        </li>
+                    </ul>
+                    <input type="hidden" formControlName="order_id" />
+                    <input type="hidden" formControlName="drug_id" />
+                
+               
+            </div>
+            <div class="modal-footer d-block text-center">
+                <button type="submit" [disabled]="createSubscriptionForm.invalid || formSubmitting" class="btn btn-success">Start Subscription</button>
+            </div>
+        </form>
+    </div>
+      
+    <div *ngIf="ModalEvent=='CHANGE' || ModalEvent=='ACTIVATE'">
+        <form (ngSubmit)="changeSubscriptionSubmit(changeSubscriptionForm.valid)" [formGroup]="changeSubscriptionForm" autocomplete="off">              
+            <div class="modal-header">
+                <button (click)="closeModal()" type="button" id="closechangeSubscriptionModalBtn" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="font-weight-bold modal-title w-100" id="mychangeSubscriptionModalLabel">
+                    {{ ModalLabel }}
+                </h4>
+            </div>
+            <div class="modal-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <p class="mb-0 font-weight-normal">Medicine</p>
+                            <p class="mb-0 font-weight-bold" *ngIf="selectedSubscription">{{ selectedSubscription.drug_name+' '+selectedSubscription.drug_dosage+' '+selectedSubscription.subscription_quantity+' '+selectedSubscription.drug_form}}</p>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="priceObject && ModalEvent=='ACTIVATE'">
+                            <p class="mb-0 font-weight-normal">Amount to Charge</p>
+                            <p class="mb-0 font-weight-bold">{{ priceObject.price| currency:'INR' }}</p>
+                        </li>
+                        <li class="border-bottom-0 list-group-item d-flex justify-content-between align-items-center">
+                            <p class="mb-0 font-weight-normal">Refill Duration</p>
+                            <div class="form-group">
+                                <select name="customFrequency" class="form-control input-lg" formControlName="custom_duration">
+                                    <option *ngFor="let option of customFrequencyOptions" [value]="option.days">{{ option.title }} </option>
+                                </select>
+                            </div>
+                        </li>
+                    </ul>
+                    <input type="hidden" formControlName="subscription_id" />
+                    <input type="hidden" formControlName="medicine_name" />                
+            </div>
+            <div class="modal-footer d-block text-center">
+                <button type="submit" [disabled]="changeSubscriptionForm.invalid || formSubmitting" class="btn btn-success">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="ModalEvent=='DEACTIVATE' && selectedSubscription">
+        <div class="modal-header">
+            <button (click)="closeModal()" type="button" id="closechangeSubscriptionModalBtn" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="font-weight-bold modal-title w-100" id="mychangeSubscriptionModalLabel">
+                Cancel Subscription
+            </h4>
+        </div>
+        <div class="modal-body">
+         <p class="font-weight-normal">{{ selectedSubscription.medicine_name }}</p>
+         <p class="font-weight-normal">Are you sure to Cancel Subscription ?</p>
+        </div>
+        <div class="modal-footer d-block text-center">
+            <button type="button" class="btn btn-danger"  [disabled]="formSubmitting"  (click)="deactivateSubscription(selectedSubscription)">Cancel Subscription</button>
+        </div>
+    </div>
+
+    <div *ngIf="ModalEvent=='ACTION_REQUIRED'">
+        <form (ngSubmit)="actionRequiredSubscriptionSubmit(actionRequiredSubscriptionForm.valid)" [formGroup]="actionRequiredSubscriptionForm" autocomplete="off">              
+            <div class="modal-header">
+                <button (click)="closeModal()" type="button" id="closeactionRequiredSubscriptionModalBtn" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="font-weight-bold modal-title w-100" id="myactionRequiredSubscriptionModalLabel">
+                    Take Action On Subscription
+                </h4>
+            </div>
+            <div class="modal-body"> 
+
+                        <ul class="list-group list-group-flush" *ngIf="selectedSubscription">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <p class="mb-0 font-weight-normal">Medicine</p>
+                                <p class="mb-0 font-weight-bold">{{ selectedSubscription.drug_name+' '+selectedSubscription.drug_dosage+' '+selectedSubscription.subscription_quantity+' '+selectedSubscription.drug_form}}</p>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="priceObject && (ModalEvent=='ACTIVATE' ||  ModalEvent=='CREATE' || ModalEvent=='REFILL' || ModalEvent=='ACTION_REQUIRED')">
+                                <p class="mb-0 font-weight-normal">New Price</p>
+                                <p class="mb-0 font-weight-bold">{{selectedSubscription.new_change_subscription_price| currency:'INR'}}</p>
+                            </li>
+                        </ul>
+
+                        <div class="custom-control custom-radio mb-3">
+                            <input class="custom-control-input cursor-pointer" type="radio" name="action" id="action_YES" value="YES" formControlName="action" />
+                            <label class="text-success custom-control-label cursor-pointer" for="action_YES">
+                                Yes, I want to continue my subscription with new price .
+                            </label>
+                        </div>
+
+                            <div class="custom-control custom-radio">
+                            <input class="custom-control-input cursor-pointer" type="radio" name="action" id="action_NO" value="NO" formControlName="action" />
+                            <label class="text-danger custom-control-label cursor-pointer" for="action_NO">
+                                No, I don't want to continue my subscription with new price and cancle my subscription
+                            </label>
+                        </div>
+            </div>
+            <div class="modal-footer">
+                <div class="w-100 text-center">
+                <button type="submit" [disabled]="actionRequiredSubscriptionForm.invalid || formSubmitting" class="btn btn-warning">Take Action</button>
+                </div>
+                </div>
+        </form>
+    </div>
+
+    <div *ngIf="ModalEvent=='DELAYED'">
+            <form (ngSubmit)="delaySubscriptionSubmit(delaySubscriptionForm.valid)" [formGroup]="delaySubscriptionForm" autocomplete="off">              
+            <div class="modal-header">
+                <button (click)="closeModal()" type="button" id="closedelaySubscriptionModalBtn" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="font-weight-bold modal-title w-100" id="mydelaySubscriptionModalLabel">
+                    Pause Subscription
+                </h4>
+            </div>
+            <div class="modal-body">
+                    <p class="font-weight-normal" *ngIf="selectedSubscription">
+                    Want to pause subscription for your next refill ?<br/>
+                    {{ selectedSubscription.drug_name+' '+selectedSubscription.drug_dosage+' '+selectedSubscription.subscription_quantity+' '+selectedSubscription.drug_form}} 
+                    </p>
+                    <input type="hidden" formControlName="delay_subscription_id" />
+                    <input type="hidden" formControlName="delay_medicine_name" />
+                <div class="form-group">
+                    <label class="form-label">Pause For</label>
+                    <select name="delayFrequency" class="form-control input-lg" formControlName="delay_duration">
+                        <option *ngFor="let option of delayFrequencyOptions" [value]="option">{{ option + ' Days'}} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer d-block text-center">
+                <button type="submit" [disabled]="delaySubscriptionForm.invalid || formSubmitting" class="btn btn-success">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="ModalEvent=='REFILL'">
+            <div class="modal-header">
+                <button (click)="closeModal()" type="button" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="font-weight-bold modal-title w-100" id="mychangeSubscriptionModalLabel">
+                    Refill Now
+                </h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p class="mb-0 font-weight-normal">Medicine</p>
+                        <p class="mb-0 font-weight-bold" *ngIf="selectedSubscription">{{ selectedSubscription.drug_name+' '+selectedSubscription.drug_dosage+' '+selectedSubscription.subscription_quantity+' '+selectedSubscription.drug_form}}</p>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p class="mb-0 font-weight-normal">Amount to Charge</p>
+                        <p class="mb-0 font-weight-bold" *ngIf="priceObject">{{priceObject.price| currency:'INR'}}</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer d-block text-center">
+                <button (click)="addToCartForRefill()" [disabled]="formSubmitting" type="button" class="btn btn-success">Add To Cart</button>
+            </div>
+    </div>
+
+</div>
+    
+
+ 
+            
+        

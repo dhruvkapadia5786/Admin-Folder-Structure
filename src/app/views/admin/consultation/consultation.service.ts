@@ -11,21 +11,21 @@ export class ConsultationService {
   async getConditionById(condition_id:string) {
     return await this._http.get(`api/v1/consultation/condition/${condition_id}`).toPromise();
   }
-  
+
   async loadRiskFactors() {
     return await this._http.get(`api/v1/consultation/risk_factors`).toPromise();
   }
-  
+
   async getAllConsultation(data:any){
-    return await this._http.post(`api/v1/admin/consultation/all`,data).toPromise();
+    return await this._http.post(`api/consultation/all`,data).toPromise();
   }
-  
+
   async getConsultationList(patientId:number,data:any):Promise<any>{
     return await this._http.post(`api/v1/consultation/forPatient?pId=${patientId}`,data).toPromise();
   }
 
   async getConsultationDetails(id:number){
-    return await this._http.get(`api/v1/admin/consultation/details/${id}`).toPromise();
+    return await this._http.get(`api/consultation/details/${id}`).toPromise();
   }
 
   async removeConsultationMediaById(data:any){

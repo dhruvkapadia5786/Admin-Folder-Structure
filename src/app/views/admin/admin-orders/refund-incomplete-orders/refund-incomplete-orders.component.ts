@@ -44,7 +44,7 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
     this._http.post(url1,{order_id:orderId,initiated_by:''}) .subscribe((res: any) => {
 
       if(total_amount>0){
-        const process_refund_url = 'api/v1/admin/orders/processRefund';
+        const process_refund_url = 'api/orders/processRefund';
         this._http.post(process_refund_url, { order_id: orderId }).subscribe((res: any) => {
           this.refund_processing=false;
           this.selectedOrder.result = res;
@@ -93,7 +93,7 @@ export class RefundIncompleteOrdersComponent implements OnInit,AfterViewInit {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            `api/v1/admin/orders/paymentComplete/orderIncomplete`,
+            `api/orders/paymentComplete/orderIncomplete`,
             dataTablesParameters,
             {}
           )

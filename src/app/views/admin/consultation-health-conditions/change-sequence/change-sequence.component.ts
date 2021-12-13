@@ -12,7 +12,7 @@ export class ChangeSequenceComponent implements OnInit {
 
   public healthconditions: any[] = [];
   public originalHealthconditions: any[] = [];
-  
+
   public isSequenceUpdated = false;
   public sequenceArray: {
     healthconditions_id: number;
@@ -29,7 +29,7 @@ export class ChangeSequenceComponent implements OnInit {
   }
 
   public getHealthConditionsList() {
-    const url = 'api/v1/admin/consultation/health_condition/all';
+    const url = 'api/consultation/health_condition/all';
     this.http.get(url).subscribe((data: any) => {
       this.healthconditions = data;
       this.originalHealthconditions =this.healthconditions;
@@ -56,7 +56,7 @@ export class ChangeSequenceComponent implements OnInit {
     this.healthconditions.forEach((hc, index) => {
       this.sequenceArray.push({ healthconditions_id: hc.id, sequence: (index + 1)});
     });
-    const url = 'api/v1/admin/consultation/health_condition/update_priority';
+    const url = 'api/consultation/health_condition/update_priority';
     this.http.post(url, { sequences: this.sequenceArray })
       .subscribe(data => {
         this.toaster.success('Priority Updated Successfully');
@@ -64,7 +64,7 @@ export class ChangeSequenceComponent implements OnInit {
         this.healthconditions = [];
         this.isSequenceUpdated = false;
         this.getHealthConditionsList();
-      }, err => {                                       
+      }, err => {
         this.toaster.error('Unable to update Priority. Please try again');
       });
   }

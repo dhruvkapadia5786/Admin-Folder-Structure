@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, Event } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Toastr } from 'src/app/services/toastr.service';
 
 @Component({
   selector: 'app-info-treatment-condition',
@@ -19,12 +20,13 @@ export class InfoTreatmentConditionComponent implements OnInit, OnDestroy {
     private _http: HttpClient,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
+    private _toastr:Toastr,
     private _changeDetectorRef: ChangeDetectorRef){
 
     let activeRoute:any = this.route;
         if(activeRoute){
           this.conditionId = activeRoute.parent.parent.snapshot.paramMap.get('treatment_condition_id');
-          this.findByIdBrand(this.conditionId);
+          this.getTreatmentConditionDetails();
     }
 
   }
@@ -35,8 +37,8 @@ export class InfoTreatmentConditionComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
   }
 
-  async findByIdBrand(id: any){
-    let url = `api/treatment_conditions/view/${id}`;
+  async getTreatmentConditionDetails(){
+    let url = `api/treatment_conditions/view/${this.conditionId}`;
     this._http.get(url).subscribe((result: any) => {
       if (result && result._id) {
         this.conditionDetails = result;
@@ -61,4 +63,18 @@ export class InfoTreatmentConditionComponent implements OnInit, OnDestroy {
       })
   }
 
+  updateSequence (event: any) {
+    let dataToSend: any = []
+     event.data.forEach((obj: any) => {
+        dataToSend.push({ ...obj.item, sequence:obj.sequence });
+    });
+    let url: string = `api/treatment_conditions/update_sequence/${this.conditionId}`;
+    this._http.post(url, { mode: event.mode, sequences: dataToSend })
+      .subscribe(data => {
+        this.getTreatmentConditionDetails();
+        this._toastr.showSuccess('Sequence Updated Successfully');
+      }, err => {
+        this._toastr.showError('Unable to update sequence. Please try again');
+      });
+  }
 }

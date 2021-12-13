@@ -60,7 +60,7 @@ export class ViewClinicComponent implements OnInit, AfterViewInit {
   }
 
   getDoctorsList() {
-    let url = 'api/v1/admin/clinics/all_doctors_list';
+    let url = 'api/clinics/all_doctors_list';
     this.http.get(url).subscribe((res: any) => {
       this.doctorList = res.filter((doc: any) => {
         return this.clinic.doctors.filter((clinic_doctor: any) => { return clinic_doctor.is_deleted != 1 && clinic_doctor._id == doc.teledaddyuser_ptr_id }).length > 0 ? false : true;
@@ -71,7 +71,7 @@ export class ViewClinicComponent implements OnInit, AfterViewInit {
   }
 
   manageAccountService(doctorId: number, account_service_enabled: any) {
-    let url = 'api/v1/admin/doctors/manage_account_service';
+    let url = 'api/doctors/manage_account_service';
     this.http.post(url, {
       doctor_id: doctorId,
       status: account_service_enabled == 0 ? 1 : 0
@@ -83,7 +83,7 @@ export class ViewClinicComponent implements OnInit, AfterViewInit {
   }
 
   manageAccountUsage(doctorId: any, is_active: any) {
-    let url = 'api/v1/admin/doctors/manage_account_usage';
+    let url = 'api/doctors/manage_account_usage';
     this.http.post(url, {
       doctor_id: doctorId,
       status: is_active == 0 ? 1 : 0

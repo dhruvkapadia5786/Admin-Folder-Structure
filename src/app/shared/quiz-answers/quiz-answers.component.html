@@ -1,0 +1,11 @@
+<ul class="list-group list-group-flush w-100" [ngStyle]="{'max-height':maxHeight+'px','overflow-y':'scroll'}">
+  <li class="list-group-item" *ngFor="let item of formattedQuestionAnswers;let itemIndex=index">
+      <p class="mb-0 text-dark font-weight-bold">{{itemIndex+1}}. {{ item.text }}</p>
+      <p class="ml-3 mb-0 text-primary font-weight-bold" *ngIf="item.answer">{{item.answer}}</p>
+      <div class="ml-3 mb-0 text-primary font-weight-bold" *ngIf="item.answers">
+        <p class="mb-0" *ngFor="let ans of item.answers">
+          {{ ans.text }} - {{ ans.choice }} 
+        </p>
+      </div>
+  </li>
+</ul>

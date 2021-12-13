@@ -42,7 +42,7 @@ export class RefundProcessedOrdersComponent implements OnInit,AfterViewInit {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            `api/v1/admin/orders/refund_processed`,
+            `api/orders/refund_processed`,
             dataTablesParameters,
             {}
           )

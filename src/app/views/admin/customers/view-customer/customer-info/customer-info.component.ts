@@ -107,7 +107,7 @@ export class CustomerInfoComponent implements OnInit {
   }
 
   loginAsUser() {
-    let url = 'api/v1/admin/users/temp-user/' + this.customerDetails.id;
+    let url = 'api/users/temp-user/' + this.customerDetails.id;
     this.http.get(url).subscribe((res: any) => {
       window.open(environment.client_app_url + 'bypass-login?' + res.urlQuery);
     }, (err: any) => {

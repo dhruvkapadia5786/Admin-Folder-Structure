@@ -66,7 +66,7 @@ export class ChangePasswordWithOtpComponent implements OnInit {
     let user = this._authService.loggedInUser;
     reqbody['temp_password'] = this.password['new'];
 
-    this._http.post(`api/v1/users/reset-password-request`, reqbody).subscribe((data:any) => {
+    this._http.post(`api/auth/reset-password-request`, reqbody).subscribe((data:any) => {
        switch (data['status']) {
         case 'OTP_GENERATED':
           this._toaster.showSuccess('OTP sent successfully');
@@ -104,7 +104,7 @@ export class ChangePasswordWithOtpComponent implements OnInit {
     let reqbody:any = {};
     reqbody['temp_password'] = this.password['new'];
     reqbody['otp'] = this.password['otp'];
-    this._http.post(`api/v1/users/verify-otp`, reqbody).subscribe((data:any) => {
+    this._http.post(`api/auth/verify-otp`, reqbody).subscribe((data:any) => {
       switch (data['status']) {
         case 'PASSWORD_CHANGED':
           this._toaster.showSuccess('Password changed successfully , Please Login ');

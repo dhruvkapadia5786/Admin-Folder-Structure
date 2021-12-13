@@ -87,7 +87,7 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             // tslint:disable-next-line:max-line-length
-            return `<a href="javascript:void(0);" customerId=${full.user.id}>${full.user.firstName} ${full.user.lastName} </a>`;
+            return `<a href="javascript:void(0);" customerId=${full.user.id}>${full.user.first_name} ${full.user.last_name} </a>`;
           }
         },
         {

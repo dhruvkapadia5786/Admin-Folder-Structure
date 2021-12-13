@@ -9,6 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -16,11 +17,12 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     ProductsAddComponent
   ],
   imports: [
-    CommonModule,
+  CommonModule,
     FormsModule,ReactiveFormsModule,
     MatCheckboxModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatSlideToggleModule,
     NgxMatSelectSearchModule,
     ProductsAddRoutingModule
   ],

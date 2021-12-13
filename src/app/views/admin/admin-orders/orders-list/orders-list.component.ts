@@ -5,7 +5,6 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Helper } from '../../../../services/helper.service';
 import { HttpClient } from '@angular/common/http';
-import { SYSTEM_STATUS } from '../../../../enums/order-status.enum';
 import { orderHelper } from 'src/app/services/orderHelper.service';
 
 @Component({
@@ -21,8 +20,8 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
     filter: {
       STATE: [],
       MEDICINE_KIT: [],
-      ORDER_STATUS: '1,2,3,4,5,6,7,8,9,10,15,16,17',
-      ORDER_TYPE: 'ALL'
+      ORDER_STATUS: ['NONE','ASSIGNED_TO_TECHNICIAN','REJECTED','APPROVED_BY_TECHNICIAN','ASSIGNED_TO_DOCTOR','PRESCRIBED_BY_DOCTOR','REFUND_REQUESTED','REFUND_PROCESSED','ASSIGNED_TO_PHARMACY','COMPLETED','TOO_SOON'],
+      ORDER_TYPE: ['MAIN','REFILL']
     }
   };
   stateList:any[] = [];
@@ -45,8 +44,10 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
     private _renderer: Renderer2,
     private _orderHelper:orderHelper) {
 
-    this.medicineKitId = this.route?.parent?.parent?.snapshot.paramMap.get('kit_id') ? parseInt(this.route.parent.parent.snapshot.paramMap.get('kit_id')!) : null;
-    this.treatmentConditionId = this.route?.parent?.parent?.snapshot.paramMap.get('treatment_id');
+    let activeRoute:any=this.route;
+
+    this.medicineKitId = activeRoute.parent.parent.snapshot.paramMap.get('kit_id');
+    this.treatmentConditionId = activeRoute.parent.parent.snapshot.paramMap.get('treatment_id');
 
     if (this.medicineKitId && this.treatmentConditionId) {
       this.showHeaderAndFilter = false
@@ -68,7 +69,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
     var that=this;
     this.dtOptions = {
       pagingType: 'full_numbers',
-      pageLength: 20,
+      pageLength: 25,
       paging: true,
       serverSide: true,
       // processing: true,
@@ -110,13 +111,13 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center font-weight-normal',
           render: function (data, type, record) {
             if (data) {
-              return '<a href="javascript:void(0);" orderID=' + record.id + ' class="text-primary font-weight-bold">' + data + '</a>';
+              return '<a href="javascript:void(0);" orderID=' + record._id + ' class="text-primary font-weight-bold">' + data + '</a>';
             } else {
               return '<span></span>';
             }
           }
         },{
-          data: 'created',
+          data: 'created_at',
           title: 'Order Date',
           className: 'text-center font-weight-normal',
           render: (data) => {
@@ -140,16 +141,16 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           }
         },
         {
-          data: 'customer_first_name',
+          data: 'user_id.first_name',
           title: 'Customer Name',
           className: 'text-center font-weight-normal',
           render: function (data: any, type: any, full: any) {
             // tslint:disable-next-line:max-line-length
-            return `<a href="javascript:void(0);" class="text-primary font-weight-bold" customerId=${full.tele_daddy_user_id}>${full.customer_first_name} ${full.customer_last_name} </a>`;
+            return `<a href="javascript:void(0);" class="text-primary font-weight-bold" customerId=${full.user_id._id}>${full.user_id.first_name} ${full.user_id.last_name} </a>`;
           }
         },
         {
-          data: 'medicine_kit_name',
+          data: 'medicine_kit_details.name',
           title: 'Medicine Kit Name',
           className: 'text-center font-weight-normal'
         },
@@ -162,16 +163,19 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           }
         },
         {
-          data: 'state_name',
+          data: 'shipping_address',
           title: 'State',
-          className: 'text-center font-weight-normal'
+          className: 'text-center font-weight-normal',
+          render: function (data: any, type: any, full: any) {
+            return `${full.shipping_address.state}`;
+          }
         },
         {
           data: 'system_status',
           title: 'System Status',
           className: 'text-center font-weight-normal',
-          render: (data,type,record) => {
-            return this.getSystemStatus(data,type,record);
+          render: (data) => {
+            return  that._orderHelper.getSystemStatus(data);
           }
         },
         {
@@ -193,49 +197,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
       ]
     };
   }
-  getSystemStatus(data:any,type:any,record:any) {
-    let systemStatusBadge='';
-    switch (data) {
-      case 0:
-      case null:
-        systemStatusBadge= `<span class='badge badge-default'>Incomplete</span>`;
-        break;
-      case 1:
-        systemStatusBadge= `<span class='badge badge-info'>${SYSTEM_STATUS[data]}</span>`;
-        break;
-      case 2:
-      case 4:
-      case 5:
-      case 6:
-      case 9:
-      case 10:
-      case 11:
-      case 17:
-        systemStatusBadge= `<span class='badge badge-success'>${SYSTEM_STATUS[data]}</span>`;
-        break;
-      case 3:
-      case 13:
-      case 14:
-      case 15:
-        systemStatusBadge= `<span class='badge badge-danger'>${SYSTEM_STATUS[data]}</span>`;
-        break;
-      case 7:
-      case 8:
-      case 12:
-      case 16:
-        systemStatusBadge= `<span class='badge badge-warning'>${SYSTEM_STATUS[data]}</span>`;
-        break;
-      default:
-        systemStatusBadge= `<span></span>`;
-    }
-    if(record.is_transferred==1){
-        systemStatusBadge+=`<span class='badge badge-warning'>Transferred</span>`;
-    }
-    if(record.is_closed==1){
-      systemStatusBadge+=`<span class='badge badge-dark'>Closed</span>`;
-    }
-    return systemStatusBadge;
-  }
+
 
 
   rerender(): void {
@@ -278,11 +240,11 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
 
 
   get notSelectedStates () {
-    return this.stateList.filter(({ id: a }) => !this.order_config.filter.STATE.some((b: any) => b === a)).length;
+    return this.stateList ? this.stateList.filter(({ _id: a }) => !this.order_config.filter.STATE.some((b: any) => b === a)).length:0;
   }
 
   get notSelectedMedicineKit () {
-    return this.medicinekitList.filter(({ id: a }) => !this.order_config.filter.MEDICINE_KIT.some((b: any) => b === a)).length;
+    return this.medicinekitList ? this.medicinekitList.filter(({ _id: a }) => !this.order_config.filter.MEDICINE_KIT.some((b: any) => b === a)).length:0;
   }
 
   getAllFilterList() {
@@ -292,7 +254,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
     }, err=> {});
 
     // Medicine kits
-    this._http.post<any>('api/v1/admin/medicinekits/all', {}).subscribe((resp) => {
+    this._http.get<any>('api/medicine_kits/all').subscribe((resp) => {
       this.medicinekitList = resp.data;
     }, err=> {});
   }
@@ -305,14 +267,14 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
   public handleCheckAll (event:any, flag:any) {
     if (flag == 'STATE') {
       if (event.checked) {
-        this.order_config.filter.STATE = this.stateList.map(({id}) => id);
+        this.order_config.filter.STATE = this.stateList.map(({_id}) => _id);
       } else {
         this.order_config.filter.STATE = [];
       }
     }
     if (flag == 'MK') {
       if (event.checked) {
-        this.order_config.filter.MEDICINE_KIT = this.medicinekitList.map(({id}) => id);
+        this.order_config.filter.MEDICINE_KIT = this.medicinekitList.map(({_id}) => _id);
       } else {
         this.order_config.filter.MEDICINE_KIT = [];
       }
@@ -321,7 +283,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
   }
 
   clearFilter() {
-    this.order_config = {filter: {STATE: [], MEDICINE_KIT: [], ORDER_STATUS: '1,2,3,4,5,6,7,8,9,10,15,16,17', ORDER_TYPE: 'ALL'}}
+    this.order_config = {filter: {STATE: [], MEDICINE_KIT: [], ORDER_STATUS:['NONE','ASSIGNED_TO_TECHNICIAN','REJECTED','APPROVED_BY_TECHNICIAN','ASSIGNED_TO_DOCTOR','PRESCRIBED_BY_DOCTOR','REFUND_REQUESTED','REFUND_PROCESSED','ASSIGNED_TO_PHARMACY','COMPLETED','TOO_SOON'], ORDER_TYPE: ['MAIN','REFILL']}}
     if (this.medicineKitId && this.treatmentConditionId) {
       this.order_config.filter.MEDICINE_KIT.push(this.medicineKitId);
     }

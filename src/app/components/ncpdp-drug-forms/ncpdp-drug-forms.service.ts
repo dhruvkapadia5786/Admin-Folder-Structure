@@ -10,12 +10,12 @@ export class NcpdpDrugFormsService {
     setFormData(data:any){
         this.formData = data;
     }
-    
+
     getFormData(){
         return this.formData;
     }
 
     async getAllNCPDPdrugForms(searchTerm:string):Promise<any>{
-        return await this._http.get(`api/v1/admin/medicinekits/ncpdp_drug_forms`+`?search=${searchTerm}`).toPromise();
+        return await this._http.get(`api/medicinekits/ncpdp_drug_forms`+`?search=${searchTerm}`).toPromise();
     }
 }

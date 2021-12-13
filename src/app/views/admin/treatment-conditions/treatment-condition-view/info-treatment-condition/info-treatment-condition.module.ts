@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { InfoTreatmentConditionComponent } from './info-treatment-condition.component';
 import { InfoTreatmentConditionRoutingModule } from './info-treatment-condition-routing.module';
+import { ChangeSequenceModule } from 'src/app/shared/change-sequence/change-sequence.module';
+import {ImagePreviewModule} from 'src/app/shared/image-preview/image-preview.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +12,9 @@ import { InfoTreatmentConditionRoutingModule } from './info-treatment-condition-
   ],
   imports: [
     CommonModule,
-    InfoTreatmentConditionRoutingModule
+    InfoTreatmentConditionRoutingModule,
+    ChangeSequenceModule,
+    ImagePreviewModule
   ]
 })
 export class InfoTreatmentConditionModule { }

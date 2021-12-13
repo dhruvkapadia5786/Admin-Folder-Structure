@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="row choice hover" *ngFor="let choice of questionDetails.choices">
-          
+
             <div class="col-sm-2">
               <span class="badge badge-danger" *ngIf="choice.result == 1"> Red</span>
               <span class="badge badge-success" *ngIf="choice.result == 2"> Green</span>
@@ -57,7 +57,7 @@
                 <div class="col-sm-5">
                   <h6 *ngIf="choice.consent_message">Consent Message:&nbsp;&nbsp;{{choice.consent_message}}</h6>
                 </div>
-                 
+
                 <div class="col-sm-5">
                   <h6 *ngIf="choice.has_subquestions">Sub-Questions:<br/></h6>
                     <p *ngFor="let subQ of choice.sub_questions; let i = index;">
@@ -67,8 +67,8 @@
 
               </div>
             </div>
-           
-           
+
+
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@
         <hr>
       </div>
       <br>
-      <div class="row" *ngFor="let kit of questionDetails.pet_dtc_medicine_kits; let i = index;">
+      <div class="row" *ngFor="let kit of questionDetails.dtc_medicine_kits; let i = index;">
         <div class="col-sm-12">
           <div class="col-sm-4">
             <h6>{{i+1}}. {{kit.name}}</h6>
@@ -93,7 +93,7 @@
         <hr>
       </div>
       <br>
-      <div class="row" *ngFor="let condition of questionDetails.pet_consultation_health_conditions; let i = index;">
+      <div class="row" *ngFor="let condition of questionDetails.consultation_health_conditions; let i = index;">
         <div class="col-sm-12">
           <div class="col-sm-4">
             <h6>{{i+1}}. {{condition.name}}</h6>

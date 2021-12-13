@@ -58,7 +58,7 @@ export class TechViewComponent implements OnInit, AfterViewInit {
   }
 
   getTechDocuments(){
-    const url = 'api/v1/admin/document/for_user/' + this.techId;
+    const url = 'api/document/for_user/' + this.techId;
     this.http.post(url, {})
       .subscribe((documents: any) => {
         this.techDocuments = documents.data;
@@ -223,7 +223,7 @@ export class TechViewComponent implements OnInit, AfterViewInit {
   }
 
   loginAsUser () {
-    let url = 'api/v1/admin/users/temp-user/' + this.techId;
+    let url = 'api/users/temp-user/' + this.techId;
     this.http.get(url).subscribe((res: any) => {
       window.open(environment.client_app_url+'bypass-login?'+res.urlQuery);
     }, (err: any) => {
@@ -273,10 +273,10 @@ export class TechViewComponent implements OnInit, AfterViewInit {
             }
           }
         },
-        { data: 'user.firstName', title: 'First Name' },
-        { data: 'user.lastName', title: 'Last Name' },
+        { data: 'user.first_name', title: 'First Name' },
+        { data: 'user.last_name', title: 'Last Name' },
         {
-          data: 'user.dateOfBirth',
+          data: 'user.date_of_birth',
           title: 'Age',
           render: function (data: any) {
             if (data) {

@@ -6,32 +6,26 @@
     <div class="row">
       <div class="col-md-2">
         <mat-label>Order Type</mat-label>
-        <mat-select placeholder="Order Type" [(ngModel)]="order_config.filter.ORDER_TYPE" (selectionChange)="handleChange('ORDER_TYPE', $event.value)">
-          <mat-option value="ALL">ALL</mat-option>
-          <mat-option value="main">MAIN</mat-option>
-          <mat-option value="refill">REFILL</mat-option>
+        <mat-select placeholder="Order Type" [(ngModel)]="order_config.filter.ORDER_TYPE" (selectionChange)="handleChange('ORDER_TYPE', $event.value)" multiple>
+          <mat-option value="MAIN">MAIN</mat-option>
+          <mat-option value="REFILL">REFILL</mat-option>
         </mat-select>
       </div>
       <div class="col-md-3">
+
         <mat-label>Order Status</mat-label>
-        <mat-select placeholder="Order Status" [(ngModel)]="order_config.filter.ORDER_STATUS" (selectionChange)="handleChange('ORDER_STATUS', $event.value)">
-          <mat-option value="1,2,3,4,5,6,7,8,9,10,15,16,17">Custom</mat-option>
-          <mat-option value="ALL">ALL</mat-option>
-          <mat-option value="10,17">Shipped Or PickedUp</mat-option>
-          <mat-option value="0">Incomplete</mat-option>
-          <mat-option value="1">Order Placed</mat-option>
-          <mat-option value="2">Assigned To Technician</mat-option>
-          <mat-option value="3">Rejected By Technician</mat-option>
-          <mat-option value="4">Approved By Technician</mat-option>
-          <mat-option value="5">Assigned To Doctor</mat-option>
-          <mat-option value="6">Prescibed By Doctor</mat-option>
-          <mat-option value="7">On Hold in Doctor Queue</mat-option>
-          <mat-option value="8">Consultation Required</mat-option>
-          <mat-option value="9">Assigned To Pharmacy</mat-option>
-          <mat-option value="10">Shipped</mat-option>
-          <mat-option value="15">Refunded</mat-option>
-          <mat-option value="16">Too Soon</mat-option>
-          <mat-option value="17">PickedUp / Delivery</mat-option>
+        <mat-select placeholder="Order Status" [(ngModel)]="order_config.filter.ORDER_STATUS" (selectionChange)="handleChange('ORDER_STATUS', $event.value)" multiple>
+          <mat-option value="NONE">Incomplete</mat-option>
+          <mat-option value="TOO_SOON">Received Too Soon</mat-option>
+          <mat-option value="ASSIGNED_TO_TECHNICIAN">Assigned To Technician</mat-option>
+          <mat-option value="REJECTED">Rejected By Technician</mat-option>
+          <mat-option value="APPROVED_BY_TECHNICIAN">Approved By Technician</mat-option>
+          <mat-option value="ASSIGNED_TO_DOCTOR">Assigned To Doctor</mat-option>
+          <mat-option value="PRESCRIBED_BY_DOCTOR">Prescibed By Doctor</mat-option>
+          <mat-option value="ASSIGNED_TO_PHARMACY">Assigned To Pharmacy</mat-option>
+          <mat-option value="COMPLETED">Completed</mat-option>
+          <mat-option value="REFUND_REQUESTED">Refund Requested</mat-option>
+          <mat-option value="REFUND_PROCESSED">Refund Processed</mat-option>
         </mat-select>
       </div>
       <div class="col-md-2">
@@ -59,6 +53,6 @@
 </div>
 <div class="p-2">
     <div class="table-responsive-md">
-      <table mdbTable hover="true" id="ordersList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"></table>
+      <table  hover="true" id="ordersList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"></table>
     </div>
 </div>

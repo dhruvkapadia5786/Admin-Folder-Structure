@@ -1,0 +1,65 @@
+<div class="container my-4">
+  <div class="row">
+      <div class="col-md-4">
+          <div class="card">
+              <div class="card-header bg-dark-grey">
+              <h4 class="text-white mb-0 font-weight-bold">Customer Cart</h4>
+              </div>
+              <div class="card-body p-0">
+                  <div class="form-group">
+                      <input placeholder="Search By Patient Name , Email , Phone" class="form-control" type="text" [(ngModel)]="search" (keyup)="searchPatient($event)" />
+                  </div>
+                  <ul class="list-group list-group-flush" style="max-height:500px;overflow-y:scroll;">
+                      <li class="list-group-item cursor-pointer"  *ngFor = "let patient of collection.data | paginate: config" (click)="loadSubscriptionsForPatients(patient)">
+                          <p class="font-weight-bold mb-1">{{patient.patient_name}}</p>
+                          <p class="mb-0 font-weight-normal text-muted">{{patient.patient_email}}</p>  
+                          <p class="mb-0 font-weight-normal text-muted">{{patient.patient_phone | phone }}</p>                    
+                      </li>
+                  </ul>
+              </div>
+              <div class="card-footer">
+                  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-8">
+          <div class="card">
+              <div class="card-header bg-dark-grey d-flex justify-content-between align-items-center">
+                  <h4 class="text-white mb-0 font-weight-bold">Cart Details 
+                    <span *ngIf="selectedPatient && selectedPatient.cart_items" class="badge badge-primary badge-pill p-2 ml-2 pull-right">{{selectedPatient.cart_items.length}}</span>
+                  </h4>
+                  <!--<button type="button" (click)="sendReminderMailForCart(patient.patient_id)" class="btn btn-primary">Send Reminder Mail</button>-->
+              </div>
+              <div class="card-body p-0">
+                  <div class="alert alert-primary" *ngIf="loading">Loading Cart Orders...</div>
+                  <div *ngIf="selectedPatient && !loading">
+                        
+                          <div class="tab-pane-content">
+                              <ul class="list-group list-group-flush" style="max-height:500px;overflow-y:scroll;" *ngIf="selectedPatient.cart_items && selectedPatient.cart_items.length>0;else noCartOrders">
+                                <li class="list-group-item"> 
+                                    <span class="ml-2" *ngIf="selectedPatient">Patient : {{ selectedPatient.patient_name }}</span>
+                                </li>    
+                                <li class="list-group-item" *ngFor="let cart_order of selectedPatient.cart_items;">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="font-weight-bold mb-0">{{cart_order.label_name+' '+cart_order.dosage_name}}<span class="ml-3 p-2 badge badge-pill badge-info">Qty. {{cart_order.selected_quantity.quantity+' '+cart_order.form_name}} </span></p>  
+                                        <p>{{cart_order.selected_quantity.price | currency:'INR'}}</p>
+                                    </div>
+                                </li>
+                                  <li class="list-group-item">
+                                    <div class="d-flex justify-content-end">
+                                      <p class="font-weight-bold mb-0"> <span class="mr-4">Total</span>{{ selectedPatient.cart_total | currency:'INR' }}</p>
+                                    </div>
+                                  </li>
+                              </ul>
+                              <ng-template #noCartOrders>
+                                  <div class="alert alert-danger">
+                                      No Cart Orders Found
+                                  </div>
+                              </ng-template>
+                          </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

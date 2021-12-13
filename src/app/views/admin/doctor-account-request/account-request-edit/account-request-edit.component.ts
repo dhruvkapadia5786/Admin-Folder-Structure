@@ -108,7 +108,7 @@ export class AccountRequestEditComponent implements OnInit {
 
 
   public getActiveTreatmentConditionList() {
-    const url = 'api/v1/admin/conditions/active';
+    const url = 'api/conditions/active';
     this.http.get(url).subscribe((conditionsList: any) => {
       if (conditionsList != null) {
         this.treatmentConditionsList = conditionsList;
@@ -119,7 +119,7 @@ export class AccountRequestEditComponent implements OnInit {
   }
 
   private async getAllSpecialityPaths() {
-    const url = 'api/v1/admin/consultation/speciality_paths';
+    const url = 'api/consultation/speciality_paths';
     this.http.get(url).subscribe(
       (data: any) => {
         this.speciality_paths = data;
@@ -500,7 +500,7 @@ export class AccountRequestEditComponent implements OnInit {
   }
 
   private async _getStates() {
-    const url = 'api/v1/admin/states/active';
+    const url = 'api/states/active';
     this.http.get(url).subscribe(
       (data: any) => {
         this.states = data;

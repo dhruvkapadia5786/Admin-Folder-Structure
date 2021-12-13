@@ -47,6 +47,7 @@
     "jquery": "^3.6.0",
     "moment-timezone": "^0.5.33",
     "ng-block-ui": "^3.0.2",
+    "ng-pick-datetime": "^7.0.0",
     "ngx-agora": "^2.0.1",
     "ngx-bootstrap": "^6.2.0",
     "ngx-dropzone": "^3.0.0",

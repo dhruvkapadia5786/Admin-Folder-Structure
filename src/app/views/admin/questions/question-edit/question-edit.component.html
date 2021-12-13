@@ -20,37 +20,37 @@
         <div *ngIf="editQuestionFormGroup.get('category')?.value == 'ORDER'" class="col-sm-3">
           <label>Medicine Kit:</label>
           <mat-form-field>
-            <mat-select formControlName="pet_dtc_medicine_kits" multiple>
+            <mat-select formControlName="dtc_medicine_kits" multiple>
               <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
                 (change)="handleCheckAll($event, 'kit')"
-                [indeterminate]="pet_dtc_medicine_kits?.value.length > 0 && notSelectedKits"
+                [indeterminate]="dtc_medicine_kits?.value.length > 0 && notSelectedKits"
                 [checked]="!notSelectedKits">All</mat-checkbox>
               <mat-option *ngFor="let medicineKit of medicineKitList" [value]="medicineKit._id">{{medicineKit.name}}
               </mat-option>
             </mat-select>
           </mat-form-field>
           <div class="invalid-feedback"
-            *ngIf="pet_dtc_medicine_kits?.invalid && (pet_dtc_medicine_kits?.dirty || pet_dtc_medicine_kits?.touched)"
+            *ngIf="dtc_medicine_kits?.invalid && (dtc_medicine_kits?.dirty || dtc_medicine_kits?.touched)"
             class="text-danger">
-            <div *ngIf="pet_dtc_medicine_kits?.errors?.required">Medicine kit is required.</div>
+            <div *ngIf="dtc_medicine_kits?.errors?.required">Medicine kit is required.</div>
           </div>
         </div>
         <div *ngIf="editQuestionFormGroup.get('category')?.value == 'CONSULTATION'" class="col-sm-6">
           <label>Health Condition:</label>
           <mat-form-field>
-            <mat-select formControlName="pet_consultation_health_conditions" multiple>
+            <mat-select formControlName="consultation_health_conditions" multiple>
               <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary"
                 (change)="handleCheckAll($event, 'conditions')"
-                [indeterminate]="pet_consultation_health_conditions?.value.length > 0 && notSelectedConditions"
+                [indeterminate]="consultation_health_conditions?.value.length > 0 && notSelectedConditions"
                 [checked]="!notSelectedConditions">Select All Health Conditions</mat-checkbox>
               <mat-option *ngFor="let condition of healthConditionsList" [(value)]="condition._id">{{condition.name}}
               </mat-option>
             </mat-select>
           </mat-form-field>
           <div class="invalid-feedback"
-            *ngIf="pet_consultation_health_conditions?.invalid && (pet_consultation_health_conditions?.dirty || pet_consultation_health_conditions?.touched)"
+            *ngIf="consultation_health_conditions?.invalid && (consultation_health_conditions?.dirty || consultation_health_conditions?.touched)"
             class="text-danger">
-            <div *ngIf="pet_consultation_health_conditions?.errors?.required">Health Conditions is required.</div>
+            <div *ngIf="consultation_health_conditions?.errors?.required">Health Conditions is required.</div>
           </div>
         </div>
         <div class="col-sm-3">
@@ -133,7 +133,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="row">
             <div class="col-sm-5">
               <label>Options:</label><br>
@@ -155,7 +155,7 @@
               </div>
             </div>
           </div>
-            
+
           <div class="row">
             <div class="col-sm-6">
               <label>Choice Has Sub-Questions ?</label><br>
@@ -164,7 +164,7 @@
             <div class="col-sm-6">
               <button *ngIf="choice.get('has_subquestions')?.value" type="button" class="btn btn-sm btn-primary btn-block" (click)="addSubQuestion(choiceIndex)"><i class="fa fa-plus mr-2"></i>Add New Sub-Question</button>
             </div>
-          </div>          
+          </div>
 
           <div *ngIf="choice.get('has_subquestions')?.value" formArrayName="sub_questions" style="width:100%;">
             <div class="p-3 my-2 rounded" *ngFor="let subitem of choiceSubQuestions(choiceIndex).controls; let j = index;" [formGroupName]="j" style="background-color:#cce5ff;border-color: #b8daff;">

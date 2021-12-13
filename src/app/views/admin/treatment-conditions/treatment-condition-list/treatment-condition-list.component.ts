@@ -29,7 +29,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
     private _renderer:Renderer2,
     private _http: HttpClient,
     private modalService: BsModalService,
-    private _hcAddEditModalService: TreatmentConditionAddEditModalService
+    private _tcAddEditModalService: TreatmentConditionAddEditModalService
   ) {
      this.getDTOptions();
   }
@@ -73,7 +73,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
   }
 
   openAddModal(){
-    this._hcAddEditModalService.setData({event:'ADD'})
+    this._tcAddEditModalService.setData({event:'ADD'})
     this.modalRef = this.modalService.show(TreatmentConditionAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
@@ -82,7 +82,7 @@ export class TreatmentConditionListComponent implements OnInit, AfterViewInit, O
 
   openEditModal(id:any){
     let data = this.healthConditionList.find((item:any)=>item._id == id);
-    this._hcAddEditModalService.setData({event:'EDIT',data:data});
+    this._tcAddEditModalService.setData({event:'EDIT',data:data});
     this.modalRef = this.modalService.show(TreatmentConditionAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();

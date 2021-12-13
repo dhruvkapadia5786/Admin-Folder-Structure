@@ -59,7 +59,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/v1/admin/orders/forCustomer/' + this.customerId,
+            'api/orders/forCustomer/' + this.customerId,
             dataTablesParameters,
             {}
           )

@@ -10,7 +10,9 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', loadChildren:()=>import('./consultation-list/consultation-list.module').then(CL=>CL.ConsultationListModule) },
-      { path: 'view/:id', component: ConsultationViewComponent }
+      { path: 'view/:id', component: ConsultationViewComponent },
+      { path: 'refund_requested',  loadChildren:()=>import('./refund-requested/refund-requested.module').then(refundRequested=>refundRequested.RefundRequestedModule) },
+      { path: 'refund_processed',  loadChildren:()=>import('./refund-processed/refund-processed.module').then(refundProcessed=>refundProcessed.RefundProcessedModule) }
     ]
   }
 ];

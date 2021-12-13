@@ -19,7 +19,7 @@ export class ViewQuestionComponent implements OnInit {
     this.getQuestionDetails();
   }
   getQuestionDetails() {
-    // const url = 'api/v1/admin/questions/details/' + this.questionId;
+    // const url = 'api/questions/details/' + this.questionId;
     const url = 'api/questions/view/' + this.questionId;
     this.http.get(url)
       .subscribe((questionDetails: any) => {
@@ -30,7 +30,7 @@ export class ViewQuestionComponent implements OnInit {
   }
 
   updateMedicineKitStatus(event: any, kit: any) {
-    const url = 'api/v1/admin/questions/manage_question_kits';
+    const url = 'api/questions/manage_question_kits';
     const obj = {
       'id': kit.id,
       'is_active': kit.is_active
@@ -44,7 +44,7 @@ export class ViewQuestionComponent implements OnInit {
   }
 
   updateStateStatus(event: any, state: any) {
-    const url = 'api/v1/admin/questions/manage_question_states';
+    const url = 'api/questions/manage_question_states';
     const obj = {
       'id': state._id,
       'is_active': state.is_active

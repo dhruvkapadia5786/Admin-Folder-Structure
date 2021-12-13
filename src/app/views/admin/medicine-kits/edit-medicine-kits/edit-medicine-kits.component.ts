@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { Router,ActivatedRoute } from '@angular/router';
 import { Toastr } from 'src/app/services/toastr.service';
-import { environment } from 'src/environments/environment'; 
+import { environment } from 'src/environments/environment';
 
 import { COMMA,ENTER } from '@angular/cdk/keycodes';
 import { ReplaySubject, Subject } from 'rxjs';
@@ -382,7 +382,7 @@ export class EditMedicineKitsComponent implements OnInit {
         this.medicineKitDetails = res;
 
         this.addMedicineKit.patchValue({
-          'treatment_condition_ids': res.treatment_condition_ids,
+          'treatment_condition_ids': res.treatment_condition_ids.map((item:any)=>item._id),
           'name': res.name,
           'generic_name': res.generic_name,
           'brand_id':res.brand_id._id,
@@ -430,7 +430,7 @@ export class EditMedicineKitsComponent implements OnInit {
           });
           attributesControl.push(attrFormGroup);
         });
-        
+
         const medicinesControl = this.addMedicineKit.get('medicines') as FormArray;
         res.medicines.forEach((item:any)=>{
           let medFormGroup = new FormGroup({
@@ -530,7 +530,7 @@ export class EditMedicineKitsComponent implements OnInit {
   public medicinesControls(){
     return (this.addMedicineKit.get('medicines') as FormArray)['controls'];
   }
- 
+
   public removeMedicine(index: any) {
     const medicinesControl = this.addMedicineKit.get('medicines') as FormArray;
     medicinesControl.removeAt(index);
@@ -588,10 +588,10 @@ export class EditMedicineKitsComponent implements OnInit {
     let icd10Obj: any = []
     for (let item of this.selectedSimilarDrugs) {
       icd10Obj.push({
-        code: item[0], 
+        code: item[0],
         description: item[1]
       })
-    } 
+    }
     this.addMedicineKit.value.icd10_code = icd10Obj;
     this.addMedicineKit.value.oldImages = this.medicineKitDetails.images;
     this.addMedicineKit.value.oldDocuments = this.medicineKitDetails.documents;

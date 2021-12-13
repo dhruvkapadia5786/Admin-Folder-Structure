@@ -1,0 +1,108 @@
+<div class="modal-content">
+    <div *ngIf="ModalEvent=='RE_ACTIVATE_BY_TECH'">
+          <form (ngSubmit)="handleReActivateSubscriptionByTechnician($event)">
+            <div class="modal-header">
+                <button (click)="closeModal()" type="button" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="font-weight-bold modal-title w-100" id="reactiveModalLabel">
+                   Activate Subscription
+                </h4>
+            </div>
+            <div class="modal-body">
+                    <p class="font-weight-bold" *ngIf="selectedSubscription">{{ selectedSubscription.kit_name }}</p>
+                    <div class="form-row align-items-center">
+                        <div class="col-auto my-1">
+                            <select name="customFrequency" class="form-control input-lg" [(ngModel)]="customFrequency">
+                                    <option *ngFor="let option of customFrequencyOptions" [value]="option.days">{{ option.title }} </option>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer d-block text-center">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </form>
+    </div>
+
+     <div *ngIf="ModalEvent=='DEACTIVATE' && selectedSubscription">
+        <div class="modal-header">
+            <button (click)="closeModal()" type="button" id="closechangeSubscriptionModalBtn" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="font-weight-bold modal-title w-100" id="mychangeSubscriptionModalLabel">
+                Cancel Subscription
+            </h4>
+        </div>
+        <div class="modal-body">
+         <p class="font-weight-normal">{{ selectedSubscription.kit_name }}</p>
+         <p class="font-weight-normal">Are you sure to Cancel Subscription ?</p>
+        </div>
+        <div class="modal-footer d-block text-center">
+            <button type="button" class="btn btn-danger"  [disabled]="formSubmitting"  (click)="handleDeactivateSubscription()">Cancel Subscription</button>
+        </div>
+    </div>
+
+    <div *ngIf="ModalEvent=='DELAYED'">
+            <form (ngSubmit)="delaySubscriptionSubmit(delaySubscriptionForm.valid)" [formGroup]="delaySubscriptionForm" autocomplete="off">
+            <div class="modal-header">
+                <button (click)="closeModal()" type="button" id="closedelaySubscriptionModalBtn" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="font-weight-bold modal-title w-100" id="mydelaySubscriptionModalLabel">
+                    Pause Subscription
+                </h4>
+            </div>
+            <div class="modal-body">
+                    <p class="font-weight-normal" *ngIf="selectedSubscription">
+                    Want to pause subscription for your next refill ?<br/>
+                    {{ selectedSubscription.kit_name}}
+                    </p>
+                    <input type="hidden" formControlName="delay_subscription_order_id" />
+                    <input type="hidden" formControlName="delay_medicine_name" />
+                <div class="form-group">
+                    <label class="form-label">Pause For</label>
+                    <select name="delayFrequency" class="form-control input-lg" formControlName="delay_duration">
+                        <option *ngFor="let option of delayFrequencyOptions" [value]="option">{{ option + ' Days'}} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer d-block text-center">
+                <button type="submit" [disabled]="delaySubscriptionForm.invalid || formSubmitting" class="btn btn-success">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+     <div *ngIf="ModalEvent=='CHANGE'">
+        <form (ngSubmit)="changeSubscriptionSubmit(changeSubscriptionForm.valid)" [formGroup]="changeSubscriptionForm" autocomplete="off">
+            <div class="modal-header">
+                <button (click)="closeModal()" type="button" id="closechangeSubscriptionModalBtn" class="close pull-right" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="font-weight-bold modal-title w-100" id="mychangeSubscriptionModalLabel">
+                     Subscription Settings
+                </h4>
+            </div>
+            <div class="modal-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <p class="mb-0 font-weight-normal">Medicine</p>
+                            <p class="mb-0 font-weight-bold" *ngIf="selectedSubscription">{{ selectedSubscription.kit_name}}</p>
+                        </li>
+                        <li class="border-bottom-0 list-group-item d-flex justify-content-between align-items-center">
+                            <p class="mb-0 font-weight-normal">Refill Duration</p>
+                            <div class="form-group">
+                                <select name="customFrequency" class="form-control input-lg" formControlName="custom_duration">
+                                    <option *ngFor="let option of customFrequencyOptions" [value]="option.days">{{ option.title }} </option>
+                                </select>
+
+                            </div>
+                        </li>
+                    </ul>
+            </div>
+            <div class="modal-footer d-block text-center">
+                <button type="submit" [disabled]="changeSubscriptionForm.invalid || formSubmitting" class="btn btn-success">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>

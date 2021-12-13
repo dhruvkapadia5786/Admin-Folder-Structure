@@ -58,7 +58,7 @@ export class ChangePasswordModalComponent implements OnInit {
       return;
     }
 
-    const url = 'api/v1/admin/customer/update/password/' + this.customerId;
+    const url = 'api/customer/update/password/' + this.customerId;
     const data ={
       'password': this.editPassword.value.password,
       'user_id':this.customerId

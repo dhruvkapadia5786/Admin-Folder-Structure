@@ -32,7 +32,7 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
       private _orderLogDetailsModalService: OrderLogDetailsModalService
     ) {
       this.orderId = this.route.snapshot.paramMap.get('id');
-      
+
       if (router.url.includes('/orders/view')) {
         this.orderType = 'ORDER'
       } else if (router.url.includes('drug-order/view')) {
@@ -51,20 +51,20 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
       let url = '';
       console.log(filterValue)
       if (this.orderType == 'ORDER') {
-        url = `api/v1/new_orders/logs/${this.orderId}?user_types=${filterValue}`; // 
+        url = `api/v1/new_orders/logs/${this.orderId}?user_types=${filterValue}`; //
       } else if (this.orderType == 'CONSULTATION') {
-        url = `api/v1/admin/consultation/logs/${this.orderId}?user_types=${filterValue}`; // 
+        url = `api/consultation/logs/${this.orderId}?user_types=${filterValue}`; //
       } else if (this.orderType == 'DRUG_ORDER') {
-        url = `api/v1/admin/drug_orders/logs/${this.orderId}?user_types=${filterValue}`; // 
+        url = `api/drug_orders/logs/${this.orderId}?user_types=${filterValue}`; //
       } else if (this.orderType == 'DIGITAL_THERAPY_ORDER') {
-        url = `api/v1/admin/digital-therapy-orders/logs/${this.orderId}?user_types=${filterValue}`; // 
+        url = `api/digital-therapy-orders/logs/${this.orderId}?user_types=${filterValue}`; //
       }
 
       this.http.get(url)
       .subscribe((data: any) => {
         this.orderLogs = data;
       }, err => {
-        
+
       });
     }
 
