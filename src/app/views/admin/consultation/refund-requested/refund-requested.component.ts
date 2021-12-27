@@ -106,7 +106,7 @@ export class RefundRequestedComponent implements OnInit, AfterViewInit, OnDestro
           }
         },
         {
-          data: 'charged_from_stripe',
+          data: 'charged_from_paymentgateway',
           title: 'Charged From Stripe',
           className: 'text-center  font-weight-normal',
           render: (data) => {

@@ -8,11 +8,10 @@ import { NgxMaskModule } from 'ngx-mask';
 import { DataTablesModule } from 'angular-datatables';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.module';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 
 @NgModule({
@@ -24,11 +23,10 @@ import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.m
     NgxMaskModule,
     DataTablesModule,
     MatRadioModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     MatCheckboxModule,
     ReactiveFormsModule,
     MatSelectModule,
+    BsDatepickerModule.forRoot(),
     ImagePreviewModule
   ]
 })

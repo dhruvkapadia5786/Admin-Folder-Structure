@@ -53,7 +53,7 @@ export class ReferralTransactionsComponent implements OnInit, AfterViewInit, OnD
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/referral-transactions/all',
+            'api/referral_transactions/list',
             dataTablesParameters,
             {}
           )
@@ -69,19 +69,19 @@ export class ReferralTransactionsComponent implements OnInit, AfterViewInit, OnD
       },
       columns: [
         {
-          data: 'referrer_user_name',
+          data: 'referrer_user_id',
           title: 'Referrer User',
           className: 'text-center  font-weight-normal',
           render: (data: any, type: any, full: any) => {
-            return `<span userId=${full.referrer_user_id} style="font-weight:bold; cursor:pointer;">${data || 'N/A'}</span>`
+            return `<span userId=${full.referrer_user_id._id} style="font-weight:bold; cursor:pointer;">${full.referrer_user_id.first_name+' '+full.referrer_user_id.last_name}</span>`
           }
         },
         {
-          data: 'referree_user_name',
+          data: 'referree_user_id',
           title: 'Referree User',
           className: 'text-center  font-weight-normal',
           render: (data, type, full) => {
-            return `<span userId=${full.referree_user_id} style="font-weight:bold; cursor:pointer;">${data || 'N/A'}</span>`
+            return `<span userId=${full.referree_user_id._id} style="font-weight:bold; cursor:pointer;">${full.referrer_user_id.first_name+' '+full.referrer_user_id.last_name}</span>`
           }
         },
         {
@@ -139,7 +139,7 @@ export class ReferralTransactionsComponent implements OnInit, AfterViewInit, OnD
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span>-</span>';
             }
@@ -151,7 +151,7 @@ export class ReferralTransactionsComponent implements OnInit, AfterViewInit, OnD
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

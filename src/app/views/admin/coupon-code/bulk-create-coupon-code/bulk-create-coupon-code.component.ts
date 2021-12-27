@@ -16,22 +16,21 @@ import { State } from 'src/app/models/admin/State';
 export class BulkCreateCouponCodeComponent implements OnInit {
   public divDiscountAmount = true;
   public divDiscountPercentage = false;
-  public discount_type = '0';
+  public discount_type = 'AMOUNT';
   public questionObj: any = {};
   public statesList: State[] = [];
   public kitList:any[]=[];
   public digitalTherapyList:any[]=[];
   public healthKitList: any=[];
-  public categoryList: any[] = [
-    { 'name': 'Pharmacy Order', 'value': 'DRUG_ORDER'},
-    { 'name': 'Order', 'value': 'ORDER'},
-    { 'name': 'Digital Therapy Order', 'value': 'DIGITAL_THERAPY_ORDER'},
+  public categoryList: any = [
+    { 'name': 'Pharmacy Order', 'value': 'PHARMACY_ORDER'},
+    { 'name': 'Order', 'value': 'DTC_ORDER'},
     { 'name': 'Consultation', 'value': 'CONSULTATION'}
   ]
   GrouponFile!:File;
 
   setDiscountValidators() {
-    if (this.discount_type == '0') {
+    if (this.discount_type == 'AMOUNT') {
       this.divDiscountAmount = true;
       this.divDiscountPercentage = false
       this.addCouponCode.get('discount_percent')?.setValidators([]);
@@ -64,7 +63,6 @@ export class BulkCreateCouponCodeComponent implements OnInit {
     coupon_code_id: null,
     states:[],
     kits:[],
-    digital_therapies:[],
     health_conditions: [],
     coupon_category: ['ORDER']
   };
@@ -92,7 +90,6 @@ export class BulkCreateCouponCodeComponent implements OnInit {
   get is_active() { return this.addCouponCode.get('is_active'); }
   get states() { return this.addCouponCode.get('states'); }
   get kits() { return this.addCouponCode.get('kits'); }
-  get digital_therapies(){return this.addCouponCode.get('digital_therapies');}
   get health_conditions() { return this.addCouponCode.get('health_conditions'); }
   get coupon_category() { return this.addCouponCode.get('coupon_category'); }
 
@@ -115,21 +112,16 @@ export class BulkCreateCouponCodeComponent implements OnInit {
       'is_active': new FormControl(this.couponCodeObj.is_active),
       'states': new FormControl(this.couponCodeObj.states, [Validators.required]),
       'kits': new FormControl(this.couponCodeObj.kits, [Validators.required]),
-      'digital_therapies': new FormControl(this.couponCodeObj.digital_therapies, [Validators.required]),
       'coupon_category': new FormControl(this.couponCodeObj.coupon_category, [Validators.required])
     });
   }
 
   get notSelectedStates () {
-    return this.statesList.filter((data: any) => !this.couponCodeObj.states.some((b: any) => b === data.id)).length
+    return this.statesList.filter((data: any) => !this.couponCodeObj.states.some((b: any) => b === data._id)).length
   }
 
   get notSelectedKits () {
-    return this.kitList.filter((data: any) => !this.couponCodeObj.kits.some((b: any) => b === data.id)).length
-  }
-
-  get notSelectedTherapies(){
-    return this.digitalTherapyList.filter((data: any) => !this.couponCodeObj.digital_therapies.some((b: any) => b === data.id)).length
+    return this.kitList.filter((data: any) => !this.couponCodeObj.kits.some((b: any) => b === data._id)).length
   }
 
   get notSelectedcategory () {
@@ -137,35 +129,27 @@ export class BulkCreateCouponCodeComponent implements OnInit {
   }
 
   get notSelectedhealthKits () {
-    return this.healthKitList.filter((data: any) => !this.couponCodeObj.health_conditions.some((b: any) => b === data.id)).length
+    return this.healthKitList.filter((data: any) => !this.couponCodeObj.health_conditions.some((b: any) => b === data._id)).length
   }
 
   public handleCheckAll (event:any, flag:any) {
     if (flag == 'state') {
       if (event.checked) {
-        this.couponCodeObj.states = this.statesList.map(({id}) => id);
+        this.couponCodeObj.states = this.statesList.map((item:any) => item._id);
       } else {
         this.couponCodeObj.states = [];
       }
     } else if (flag == 'kit') {
       if (event.checked) {
-        this.couponCodeObj.kits = this.kitList.map(({id}) => id);
+        this.couponCodeObj.kits = this.kitList.map((item:any) => item._id);
       } else {
         this.couponCodeObj.kits = [];
       }
     }
-    else if(flag=='therapy'){
-      if(event.checked){
-        this.couponCodeObj.digital_therapies = this.digitalTherapyList.map(({id})=>id);
-      }else{
-        this.couponCodeObj.digital_therapies=[];
-      }
-   }
     else if (flag == 'category') {
       if (event.checked) {
-        this.couponCodeObj.coupon_category = this.categoryList.map(({value}) => value);
+        this.couponCodeObj.coupon_category = this.categoryList.map((data: any) => data.value);
         this.addCouponCode.addControl('kits', new FormControl(this.couponCodeObj.kits, [Validators.required]));
-        this.addCouponCode.addControl('digital_therapies', new FormControl(this.couponCodeObj.digital_therapies, [Validators.required]));
         this.addCouponCode.addControl('health_conditions', new FormControl(this.couponCodeObj.health_conditions, [Validators.required]));
         this._changeDetectorRef.detectChanges();
       } else {
@@ -173,16 +157,13 @@ export class BulkCreateCouponCodeComponent implements OnInit {
         this.addCouponCode.removeControl('kits');
         this.couponCodeObj.kits=[];
 
-        this.addCouponCode.removeControl('digital_therapies');
-        this.couponCodeObj.digital_therapies=[];
-
         this.addCouponCode.removeControl('health_conditions');
         this.couponCodeObj.health_conditions=[];
         this._changeDetectorRef.detectChanges();
       }
     } else if (flag == 'health_conditions') {
       if (event.checked) {
-        this.couponCodeObj.health_conditions = this.healthKitList.map((data: any) => data.id);
+        this.couponCodeObj.health_conditions = this.healthKitList.map((data: any) => data._id);
       } else {
         this.couponCodeObj.health_conditions = [];
       }
@@ -190,67 +171,46 @@ export class BulkCreateCouponCodeComponent implements OnInit {
   }
 
   public handleCategoryChange(event: any) {
-    if (event.value.includes("ORDER")) {
+    if (event.value.includes("DTC_ORDER")) {
       this.addCouponCode.addControl('kits', new FormControl(this.couponCodeObj.kits, [Validators.required]))
     } else {
       this.addCouponCode.removeControl('kits');
-      this.couponCodeObj.kits=[];
-    }
-
-    if (event.value.includes("DIGITAL_THERAPY_ORDER")) {
-      this.addCouponCode.addControl('digital_therapies', new FormControl(this.couponCodeObj.digital_therapies, [Validators.required]))
-    } else {
-      this.addCouponCode.removeControl('digital_therapies');
-      this.couponCodeObj.digital_therapies=[];
+      this.couponCodeObj.kits = [];
     }
 
     if (event.value.includes("CONSULTATION")) {
       this.addCouponCode.addControl('health_conditions', new FormControl(this.couponCodeObj.health_conditions, [Validators.required]))
     } else {
       this.addCouponCode.removeControl('health_conditions');
-      this.couponCodeObj.health_conditions=[];
+      this.couponCodeObj.health_conditions = [];
     }
   }
 
   public getMedicineKits() {
-     const url = 'api/medicinekits/id_name_price_active_list';
-    this._http.get(url)
-      .subscribe((medicineKitList: any) => {
-          this.kitList= medicineKitList;
-          this.handleCheckAll({checked:true},'kit');
-      }, err => {
+    const url = 'api/medicine_kits/all';
+    this._http.get(url).subscribe((medicineKitList: any) => {
+      this.kitList = medicineKitList;
+    }, err => {
 
-      });
+    });
   }
 
   public getHealthKits() {
-    this._http.get('api/consultation/health_condition/active')
-      .subscribe((data: any) => {
-        this.healthKitList = data;
-      }, err => {
+    this._http.get('api/consultation_health_conditions/all').subscribe((data: any) => {
+      this.healthKitList = data;
+    }, err => {
 
-      });
+    });
   }
 
-  public getDigitalTherapies(){
-    const url = 'api/digital-therapies/id_name_price_active_list';
-    this._http.get(url).subscribe((therapies: any) => {
-          this.digitalTherapyList= therapies;
-      }, err => {
-
-      });
-  }
-
-
-public getStateList() {
-  this._http.get('api/states/active')
-    .subscribe((data: any) => {
+  public getStateList() {
+    this._http.get('api/system_states/all').subscribe((data: any) => {
       this.statesList = data;
       this.handleCheckAll({checked:true},'state');
     }, err => {
 
     });
-}
+  }
 
   onFileSelect(event:any){
     if (event.target.files.length > 0) {
@@ -264,9 +224,9 @@ public getStateList() {
       this._helper.markFormGroupTouched(this.addCouponCode);
       return;
     }
-    this.couponCodeObj.start = moment.tz(this.couponCodeObj.start, 'America/New_York').format('YYYY-MM-DD HH:mm:ss');
-    this.couponCodeObj.expiry = moment.tz(this.couponCodeObj.expiry, 'America/New_York').format('YYYY-MM-DD HH:mm:ss');
-    const url = 'api/coupan-code/bulkCreate';
+    this.couponCodeObj.start = moment.tz(this.couponCodeObj.start, 'Asia/Calcutta').format('YYYY-MM-DD HH:mm:ss');
+    this.couponCodeObj.expiry = moment.tz(this.couponCodeObj.expiry, 'Asia/Calcutta').format('YYYY-MM-DD HH:mm:ss');
+    const url = 'api/coupon_codes/bulk-create';
     const fd: FormData = new FormData();
     fd.append('coupon_object', JSON.stringify(this.couponCodeObj));
     fd.append('coupon_code_file', this.GrouponFile);

@@ -12,7 +12,7 @@ import { DataTableDirective } from 'angular-datatables';
 export class QuestionsListComponent implements OnInit {
   dtElement!: DataTableDirective;
   dtOptions: DataTables.Settings = {};
-  public questions: any = [];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  public questions: any = [];
   kitList: any = [];
   chcList: any = [];
   selectedKits: any = [];
@@ -35,14 +35,15 @@ export class QuestionsListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute) {
 
-    this.medicineKitId = this.route.parent?.parent?.snapshot.paramMap.get('kit_id');
-    this.healthConditionId = this.route.parent?.parent?.snapshot.paramMap.get('condition_id');
+    let activeRoute:any = this.route;
+    this.medicineKitId = activeRoute.parent.parent.snapshot.paramMap.get('kit_id');
+    this.healthConditionId = activeRoute.parent.parent.snapshot.paramMap.get('condition_id');
 
     if (this.medicineKitId) {
       this.showHeaderAndFilter = false
       this.selectedKits.push(this.medicineKitId)
     }
-    
+
     if (this.healthConditionId) {
       this.showHeaderAndFilter = false
       this.selectedCHC.push(this.healthConditionId)
@@ -83,7 +84,7 @@ export class QuestionsListComponent implements OnInit {
   get notSelectedMedicineKit() {
     return this.kitList.filter((data: any) => !this.selectedKits.some((b: any) => b === data._id)).length;
   }
-  
+
   get notSelectedConditions() {
     return this.chcList.filter((data: any) => !this.selectedCHC.some((b: any) => b === data._id)).length;
   }
@@ -105,13 +106,13 @@ export class QuestionsListComponent implements OnInit {
   public handleCheckAll(event: any, flag: any) {
     if (flag == 'MK') {
       if (event.checked) {
-        this.selectedKits = this.kitList.map((data: any) => data.id);
+        this.selectedKits = this.kitList.map((data: any) => data._id);
       } else {
         this.selectedKits = [];
       }
     } else if (flag == 'HC') {
       if (event.checked) {
-        this.selectedCHC = this.chcList.map((data: any) => data.id);
+        this.selectedCHC = this.chcList.map((data: any) => data._id);
       } else {
         this.selectedCHC = [];
       }

@@ -36,69 +36,57 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
   drug_orders_limit_options=[5,10,20,30,50];
 
   drug_orders_sort_by:string='last_refund_processed_on';
-  drug_orders_sort_order:string='DESC';
+  drug_orders_sort_order:any=-1;
   drug_orders_search:string='';
 
   drug_orders_sort_selected_option=7;
   drug_orders_sort_options=[
     {
-      id:1,
-      sort_by:'id',
-      sort_order:'DESC',
-      title:'Sort By ID descending'
-    },
-    {
-      id:2,
-      sort_by:'id',
-      sort_order:'ASC',
-      title:'Sort By ID ascending'
-    },
-    {
       id:3,
       sort_by:'order_number',
-      sort_order:'DESC',
+      sort_order:-1,
       title:'Sort By Order No descending'
     },
     {
       id:4,
       sort_by:'order_number',
-      sort_order:'ASC',
+      sort_order:1,
       title:'Sort By Order No ascending'
     },
     {
       id:5,
       sort_by:'total_amount',
-      sort_order:'DESC',
+      sort_order:-1,
       title:'Sort By Total descending'
     },
     {
       id:6,
       sort_by:'total_amount',
-      sort_order:'ASC',
+      sort_order:1,
       title:'Sort By Total ascending'
     },
     {
       id:7,
-      sort_by:'order_created_datetime',
-      sort_order:'DESC',
+      sort_by:'order_place_datetime',
+      sort_order:-1,
       title:'Sort By OrderDate descending'
     },
     {
       id:8,
-      sort_by:'order_created_datetime',
-      sort_order:'ASC',
+      sort_by:'order_place_datetime',
+      sort_order:1,
       title:'Sort By OrderDate ascending'
     },
     {
       id:9,
       sort_by:'last_refund_requested_on',
-      sort_order:'DESC',
+      sort_order:-1,
       title:'Sort By Last Refund Requested Date descending'
     },
     {
       id:10,
       sort_by:'last_refund_requested_on',
-      sort_order:'ASC',
+      sort_order:1,
       title:'Sort By  Last Refund Requested Date ascending'
     }
   ];
@@ -165,7 +153,7 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
     }
 
     let total_balance_remaining   =    order.total_amount - order.refunded_total  ;
-    let stripe_balance_remaining  =   order.charged_from_stripe  -  order.refunded_in_stripe;
+    let stripe_balance_remaining  =   order.charged_from_paymentgateway  -  order.refunded_in_paymentgateway;
     let wallet_balance_remaining =    order.charged_from_wallet -  order.refunded_in_wallet;
 
     if(wallet_balance_remaining>0){
@@ -200,7 +188,7 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
 
 
   refundOrder(orderId: number) {
-    let url:string = `api/drug_orders/processRefund/${orderId}`;
+    let url:string = `api/pharmacy_orders/processRefund/${orderId}`;
     this.refund_processing=true;
     this.http.post(url,this.refundObject)
       .subscribe((res: any) => {
@@ -252,14 +240,16 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
    this.getRefundRequestedOrders(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,this.drug_orders_sort_by,this.drug_orders_sort_order,this.drug_orders_search);
  }
 
- getRefundRequestedOrders(page:number,limit:number,sortBy:string='id',sortOrder:string='DESC',search:string=''){
-   this.http.get<any>(`api/drug_orders/refund_requested?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`).subscribe((resp) => {
+ getRefundRequestedOrders(page:number,limit:number,sortBy:string='order_place_datetime',sortOrder:any=-1,search:string=''){
+   this.http.get<any>(`api/pharmacy_orders/list_refund_requested?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`).subscribe((resp) => {
        this.drug_orders_collection.data = resp.data;
        this.drug_orders_collection.count= resp.total;
        this.drug_orders_config.itemsPerPage =  resp.perPage;
        this.drug_orders_config.totalItems = resp.total;
        this.drug_orders_config.currentPage  =  resp.currentPage;
+       this.drug_order_hasMorePages = resp.hasMorePages;
    },err=>{
+
    });
  }
 

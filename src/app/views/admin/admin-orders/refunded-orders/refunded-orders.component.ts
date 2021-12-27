@@ -108,7 +108,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
           className: 'text-center  font-weight-normal'
         },
         {
-          data: 'charged_from_stripe',
+          data: 'charged_from_paymentgateway',
           title: 'Charged From Stripe',
           className: 'text-center  font-weight-normal',
           render: (data) => {
@@ -218,7 +218,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
 
   async callProcessrefund(orderId:number){
     this.selectedOrder = this.ordersTableData.find((order:any)=>order.id==orderId);
-    if(this.selectedOrder.charged_from_stripe>0 && this.selectedOrder.transaction_type=='AUTHORIZE_AND_CAPTURE'){
+    if(this.selectedOrder.charged_from_paymentgateway>0 && this.selectedOrder.transaction_type=='AUTHORIZE_AND_CAPTURE'){
       let chargeDetails:any = await this._getPaymentDetailsForOrder(orderId);
       this.selectedOrder.charge_details = chargeDetails &&  chargeDetails.charge_details?chargeDetails.charge_details:null;
     }
@@ -226,7 +226,7 @@ export class RefundedOrdersComponent implements OnInit,AfterViewInit {
   }
 
   async _getPaymentDetailsForOrder(orderId:number){
-    const url = `api/v1/new_orders/charge_details/${orderId}`;
+    const url = `api/v1/orders/charge_details/${orderId}`;
     return await this._http.get(url).toPromise();
   }
 

@@ -33,7 +33,7 @@ export class InterceptedHttp implements HttpInterceptor {
             _req = req.clone({ url:url});
         }
 
-        if (req.url.indexOf('login') == -1 && req.url.indexOf('is_third_party_api') == -1){
+        if (req.url.indexOf('api/auth/login') == -1 && req.url.indexOf('is_third_party_api') == -1){
             // Get the auth token from the service.
             const authToken = this._auth.getAuthorizationToken();
 

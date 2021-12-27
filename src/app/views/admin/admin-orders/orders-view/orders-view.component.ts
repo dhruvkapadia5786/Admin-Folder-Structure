@@ -26,14 +26,11 @@ export class OrdersViewComponent implements OnInit {
   orderId: any;
   parentSub: any;
   patient: any;
-  profileLicense: any;
   orderDetails: any;
-  patientUinqueNumber: any;
   drugRXCUI = '';
   userDrugs: any[] = [];
   orderCurrentStatus: any = {};
   loadingReminderButton: boolean = false;
-  states:any[]=[];
 
   refundData: any;
   refundOrderForm:FormGroup;
@@ -79,14 +76,13 @@ export class OrdersViewComponent implements OnInit {
     this._changeAddressModalService.setFormData({
       type: 'EDIT_ADDRESS',
       order_id:this.orderId,
-      user_id:this.orderDetails.user.id,
-      address_line_1: this.orderDetails.address.address_line_1,
-      address_line_2: this.orderDetails.address.address_line_2?this.orderDetails.address.address_line_2:'',
-      city_name: this.orderDetails.address.city_name,
-      state_id: this.orderDetails.address.state_id,
-      state_name: this.orderDetails.address.state_name,
-      state_abbreviation: this.orderDetails.address.state_abbreviation,
-      zip_code: this.orderDetails.address.zip_code,
+      user_id:this.orderDetails.user_id._id,
+      address_line_1: this.orderDetails.shipping_address.address_line_1,
+      address_line_2: this.orderDetails.shipping_address.address_line_2?this.orderDetails.shipping_address.address_line_2:'',
+      city_name: this.orderDetails.shipping_address.city,
+      state_id: this.orderDetails.shipping_address.state_id,
+      state_name: this.orderDetails.shipping_address.state,
+      zip_code: this.orderDetails.shipping_address.zip_code,
       addressModalTitle: 'Change Address'
     });
     this.modalRef = this.modalService.show(ChangeAddressModalComponent, { class: 'modal-lg' });
@@ -104,9 +100,6 @@ export class OrdersViewComponent implements OnInit {
 
   ngOnInit() {
     this.getOrderDetails();
-    this._getState();
-
-    //this.getPatientDetails();
     this.customFrequency =30;
   }
 
@@ -114,16 +107,6 @@ export class OrdersViewComponent implements OnInit {
     this.getOrderDetails();
   }
 
-  _getState() {
-    const url = 'api/system_states/all';
-    this.http.get(url).subscribe(
-      (data:any) => {
-        this.states = data;
-      },
-      (err) => {
-      }
-    );
-  }
   sendMail(orderId:number) {
     this.loadingReminderButton = true
     this.http
@@ -148,129 +131,31 @@ export class OrdersViewComponent implements OnInit {
     this.input.nativeElement.style.display = 'block';
   }
 
-  getOrderCreatedWay(data:any){
-    let badge='';
-    switch (data) {
-      case 'MANUAL_BY_USER':
-        badge= `<span class='p-2 badge badge-pill badge-info'>Manually By Customer</span>`;
-        break;
-      case 'MANUAL_BY_STAFF':
-        badge= `<span class='p-2 badge badge-pill badge-warning'>Manually By Staff</span>`;
-        break;
-      case 'AUTO_BY_SYSTEM':
-        badge= `<span class='p-2 badge badge-pill badge-dark'>Auto By System</span>`;
-        break;
-    }
-    return badge;
+  saveUserAddress(address:any){
+      const url = 'api/order/save_address';
+      this.http.post(url,{
+              order_id:this.orderId,
+              user_id:this.orderDetails.user_id._id,
+              address:address
+      }).subscribe((data:any) => {
+                this.getOrderDetails();
+      },
+      (err) => {
+
+      });
   }
 
-  saveUserAddress(valid:boolean,modal:any){
-    if(valid){
-          this.validateShippingAddress().then((res:any) => {
-            if (res) {
-              const url = 'api/v1/technician/save_order_address';
-              this.http.post(url,{
-                  order_id:this.orderId,
-                  user_id:this.orderDetails.user.id,
-                  // address:this.addressForm.value
-                }).subscribe((data:any) => {
-                    modal.hide();
-                    this.getOrderDetails();
-                },
-                (err) => {
-
-                }
-              );
-          }
-        });
-    }else{
-      return;
-    }
-}
-
-getStateNameFromId(state_id:number){
-  let stateFound =  this.states.find((state:any)=>state.id == state_id);
-  return stateFound && stateFound.name ? stateFound.name:'Florida';
-}
-
-setStateInfo(state_id:any){
-  let stateFound =  this.states.find((state:any)=>state.id == state_id);
-  /* this.addressForm.patchValue({
-    state_name: stateFound.name,
-    state_abbreviation: stateFound.abbreviation
-  }); */
-}
-
-validateShippingAddress(): Promise<boolean> {
-  // let state_name= this.getStateNameFromId(this.addressForm.value.state_id);
-  let ValidationAddress = {
-    // address_line1: this.addressForm.value.address_line_1,
-    // city_locality: this.addressForm.value.city,
-    company_name: '',
-    country_code: 'US',
-    //postal_code: this.addressForm.value.zip_code,
-    //state_province: state_name
-  };
-  const url = 'api/states/validateShippingAddress';
-  let isValid = false;
-  const obj = {
-    address: [ValidationAddress]
-  };
-  return new Promise((resolve, reject) => {
-    this.http.post(url, obj).subscribe((data: any) => {
-        if (data[0].status === 'verified') {
-          isValid = true;
-          resolve(isValid);
-        } else if (data[0].status === 'unverified') {
-          isValid = false;
-          this.toastr.showError('Shipping Address is not verified');
-          reject(isValid);
-        } else {
-          isValid = false;
-          this.toastr.showError('Shipping Address is invalid');
-          reject(isValid);
-        }
+  getOrderDetails(){
+     const url = 'api/orders/details/' + this.orderId;
+     this.http.get(url).subscribe((data: any) => {
+        this.orderDetails = data;
+        this.patient = data.user_id;
+        this.patient.age = this.helper.calculateAge(this.patient.date_of_birth,'YYYY-MM-DDTHH:mm:ss.000Z');
+        this.showChangeAddressBtn =true;
+        this.getUserLastOrderDrugs()
       },
       err => {
-        isValid = false;
-        this.toastr.showError('Shipping Address is invalid');
-        reject(isValid);
-      });
-  });
-}
-
-  getOrderDetails() {
-    const url = 'api/orders/info/' + this.orderId;
-    const req = '';
-    this.http.post(url, req).subscribe((data: any) => {
-      this.orderDetails = data;
-      this.getOrderCurrentStatus();
-      this.patient = data.user;
-      this.profileLicense = data.profile_license;
-      this.patient.age = this.helper.calculateAge(this.patient.date_of_birth,'YYYY-MM-DDTHH:mm:ss.000Z');
-      this.patientUinqueNumber = this.helper.getUserUniqueId(this.patient.id, this.patient.type);
-      if(data.system_status ==10 || data.system_status ==11 || data.system_status ==13 || data.system_status ==14 || data.system_status ==15 || data.system_status ==17){
-        this.showChangeAddressBtn =false;
-      }else{
-        this.showChangeAddressBtn =true;
-      }
-
-      this.getUserLastOrderDrugs()
-      if (this.patient.license_photo) {
-        this.getImage(this.patient.license_photo);
-      } else {
-        this.imageUrl = '../../../../assets/img/no-image.png';
-        this._albums = [];
-        this._albums.push({
-          src: this.imageUrl,
-          caption: 'License image',
-          thumb: this.imageUrl
-        });
-      }
-
-    },
-      err => {
-        this.toastr.showError('Unable to fetch order detials');
+        this.toastr.showError('Unable to fetch order details');
       });
   }
 
@@ -278,16 +163,10 @@ validateShippingAddress(): Promise<boolean> {
     this.router.navigate(['admin','patients','view',this.patient.id,'orders']);
   }
 
-  getOrderCurrentStatus() {
-    const url = 'api/orders/status/' + this.orderId;
-    this.http.get(url).subscribe((data: any) => {
-      this.orderCurrentStatus = data;
-    });
-  }
 
   getUserLastOrderDrugs() {
     this.drugRXCUI = '';
-    const url = 'api/v1/new_orders/getUserLastOrderDrugs?user_id=' + this.patient.id;
+    const url = 'api/v1/orders/getUserLastOrderDrugs?user_id=' + this.patient.id;
     this.http.post(url, {}).subscribe(
       (data: any) => {
         this.userDrugs = data;
@@ -301,41 +180,13 @@ validateShippingAddress(): Promise<boolean> {
       }
     );
   }
-  async getImage(path: string) {
-    await this.http.post('api/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
-      const fr = new FileReader();
-      fr.readAsDataURL(result);
-      fr.onloadend = () => {
-        this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(fr.result + '');
-        this._albums = [];
-        this._albums.push({
-          src: this.imageUrl,
-          caption: 'License image',
-          thumb: this.imageUrl
-        });
-      }
-    })
-      .catch(err => {
-        this.imageUrl = '../../../../assets/img/no-image.png';
-        this._albums = [];
-        this._albums.push({
-          src: this.imageUrl,
-          caption: 'License image',
-          thumb: this.imageUrl
-        });
-        //
-      })
-  }
-  open(): void {
-    this.lightbox.open(this._albums, 0, { centerVertically: true });
-  }
+
 
   OnDestroy() {
     if (this.parentSub) {
       this.parentSub.unsubscribe();
     }
   }
-
 
   openShippingLabelToPrint(label_url: any) {
     if (label_url) {
@@ -378,7 +229,7 @@ validateShippingAddress(): Promise<boolean> {
   async downloadReceipt(type:string){
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');
-    const url = 'api/v1/new_orders/download?order_number=' + this.orderDetails.order_number_text+'&fileType='+type+'&orderId='+this.orderId;
+    const url = 'api/orders/download?order_number=' + this.orderDetails.order_number_text+'&fileType='+type+'&orderId='+this.orderId;
     await this.http.get(url, {headers: headers,  responseType: 'arraybuffer'}).toPromise().then((result) =>{
       let fileName=type=='refund_receipt'?'refund_receipt':'statement';
       fileName+='_order_'+this.orderDetails.order_number_text+'.pdf';
@@ -389,7 +240,7 @@ validateShippingAddress(): Promise<boolean> {
   async downloadOrderSummary() {
     let headers = new HttpHeaders();
     headers.set('Accept', 'application/pdf');
-    const url = `api/v1/new_orders/download/summary?order_number=${this.orderDetails.order_number_text}&order_id=${this.orderId}`;
+    const url = `api/orders/download/summary?order_number=${this.orderDetails.order_number_text}&order_id=${this.orderId}`;
     await this.http.get(url, { headers: headers, responseType: 'arraybuffer' }).toPromise().then((result) =>{
       let fileName='order_summary_'+this.orderDetails.order_number_text+'.pdf';
       this.writeContents(result,fileName,'application/pdf', false);
@@ -407,7 +258,7 @@ validateShippingAddress(): Promise<boolean> {
   refundOrderFormSubmit(formValid:boolean,modal:any) {
     if(formValid){
       this.formSubmitting = true;
-      const apiURL = 'api/v1/new_orders/refund';
+      const apiURL = 'api/orders/refund_request';
       const obj = {
         initiated_by: 'admin',
         order_id: this.orderId,
@@ -418,13 +269,11 @@ validateShippingAddress(): Promise<boolean> {
         .subscribe((data) => {
           this.formSubmitting = false;
           this.refundData = data;
-          document.getElementById('hiderefundOrderModal')?.click();
           this.toastr.showSuccess('Refund request send successfully');
           this.getOrderDetails();
           this.cdr.detectChanges();
         }, err => {
           this.formSubmitting = false;
-          document.getElementById('hiderefundOrderModal')?.click();
           this.toastr.showError('Unable to send refund request');
         });
     }else{

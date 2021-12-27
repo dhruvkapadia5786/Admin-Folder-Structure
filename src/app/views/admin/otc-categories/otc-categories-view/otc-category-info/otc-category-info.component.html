@@ -19,9 +19,9 @@
           </tbody>
         </table>
 
-         <h4 class="bg-dark text-white p-2 mt-3">
+         <h6 class="bg-light text-light p-2 mt-3">
             Attributes
-          </h4>
+          </h6>
           <div class="row" *ngIf="OTCCategoryDetails?.attributes.length > 0; else noAttributes">
             <div class="col-md-12">
               <app-change-sequence [mode]="'ATTRIBUTES'" [data]="OTCCategoryDetails.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
@@ -34,7 +34,7 @@
             </div>
           </ng-template>
 
-          <h4 class="bg-dark text-white p-2 mt-3">FAQ</h4>
+          <h6 class="bg-light text-light p-2 mt-3">FAQ</h6>
           <div class="row" *ngIf="OTCCategoryDetails?.faqs.length > 0; else noFaqs">
             <div class="col-md-12">
               <app-change-sequence [mode]="'FAQS'" [data]="OTCCategoryDetails.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>

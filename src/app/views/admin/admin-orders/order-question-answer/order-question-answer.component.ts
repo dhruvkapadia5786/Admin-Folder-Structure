@@ -161,7 +161,7 @@ export class OrderQuestionAnswerComponent implements OnInit {
 
   private _getAlardyFillDrugsByUser() {
     this.selectDrug = [];
-    const url = 'api/v1/new_orders/getUserOrderDrugs?user_id=' + this.patient.id;
+    const url = 'api/v1/orders/getUserOrderDrugs?user_id=' + this.patient.id;
     this.http.post(url, { order_id: this.orderId }).subscribe(
       (data: any) => {
         if (data.length) {
@@ -178,7 +178,7 @@ export class OrderQuestionAnswerComponent implements OnInit {
     );
   }
   private _getUserIllnesses() {
-    const url = 'api/v1/new_orders/getUserOrderIllnesses?user_id=' + this.patient.id;
+    const url = 'api/v1/orders/getUserOrderIllnesses?user_id=' + this.patient.id;
     this.http.post(url, { order_id: this.orderId }).subscribe(
       (data: any) => {
         if (data) {
@@ -196,7 +196,7 @@ export class OrderQuestionAnswerComponent implements OnInit {
   }
 
   private _getUserAllergies() {
-    const url = 'api/v1/new_orders/getUserOrderAllergies?user_id=' + this.patient.id;
+    const url = 'api/v1/orders/getUserOrderAllergies?user_id=' + this.patient.id;
     this.http.post(url, { order_id: this.orderId }).subscribe(
       (data: any) => {
         if (data) {
@@ -252,35 +252,35 @@ export class OrderQuestionAnswerComponent implements OnInit {
         };
 
       } else if (eventName == 'DRUG') {
-        api_url = 'api/v1/new_orders/userDrugs/sendConsent';
+        api_url = 'api/v1/orders/userDrugs/sendConsent';
         req = {
           user_id: this.patient.id,
           order_id: this.orderId,
           consent_message: this.consentForm.value.consentMsg
         };
       } else if (eventName == 'ILLNESS') {
-        api_url = 'api/v1/new_orders/userIllnesses/sendConsent';
+        api_url = 'api/v1/orders/userIllnesses/sendConsent';
         req = {
           user_id: this.patient.id,
           order_id: this.orderId,
           consent_message: this.consentForm.value.consentMsg
         };
       } else if (eventName == 'ALLERGY') {
-        api_url = 'api/v1/new_orders/userAllergies/sendConsent';
+        api_url = 'api/v1/orders/userAllergies/sendConsent';
         req = {
           user_id: this.patient.id,
           order_id: this.orderId,
           consent_message: this.consentForm.value.consentMsg
         };
       } else if (eventName == 'BP') {
-        api_url = 'api/v1/new_orders/userBP/sendConsent';
+        api_url = 'api/v1/orders/userBP/sendConsent';
         req = {
           user_id: this.patient.id,
           order_id: this.orderId,
           consent_message: this.consentForm.value.consentMsg
         };
       } else {
-        api_url = 'api/v1/new_orders/userBMI/sendConsent';
+        api_url = 'api/v1/orders/userBMI/sendConsent';
         req = {
           user_id: this.patient.id,
           order_id: this.orderId,

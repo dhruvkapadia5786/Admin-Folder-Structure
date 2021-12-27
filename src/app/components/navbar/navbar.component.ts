@@ -109,11 +109,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			},
 			{
 				displayName: 'Pharmacy',
-				iconName: 'fa-pills',
+				iconName: 'fa-mortar-pestle',
 				children: [
 					{ route: '/admin/drug-order', iconName: 'fa-shopping-cart', displayName: 'Pharmacy Orders' },
           { route: '/admin/products', iconName: 'fa-pills', displayName: 'Products' },
-					{ route: '/admin/user-cart-list', iconName: 'fa-list-alt', displayName: 'User Cart' }
+					{ route: '/admin/user-cart-list', iconName: 'fa-shopping-cart', displayName: 'User Cart' },
+					{ route: '/admin/drugforms', iconName: 'fa-pills', displayName: 'DrugForms' },
+					{ route: '/admin/therapies', iconName: 'fa-book-medical', displayName: 'Therapies' },
+					{ route: '/admin/packforms', iconName: 'fa-medkit', displayName: 'PackForms' }
 				]
 			},
 			{

@@ -110,7 +110,7 @@ export class CreateQuestionComponent implements OnInit {
         this.questionObj.dtc_medicine_kits = [];
       }
       this.addQuestion.get('dtc_medicine_kits')?.patchValue(this.questionObj.dtc_medicine_kits);
-    } else if (flag == 'conditions') {
+    } else if (flag == 'consultation_health_conditions') {
       if (event.checked) {
         this.questionObj.consultation_health_conditions =  this.healthConditionsList.map((data:any) => data._id);
       } else {

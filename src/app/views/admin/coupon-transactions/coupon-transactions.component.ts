@@ -88,7 +88,7 @@ export class CouponTransactionsComponent implements OnInit, AfterViewInit, OnDes
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/coupan-code/transactions/all',
+            'api/coupon_codes/transactions',
             dataTablesParameters,
             {}
           )
@@ -170,7 +170,7 @@ export class CouponTransactionsComponent implements OnInit, AfterViewInit, OnDes
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
@@ -184,11 +184,11 @@ export class CouponTransactionsComponent implements OnInit, AfterViewInit, OnDes
             let btnText='';
             items.forEach((item:any)=>{
                 if(item=='ORDER'){
-                  btnText+=`<button class="btn btn-default btn-sm m-0" orderId=${full.event_id}>View</button>`
+                  btnText+=`<button class="btn btn-default btn-sm m-0" orderId=${full.dtc_order_id}>View</button>`
                 }else if(item=='CONSULTATION'){
-                  btnText+=`<button class="btn btn-default btn-sm m-0" consultationId=${full.event_id}>View</button>`
+                  btnText+=`<button class="btn btn-default btn-sm m-0" consultationId=${full.consultation_id}>View</button>`
                 }else if(item=='DRUG_ORDER'){
-                  btnText+=`<button class="btn btn-default btn-sm m-0" pharmacyOrderId=${full.event_id}>View</button>`
+                  btnText+=`<button class="btn btn-default btn-sm m-0" pharmacyOrderId=${full.pharmacy_order_id}>View</button>`
                 }
                 else{
                   btnText=''

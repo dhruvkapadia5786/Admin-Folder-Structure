@@ -91,7 +91,7 @@ export class ViewCouponCodeComponent implements OnInit {
         this.couponCodeDetails = couponCode;
         this._changeDetectorRef.detectChanges();
       }, err => {
-
+        
       });
   }
 
@@ -110,7 +110,7 @@ export class ViewCouponCodeComponent implements OnInit {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/coupan-code/history/'+this.couponCodeId,
+            'api/v1/admin/coupan-code/history/'+this.couponCodeId,
             dataTablesParameters,
             {}
           )
@@ -193,7 +193,7 @@ export class ViewCouponCodeComponent implements OnInit {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/coupan-code/consultation/history/'+this.couponCodeId,
+            'api/v1/admin/coupan-code/consultation/history/'+this.couponCodeId,
             dataTablesParameters,
             {}
           )

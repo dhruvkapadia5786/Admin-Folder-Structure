@@ -22,15 +22,14 @@
 
                     <div class="col-md-4">
                         <h5 class="mb-3">Shipping Address</h5>
-                        <div *ngIf="orderDetails.address">
-                            <p class="mb-0">{{orderDetails.address.address_line_1?orderDetails.address.address_line_1:''}}{{ orderDetails.address.address_line_2 ? ', ':'' }}<br/>{{orderDetails.address?.address_line_2}}</p>
-                            <p class="mb-0">{{orderDetails.address.city_name?orderDetails.address.city_name:''}}{{orderDetails.address.state_name?', '+orderDetails.address.state_name:''}} {{orderDetails.address.zip_code?orderDetails.address.zip_code:''}}</p>
+                        <div *ngIf="orderDetails.shipping_address">
+                            <p class="mb-0">{{orderDetails.shipping_address.address_line_1?orderDetails.shipping_address.address_line_1:''}}{{ orderDetails.shipping_address.address_line_2 ? ', ':'' }}<br/>{{orderDetails.shipping_address?.address_line_2}}</p>
+                            <p class="mb-0">{{orderDetails.shipping_address.city?orderDetails.shipping_address.city:''}}{{orderDetails.shipping_address.state?', '+orderDetails.shipping_address.state:''}} {{orderDetails.shipping_address.zip_code?orderDetails.shipping_address.zip_code:''}}</p>
                         </div>
-                        <div *ngIf="!orderDetails.address">
+                        <div *ngIf="!orderDetails.shipping_address">
                             <p class="mb-0">Address not added yet.</p>
                         </div>
-                        <div class="text-500" *ngIf="orderDetails.is_express_shipping!=1"><strong> Shipping Method : </strong>FREE USPS First Class</div>
-                        <div class="text-500" *ngIf="orderDetails.is_express_shipping==1"><strong> Shipping Method : </strong>USPS Priority Mail</div>
+                        <div class="text-500"><strong> Shipping Method : </strong>{{orderDetails.shipping_method}}</div>
                         <button *ngIf="showChangeAddressBtn" class="btn btn-warning btn-sm" type="button" (click)="openEditAddressModal()"><i class="fa fa-pencil mr-2"></i>Change Address</button>
                     </div>
                 </div>
@@ -40,9 +39,7 @@
                     <button type="button" *ngIf="anyDrugRefunded" class="btn btn-sm btn-primary" (click)="downloadReceipt('refund_receipt')"><i class="mr-2 fa fa-download"></i>Refund Receipt</button>
                     <button type="button" class="btn btn-sm btn-danger mr-2" (click)="openRefundModal()" *ngIf="!(orderDetails.system_status == 'REFUND_PROCESSED' || orderDetails.system_status == 'REFUND_REQUESTED')"><i class="fa fa-redo mr-2"></i>Refund</button>
                 </div>
-
                 <div class="row mt-3">
-
                     <div class="col-md-12">
                             <div class="table-responsive">
                                <table class="table border-bottom table-sm table-borderless">
@@ -58,29 +55,15 @@
                                   </tr>
                                   </thead>
                                   <tbody>
-                                  <tr *ngFor="let drug of orderDetails.drugs">
+                                  <tr *ngFor="let drug of orderDetails.products">
                                       <td class="align-middle">
-                                      <h6 class="mb-0 text-nowrap font-weight-bold">{{drug.drug_name}} {{ drug.drug_dosage }}
+                                      <h6 class="mb-0 text-nowrap font-weight-bold">{{drug.product_name }}
                                           <span *ngIf="drug.product_type=='LENS'">{{ ' - '+drug.eye_type }}</span>
                                       </h6>
                                       </td>
-                                      <td class="align-middle text-center">{{drug.drug_quantity+'  '+drug.drug_form}}</td>
+                                      <td class="align-middle text-center">{{drug.quantity}}</td>
                                       <td class="align-middle text-center">
                                             <strong [innerHTML]="_drugOrderHelper.getOrderDrugCustomerOption(drug.customer_drug_option)"></strong>
-
-                                            <a *ngIf="drug.contact_lens_rx_request_url" target="_blank" class="btn btn-sm btn-primary my-2" [href]="drug.contact_lens_rx_request_url">Prescription Request</a>
-
-                                            <div class="mt-2" *ngIf="drug.customer_drug_option == 'PRESCRIPTION_FROM_OTHER_PHARMACY'">
-                                                <p class="font-weight-bold">Pharamcy Details</p>
-                                                <p class="mb-0">{{drug.transfer_pharmacy_details.store_name}}</p>
-                                                <p class="mb-0">{{drug.transfer_pharmacy_details.pharmacy_address_line1+','}}{{drug.transfer_pharmacy_details.pharmacy_address_line2 ? drug.transfer_pharmacy_details.pharmacy_address_line2+',':''}}</p>
-                                                <p class="mb-0">{{drug.transfer_pharmacy_details.pharmacy_address_city}} , {{drug.transfer_pharmacy_details.pharmacy_address_state}} - {{drug.transfer_pharmacy_details.pharmacy_address_zipcode}}</p>
-                                                <p class="mb-0">Phone: {{drug.transfer_pharmacy_details.pharmacy_phone?drug.transfer_pharmacy_details.pharmacy_phone:'-'}}</p>
-                                                <p class="mb-0">Fax: {{drug.transfer_pharmacy_details.pharmacy_fax?drug.transfer_pharmacy_details.pharmacy_fax:'-'}}</p>
-                                                <div *ngIf="drug.transfer_pharmacy_prescription_image">
-                                                    <app-image-preview [imgPath]="drug.transfer_pharmacy_prescription_image" height="250" width="350"></app-image-preview>
-                                                </div>
-                                            </div>
 
                                             <div class="mt-2" *ngIf="drug.customer_drug_option == 'PRESCRIPTION_FROM_DOCTOR' || drug.customer_drug_option == 'MANUALLY_ENTER_PRESCRIPTION'">
                                                 <p class="font-weight-bold">Physician Details</p>
@@ -143,13 +126,12 @@
                                       </td>
                                       <td class="align-middle text-right">{{ drug.tax_amount | currency:'INR'}}</td>
                                       <td class="align-middle text-right">
-                                       <p class="mb-0 font-weight-bold">{{ drug.drug_quantity_price | currency:'INR'}}</p>
+                                       <p class="mb-0 font-weight-bold">{{ drug.price | currency:'INR'}}</p>
                                        <div *ngIf="drug.offer_applied">
                                          <p  class="mb-0 text-muted"><s>{{ drug.drug_quantity_original_price | currency:'INR'}}</s></p>
                                          <a  class="text-decoration-none" [routerLink]="'/admin/offers/view-offer/'+drug.offer_applied"><span class="badge badge-danger p-2 badge-pill"><i class="fa fa-tag mr-2" aria-hidden="true"></i>OFFER {{ drug.offer_amount?(drug.offer_amount| currency:'INR'): drug.offer_percentage+'%'}} DISCOUNT</span></a>
                                        </div>
                                       </td>
-
                                   </tr>
                                   </tbody>
                               </table>
@@ -160,7 +142,7 @@
                                     <table class="table table-sm table-borderless text-right">
                                     <tbody>
                                      <tr>
-                                        <th class="text-900">Sales Tax</th>
+                                        <th class="text-900">GST</th>
                                         <td class="font-weight-semi-bold text-right">{{(orderDetails.tax_amount||0) | currency:'INR'}}</td>
                                     </tr>
                                     <tr *ngIf="orderDetails.first_order_offer_discount>0">
@@ -192,7 +174,7 @@
                                 <table class="table border-bottom table-borderless table-sm">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th>Charged From Stripe</th>
+                                            <th>Charged From Payment Gateway</th>
                                             <th>Charged From Wallet</th>
                                             <th class="text-right">Total</th>
                                         </tr>
@@ -200,14 +182,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                             <p class="font-weight-bold">{{orderDetails.charged_from_stripe | currency:'INR' }}</p>
-                                             <div class="media" *ngIf="orderDetails.payment && orderDetails.payment.details && orderDetails.payment.details.card">
-                                                <div class="media-body">
-                                                    <h6 class="mb-0">{{orderDetails.payment.details.card.brand.toUpperCase()}}</h6>
-                                                    <p class="mb-0">**** **** **** {{orderDetails.payment.details.card.last4 + ' (Expires : '+orderDetails.payment.details.card.exp_month+'/'+orderDetails.payment.details.card.exp_year+')'}}</p>
-                                                </div>
-                                            </div>
-                                            <a *ngIf="orderDetails.payment && orderDetails.payment.receipt_url" class="btn btn-sm btn-primary" target="_blank" [href]="orderDetails.payment.receipt_url">Stripe Receipt</a>
+                                             <p class="font-weight-bold">{{orderDetails.charged_from_paymentgateway | currency:'INR' }}</p>
                                             </td>
                                             <td class="font-weight-bold">{{orderDetails.charged_from_wallet | currency:'INR' }}</td>
                                             <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency:'INR'}}</td>
@@ -219,14 +194,14 @@
                                 <table class="table border-bottom table-borderless table-sm">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th>Refunded to Stripe</th>
+                                            <th>Refunded to Payment Gateway</th>
                                             <th>Refunded to Wallet</th>
                                             <th class="text-right">Refunded Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="font-weight-bold">{{orderDetails.refunded_in_stripe | currency:'INR' }}</td>
+                                            <td class="font-weight-bold">{{orderDetails.refunded_in_paymentgateway | currency:'INR' }}</td>
                                             <td class="font-weight-bold">{{orderDetails.refunded_in_wallet | currency:'INR' }}</td>
                                             <td class="font-weight-bold text-right">{{orderDetails.refunded_total | currency:'INR'}}</td>
                                         </tr>
@@ -302,43 +277,16 @@
                                             <td></td>
                                             <td></td>
                                             <td>
-                                                <ng-container *ngIf="orderDetails.assigned_to_pharmacy_id && orderDetails.pharmacy_details">
-                                                     <p class="mb-1"><strong class="mr-2">Name : </strong>{{orderDetails.pharmacy_details.pharmacy_name}}</p>
-                                                     <p class="mb-1"><strong class="mr-2">Phone: </strong>{{orderDetails.pharmacy_details.phone_number | mask: '(000) 000-0000' || '-'}}</p>
-                                                     <p class="mb-1"><strong class="mr-2">Fax: </strong>{{orderDetails.pharmacy_details.fax_number | mask: '(000) 000-0000' || '-'}}</p>
-                                                     <p class="mb-1"><strong class="mr-2">NPI Number: </strong>{{orderDetails.pharmacy_details.npi_number}}</p>
-                                                     <p class="mb-1"><strong class="mr-2">DEA Number: </strong>{{orderDetails.pharmacy_details.dea_number}}</p>
-                                                </ng-container>
-                                                <div class="mt-4"  *ngIf="orderDetails.transferred_pharmacy">
-                                                    <p class="font-weight-bold text-warning">Transferred Pharmacy</p>
-                                                    <ng-container>
-                                                        <p class="mb-1"><strong class="mr-2">Name : </strong>{{orderDetails.transferred_pharmacy.pharmacy_name}}</p>
-                                                        <p class="mb-1"><strong class="mr-2">Pharmacist: </strong>{{orderDetails.transferred_pharmacy.contact_name }}</p>
-                                                        <p class="mb-1"><strong class="mr-2">Address: </strong>
-                                                            {{orderDetails.transferred_pharmacy.address_line_1 }}
-                                                            <span *ngIf="orderDetails.transferred_pharmacy.address_line_1">,<br/></span>
-                                                            {{orderDetails.transferred_pharmacy.address_line_2 }}
-                                                            <span *ngIf="orderDetails.transferred_pharmacy.address_line_2">,<br/></span>
-                                                            {{orderDetails.transferred_pharmacy.city }}
-                                                            <span *ngIf="orderDetails.transferred_pharmacy.city">,</span>
-                                                            {{orderDetails.transferred_pharmacy.state }}
-                                                            <span  *ngIf="orderDetails.transferred_pharmacy.state">,</span>
-                                                            {{orderDetails.transferred_pharmacy.zip }}
-                                                        </p>
-
-                                                        <p class="mb-1" *ngIf="orderDetails.transferred_pharmacy.phone_number"><strong class="mr-2">Phone: </strong>{{orderDetails.transferred_pharmacy.phone_number | mask: '(000) 000-0000' || '-'}}</p>
-                                                        <p class="mb-1" *ngIf="orderDetails.transferred_pharmacy.fax_number"><strong class="mr-2">Fax: </strong>{{orderDetails.transferred_pharmacy.fax_number | mask: '(000) 000-0000' || '-'}}</p>
-                                                        <p class="mb-1" *ngIf="orderDetails.transferred_pharmacy.npi_number"><strong class="mr-2">NPI Number: </strong>{{orderDetails.transferred_pharmacy.npi_number}}</p>
-                                                        <p class="mb-1" *ngIf="orderDetails.transferred_pharmacy.dea_number"><strong class="mr-2">DEA Number: </strong>{{orderDetails.transferred_pharmacy.dea_number}}</p>
-                                                        <p class="mb-1" *ngIf="orderDetails.transferred_pharmacy.ncpdp"><strong class="mr-2">NCPDP Number: </strong>{{orderDetails.transferred_pharmacy.ncpdp}}</p>
-                                                    </ng-container>
-                                                </div>
+                                                <ng-container *ngIf="orderDetails.assigned_to_pharmacy_id">
+                                                     <p class="mb-1"><strong class="mr-2">Name : </strong>{{orderDetails.assigned_to_pharmacy_id.pharmacy_name}}</p>
+                                                     <p class="mb-1"><strong class="mr-2">Phone: </strong>{{orderDetails.assigned_to_pharmacy_id.phone_number | mask: '(000) 000-0000' || '-'}}</p>
+                                                     <p class="mb-1"><strong class="mr-2">Fax: </strong>{{orderDetails.assigned_to_pharmacy_id.fax_number | mask: '(000) 000-0000' || '-'}}</p>
+                                              </ng-container>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-
                     </div>
                 </div>
           </ng-container>
@@ -397,34 +345,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label>Shipping Addresses</label>
-                        <h5 class="m-0">{{orderDetails.address.address_line_1?orderDetails.address.address_line_1:''}}{{orderDetails.address.address_line_2 ? ', ' + orderDetails.address.address_line_2:''}}</h5>
-                        <h5 class="m-0">{{orderDetails.address.city_name?orderDetails.address.city_name:''}}{{orderDetails.address.state_name?', '+orderDetails.address.state_name:''}} {{orderDetails.address.zip_code?orderDetails.address.zip_code:''}}
-                        </h5>
-
+                        <h5 class="m-0">{{orderDetails.shipping_address.address_line_1?orderDetails.shipping_address.address_line_1:''}}{{orderDetails.shipping_address.address_line_2 ? ', ' + orderDetails.shipping_address.address_line_2:''}}</h5>
+                        <h5 class="m-0">{{orderDetails.shipping_address.city_name?orderDetails.shipping_address.city_name:''}}{{orderDetails.shipping_address.state_name?', '+orderDetails.shipping_address.state_name:''}} {{orderDetails.shipping_address.zip_code?orderDetails.shipping_address.zip_code:''}}</h5>
                         <button class="btn btn-primary" (click)="loadMapIframe()" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">View Shipping Address on Map<i class="ml-2 fa fa-map-marker" aria-hidden="true"></i></button>
                         <div class="collapse" id="collapseExample">
                             <iframe #mapIframe style="display: none;" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
                         </div>
                     </div>
                     <div class="col-md-6">
-
-                    <div>
-                        <label>Body Mass Index (latest)</label>
-                        <h5>Weight : {{patient.profile_bmi? patient.profile_bmi.weight +' lbs':'-' }}</h5>
-                        <h5>Height : {{patient.profile_bmi? patient.profile_bmi.height_feet+' Feet  '+patient.profile_bmi.height_inch+' Inch' : ' - '}}</h5>
-                        <h5>BMI    : {{patient.profile_bmi ? patient.profile_bmi.bmi : ' - ' }} <span *ngIf="patient.profile_bmi" [innerHtml]="helper.getBMITextBadge(patient.profile_bmi.bmi_text)"></span></h5>
-
-                    </div>
-
-                        <label>Blood Pressure (latest)</label>
-                        <h5> {{patient.profile_bp ?  patient.profile_bp.systolic+' / '+patient.profile_bp.diastolic +' '+ patient.profile_bp.unit  : ' - '}} <span *ngIf="patient.profile_bp" [innerHtml]="helper.getBPTextBadge(patient.profile_bp.result)"></span></h5>
-
-                        <label>Mean Arterial Pressure (latest)</label>
-                        <h5>{{patient.profile_bp ?  patient.profile_bp.mean_arterial_pressure +' '+ patient.profile_bp.unit  : ' - '}}</h5>
-
-                        <label>Pulse Pressure(latest)</label>
-                        <h5>{{patient.profile_bp ?  patient.profile_bp.pulse_pressure +' '+ patient.profile_bp.unit  : ' - '}}</h5>
-
                     </div>
                 </div>
                 <div class="row">
@@ -432,15 +360,13 @@
                         <div class="accordion td-accordian mt-4" id="licenseAccordian">
                             <div class="card">
                                 <div class="card-header" id="headingTwo">
-                                    <h3 class="mb-0">
-                                        <button class="btn btn-link waves-effect waves-light" type="button" data-toggle="collapse" data-target="#license" aria-expanded="true" aria-controls="collapseTwo">License</button>
-                                    </h3>
+                                    <h3 class="mb-0"><button class="btn btn-link waves-effect waves-light" type="button" data-toggle="collapse" data-target="#license" aria-expanded="true" aria-controls="collapseTwo">License</button></h3>
                                 </div>
                                 <div id="license" class="collapse show" aria-labelledby="headingTwo" data-parent="#licenseAccordian">
                                     <div class="card-body">
                                         <div class="mt-2">
                                             <div class="allergies">
-                                                <app-image-preview *ngIf="profileLicense && profileLicense.license_photo" [imgPath]="profileLicense.license_photo" height="250" width="350" caption="License Image"></app-image-preview>
+                                                <app-image-preview *ngIf="orderDetails.customer_license_photo" [imgPath]="orderDetails.customer_license_photo" height="250" width="350" caption="License Image"></app-image-preview>
                                             </div>
                                         </div>
                                     </div>
@@ -451,14 +377,12 @@
                     <div class="col-md-6">
                         <div class="accordion td-accordian mt-4" id="fullFaceAccordian">
                             <div class="card">
-                                <div class="card-header" id="headingTwo">
-                                    <h3 class="mb-0"><button class="btn btn-link waves-effect waves-light" type="button" data-toggle="collapse" data-target="#license" aria-expanded="true" aria-controls="collapseTwo">Full Face Image</button></h3>
-                                </div>
+                                <div class="card-header" id="headingTwo"><h3 class="mb-0"><button class="btn btn-link waves-effect waves-light" type="button" data-toggle="collapse" data-target="#license" aria-expanded="true" aria-controls="collapseTwo">Full Face Image</button></h3></div>
                                 <div id="license" class="collapse show" aria-labelledby="headingTwo" data-parent="#fullFaceAccordian">
                                     <div class="card-body">
                                         <div class="mt-2">
                                             <div class="allergies">
-                                                <app-image-preview  *ngIf="profileLicense && profileLicense.profile_photo" [imgPath]="profileLicense.profile_photo" height="250" width="350" caption="Full Face Image"></app-image-preview>
+                                                <app-image-preview  *ngIf="orderDetails.customer_profile_photo" [imgPath]="orderDetails.customer_profile_photo" height="250" width="350" caption="Full Face Image"></app-image-preview>
                                             </div>
                                         </div>
                                     </div>
@@ -477,7 +401,7 @@
         </div>
     </mat-tab>
     <mat-tab label="Subscriptions" *ngIf="orderDetails">
-        <div *ngIf="userSubscriptions.length>0">
+        <div *ngIf="userSubscriptions && userSubscriptions.length>0">
           <button class="btn btn-sm btn-primary float-right" type="button" (click)="openCreateRefillOrderModal()">Create Refill Order</button>
         </div>
         <div class="container-fluid details">
@@ -516,7 +440,7 @@
                           </td>
                         </tr>
                     </tbody>
-                    <tfoot *ngIf="orderDetails.subscription_details.length==0">
+                    <tfoot *ngIf="orderDetails.subscription_details && orderDetails.subscription_details.length==0">
                         <tr>
                             <td colspan="7">
                                 <div class="text-center text-muted">
@@ -559,7 +483,7 @@
                           </td>
                         </tr>
                     </tbody>
-                    <tfoot *ngIf="orderDetails.otc_subscriptions.length==0">
+                    <tfoot *ngIf="orderDetails.otc_subscriptions && orderDetails.otc_subscriptions.length==0">
                         <tr>
                             <td colspan="7">
                                 <div class="text-center text-muted">

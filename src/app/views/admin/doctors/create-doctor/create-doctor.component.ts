@@ -20,6 +20,12 @@ export class CreateDoctorComponent implements OnInit {
   public clinics: any;
   public selectedClinic: any;
 
+  maxDate: Date = new Date();
+  bsConfig={
+    isAnimated: true,
+    dateInputFormat: 'DD-MM-YYYY',
+ }
+
   constructor(
     private _toastr: Toastr,
     public cdr: ChangeDetectorRef,
@@ -28,7 +34,6 @@ export class CreateDoctorComponent implements OnInit {
   ) {
     this._getStates();
     this.addDoctor = new FormGroup({
-      'pet_types': new FormControl([], []),
       'company_name': new FormControl(null, [Validators.required]),
       'llc_name': new FormControl(null, [Validators.required]),
       'check_payable_to_name': new FormControl(null, [Validators.required]),
@@ -58,8 +63,8 @@ export class CreateDoctorComponent implements OnInit {
       'emailPhoneConsent': new FormControl(null),
       'is_active': new FormControl(null),
       'professional_liability_policy_number': new FormControl(null, [Validators.required]),
-      'npi_number': new FormControl(null, [Validators.required]),
-      'dea_number': new FormControl(null, [Validators.required]),
+      'registration_number': new FormControl(null, []),
+      'registration_date': new FormControl(null, []),
       'order_batch_size': new FormControl(null, [Validators.required]),
       'consultation_batch_size': new FormControl(null, [Validators.required]),
       'professional_liability_document': new FormControl(null, [Validators.required]),
@@ -68,7 +73,7 @@ export class CreateDoctorComponent implements OnInit {
       'add_memo_tab': new FormControl(null, []),
       'licenses': new FormArray([]),
       'select_from_option': new FormControl('from_list', [Validators.required]),
-      'selected_clinic_id': new FormControl(null, [Validators.required]),
+      'selected_clinic_id': new FormControl(null,[]),
       'clinic_name': new FormControl(null, []),
       'clinic_long_name': new FormControl(null, []),
       'clinic_address_line_1': new FormControl(null, []),
@@ -103,7 +108,7 @@ export class CreateDoctorComponent implements OnInit {
   }
 
   private async _getClinics() {
-    const url = 'api/clinics/available_clinics';
+    const url = 'api/clinics/active';
     this.http.get(url).subscribe(
       (data: any) => {
         this.clinics = data;
@@ -153,6 +158,7 @@ export class CreateDoctorComponent implements OnInit {
           }
 
           if (selectedOption === 'add_new') {
+            selected_clinic_idControl.setValidators(null);
             selected_clinic_idControl.clearValidators();
             clinic_nameControl.setValidators([Validators.required]);
             clinic_long_nameControl.setValidators([Validators.required]);
@@ -186,7 +192,6 @@ export class CreateDoctorComponent implements OnInit {
     this.selectedClinic = this.clinics.find((clinic: any) => clinic._id = value);
   }
 
-  get pet_types() { return this.addDoctor.get('pet_types'); }
   get company_name() { return this.addDoctor.get('company_name'); }
   get llc_name() { return this.addDoctor.get('llc_name'); }
   get check_payable_to_name() { return this.addDoctor.get('check_payable_to_name'); }
@@ -208,8 +213,8 @@ export class CreateDoctorComponent implements OnInit {
   get emailPhoneConsent() { return this.addDoctor.get('emailPhoneConsent'); }
   get is_active() { return this.addDoctor.get('is_active'); }
   get professional_liability_policy_number() { return this.addDoctor.get('professional_liability_policy_number'); }
-  get npi_number() { return this.addDoctor.get('npi_number'); }
-  get dea_number() { return this.addDoctor.get('dea_number'); }
+  get registration_number() { return this.addDoctor.get('registration_number'); }
+  get registration_date() { return this.addDoctor.get('registration_date'); }
   get order_batch_size() { return this.addDoctor.get('order_batch_size'); }
   get consultation_batch_size() { return this.addDoctor.get('consultation_batch_size'); }
 
@@ -240,11 +245,11 @@ export class CreateDoctorComponent implements OnInit {
 
   get practiceAddresses(): FormGroup {
     return new FormGroup({
-      'address_line1': new FormControl('', [Validators.required]),
-      'address_line2': new FormControl(''),
-      'city_name': new FormControl('', [Validators.required]),
+      'address_line_1': new FormControl('', [Validators.required]),
+      'address_line_2': new FormControl(''),
+      'city': new FormControl('', [Validators.required]),
       'state_id': new FormControl('', [Validators.required]),
-      'zipcode': new FormControl('', [Validators.required]),
+      'zip_code': new FormControl('', [Validators.required]),
       'is_active': new FormControl(true),
     });
   }
@@ -333,13 +338,42 @@ export class CreateDoctorComponent implements OnInit {
     }
   }
 
+  public findInvalidControls() {
+    const invalid = [];
+    const controls = this.addDoctor.controls;
+    for (const name in controls) {
+        if (controls[name].invalid) {
+            invalid.push(name);
+        }
+    }
+    return invalid;
+  }
+
   saveDoctor(): boolean | void {
+    let demo = this.findInvalidControls();
+    console.log('demo =',demo);
+
     if (this.hasPracticeAddressLengthError() || this.addDoctor.invalid) {
       this.markFormGroupTouched(this.addDoctor);
       return false;
     }
     const fd: FormData = new FormData();
-    fd.append('doctor', JSON.stringify(this.addDoctor.value));
+    let formVal= this.addDoctor.value;
+    let residentialState = this.states.find((item: any)=> item._id == formVal.residential_state_id)
+    if (residentialState){
+      formVal.residential_state = residentialState.name
+    }
+    formVal.licenses = formVal.licenses.map((item:any)=>{
+      let stFound = this.states.find((st:any)=>st._id == item.state_id);
+      item.state_name  = stFound.name;
+      return item;
+    });
+    formVal.practice_addresses = formVal.practice_addresses.map((item:any)=>{
+      let stFound:any = this.states.find((st:any)=>st._id == item.state_id);
+      item.state  =stFound.name;
+      return item;
+    });
+    fd.append('doctor', JSON.stringify(formVal));
     fd.append('professional_liability_document', this.professionalLiabilityDocument);
     const url = 'api/doctors/create';
     const data = fd;

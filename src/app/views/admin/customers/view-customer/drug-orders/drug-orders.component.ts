@@ -49,7 +49,7 @@ export class DrugOrdersComponent implements OnInit {
   }
 
   getDrugOrderData(page:number,limit:number,sortBy:string='id',sortOrder:string='DESC'){
-		this.http.get<any>(`api/drug_orders/history/${this.patientId}?page=${page}&limit=${limit}`).subscribe((resp) => {
+		this.http.get<any>(`api/pharmacy_orders/history/${this.patientId}?page=${page}&limit=${limit}`).subscribe((resp) => {
 				this.drug_orders_collection.data = resp.data;
 				this.drug_orders_collection.count= resp.total;
 				this.drug_orders_config.itemsPerPage =  resp.perPage;

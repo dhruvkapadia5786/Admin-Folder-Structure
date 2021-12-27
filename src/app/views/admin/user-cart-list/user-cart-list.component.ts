@@ -45,7 +45,7 @@ export class UserCartListComponent implements OnInit {
   loadSubscriptionsForPatients(patient:any){
     this.selectedPatient =patient;
     this.loading= true;
-    this._http.get<any>(`api/drug_orders/customer-cart/${patient.patient_id}`).subscribe((resp:any) => {
+    this._http.get<any>(`api/pharmacy_orders/customer-cart/${patient.patient_id}`).subscribe((resp:any) => {
         this.selectedPatient = {
           ...patient,
           ...resp
@@ -60,7 +60,7 @@ export class UserCartListComponent implements OnInit {
   }
 
   getPatientList(page:number,limit:number,search:string){
-		this._http.get<any>(`api/drug_orders/cart_customer_list?page=${page}&limit=${limit}&search=${search}`).subscribe((resp:any) => {
+		this._http.get<any>(`api/pharmacy_orders/cart_customer_list?page=${page}&limit=${limit}&search=${search}`).subscribe((resp:any) => {
 				this.collection.data = resp.data;
 				this.collection.count= resp.total;
 				this.config.itemsPerPage =  resp.perPage;

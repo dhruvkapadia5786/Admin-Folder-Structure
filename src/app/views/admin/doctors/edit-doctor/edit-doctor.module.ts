@@ -8,10 +8,9 @@ import { DataTablesModule } from 'angular-datatables';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ImagePreviewModule } from '../../../../shared/image-preview/image-preview.module';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [EditDoctorComponent],
@@ -21,8 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
     NgxMaskModule,
     DataTablesModule,
     MatRadioModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
+    BsDatepickerModule.forRoot(),
     MatCheckboxModule,
     ReactiveFormsModule,
     MatSelectModule,

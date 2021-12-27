@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -24,7 +24,8 @@ export class SettingsComponent implements OnInit {
     public _helper: Helper
   ) {
     this.shippingChargeSettings = new FormGroup({
-      'amount': new FormControl(null, [Validators.required]),
+      'shipping_charge_active': new FormControl(null, []),
+      'shipping_charges':new FormArray([]),
     });
 
     this.refferalSettings = new FormGroup({
@@ -38,7 +39,7 @@ export class SettingsComponent implements OnInit {
 
   }
 
-  get amount() { return this.shippingChargeSettings.get('amount'); };
+  get shipping_charge_active() { return this.shippingChargeSettings.get('shipping_charge_active'); };
 
   get referral_program_is_active() { return this.refferalSettings.get('referral_program_is_active'); };
   get reward_for_referrer_amount() { return this.refferalSettings.get('reward_for_referrer_amount'); };
@@ -51,11 +52,33 @@ export class SettingsComponent implements OnInit {
     this.getSystemSettingsDetails();
   }
 
+  newShippingCharge(): FormGroup {
+    return new FormGroup({
+      'name': new FormControl('', [Validators.required]),
+      'price': new FormControl('', [Validators.required])
+    });
+  }
+
+  addShippingCharge() {
+    this.shipping_charges().push(this.newShippingCharge());
+  }
+
+  removeShippingCharge(empIndex:number) {
+    this.shipping_charges().removeAt(empIndex);
+  }
+
+  shipping_charges(): FormArray {
+      return this.shippingChargeSettings.get("shipping_charges") as FormArray
+  }
+
   getSystemSettingsDetails(){
     const url = 'api/system_settings/view' ;
     this._http.get(url).subscribe((data:any) => {
         this.systemSettings = data;
-        this.shippingChargeSettings.patchValue({amount:data.shipping_charge});
+
+        this.shippingChargeSettings.patchValue({
+          shipping_charge_active:data.shipping_charge_active
+        });
 
         this.refferalSettings.patchValue({
           referral_program_is_active:data.referral_program_info.referral_program_is_active,
@@ -65,6 +88,18 @@ export class SettingsComponent implements OnInit {
           reward_for_referee_percent:data.referral_program_info.reward_for_referee_percent,
           max_referee_allowed:data.referral_program_info.max_referee_allowed,
         });
+
+        const shipping_chargesControl = this.shippingChargeSettings.get('shipping_charges') as FormArray;
+        if(data.shipping_charges){
+          data.shipping_charges.forEach((item:any)=>{
+            let shFormGroup = new FormGroup({
+              'name':new FormControl(item.name, [Validators.required]),
+              'price':new FormControl(item.price, [Validators.required])
+            });
+            shipping_chargesControl.push(shFormGroup);
+          });
+        }
+
 
         this._changeDetectorRef.detectChanges();
       }, err => {

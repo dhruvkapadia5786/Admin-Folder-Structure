@@ -19,7 +19,7 @@ export class DoctorViewComponent implements OnInit, AfterViewInit {
   constructor(
     public http: HttpClient,
     private route: ActivatedRoute,
-    private helper: Helper,
+    public helper: Helper,
     private sanitizer: DomSanitizer
   ) {
     this.doctorId = this.route.snapshot.params.id;
@@ -39,8 +39,8 @@ export class DoctorViewComponent implements OnInit, AfterViewInit {
     this.http.get(url)
       .subscribe((doctor: any) => {
         this.doctorDetails = doctor;
-        if (this.doctorDetails.professional_liability_document) {
-          this.getImage(this.doctorDetails.professional_liability_document);
+        if (this.doctorDetails.professional_details.professional_liability_document) {
+          this.getImage(this.doctorDetails.professional_details.professional_liability_document);
         } else {
           this.imageUrl = 'assets/img/no-image.png';
         }
@@ -75,11 +75,11 @@ export class DoctorViewComponent implements OnInit, AfterViewInit {
 
   }
 
-  manageAccountService(){
-    let url = 'api/doctors/manage_account_service';
+  manageAccountUsage(){
+    let url = 'api/general/manage-account-login';
     this.http.post(url,{
-      doctor_id:this.doctorId,
-      status:this.doctorDetails.account_service_enabled==0?1:0
+      user_id:this.doctorId,
+      is_active:!this.doctorDetails.is_active
     }).subscribe((res: any) => {
         this.getDoctorDetails();
     },(err: any) => {
@@ -87,11 +87,11 @@ export class DoctorViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  manageAccountUsage(){
-    let url = 'api/doctors/manage_account_usage';
+  manageAccountService(){
+    let url = 'api/general/manage-account-service';
     this.http.post(url,{
-      doctor_id:this.doctorId,
-      status:this.doctorDetails.is_active==0?1:0
+      user_id:this.doctorId,
+      account_service_enabled:!this.doctorDetails.account_service_enabled
     }).subscribe((res: any) => {
         this.getDoctorDetails();
     },(err: any) => {

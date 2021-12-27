@@ -114,31 +114,31 @@ export class CreateCouponCodeComponent implements OnInit {
   }
 
   get notSelectedStates() {
-    return this.statesList.filter((data: any) => !this.couponCodeObj.states.some((b: any) => b === data.id)).length
+    return this.statesList.filter((data: any) => !this.couponCodeObj.states.some((b: any) => b === data._id)).length
   }
 
   get notSelectedKits() {
-    return this.kitList.filter((data: any) => !this.couponCodeObj.kits.some((b: any) => b === data.id)).length
+    return this.kitList.filter((data: any) => !this.couponCodeObj.kits.some((b: any) => b === data._id)).length
   }
 
   get notSelectedcategory() {
-    return this.categoryList.filter((data: any) => !this.couponCodeObj.coupon_category.some((b: any) => b === data.id)).length
+    return this.categoryList.filter((data: any) => !this.couponCodeObj.coupon_category.some((b: any) => b === data._id)).length
   }
 
   get notSelectedhealthKits() {
-    return this.healthKitList.filter((data: any) => !this.couponCodeObj.health_conditions.some((b: any) => b === data.id)).length
+    return this.healthKitList.filter((data: any) => !this.couponCodeObj.health_conditions.some((b: any) => b === data._id)).length
   }
 
   public handleCheckAll(event: any, flag: any) {
     if (flag == 'state') {
       if (event.checked) {
-        this.couponCodeObj.states = this.statesList.map((data: any) => data.id);
+        this.couponCodeObj.states = this.statesList.map((data: any) => data._id);
       } else {
         this.couponCodeObj.states = [];
       }
     } else if (flag == 'kit') {
       if (event.checked) {
-        this.couponCodeObj.kits = this.kitList.map((data: any) => data.id);
+        this.couponCodeObj.kits = this.kitList.map((data: any) => data._id);
       } else {
         this.couponCodeObj.kits = [];
       }
@@ -162,7 +162,7 @@ export class CreateCouponCodeComponent implements OnInit {
       }
     } else if (flag == 'health_conditions') {
       if (event.checked) {
-        this.couponCodeObj.health_conditions = this.healthKitList.map((data: any) => data.id);
+        this.couponCodeObj.health_conditions = this.healthKitList.map((data: any) => data._id);
       } else {
         this.couponCodeObj.health_conditions = [];
       }
@@ -215,8 +215,8 @@ export class CreateCouponCodeComponent implements OnInit {
       this._helper.markFormGroupTouched(this.addCouponCode);
       return;
     }
-    this.couponCodeObj.start = moment.tz(this.couponCodeObj.start, 'America/New_York').format('YYYY-MM-DD HH:mm:ss');
-    this.couponCodeObj.expiry = moment.tz(this.couponCodeObj.expiry, 'America/New_York').format('YYYY-MM-DD HH:mm:ss');
+    this.couponCodeObj.start = moment.tz(this.couponCodeObj.start, 'Asia/Calcutta').format('YYYY-MM-DD HH:mm:ss');
+    this.couponCodeObj.expiry = moment.tz(this.couponCodeObj.expiry, 'Asia/Calcutta').format('YYYY-MM-DD HH:mm:ss');
     const url = 'api/coupon_codes/create';
     const req = this.couponCodeObj;
 

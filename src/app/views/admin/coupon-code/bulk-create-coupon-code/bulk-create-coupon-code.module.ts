@@ -5,6 +5,7 @@ import { BulkCreateCouponCodeRoutingModule } from './bulk-create-coupon-code-rou
 import { BulkCreateCouponCodeComponent } from './bulk-create-coupon-code.component';
 import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -16,6 +17,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     SharedModule,
     BsDatepickerModule.forRoot(),
 		DatepickerModule.forRoot(),
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     MatCheckboxModule,
     MatSelectModule,
     MatRadioModule,

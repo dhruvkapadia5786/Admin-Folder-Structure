@@ -38,13 +38,13 @@ export class DoctorListComponent implements OnInit {
         ST: []
       }
     };
-    this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'teledaddyuser_ptr_id','DESC');
+    this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'created_at',-1);
     this.getAllFilterList();
   }
 
   ngOnInit() {}
 
-  getDoctorList(page:number,limit:number,sortBy:string='teledaddyuser_ptr_id',sortOrder:string='DESC',search:string='',filter:any=this.doctor_config.filter){
+  getDoctorList(page:number,limit:number,sortBy:string='created_at',sortOrder:any=-1,search:string='',filter:any=this.doctor_config.filter){
     let body = {
       page: page,
       limit: limit,
@@ -79,12 +79,12 @@ export class DoctorListComponent implements OnInit {
   public handleCheckAll (event:any, flag:any) {
     if (flag == 'ST') {
       if (event.checked) {
-        this.doctor_config.filter.ST = this.stateList.map(({id}) => id);
+        this.doctor_config.filter.ST = this.stateList.map(({_id}) => _id);
       } else {
         this.doctor_config.filter.ST = [];
       }
     }
-    this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'teledaddyuser_ptr_id','DESC','',this.doctor_config.filter);
+    this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'created_at',-1,'',this.doctor_config.filter);
   }
 
   /* Handle Partial check all */
@@ -96,12 +96,12 @@ export class DoctorListComponent implements OnInit {
     event = typeof event == 'object' ? event.target.value : event;
 
     if (eventName == 'SEARCH') {
-      this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'teledaddyuser_ptr_id','DESC', event);
+      this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'created_at',-1, event);
     } else if (eventName == 'LIMIT' && event) {
       this.doctor_config.itemsPerPage = event
-      this.getDoctorList(this.doctor_config.currentPage,event,'teledaddyuser_ptr_id','DESC');
+      this.getDoctorList(this.doctor_config.currentPage,event,'created_at',-1);
     } else if(eventName == 'ST') {
-      this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'teledaddyuser_ptr_id','DESC','',this.doctor_config.filter);
+      this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'created_at',-1,'',this.doctor_config.filter);
     }
   }
 
@@ -111,7 +111,7 @@ export class DoctorListComponent implements OnInit {
 
   pageChanged(event:any){
 			this.doctor_config.currentPage = event;
-      this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'teledaddyuser_ptr_id','DESC');
+      this.getDoctorList(this.doctor_config.currentPage,this.doctor_config.itemsPerPage,'created_at',-1);
 	}
 
   goToDetailsPage(doctorID: any): any {

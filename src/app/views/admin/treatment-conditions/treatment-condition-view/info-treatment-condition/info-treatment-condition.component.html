@@ -17,7 +17,7 @@
           </tbody>
         </table>
 
-      <h4 class="bg-dark text-white p-2 mt-3">Attributes</h4>
+      <h6 class="bg-light text-dark p-2 mt-3">Attributes</h6>
       <div class="row" *ngIf="conditionDetails?.attributes.length > 0; else noAttributes">
         <div class="col-md-12">
           <app-change-sequence [mode]="'ATTRIBUTES'" [data]="conditionDetails.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
@@ -30,7 +30,7 @@
         </div>
       </ng-template>
 
-      <h4 class="bg-dark text-white p-2 mt-3">FAQ</h4>
+      <h6 class="bg-light text-dark p-2 mt-3">FAQ</h6>
       <div class="row" *ngIf="conditionDetails?.faqs.length > 0; else noFaqs">
         <div class="col-md-12">
           <app-change-sequence [mode]="'FAQS'" [data]="conditionDetails.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>

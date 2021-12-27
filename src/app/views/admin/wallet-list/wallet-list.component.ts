@@ -152,7 +152,7 @@ export class WalletListComponent implements OnInit,AfterViewInit,OnDestroy{
             className: 'text-center  font-weight-normal',
             render: function (data: any, type: any, full: any) {
               return `
-              <button class="btn btn-sm btn-danger" type="button" walletId=${full._id}><i class="fa fa-usd mr-2"></i>Add Fund</button>
+              <button class="btn btn-sm btn-danger" type="button" walletId=${full._id}><i class="fas fa-rupee-sign mr-2"></i>Add Fund</button>
               <button class="btn btn-sm btn-primary m-0" type="button" customerId=${full._id}>View Transactions</button>`;
             },
             orderable: false

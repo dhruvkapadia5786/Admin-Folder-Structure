@@ -22,8 +22,6 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
   doctorTableData = new Array();
   dtOptions: any;
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
-  // @ViewChild(ModalDirective) modal: ModalDirective;
-  // @ViewChild(DaterangepickerDirective) pickerDirective: DaterangepickerDirective;
 
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
   dtTrigger: Subject<any> = new Subject();
@@ -94,8 +92,7 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
         return couponIds;
       }).then((data:any) => {
         if (couponIds.length > 0) {
-          this.selectedCouponCodeIds = couponIds.toArray().map((coupon:any)=>coupon.id);
-
+          this.selectedCouponCodeIds = couponIds.toArray().map((coupon:any)=>coupon._id);
 
           if(modal == 'DELETE') {
             this.modalRef = this.modalService.show(ConfirmDeleteCouponModalComponent)
@@ -107,8 +104,8 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
           } else if(modal == 'EDIT') {
             this.modalRef = this.modalService.show(BulkEditCouponModalComponent, {class: 'modal-x-lg'})
             this.modalRef.content.onEventCompleted.subscribe((validForm: any) => {
-              this.is_change_amount_flag = validForm.is_change_amount_flag
-              this.updateCouponCode(validForm.form)
+              this.is_change_amount_flag = validForm.is_change_amount
+              this.updateCouponCode(validForm)
             });
           }
         } else {
@@ -120,7 +117,7 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
   deleteSelectedCouponCode() {
     this._http
     .post<any>(
-      'api/coupan-code/bulk-soft-delete',
+      'api/coupon_codes/bulk-soft-delete',
       {'couponIds': this.selectedCouponCodeIds}
     )
     .subscribe((resp) => {
@@ -131,20 +128,20 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  updateCouponCode(bulkUpdateCouponCode: any) {
+  updateCouponCode(bulkUpdateCouponCode: any){
     let dataToBeUpdate: any = {
       is_change_amount_flag: this.is_change_amount_flag
     };
     dataToBeUpdate.couponIds = this.selectedCouponCodeIds
-    dataToBeUpdate.expiry = moment.tz(bulkUpdateCouponCode.get('expiry')?.value, 'America/New_York').format('YYYY-MM-DD HH:mm:ss');
-    dataToBeUpdate.is_active = bulkUpdateCouponCode.get('is_active')?.value;
+    dataToBeUpdate.expiry = moment.tz(bulkUpdateCouponCode.expiry, 'Asia/Calcutta').format('YYYY-MM-DD HH:mm:ss');
+    dataToBeUpdate.is_active = bulkUpdateCouponCode.is_active;
 
     if (this.is_change_amount_flag) {
-      dataToBeUpdate.discount_amount = (bulkUpdateCouponCode.get('discount_amount')?.value) ? bulkUpdateCouponCode.get('discount_amount')?.value : 0;
-      dataToBeUpdate.discount_percent = (bulkUpdateCouponCode.get('discount_percent')?.value) ? bulkUpdateCouponCode.get('discount_percent')?.value : 0;
+      dataToBeUpdate.discount_amount = (bulkUpdateCouponCode.discount_amount) ? bulkUpdateCouponCode.discount_amount : 0;
+      dataToBeUpdate.discount_percent = (bulkUpdateCouponCode.discount_percent) ? bulkUpdateCouponCode.discount_percent : 0;
     }
 
-    const url = 'api/coupan-code/bulk-update';
+    const url = 'api/coupon_codes/bulk-update';
     const req = dataToBeUpdate;
     this._http.post(url, req).subscribe((data: any) => {
       this.selectedCouponCodeIds = null;
@@ -206,12 +203,12 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
           render: (data: any) => {
             let badgesText='';
             data.forEach((item:any)=>{
-                if(item=='PET_DTC_ORDER'){
+                if(item=='DTC_ORDER'){
                   badgesText+=`<span class="badge badge-success mr-2">ORDER</span>`
                 }
-                else if(item=='PET_CONSULTATION'){
+                else if(item=='CONSULTATION'){
                   badgesText+=`<span class="badge badge-warning mr-2">CONSULTATION</span>`
-                }else if(item=='PET_PHARMACY_ORDER'){
+                }else if(item=='PHARMACY_ORDER'){
                   badgesText+=`<span class="badge badge-primary mr-2">PHARMACY ORDER</span>`
                 }else{
 
@@ -277,7 +274,7 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
           className: 'text-center  font-weight-normal',
           render: (data: any) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDateFromUnixTimestamp(data, 'MM/DD/YYYY');
             } else {
               return '<span></span>';
             }
@@ -317,7 +314,7 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
           orderable: false
         },
         {
-          data: 'deleted',
+          data: 'deleted_at',
           title: 'Deleted',
           className: 'text-center  font-weight-normal',
           render: (data:any) => {
@@ -331,6 +328,8 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
       ]
     };
   }
+
+
   rerender(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
@@ -339,6 +338,7 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
       this.dtTrigger.next();
     });
   }
+
   ngAfterViewInit(): void {
     this.dtTrigger.next();
     this._renderer.listen('document', 'click', (event: any) => {
@@ -350,9 +350,11 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
   goToDetailsPage(couponCodeID: any): any {
     this.router.navigate(['admin', 'coupon-code', 'view-coupon-code', couponCodeID]);
   }
+
   goToEditPage(couponCodeEditID: any): any {
     this.router.navigate(['admin', 'coupon-code', 'edit-coupon-code', couponCodeEditID]);
   }
@@ -362,11 +364,13 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
       this.rerender()
     }
   }
+
   setDateRangeFilter(dateRange: any): void {
-    this.couponcode_config.filter.dateRange = [moment(dateRange.start).tz('America/New_York').format('YYYY-MM-DD'), moment(dateRange.end).tz('America/New_York').format('YYYY-MM-DD')]
+    this.couponcode_config.filter.dateRange = [moment(dateRange.start).tz('Asia/Calcutta').format('YYYY-MM-DD'), moment(dateRange.end).tz('Asia/Calcutta').format('YYYY-MM-DD')]
     this.rerender();
   }
-  clearFilter() {
+
+  clearFilter(){
     this.couponcode_config = {
       filter: {
         STATUS: '',
@@ -379,4 +383,5 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
     // this.pickerDirective.clear();
     $('#coupanCodeList').DataTable().ajax.reload();
   }
+
 }

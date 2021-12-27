@@ -17,6 +17,11 @@ export class EditDoctorComponent implements OnInit {
   practice_addresses!: FormGroup;
   professionalLiabilityDocument!:File;
 
+  maxDate: Date = new Date();
+  bsConfig={
+    isAnimated: true,
+    dateInputFormat: 'DD-MM-YYYY',
+  }
   public addressError: boolean = false;
   public licenseError: boolean = false;
   public states: any[]=[];
@@ -52,8 +57,8 @@ export class EditDoctorComponent implements OnInit {
       'emailPhoneConsent': new FormControl(null),
       'is_active': new FormControl(null),
       'professional_liability_policy_number': new FormControl(null,[Validators.required]),
-      'npi_number': new FormControl(null, [Validators.required]),
-      'dea_number': new FormControl(null, [Validators.required]),
+      'registration_number': new FormControl(null, []),
+      'registration_date': new FormControl(null, []),
       'order_batch_size': new FormControl(null, [Validators.required]),
       'consultation_batch_size': new FormControl(null, [Validators.required]),
       'professional_liability_document': new FormControl(null),
@@ -92,8 +97,8 @@ export class EditDoctorComponent implements OnInit {
   get is_active() { return this.addDoctor.get('is_active'); }
   get add_memo_tab() { return this.addDoctor.get('add_memo_tab'); }
 
-  get npi_number() { return this.addDoctor.get('npi_number'); }
-  get dea_number() { return this.addDoctor.get('dea_number'); }
+  get registration_number() { return this.addDoctor.get('registration_number'); }
+  get registration_date() { return this.addDoctor.get('registration_date'); }
   get order_batch_size() { return this.addDoctor.get('order_batch_size'); }
   get consultation_batch_size() { return this.addDoctor.get('consultation_batch_size'); }
 
@@ -113,51 +118,52 @@ export class EditDoctorComponent implements OnInit {
    * Retrieves Doctor Details to be edited
    */
   public getDoctorDetails() {
-    const url = 'api/doctors/details/' + this.doctorId;
+    const url = 'api/doctors/view/' + this.doctorId;
     this.http.get(url)
       .subscribe((doctor: any) => {
         this.doctorObj=doctor;
         this.addDoctor.patchValue({
-          id : doctor.id,
-          company_name : doctor.company_name,
-          llc_name : doctor.llc_name,
-          check_payable_to_name : doctor.check_payable_to_name,
+          id : doctor._id,
+          company_name : doctor.professional_details.company_name,
+          llc_name : doctor.professional_details.llc_name,
+          check_payable_to_name : doctor.professional_details.check_payable_to_name,
           first_name : doctor.first_name,
           last_name : doctor.last_name,
-          display_name : doctor.display_name,
-          fax_number :doctor.fax_number,
+          suffix : doctor.suffix,
+          display_name : doctor.professional_details.display_name,
+          fax_number :doctor.professional_details.fax_number,
           gender : doctor.gender,
           email : doctor.email,
           date_of_birth : doctor.date_of_birth,
 
-          residential_address_1:doctor.residential_address.address_line_1,
-          residential_address_2:doctor.residential_address.address_line_2,
-          residential_city:doctor.residential_address.city_name,
-          residential_state_id:doctor.residential_address.state_id,
-          residential_zipcode:doctor.residential_address.zip_code,
+          residential_address_1:doctor.default_address.address_line_1,
+          residential_address_2:doctor.default_address.address_line_2,
+          residential_city:doctor.default_address.city,
+          residential_state_id:doctor.default_address.state_id,
+          residential_zipcode:doctor.default_address.zip_code,
 
           cell_phone_number:doctor.cell_phone_number,
           emailPhoneConsent: doctor.emailPhoneConsent,
           is_active: doctor.is_active,
           add_memo_tab:doctor.add_memo_tab,
 
-          professional_liability_policy_number:doctor.professional_liability_policy_number,
-          professional_liability_document_expiry_date:doctor.professional_liability_document_expiry_date,
-          npi_number:doctor.npi_number,
-          dea_number:doctor.dea_number,
-          order_batch_size:doctor.order_batch_size,
-          consultation_batch_size:doctor.consultation_batch_size
+          professional_liability_policy_number:doctor.professional_details.professional_liability_policy_number,
+          professional_liability_document_expiry_date:doctor.professional_details.professional_liability_document_expiry_date,
+          registration_number:doctor.professional_details.registration_number,
+          registration_date:doctor.professional_details.registration_date,
+          order_batch_size:doctor.professional_details.order_batch_size,
+          consultation_batch_size:doctor.professional_details.consultation_batch_size
         });
-        this.cdr.detectChanges();
-         this.doctorObj.practice_addresses.forEach((address:any) => {
+         this.cdr.detectChanges();
+         this.doctorObj.addresses.forEach((address:any) => {
           let address2 = address.address_line_2?address.address_line_2:null;
           const addressControl = this.addDoctor.get('practice_addresses') as FormArray;
           const addControl = new FormGroup({
-            'address_line1': new FormControl(address.address_line_1, [Validators.required]),
-            'address_line2': new FormControl(address2),
-            'city_name': new FormControl(address.city_name, [Validators.required]),
+            'address_line_1': new FormControl(address.address_line_1, [Validators.required]),
+            'address_line_2': new FormControl(address2),
+            'city': new FormControl(address.city, [Validators.required]),
             'state_id': new FormControl(address.state_id, [Validators.required]),
-            'zipcode': new FormControl(address.zip_code, [Validators.required]),
+            'zip_code': new FormControl(address.zip_code, [Validators.required]),
             'is_active': new FormControl(address.is_active, []),
           });
           addressControl.push(addControl);
@@ -180,11 +186,11 @@ export class EditDoctorComponent implements OnInit {
 
   get practiceAddresses(): FormGroup {
     return new FormGroup({
-      'address_line1': new FormControl('', [Validators.required]),
-      'address_line2': new FormControl(''),
-      'city_name': new FormControl('', [Validators.required]),
+      'address_line_1': new FormControl('', [Validators.required]),
+      'address_line_2': new FormControl(''),
+      'city': new FormControl('', [Validators.required]),
       'state_id': new FormControl('', [Validators.required]),
-      'zipcode': new FormControl('', [Validators.required]),
+      'zip_code': new FormControl('', [Validators.required]),
       'is_active': new FormControl(true),
     });
   }
@@ -258,7 +264,22 @@ export class EditDoctorComponent implements OnInit {
     }
 
     const fd: FormData = new FormData();
-    fd.append('doctor', JSON.stringify(this.addDoctor.value));
+    let formVal= this.addDoctor.value;
+    let residentialState = this.states.find((item: any)=> item._id == formVal.residential_state_id)
+    if (residentialState){
+      formVal.residential_state = residentialState.name
+    }
+    formVal.licenses = formVal.licenses.map((item:any)=>{
+      let stFound = this.states.find((st:any)=>st._id == item.state_id);
+      item.state_name  = stFound.name;
+      return item;
+    });
+    formVal.practice_addresses = formVal.practice_addresses.map((item:any)=>{
+      let stFound:any = this.states.find((st:any)=>st._id == item.state_id);
+      item.state  =stFound.name;
+      return item;
+    });
+    fd.append('doctor', JSON.stringify(formVal));
     if(this.professionalLiabilityDocument){
       fd.append('professional_liability_document',this.professionalLiabilityDocument);
     }else{
@@ -279,17 +300,16 @@ export class EditDoctorComponent implements OnInit {
       },
       err => {
         this.toastr.showError('Unable to edit doctor.');
-
       }
-    );
-  }
+    )}
 
-  private async _getStates() {
+  private async _getStates(){
     const url = 'api/system_states/all';
     this.http.get(url).subscribe((data: any) => {
         this.states = data;
       },
       (err) => {
+
       }
     );
   }
@@ -297,7 +317,7 @@ export class EditDoctorComponent implements OnInit {
   public getStateList(currentStateId: number) {
     let selectedStateIds = this.addDoctor.get('licenses')?.value.map((e: any) => e.state_id)
     selectedStateIds.splice(selectedStateIds.indexOf(currentStateId), 1)
-    var filtered = this.states.filter(({ id }) => !selectedStateIds.includes(id));
+    var filtered = this.states.filter(({ _id }) => !selectedStateIds.includes(_id));
     return filtered;
   }
 

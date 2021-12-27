@@ -97,14 +97,14 @@
         <div class="col-md-6">
           <label>Gender</label><br />
           <div class="custom-control custom-radio">
-            <input class="custom-control-input" type="radio" name="gender" id="gender_male" [value]="1"
+            <input class="custom-control-input" type="radio" name="gender" id="gender_male" value="male"
               formControlName="gender">
             <label class="custom-control-label" for="gender_male">
               Male
             </label>
           </div>
           <div class="custom-control custom-radio">
-            <input class="custom-control-input" type="radio" name="gender" id="gender_female" [value]="2"
+            <input class="custom-control-input" type="radio" name="gender" id="gender_female" value="female"
             formControlName="gender">
             <label class="custom-control-label" for="gender_female">
               Female
@@ -113,13 +113,11 @@
         </div>
         <div class="col-md-6">
           <label class="float-left">Date Of Birth</label>
-          <!-- <input matInput [matDatepicker]="date_of_birth" (click)="date_of_birth?.open()" class="form-control input-lg"
-            formControlName='date_of_birth' placeholder="MM/DD/YYYY">
-          <mat-datepicker #date_of_birth></mat-datepicker>
+          <input  class="form-control"  type="text"  placeholder="Enter Date of Birth" formControlName="date_of_birth" bsDatepicker [maxDate]="maxDate"  [bsConfig]="bsConfig"/>
           <div class="invalid-feedback" *ngIf="date_of_birth?.invalid && (date_of_birth?.dirty || date_of_birth?.touched)"
             class="text-danger font-weight-bold">
             <div *ngIf="date_of_birth?.errors?.required">Date Of Birth is required.</div>
-          </div> -->
+          </div>
         </div>
       </div>
 
@@ -214,12 +212,12 @@
             </div>
           </div>
           <div class="col-md-6">
-            <label class="float-left">NPI Number</label>
-            <input type="text" id="npi_number" formControlName="npi_number" class="form-control input-lg"
-              placeholder="Enter NPI Number" />
-            <div class="invalid-feedback" *ngIf="npi_number?.invalid && (npi_number?.dirty || npi_number?.touched)"
+            <label class="float-left">Registration Number</label>
+            <input type="text" id="registration_number" formControlName="registration_number" class="form-control input-lg"
+              placeholder="Enter Registration Number" />
+            <div class="invalid-feedback" *ngIf="registration_number?.invalid && (registration_number?.dirty || registration_number?.touched)"
               class="text-danger font-weight-bold">
-              <div *ngIf="npi_number?.errors?.required">NPI number is required.</div>
+              <div *ngIf="registration_number?.errors?.required">Registration number is required.</div>
             </div>
           </div>
         </div>
@@ -227,13 +225,8 @@
       <div class="form-group">
         <div class="form-row">
           <div class="col-md-6">
-            <label class="float-left">DEA Number</label>
-            <input type="text" id="dea_number" class="form-control" placeholder="Enter DEA Number"
-              formControlName="dea_number" />
-            <div class="invalid-feedback" *ngIf="dea_number?.invalid && (dea_number?.dirty || dea_number?.touched)"
-              class="text-danger font-weight-bold">
-              <div *ngIf="dea_number?.errors?.required">DEA number is required.</div>
-            </div>
+            <label class="float-left">Registration Date</label>
+            <input  class="form-control"  type="text"  placeholder="Enter Registration Date" formControlName="registration_date" bsDatepicker [maxDate]="maxDate"  [bsConfig]="bsConfig"/>
           </div>
           <div class="col-md-6">
             <label class="float-left">Check Payable To Name</label>
@@ -263,9 +256,7 @@
           </div>
           <div class="col-md-6">
             <label class="float-left">Professional Liability Document Expiry Date</label>
-            <input matInput [matDatepicker]="expiry_picker" (click)="expiry_picker.open()" class="form-control input-lg"
-              formControlName='professional_liability_document_expiry_date' placeholder="MM/DD/YYYY">
-            <mat-datepicker #expiry_picker></mat-datepicker>
+            <input  class="form-control"  type="text"  placeholder="Ente Expiry date" formControlName="professional_liability_document_expiry_date" bsDatepicker  [bsConfig]="bsConfig"/>
             <div class="invalid-feedback"
               *ngIf="professional_liability_document_expiry_date?.invalid && (professional_liability_document_expiry_date?.dirty || professional_liability_document_expiry_date?.touched)"
               class="text-danger font-weight-bold">
@@ -348,7 +339,7 @@
             <label class="d-block">State</label>
             <mat-select placeholder="Enter State" (selectionChange)="getStateChange($event.value)"
               formControlName="residential_state_id" class="form-control input-lg">
-              <mat-option *ngFor="let state of states" [value]="state.id">
+              <mat-option *ngFor="let state of states" [value]="state._id">
                 {{state.name}}
               </mat-option>
             </mat-select>
@@ -522,22 +513,22 @@
             <div class="form-row">
               <div class="col-md-6">
                 <label class="float-left">Address Line 1</label>
-                <input type="text" id="address_line1" class="form-control" placeholder="Enter Address Line 1"
-                  formControlName="address_line1" />
+                <input type="text" id="address_line_1" class="form-control" placeholder="Enter Address Line 1"
+                  formControlName="address_line_1" />
                 <div class="invalid-feedback"
-                  *ngIf="address.get('address_line1')?.invalid && (address.get('address_line1')?.dirty || address.get('address_line1')?.touched)"
+                  *ngIf="address.get('address_line_1')?.invalid && (address.get('address_line_1')?.dirty || address.get('address_line_1')?.touched)"
                   class="text-danger font-weight-bold">
-                  <div *ngIf="address.get('address_line1')?.errors?.required"> Address Line 1 is required.</div>
+                  <div *ngIf="address.get('address_line_1')?.errors?.required"> Address Line 1 is required.</div>
                 </div>
               </div>
               <div class="col-md-6">
                 <label class="float-left">Address Line 2</label>
-                <input type="text" id="address_line2" class="form-control" placeholder="Enter Address Line 2"
-                  formControlName="address_line2" />
+                <input type="text" id="address_line_2" class="form-control" placeholder="Enter Address Line 2"
+                  formControlName="address_line_2" />
                 <div class="invalid-feedback"
-                  *ngIf="address.get('address_line2')?.invalid && (address.get('address_line2')?.dirty || address.get('address_line2')?.touched)"
+                  *ngIf="address.get('address_line_2')?.invalid && (address.get('address_line_2')?.dirty || address.get('address_line_2')?.touched)"
                   class="text-danger font-weight-bold">
-                  <div *ngIf="address.get('address_line2')?.errors?.required"> Address Line 2 is required.</div>
+                  <div *ngIf="address.get('address_line_2')?.errors?.required"> Address Line 2 is required.</div>
                 </div>
               </div>
             </div>
@@ -555,9 +546,8 @@
               </div>
               <div class="col-md-6">
                 <label class="float-left">State</label>
-                <!-- <input type="text" id="state_id" class="form-control" placeholder="Enter state" formControlName="state_id" /> -->
                 <mat-select placeholder="Enter State" formControlName="state_id" class="form-control input-lg">
-                  <mat-option *ngFor="let state of states" [value]="state.id">
+                  <mat-option *ngFor="let state of states" [value]="state._id">
                     {{state.name}}
                   </mat-option>
                 </mat-select>
@@ -572,12 +562,12 @@
             <div class="form-row">
               <div class="col-md-6">
                 <label class="float-left">Zipcode</label>
-                <input type="text" id="zipcode" class="form-control" placeholder="Enter Zipcode"
-                  formControlName="zipcode" />
+                <input type="text" id="zip_code" class="form-control" placeholder="Enter Zipcode"
+                  formControlName="zip_code" />
                 <div class="invalid-feedback"
-                  *ngIf="address.get('zipcode')?.invalid && (address.get('zipcode')?.dirty || address.get('zipcode')?.touched)"
+                  *ngIf="address.get('zip_code')?.invalid && (address.get('zip_code')?.dirty || address.get('zip_code')?.touched)"
                   class="text-danger font-weight-bold">
-                  <div *ngIf="address.get('zipcode')?.errors?.required"> Zipcode is required.</div>
+                  <div *ngIf="address.get('zip_code')?.errors?.required"> zip_code is required.</div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -599,7 +589,6 @@
     <div class="alert alert-primary my-3">
       <div class="alert alert-primary my-3">
         <h5 class="font-weight-bold mb-3">Licenses</h5>
-
         <div class="alert alert-danger" *ngIf="licenseError">
           <h5>Atleast one license is required!</h5>
         </div>
@@ -610,8 +599,7 @@
               <div class="form-row">
                 <div class="col-md-6">
                   <label class="float-left">License number #{{licensesIndex +1}}</label>
-                  <input type="text" id="license_number" class="form-control" placeholder="Enter License Number"
-                    formControlName="license_number" />
+                  <input type="text" id="license_number" class="form-control" placeholder="Enter License Number" formControlName="license_number" />
                   <div class="invalid-feedback"
                     *ngIf="license.get('license_number')?.invalid && (license.get('license_number')?.dirty || license.get('license_number')?.touched)"
                     class="text-danger font-weight-bold">
@@ -620,9 +608,7 @@
                 </div>
                 <div class="col-md-6">
                   <label class="d-block">Expiry Date </label>
-                  <!-- <input matInput [matDatepicker]="picker" (click)="picker.open()" class="form-control input-lg"
-                    formControlName='expiry_date' [matDatepickerFilter]="DateFilter" placeholder="MM/DD/YYYY">
-                  <mat-datepicker #picker></mat-datepicker> -->
+                  <input  class="form-control"  type="text"  placeholder="Enter Date of Birth" formControlName="expiry_date" bsDatepicker   [bsConfig]="bsConfig"/>
                   <div class="invalid-feedback"
                     *ngIf="license.get('expiry_date')?.invalid && (license.get('expiry_date')?.dirty || license.get('expiry_date')?.touched)"
                     class="text-danger font-weight-bold">
@@ -636,7 +622,7 @@
                 <div class="col-md-6">
                   <label class="float-left">State</label>
                   <mat-select placeholder="Enter State" formControlName="state_id" class="form-control input-lg">
-                    <mat-option *ngFor="let state of getStateList(license.get('state_id')?.value)" [value]="state.id">
+                    <mat-option *ngFor="let state of getStateList(license.get('state_id')?.value)" [value]="state._id">
                       {{state.name}}
                     </mat-option>
                   </mat-select>
@@ -652,8 +638,7 @@
                 </div>
                 <div class="col-md-2">
                   <label class="d-block"></label>
-                  <button class="btn-sm btn-danger pull-right" (click)="removeLicense(licensesIndex)"><i
-                      class="fa fa-trash"></i></button>
+                  <button class="btn-sm btn-danger pull-right" (click)="removeLicense(licensesIndex)"><i class="fa fa-trash"></i></button>
                 </div>
               </div>
             </div>
@@ -662,12 +647,10 @@
         </div>
         <div class="row">
           <div class="col-sm-12">
-            <button type="button" class="btn btn-sm btn-success" (click)="addNewLicense()">Add another Doctor
-              license</button>
+            <button type="button" class="btn btn-sm btn-success" (click)="addNewLicense()">Add another Doctor license</button>
           </div>
         </div>
       </div>
-
       <div class="text-center">
         <button type="submit" class="btn btn-info mr-2">Submit</button>
         <a routerLink="/admin/doctors/list" routerLinkActive="active" class="btn btn-primary">Back</a>

@@ -3,22 +3,54 @@
 </div>
 <div class="container-fluid py-3">
       <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-7">
                   <div class="card">
                   <div class="card-header"><h5>Manage Shipping Charge</h5></div>
                   <div class="card-body">
                         <form (ngSubmit)="saveCharge()" [formGroup]="shippingChargeSettings">
-                              <label>Shipping Charge Amount</label>
-                              <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                              <span class="input-group-text">₹</span>
+
+                                <label>Active</label><br/>
+                                <mat-slide-toggle class="example-margin" color="primary" checked="checked" id="shipping_charge_active" formControlName="shipping_charge_active">
+                                </mat-slide-toggle>
+
+                               <div formArrayName="shipping_charges">
+                                    <div *ngFor="let fi of shipping_charges().controls; let fiIndex=index">
+                                    <div class="form-group" [formGroupName]="fiIndex">
+                                          <div class="form-row">
+
+                                          <div class="col-8">
+                                                <div class="form-group">
+                                                <input type="text" class="mt-2 form-control" placeholder="Enter Charge Name" formControlName="name"  />
+                                                <div class="invalid-feedback" *ngIf="fi.get('name')?.invalid && (fi.get('name')?.dirty || fi.get('name')?.touched)" class="text-danger">
+                                                      <div *ngIf="fi.get('name')?.errors?.required">Delivery Charge Name is required</div>
+                                                </div>
+                                                </div>
+                                          </div>
+                                          <div class="col-3">
+                                                  <div class="input-group mb-3">
+                                                      <div class="input-group-prepend">
+                                                            <span class="input-group-text">₹</span>
+                                                      </div>
+                                                      <input type="number" id="price" formControlName="price" class="form-control" />
+                                                      <div class="invalid-feedback" *ngIf="fi.get('price')?.invalid && (fi.get('price')?.dirty || fi.get('price')?.touched)" class="text-danger">
+                                                            <div *ngIf="fi.get('price')?.errors?.required">Delivery price is required</div>
+                                                      </div>
+                                                  </div>
+                                          </div>
+
+                                          <div class="col-1">
+                                                <button  type="button" class="btn btn-sm btn-danger" (click)="removeShippingCharge(fiIndex)"><i class="fa fa-trash"></i></button>
+                                          </div>
+                                          </div>
+                                    </div>
+                                    </div>
                               </div>
-                              <input type="number" id="amount" formControlName="amount" class="form-control"/>
-                              <div class="invalid-feedback" *ngIf="amount?.invalid && (amount?.dirty || amount?.touched)" class="text-danger">
-                              <div *ngIf="amount?.errors?.required">Delivery amount is required</div>
+                              <div class="text-center">
+                                    <button type="button"  class="btn btn-sm btn-primary" (click)="addShippingCharge()"><i class="fa fa-plus mr-2"></i>Add More</button>
                               </div>
-                              </div>
-                              <button class="btn btn-block btn-primary btn-sm" type="submit">Update</button>
+
+
+                              <button class="btn btn-block btn-primary btn-sm mt-3" type="submit">Update</button>
                         </form>
                   </div>
                   </div>

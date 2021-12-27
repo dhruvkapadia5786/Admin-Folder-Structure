@@ -73,55 +73,30 @@
       </div>
     </div>
     <hr>
-    <div class="row">
-      <div class="col-sm-12">
-        <h4 class="font-weight-bold"> Medicine Kits:</h4>
-        <hr>
-      </div>
-      <br>
-      <div class="row" *ngFor="let kit of questionDetails.dtc_medicine_kits; let i = index;">
-        <div class="col-sm-12">
-          <div class="col-sm-4">
-            <h6>{{i+1}}. {{kit.name}}</h6>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-sm-12">
-        <h4 class="font-weight-bold"> Health Conditions:</h4>
-        <hr>
-      </div>
-      <br>
-      <div class="row" *ngFor="let condition of questionDetails.consultation_health_conditions; let i = index;">
-        <div class="col-sm-12">
-          <div class="col-sm-4">
-            <h6>{{i+1}}. {{condition.name}}</h6>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <hr>
-        <h4 class="font-weight-bold">States:</h4>
-        <hr>
-        <div class="row" *ngFor="let state of questionDetails.states; let i = index;">
-          <div class="cols-m-12">
-            <div class="col-sm-6">
-              <h6>{{i+1}}.{{state.name}}</h6>
-            </div>
-            <hr>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="view-question-footer">
-      <div class="row">
-        <div class="col-sm-12">
-          <a routerLink="/admin/questions/questions-list" routerLinkActive="active" class="btn btn-primary pull-right">Back</a>
-        </div>
-      </div>
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item font-weight-bold">Medicine Kits :</li>
+        <li class="list-group-item" *ngFor="let kit of questionDetails.dtc_medicine_kits; let i = index;">
+          {{i+1}}.{{kit.name}}
+        </li>
+      </ul>
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item font-weight-bold">Health Conditions :</li>
+        <li class="list-group-item" *ngFor="let condition of questionDetails.consultation_health_conditions; let i = index;">
+          {{i+1}}.{{condition.name}}
+        </li>
+      </ul>
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item font-weight-bold">States :</li>
+        <li class="list-group-item" *ngFor="let state of questionDetails.states; let i = index;">
+          {{i+1}}.{{state.name}}
+        </li>
+      </ul>
+
+    <div class="text-center">
+      <a routerLink="/admin/questions/questions-list" routerLinkActive="active" class="btn btn-primary">Back</a>
     </div>
   </ng-container>
   <ng-template #noQuestionDetails>

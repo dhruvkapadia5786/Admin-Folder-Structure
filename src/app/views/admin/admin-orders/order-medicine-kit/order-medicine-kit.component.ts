@@ -16,7 +16,7 @@ export class OrderMedicineKitComponent implements OnInit,OnChanges{
   @Input() orderDetails: any;
   loading = true;
   api_url = environment.api_url ;
-  
+
   parentSub: any;
   medicineKit:any
   QUANTITY = QUANTITY;
@@ -35,21 +35,21 @@ export class OrderMedicineKitComponent implements OnInit,OnChanges{
   }
 
   ngOnInit() {
-    
+
   }
 
   ngOnChanges() {
-    if(this.orderDetails && this.orderDetails.medicine_kit_id){         
+    if(this.orderDetails && this.orderDetails.medicine_kit_id){
       this.getmedicineKitDetails();
     }
   }
 
   getmedicineKitDetails() {
-    let url = `api/v1/new_orders/order_kit_with_medicines/${this.orderDetails.id}`;
+    let url = `api/v1/orders/order_kit_with_medicines/${this.orderDetails.id}`;
     this._http.get<any>(url).subscribe((data) => {
       if (data) {
         this.medicineKit = data;
-        
+
         let firstWord = this.medicineKit.name.split(' ')[0].toLowerCase();
         if(firstWord=='sildenafil'){
           this.kitUrl= 'https://www.teledaddy.com/sildenafil';

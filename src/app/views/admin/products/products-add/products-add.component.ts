@@ -8,6 +8,12 @@ import {AppConstants} from 'src/app/constants/AppConstants';
 
 import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { tap, filter, takeUntil, switchMap} from 'rxjs/operators';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
+import { SelectOtcSubcategoryModalComponent } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.component';
+import { LensParametersModalComponent } from '../lens-parameters-modal/lens-parameters-modal.component';
+import { LensParametersModalService } from '../lens-parameters-modal/lens-parameters-modal.service';
+import { SelectOtcSubcategoryModalService } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.service';
 
 @Component({
   selector: 'app-products-add',
@@ -16,11 +22,10 @@ import { tap, filter, takeUntil, switchMap} from 'rxjs/operators';
 })
 export class ProductsAddComponent implements OnInit,OnDestroy {
 
+  modalRef!:BsModalRef;
   productForm:FormGroup;
   procurementChannels=['MEDICINE','OTC','PRIVATE LABEL','CONTACT LENS','LENS SOLUTION'];
   productTypes= ['MEDICINE','OTC','LENS','SOLUTION'];
-  packforms:any[]=[];
-  drugforms:any[]=[];
 
   selectedFiles:File[]=[];
   selectedDocuments:File[]=[];
@@ -35,11 +40,26 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   protected _onDestroyBrand = new Subject<void>();
 
 
-  protected manufacturers: any[] = [];
   public manufacturerFilteringCtrl: FormControl = new FormControl();
   public searching = false;
   public filteredManufacturers: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   protected _onDestroy = new Subject<void>();
+
+  public packformFilteringCtrl: FormControl = new FormControl();
+  public searchingPackform = false;
+  public filteredPackforms: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  protected _onDestroyPackform = new Subject<void>();
+
+  public drugformFilteringCtrl: FormControl = new FormControl();
+  public searchingDrugform = false;
+  public filteredDrugforms: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  protected _onDestroyDrugform = new Subject<void>();
+
+  public therapyFilteringCtrl: FormControl = new FormControl();
+  public searchingTherapy = false;
+  public filteredTherapies: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  protected _onDestroyTherapy = new Subject<void>();
+
 
   is_coming_soon_control_sub!:Subscription;
   is_active_control_sub!:Subscription;
@@ -54,20 +74,23 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   basecurveDefaultOptions = AppConstants.basecurveDefaultOptions;
   materialsDefaultOptions =AppConstants.materialsDefaultOptions;
 
-  selectedCylinderOptions:any=[];
-  selectedDiameterOptions:any=[];
-  selectedBasecurveOptions:any=[];
-  selectedPowersOptions:any=[];
-  selectedAddPowersOptions:any=[];
-  selectedColorOptions:any=[];
+  colorsList:any=[];
+  lenstypeList:any[]=[];
 
+  categoriesSubcategoriesList:any[]=[];
+  selected_otc_categories_forindex:any[]=[];
 
   constructor(
     public http: HttpClient,
     public changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _helper:Helper,
+    private _bsModalService:BsModalService,
+    private _lensParametersModalService:LensParametersModalService,
+    private _selectOtcSubcategoryModalService:SelectOtcSubcategoryModalService,
     private _toastr: Toastr){
+
+      this.getlensColorsList();
 
       this.manufacturerFilteringCtrl.valueChanges
       .pipe(
@@ -108,6 +131,69 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
           this.searchingBrand = false;
           // handle error...
         });
+
+
+        this.drugformFilteringCtrl.valueChanges
+        .pipe(
+          filter(search => !!search),
+          tap(() => this.searchingDrugform = true),
+          takeUntil(this._onDestroyDrugform),
+          switchMap((search:any) => {
+            return this.filterDrugformResults(search);
+          }),
+          takeUntil(this._onDestroyDrugform)
+        )
+        .subscribe((filteredDrugforms:any) => {
+          this.searching = false;
+          this.filteredDrugforms.next(filteredDrugforms);
+        },
+          error => {
+            // no errors in our simulated example
+            this.searching = false;
+            // handle error...
+          });
+
+
+          this.packformFilteringCtrl.valueChanges
+          .pipe(
+          filter(search => !!search),
+          tap(() => this.searchingPackform = true),
+          takeUntil(this._onDestroyPackform),
+          switchMap((search:any) => {
+            return this.filterPackformResults(search);
+          }),
+          takeUntil(this._onDestroyPackform)
+        )
+        .subscribe((filteredPackforms:any) => {
+          this.searching = false;
+          this.filteredPackforms.next(filteredPackforms);
+        },
+          error => {
+            // no errors in our simulated example
+            this.searching = false;
+            // handle error...
+          });
+
+
+          this.therapyFilteringCtrl.valueChanges
+          .pipe(
+          filter(search => !!search),
+          tap(() => this.searchingTherapy = true),
+          takeUntil(this._onDestroyTherapy),
+          switchMap((search:any) => {
+            return this.filterTherapyResults(search);
+          }),
+          takeUntil(this._onDestroyTherapy)
+        )
+        .subscribe((filteredTherapies:any) => {
+          this.searching = false;
+          this.filteredTherapies.next(filteredTherapies);
+        },
+          error => {
+            // no errors in our simulated example
+            this.searching = false;
+            // handle error...
+          });
 
 
       this.productForm = new FormGroup({
@@ -166,6 +252,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
           cylinder_parameters:new FormArray([]),
           addpower_parameters:new FormArray([]),
           color_parameters:new FormArray([]),
+          lens_type_ids:new FormControl([], []),
       });
 
 
@@ -265,6 +352,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   get has_fixed_addpower_options(){return this.productForm.get('has_fixed_addpower_options');}
   get has_fixed_color_options(){return this.productForm.get('has_fixed_color_options');}
 
+  get lens_type_ids(){return this.productForm.get('lens_type_ids');}
 
   async filterManufacturesResults(token: string) {
     return this.getAllManufacturers(token).then((data:any)=>{
@@ -276,6 +364,37 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
     return await this.http.get(`api/manufacturers/all`+`?search=${searchTerm}`).toPromise();
   }
 
+
+  async filterDrugformResults(token: string) {
+    return this.getAllDrugForms(token).then((data:any)=>{
+      return data;
+    });
+  }
+
+  async getAllDrugForms(searchTerm:string):Promise<any>{
+    return await this.http.get(`api/drugforms/all`+`?search=${searchTerm}`).toPromise();
+  }
+
+  async filterPackformResults(token: string) {
+    return this.getAllPackForms(token).then((data:any)=>{
+      return data;
+    });
+  }
+
+  async getAllPackForms(searchTerm:string):Promise<any>{
+    return await this.http.get(`api/packforms/all`+`?search=${searchTerm}`).toPromise();
+  }
+
+  async filterTherapyResults(token: string) {
+    return this.getAllTherapies(token).then((data:any)=>{
+      return data;
+    });
+  }
+
+  async getAllTherapies(searchTerm:string):Promise<any>{
+    return await this.http.get(`api/therapies/all`+`?search=${searchTerm}`).toPromise();
+  }
+
   async filterBrandsResults(token: string) {
     return this.getAllBrands(token).then((data:any)=>{
       return data;
@@ -283,8 +402,25 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   }
 
   async getAllBrands(searchTerm:string):Promise<any>{
-    let manufacturer_id = this.productForm.get('manufacturer_id')?.value;
+    let manufacturer_id_control = this.productForm.get('manufacturer_id');
+    let manufacturer_id = manufacturer_id_control ? manufacturer_id_control.value : '';
     return await this.http.get(`api/brands/all`+`?search=${searchTerm}&manufacturer_id=${manufacturer_id}`).toPromise();
+  }
+
+  public getlensTypesList(){
+    this.http.get('api/contact_lens/all_types').subscribe((data:any) => {
+      this.lenstypeList = data;
+    }, err => {
+
+    });
+  }
+
+  public getlensColorsList(){
+    this.http.get('api/contact_lens/all_colors').subscribe((data:any) => {
+      this.colorsList = data;
+    }, err => {
+
+    });
   }
 
   ngOnDestroy(){
@@ -294,16 +430,49 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
     this._onDestroyBrand.next();
     this._onDestroyBrand.complete();
 
+    this._onDestroyDrugform.next();
+    this._onDestroyDrugform.complete();
+
+    this._onDestroyPackform.next();
+    this._onDestroyPackform.complete();
+
+    this._onDestroyTherapy.next();
+    this._onDestroyTherapy.complete();
+
     if(this.is_active_control_sub){this.is_active_control_sub.unsubscribe();}
     if(this.is_coming_soon_control_sub){this.is_coming_soon_control_sub.unsubscribe();}
   }
 
-
-
   openParametersModal(drugIndex:number,paramName:string){
-
+      this._lensParametersModalService.setFormData({
+          index:drugIndex,
+          parameter:paramName,
+          colorsList:this.colorsList
+      });
+      this.modalRef = this._bsModalService.show(LensParametersModalComponent,{class:'modal-lg'});
+      this.modalRef.content.onApplySelected.subscribe((item:any)=>{
+        if(item.parameter=='CYLINDER'){
+          this.clearFormArray(this.lensCylinderParameters(item.index));
+        }
+        else if(item.parameter=='POWER'){
+            this.clearFormArray(this.lensPowerParameters(item.index));
+        }
+        else if(item.parameter=='BASE_CURVE'){
+            this.clearFormArray(this.lensBCParameters(item.index));
+        }
+        else if(item.parameter=='DIAMETER'){
+            this.clearFormArray(this.lensDiamenterParameters(item.index));
+        }
+        else if(item.parameter=='COLOR'){
+          this.clearFormArray(this.lensColorParameters(item.index));
+        }
+        else{
+        }
+        for(let i of item.options){
+          this.addParameter(item.index,item.parameter,i);
+        }
+      });
   }
-
 
   handleParameterChange(drugIndex:number,paramName:string,checked:any){
     if(checked){
@@ -664,21 +833,9 @@ handleTypeChange(attributeIndex:number,event:any){
 
 
   ngOnInit(): void {
-     this.getAllPackForms();
-  }
-
-  getAllPackForms(){
-    const url = 'api/products/packforms';
-    this.http.get(url).subscribe((res: any) => {
-        this.packforms = res;
-    });
-  }
-
-  getAllDrugForms(){
-    const url = 'api/products/drugforms';
-    this.http.get(url).subscribe((res: any) => {
-        this.drugforms = res;
-    });
+     this.getlensTypesList();
+     this.getlensColorsList();
+     this.getAllCategoriesWithSubcategoriesList();
   }
 
   getBrandsByManufacturer(manufacturer_id:any){
@@ -691,7 +848,10 @@ handleTypeChange(attributeIndex:number,event:any){
       return;
     }
     const fd: FormData = new FormData();
-    fd.append('product', JSON.stringify(this.productForm.value));
+    let productVal = this.productForm.value;
+    productVal.otc_drug_categories = this.get_selected_otc_categories_forindex(0);
+
+    fd.append('product', JSON.stringify(productVal));
     if(this.selectedFiles.length>0){
       for(let file of this.selectedFiles){
         fd.append('images', file, file.name);
@@ -720,4 +880,71 @@ handleTypeChange(attributeIndex:number,event:any){
       }
     );
   }
+
+
+  public getAllCategoriesWithSubcategoriesList(){
+    this.http.get('api/otc_categories/all').subscribe((data:any) => {
+      this.categoriesSubcategoriesList = data;
+    }, err => {
+
+    });
+  }
+
+  openSelectOTCCategoryModal(drugIndex:number=0){
+    let data_for_index =  this.get_selected_otc_categories_forindex(drugIndex);
+    if(data_for_index.length>0){
+      this.categoriesSubcategoriesList.map((item:any)=>{
+        let index = data_for_index.findIndex((si:any)=>si._id == item._id);
+        if(index!=-1){
+          item.is_checked = true;
+          item.sub_categories.map((subcat:any)=>{
+            subcat.is_checked = data_for_index[index].sub_categories.findIndex((ssc:any)=>ssc._id == subcat._id)!=-1;
+            return subcat;
+          });
+        }else{
+          item.is_checked = false;
+          item.sub_categories.map((subcat:any)=>{
+            subcat.is_checked = false;
+            return subcat;
+          });
+        }
+        return item;
+      });
+    }else{
+      this.categoriesSubcategoriesList.map((item:any)=>{
+        item.is_checked = false;
+        item.sub_categories.map((subcat:any)=>{
+          subcat.is_checked = false;
+          return subcat;
+        });
+        return item;
+      });
+    }
+    this._selectOtcSubcategoryModalService.setFormData({
+      categories:this.categoriesSubcategoriesList
+    });
+    this.modalRef = this._bsModalService.show(SelectOtcSubcategoryModalComponent,{class:'modal-lg'});
+    this.modalRef.content.onApplySelected.subscribe((data:any)=>{
+       let indexFound = this.selected_otc_categories_forindex.findIndex((item:any)=>item.index==drugIndex);
+       if(indexFound==-1){
+         let obj={
+           index:drugIndex,
+           data:data
+         };
+        this.selected_otc_categories_forindex.push(obj);
+       }else{
+        this.selected_otc_categories_forindex[indexFound]['data']=data;
+       }
+    });
+  }
+
+  get_selected_otc_categories_forindex(drugIndex:number){
+    let index = this.selected_otc_categories_forindex.findIndex((item:any) => item.index == drugIndex);
+    if(index!=-1){
+      return this.selected_otc_categories_forindex[index].data;
+    }else{
+      return [];
+    }
+  }
+
 }

@@ -199,7 +199,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <p class="font-weight-bold">{{consultationDetails.charged_from_stripe |
+                                            <p class="font-weight-bold">{{consultationDetails.charged_from_paymentgateway |
                                                 currency }}</p>
                                             <div class="media"
                                                 *ngIf="consultationDetails.payment_details && consultationDetails.payment_details.details && consultationDetails.payment_details.details.card">
@@ -239,7 +239,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="font-weight-bold">{{consultationDetails.refunded_in_stripe | currency
+                                        <td class="font-weight-bold">{{consultationDetails.refunded_in_paymentgateway | currency
                                             }}</td>
                                         <td class="font-weight-bold">{{consultationDetails.refunded_in_wallet | currency
                                             }}</td>

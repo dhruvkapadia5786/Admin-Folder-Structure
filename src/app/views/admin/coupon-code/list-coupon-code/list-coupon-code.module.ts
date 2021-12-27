@@ -5,7 +5,7 @@ import { ListCouponCodeRoutingModule } from './list-coupon-code-routing.module';
 import { ListCouponCodeComponent } from './list-coupon-code.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { DataTablesModule } from 'angular-datatables';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -25,7 +25,7 @@ import { BulkEditCouponModalComponent } from '../bulk-edit-coupon-modal/bulk-edi
     MatTabsModule,
     MatSelectModule,
     ModalModule.forRoot(),
-    BsDatepickerModule.forRoot(),
+    NgxDaterangepickerMd.forRoot(),
     ConfirmDeleteCouponModalModule,
     BulkEditCouponModalModule
   ],

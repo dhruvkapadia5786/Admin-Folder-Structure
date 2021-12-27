@@ -5,15 +5,15 @@
         <div class="p-2 d-flex justify-content-between align-items-center bg-dark-grey">
           <h4 class="font-weight-normal text-white">Account Actions</h4>
           <div>
-            <button (click)="manageAccountUsage()"
-              [ngClass]="{'btn':true,'btn-dark':doctorDetails && doctorDetails.is_active==1,'btn-success':doctorDetails && doctorDetails.is_active==0}">
-              <span *ngIf="doctorDetails && doctorDetails.is_active==0">Enable Account Login</span>
-              <span *ngIf="doctorDetails && doctorDetails.is_active==1">Disable Account Login</span>
+            <button (click)="manageAccountUsage()" class="mr-2"
+              [ngClass]="{'btn':true,'btn-dark':doctorDetails && doctorDetails.is_active==true,'btn-success':doctorDetails && doctorDetails.is_active==false}">
+              <span *ngIf="doctorDetails && doctorDetails.is_active==false">Enable Account Login</span>
+              <span *ngIf="doctorDetails && doctorDetails.is_active==true">Disable Account Login</span>
             </button>
-            <button [disabled]="doctorDetails.is_active==0" (click)="manageAccountService()"
-              [ngClass]="{'btn':true,'btn-dark':doctorDetails && doctorDetails.account_service_enabled==1,'btn-success':doctorDetails && doctorDetails.account_service_enabled==0}">
-              <span *ngIf="doctorDetails && doctorDetails.account_service_enabled==0">Enable Account Service</span>
-              <span *ngIf="doctorDetails && doctorDetails.account_service_enabled==1">Disable Account Service</span>
+            <button [disabled]="doctorDetails.is_active==false" (click)="manageAccountService()" class="mr-2"
+              [ngClass]="{'btn':true,'btn-dark':doctorDetails && doctorDetails.account_service_enabled==true,'btn-success':doctorDetails && doctorDetails.account_service_enabled==false}">
+              <span *ngIf="doctorDetails && doctorDetails.account_service_enabled==false">Enable Account Service</span>
+              <span *ngIf="doctorDetails && doctorDetails.account_service_enabled==true">Disable Account Service</span>
             </button>
             <a routerLink="/admin/doctors/edit/{{doctorId}}" routerLinkActive="active" class="btn btn-primary mr-2">Edit</a>
             <a routerLink="/admin/document-upload/{{doctorHashId}}" routerLinkActive="active"
@@ -27,20 +27,20 @@
           <div class="col-md-3">
             <label>Login Enabled</label>
             <h5>
-              <i class="fa fa-check text-success" *ngIf="doctorDetails.is_active"></i>
-              <i class="fa fa-times text-danger" *ngIf="!doctorDetails.is_active"></i>
+              <i class="fa fa-check text-success" *ngIf="doctorDetails.is_active==true"></i>
+              <i class="fa fa-times text-danger" *ngIf="doctorDetails.is_active==false"></i>
             </h5>
           </div>
           <div class="col-md-3">
             <label>Service Enabled</label>
             <h5>
-              <i class="fa fa-check text-success" *ngIf="doctorDetails.account_service_enabled"></i>
-              <i class="fa fa-times text-danger" *ngIf="!doctorDetails.account_service_enabled"></i>
+              <i class="fa fa-check text-success" *ngIf="doctorDetails.account_service_enabled==true"></i>
+              <i class="fa fa-times text-danger" *ngIf="doctorDetails.account_service_enabled==false"></i>
             </h5>
           </div>
           <div class="col-md-4">
             <label>Last Login At</label>
-            <!-- <h5>{{helper.getUTCtoLocalDateTime(doctorDetails.last_login)}}</h5> -->
+            <h5>{{helper.getFormattedDateFromUnixTimestamp(doctorDetails.last_login)}}</h5>
           </div>
         </div>
 
@@ -53,11 +53,11 @@
               <table class="table table-hover">
                 <tr>
                   <td class="font-weight-bold">Company Name</td>
-                  <td class="font-weight-normal">{{doctorDetails.company_name || '-'}}</td>
+                  <td class="font-weight-normal">{{doctorDetails.professional_details.company_name || '-'}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">LLC Name</td>
-                  <td class="font-weight-normal">{{doctorDetails.llc_name || '-'}}</td>
+                  <td class="font-weight-normal">{{doctorDetails.professional_details.llc_name || '-'}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">First Name</td>
@@ -73,15 +73,15 @@
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Display Name</td>
-                  <td class="font-weight-normal">{{doctorDetails.display_name || '-'}}</td>
+                  <td class="font-weight-normal">{{doctorDetails.professional_details.display_name || '-'}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Date Of Birth</td>
-                  <td class="font-weight-normal">{{(doctorDetails.date_of_birth | date:'MM/dd/yyyy') || '-'}}</td>
+                  <td class="font-weight-normal">{{helper.getFormattedDate(doctorDetails.date_of_birth, 'DD-MM-YYYY')}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Registration Date</td>
-                  <td class="font-weight-normal">{{(doctorDetails.created_at | date:'MM/dd/yyyy')}}</td>
+                  <td class="font-weight-normal">{{helper.getFormattedDateFromUnixTimestamp(doctorDetails.created_at, 'DD-MM-YYYY')}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Email</td>
@@ -93,12 +93,12 @@
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Fax Number</td>
-                  <td class="font-weight-normal">{{doctorDetails.fax_number | mask: '(000) 000-0000'}}</td>
+                  <td class="font-weight-normal">{{doctorDetails.professional_details.fax_number | mask: '(000) 000-0000'}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Active</td>
                   <td class="font-weight-normal"><i
-                      [ngClass]="{'fa':true,'fa-check text-success': doctorDetails.is_active, 'fa-times text-danger': !doctorDetails.is_active}"></i>
+                      [ngClass]="{'fa':true,'fa-check text-success': doctorDetails.is_active==true, 'fa-times text-danger': doctorDetails.is_active==false}"></i>
                   </td>
                 </tr>
               </table>
@@ -110,48 +110,47 @@
             </div>
             <div class="table-responsive">
               <table class="table table-hover">
-
-
                 <tr>
-                  <td class="font-weight-bold">NPI Number</td>
+                  <td class="font-weight-bold">Registration Number</td>
                   <td class="font-weight-normal">
-                    {{doctorDetails.npi_number}}
+                    {{doctorDetails.professional_details.registration_number}}
                   </td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">DEA Number</td>
+                  <td class="font-weight-bold">Registration Date</td>
                   <td class="font-weight-normal">
-                    {{doctorDetails.dea_number}}
+                    {{doctorDetails.professional_details.registration_date}}
                   </td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Order Batch Size</td>
-                  <td class="font-weight-normal"> {{doctorDetails.order_batch_size}}</td>
+                  <td class="font-weight-normal"> {{doctorDetails.professional_details.order_batch_size}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Consultation Batch Size</td>
-                  <td class="font-weight-normal"> {{doctorDetails.consultation_batch_size}}</td>
+                  <td class="font-weight-normal"> {{doctorDetails.professional_details.consultation_batch_size}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Policy Expiry Date</td>
-                  <td class="font-weight-normal"> {{doctorDetails.policy_expiry_date | date : 'MM/dd/yyyy'}}</td>
+                  <td class="font-weight-normal"> {{helper.getFormattedDate(doctorDetails.professional_details.professional_liability_document_expiry_date)}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Check Payable To Name</td>
-                  <td class="font-weight-normal"> {{doctorDetails.check_payable_to_name || '-' }}</td>
+                  <td class="font-weight-normal"> {{doctorDetails.professional_details.check_payable_to_name || '-' }}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Professional Policy Liability Number</td>
                   <td class="font-weight-normal">
-                    {{doctorDetails.professional_liability_policy_number}}
+                    {{doctorDetails.professional_details.professional_liability_policy_number}}
                   </td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold" style="min-width: 200px;">Professional Policy Liability Document</td>
                   <td class="font-weight-normal">
-                    <!-- <img class="img-responsive license-image" [src]="imageUrl" (click)="open()" height="250px"
-                      width="250px" /> -->
-                      <app-image-preview [imgPath]="imageUrl" height="250" width="250" caption="License Image"></app-image-preview>
+                    <img class="img-responsive license-image" [src]="imageUrl"  height="250px"
+                      width="250px" />
+                      <!-- (click)="open()" -->
+                      <!-- <app-image-preview [imgPath]="imageUrl" height="250" width="250" caption="License Image"></app-image-preview> -->
                   </td>
                 </tr>
               </table>
@@ -173,27 +172,27 @@
               <th>Active</th>
             </tr>
           </thead>
-          <tbody *ngIf="doctorDetails.residential_address">
+          <tbody *ngIf="doctorDetails.default_address">
             <tr>
               <td>
-                <p class="font-weight-normal mb-0">{{doctorDetails.residential_address.address_line_1 }}</p>
+                <p class="font-weight-normal mb-0">{{doctorDetails.default_address.address_line_1 }}</p>
               </td>
               <td>
-                <p class="font-weight-normal mb-0" *ngIf="doctorDetails.residential_address.address_line_2">
-                  {{doctorDetails.residential_address.address_line_2 }}</p>
+                <p class="font-weight-normal mb-0" *ngIf="doctorDetails.default_address.address_line_2">
+                  {{doctorDetails.default_address.address_line_2 }}</p>
               </td>
               <td>
-                <p class="font-weight-normal mb-0">{{doctorDetails.residential_address.city_name }}</p>
+                <p class="font-weight-normal mb-0">{{doctorDetails.default_address.city }}</p>
               </td>
               <td>
-                <p class="font-weight-normal mb-0">{{doctorDetails.residential_address.state_name }}</p>
+                <p class="font-weight-normal mb-0">{{doctorDetails.default_address.state }}</p>
               </td>
               <td>
-                <p class="font-weight-normal mb-0">{{doctorDetails.residential_address.zip_code }}</p>
+                <p class="font-weight-normal mb-0">{{doctorDetails.default_address.zip_code }}</p>
               </td>
               <td class="text-left">
                 <p><i class="fa"
-                    [ngClass]="{'fa-check text-success': doctorDetails.residential_address.is_active==1, 'fa-times text-danger': doctorDetails.residential_address.is_active!=1}"></i>
+                    [ngClass]="{'fa-check text-success': doctorDetails.default_address.is_active==true, 'fa-times text-danger': doctorDetails.default_address.is_active==false}"></i>
                 </p>
               </td>
             </tr>
@@ -214,8 +213,8 @@
               <th>Active</th>
             </tr>
           </thead>
-          <tbody *ngIf="doctorDetails.practice_addresses.length">
-            <tr *ngFor="let address of doctorDetails.practice_addresses;let i = index;">
+          <tbody *ngIf="doctorDetails.addresses.length">
+            <tr *ngFor="let address of doctorDetails.addresses;let i = index;">
               <td>
                 <p class="font-weight-normal mb-0">{{address.address_line_1 }}</p>
               </td>
@@ -223,17 +222,17 @@
                 <p class="font-weight-normal mb-0" *ngIf="address.address_line_2">{{address.address_line_2 }}</p>
               </td>
               <td>
-                <p class="font-weight-normal mb-0">{{address.city_name }}</p>
+                <p class="font-weight-normal mb-0">{{address.city }}</p>
               </td>
               <td>
-                <p class="font-weight-normal mb-0">{{address.state_name }}</p>
+                <p class="font-weight-normal mb-0">{{address.state }}</p>
               </td>
               <td>
                 <p class="font-weight-normal mb-0">{{address.zip_code }}</p>
               </td>
               <td class="text-left">
                 <p><i class="fa"
-                    [ngClass]="{'fa-check text-success': address.is_active==1, 'fa-times text-danger': address.is_active!=1}"></i>
+                    [ngClass]="{'fa-check text-success': address.is_active==true, 'fa-times text-danger': address.is_active==false}"></i>
                 </p>
               </td>
             </tr>
@@ -262,14 +261,13 @@
                 <p class="font-weight-normal mb-0">{{license.license_number}}</p>
               </td>
               <td>
-                <p class="font-weight-normal mb-0">{{license.expiry_date | date: 'MM/dd/yyyy'}}</p>
+                <p class="font-weight-normal mb-0">{{license.expiry_date | date: 'DD-MM-YYYY'}}</p>
               </td>
               <td>
                 <p class="font-weight-normal mb-0">{{license.state_name}}</p>
               </td>
               <td>
-                <p><i class="fa"
-                    [ngClass]="{'fa-check text-success': license.is_active==1, 'fa-times text-danger': license.is_active!=1}"></i>
+                <p><i class="fa" [ngClass]="{'fa-check text-success': license.is_active==true, 'fa-times text-danger': license.is_active==false}"></i>
                 </p>
               </td>
             </tr>

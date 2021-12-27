@@ -25,7 +25,6 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   orderId: any;
   parentSub: any;
   patient: any;
-  profileLicense:any;
 
   orderDetails: any;
   patientUinqueNumber: any;
@@ -162,14 +161,14 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   openEditAddressModal(){
     this.addressForm.patchValue({
       order_id:this.orderId,
-      user_id:this.orderDetails.user.id,
-      address_line_1: this.orderDetails.address.address_line_1,
-      address_line_2: this.orderDetails.address.address_line_2?this.orderDetails.address.address_line_2:'',
-      city_name: this.orderDetails.address.city_name,
-      state_id: this.orderDetails.address.state_id,
-      state_name: this.orderDetails.address.state_name,
-      state_abbreviation: this.orderDetails.address.state_abbreviation,
-      zip_code: this.orderDetails.address.zip_code
+      user_id:this.orderDetails.user_id._id,
+      address_line_1: this.orderDetails.shipping_address.address_line_1,
+      address_line_2: this.orderDetails.shipping_address.address_line_2?this.orderDetails.shipping_address.address_line_2:'',
+      city_name: this.orderDetails.shipping_address.city,
+      state_id: this.orderDetails.shipping_address.state_id,
+      state_name: this.orderDetails.shipping_address.state,
+      state_abbreviation: this.orderDetails.shipping_address.state_abbreviation,
+      zip_code: this.orderDetails.shipping_address.zip_code
     });
     this.cdr.detectChanges();
 
@@ -194,7 +193,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     if(form.valid){
       // this.drugorderDetailsLoader.start();
       this.formSubmitting = true;
-      const apiURL = 'api/v1/drug_orders/refund_request';
+      const apiURL = 'api/pharmacy_orders/refund_request';
       const obj = {
         initiated_by: 'admin',
         order_id: this.orderId,
@@ -231,10 +230,10 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
   loadMapIframe () {
     this.iframeMapURL = `https://www.google.com/maps/embed/v1/directions?key=${environment.google_map_api_key}&origin=28.5483592,-81.5886492&destination=`;
-    if (this.orderDetails.address.latitude && this.orderDetails.address.longitude) {
-      this.iframeMapURL += this.orderDetails.address.latitude + ',' + this.orderDetails.address.longitude;
+    if (this.orderDetails.shipping_address.latitude && this.orderDetails.shipping_address.longitude) {
+      this.iframeMapURL += this.orderDetails.shipping_address.latitude + ',' + this.orderDetails.shipping_address.longitude;
     } else {
-      this.iframeMapURL += (this.orderDetails.address.address_line_1 !== null ? this.orderDetails.address.address_line_1 : '') + ' ' + (this.orderDetails.address.address_line_2 !== null ? this.orderDetails.address.address_line_2 : '') + ' ' + (this.orderDetails.address.city_name !== null ? this.orderDetails.address.city_name : '') + ' ' + (this.orderDetails.address.zip_code !== null ? this.orderDetails.address.zip_code : '')
+      this.iframeMapURL += (this.orderDetails.shipping_address.address_line_1 !== null ? this.orderDetails.shipping_address.address_line_1 : '') + ' ' + (this.orderDetails.address.address_line_2 !== null ? this.orderDetails.address.address_line_2 : '') + ' ' + (this.orderDetails.address.city_name !== null ? this.orderDetails.address.city_name : '') + ' ' + (this.orderDetails.address.zip_code !== null ? this.orderDetails.address.zip_code : '')
     }
     this.input.nativeElement.src = this.iframeMapURL;
     this.input.nativeElement.style.display = 'block';
@@ -244,10 +243,10 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     if(valid){
           this.validateShippingAddress().then((res:any) => {
             if (res) {
-              const url = 'api/drug_orders/save_order_address';
+              const url = 'api/pharmacy_orders/save_order_address';
               this.http.post(url,{
                   order_id:this.orderId,
-                  user_id:this.orderDetails.user.id,
+                  user_id:this.orderDetails.user_id._id,
                   address:this.addressForm.value
                 }).subscribe((data:any) => {
 
@@ -265,13 +264,13 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   }
 
 
-  getStateNameFromId(state_id:number){
-    let stateFound =  this.states.find((state:any)=>state.id == state_id);
+  getStateNameFromId(state_id:any){
+    let stateFound =  this.states.find((state:any)=>state._id == state_id);
     return stateFound && stateFound.name ? stateFound.name:'Florida';
   }
 
   setStateInfo(state_id:any){
-    let stateFound =  this.states.find((state:any)=>state.id == state_id);
+    let stateFound =  this.states.find((state:any)=>state._id == state_id);
     this.addressForm.patchValue({
       state_name: stateFound.name,
       state_abbreviation: stateFound.abbreviation
@@ -280,10 +279,10 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
 
   deactivateSubscription(subscription:any) {
-    const url = 'api/drug_orders/cancle_subscription/' + this.orderId;
+    const url = 'api/pharmacy_orders/cancle_subscription/' + this.orderId;
     let medicine_name=subscription.drug_name+' '+subscription.drug_dosage+' '+subscription.subscription_quantity+' '+subscription.drug_form;
     this.http.post(url, {
-      subscription_id:subscription.id,
+      subscription_id:subscription._id,
       medicine_name:medicine_name
     }).subscribe((data:any) => {
         this.toastr.showSuccess('Subscription Deactivated Successfully');
@@ -294,7 +293,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   }
 
   deactivateOTCSubscription(subscription:any){
-    const url = 'api/v1/otc-subscription/cancle_subscription/' + subscription.id;
+    const url = 'api/v1/otc-subscription/cancle_subscription/' + subscription._id;
     this.http.post(url,{}).subscribe((data:any) => {
         this.toastr.showSuccess('Subscription Deactivated Successfully');
         this.getOrderDetails();
@@ -318,7 +317,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
     this.selectedSubscription.medicine_name = medicine_name;
     this.changeSubscriptionForm.patchValue({
-      subscription_id:subscription.id,
+      subscription_id:subscription._id,
       medicine_name:medicine_name
     });
 
@@ -345,17 +344,17 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
       if(this.ModalEvent=='ACTIVATE'){
          if(this.ModalDrugType=='OTC'){
-          url = 'api/v1/otc-subscription/activate_subscription/' + this.selectedSubscription.id;
+          url = 'api/v1/otc-subscription/activate_subscription/' + this.selectedSubscription._id;
          }else{
-          url = 'api/drug_orders/activate_subscription/' + this.orderId;
+          url = 'api/pharmacy_orders/activate_subscription/' + this.orderId;
          }
          message='Subscription Activated';
          error_message='Unable to activate subscription. Please try again';
       }else{
           if(this.ModalDrugType=='OTC'){
-            url = 'api/v1/otc-subscription/change_subscription/' + this.selectedSubscription.id;
+            url = 'api/v1/otc-subscription/change_subscription/' + this.selectedSubscription._id;
           }else{
-            url = 'api/drug_orders/change_subscription/' + this.orderId;
+            url = 'api/pharmacy_orders/change_subscription/' + this.orderId;
           }
          message='Subscription Changed';
          error_message='Unable to change subscription. Please try again';
@@ -379,15 +378,14 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   }
 
   getOrderDetails() {
-    const url = 'api/drug_orders/info/' + this.orderId;
-    const req = '';
-    this.http.post(url, req).subscribe((data: any) => {
+    const url = 'api/pharmacy_orders/details/' + this.orderId;
+
+    this.http.get(url).subscribe((data: any) => {
       this.orderDetails = data;
-      this.profileLicense = data.profile_license;
-      this.patient = data.user;
+       this.patient = data.user_id;
       this.patient.age = this.helper.calculateAge(this.patient.date_of_birth,'YYYY-MM-DDTHH:mm:ss.000Z');
-      this.patientUinqueNumber = this.helper.getUserUniqueId(this.patient.id, this.patient.type);
-      this.anyDrugRefunded = data.drugs.filter((drg:any)=> {
+      this.patientUinqueNumber = this.helper.getUserUniqueId(this.patient._id, this.patient.type);
+      this.anyDrugRefunded = data.products.filter((drg:any)=> {
         let is_disabled_refund= (drg.order_drug_status == 'REFUND_PROCESSED' || drg.order_drug_status == 'REFUND_REQUESTED');
         if(!is_disabled_refund) this.all_drugs_for_refund_length++;
 
@@ -459,7 +457,7 @@ validateShippingAddress(): Promise<boolean> {
   }
 
   gotoPatientDetails(){
-    this.router.navigate(['admin','patients','view',this.patient.id,'orders']);
+    this.router.navigate(['admin','patients','view',this.patient._id,'orders']);
   }
 
   async getImage(path: string) {
@@ -518,7 +516,7 @@ validateShippingAddress(): Promise<boolean> {
 
 
   _getActiveSubscriptionsForUser(){
-    const url = 'api/drug_orders/get_active_subscriptions/'+this.orderDetails.user.id;
+    const url = 'api/pharmacy_orders/get_active_subscriptions/'+this.orderDetails.user_id._id;
       this.http.get(url).subscribe((data:any) => {
         this.userSubscriptions = data;
       },
@@ -527,7 +525,7 @@ validateShippingAddress(): Promise<boolean> {
   }
 
   _getActiveOTCDrugSubscriptionsForUser(){
-    const url = 'api/otc-drugs-subscriptions/active_subscriptions/'+this.orderDetails.user.id;
+    const url = 'api/otc-drugs-subscriptions/active_subscriptions/'+this.orderDetails.user_id._id;
       this.http.get(url).subscribe((data:any) => {
         this.userOTCSubscriptions = data;
       },
@@ -549,7 +547,7 @@ validateShippingAddress(): Promise<boolean> {
 
   handleChangeSubscription(checked:boolean,subscription:any,drug_type:string){
     if(drug_type=='OTC'){
-        let indexFound= this.selectedOTCSubscriptions.findIndex((item:any)=>item.id == subscription.id);
+        let indexFound= this.selectedOTCSubscriptions.findIndex((item:any)=>item._id == subscription._id);
         if(checked){
           if(indexFound==-1){
             this.selectedOTCSubscriptions.push(subscription);
@@ -560,7 +558,7 @@ validateShippingAddress(): Promise<boolean> {
           }
         }
     }else{
-      let indexFound= this.selectedSubscriptions.findIndex((item:any)=>item.id == subscription.id);
+      let indexFound= this.selectedSubscriptions.findIndex((item:any)=>item._id == subscription._id);
       if(checked){
          if(indexFound==-1){
           this.selectedSubscriptions.push(subscription);
@@ -578,10 +576,10 @@ validateShippingAddress(): Promise<boolean> {
 
   checkItemSelected(subscription_id:number,drug_type:string){
     if(drug_type=='OTC'){
-      let indexFound= this.selectedOTCSubscriptions.findIndex((item:any)=>item.id == subscription_id);
+      let indexFound= this.selectedOTCSubscriptions.findIndex((item:any)=>item._id == subscription_id);
       return indexFound == -1 ? false:true;
     }else{
-      let indexFound= this.selectedSubscriptions.findIndex((item:any)=>item.id == subscription_id);
+      let indexFound= this.selectedSubscriptions.findIndex((item:any)=>item._id == subscription_id);
       return indexFound == -1 ? false:true;
     }
   }
@@ -603,7 +601,7 @@ validateShippingAddress(): Promise<boolean> {
     if(this.selectedSubscriptions.length>0 || this.selectedOTCSubscriptions.length>0){
        let reqBody=[];
        let reqBodyItem:any={};
-       reqBodyItem.user_id = this.orderDetails.user.id;
+       reqBodyItem.user_id = this.orderDetails.user_id._id;
        reqBodyItem.subscriptions = this.selectedSubscriptions;
        reqBodyItem.otc_subscriptions = this.selectedOTCSubscriptions;
        reqBody.push(reqBodyItem);
@@ -635,7 +633,7 @@ validateShippingAddress(): Promise<boolean> {
   async downloadReceipt(type:string){
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');
-    const url = 'api/v1/drug_orders/download?order_number=' + this.orderDetails.order_number_text+'&fileType='+type+'&orderId='+this.orderId;
+    const url = 'api/pharmacy_orders/download?order_number=' + this.orderDetails.order_number_text+'&fileType='+type+'&orderId='+this.orderId;
     await this.http.get(url, {headers: headers,  responseType: 'arraybuffer'  }).toPromise().then((result) =>{
       let fileName=type=='refund_receipt'?'refund_receipt':'statement';
       fileName+='_order_'+this.orderDetails.order_number_text+'.pdf';

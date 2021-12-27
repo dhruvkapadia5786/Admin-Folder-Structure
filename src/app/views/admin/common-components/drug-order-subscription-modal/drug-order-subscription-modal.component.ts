@@ -186,7 +186,7 @@ export class DrugOrderSubscriptionModalComponent implements OnInit {
   }
 
   deactivateSubscription(subscription:any){
-    const url = 'api/drug_orders/cancle_subscription/' + this.selectedSubscription.order_id;
+    const url = 'api/pharmacy_orders/cancle_subscription/' + this.selectedSubscription.order_id;
     let medicine_name=subscription.drug_name+' '+subscription.drug_dosage+' '+subscription.subscription_quantity+' '+subscription.drug_form;
     this._http.post(url, {
       subscription_id:subscription.id,
@@ -222,12 +222,12 @@ export class DrugOrderSubscriptionModalComponent implements OnInit {
       this.formSubmitting= true;
 
       if(this.ModalEvent=='ACTIVATE'){
-         url = 'api/drug_orders/activate_subscription/' + this.selectedSubscription.order_id;
+         url = 'api/pharmacy_orders/activate_subscription/' + this.selectedSubscription.order_id;
          message='Subscription Activated';
          error_message='Unable to activate subscription. Please try again';
       }else{
          formVal.event_type='CHANGE';
-         url = 'api/drug_orders/change_subscription/' + this.selectedSubscription.order_id;
+         url = 'api/pharmacy_orders/change_subscription/' + this.selectedSubscription.order_id;
          message='Subscription Changed';
          error_message='Unable to change subscription. Please try again';
       }
@@ -263,7 +263,7 @@ export class DrugOrderSubscriptionModalComponent implements OnInit {
       formVal.event_type='DELAYED';
       this.formSubmitting= true;
 
-      url = 'api/drug_orders/change_subscription/' + this.selectedSubscription.order_id;
+      url = 'api/pharmacy_orders/change_subscription/' + this.selectedSubscription.order_id;
       message=`Subscription Paused For ${formVal.delay_duration} Days`;
       error_message='Unable to pause subscription. Please try again';
 
@@ -295,7 +295,7 @@ export class DrugOrderSubscriptionModalComponent implements OnInit {
       formVal.medicine_name= this.selectedSubscription.medicine_name;
       this.formSubmitting= true;
 
-      url = 'api/drug_orders/create_subscription/' + this.selectedSubscription.order_id;
+      url = 'api/pharmacy_orders/create_subscription/' + this.selectedSubscription.order_id;
       message='Subscription Activated';
       error_message='Unable to activate subscription. Please try again';
 
@@ -322,7 +322,7 @@ export class DrugOrderSubscriptionModalComponent implements OnInit {
   actionRequiredSubscriptionSubmit(valid:boolean){
     if(valid){
       this.formSubmitting= true;
-      let url = 'api/drug_orders/take_action_subscription/' + this.selectedSubscription.order_id;
+      let url = 'api/pharmacy_orders/take_action_subscription/' + this.selectedSubscription.order_id;
       this._http.post(url,{
         subscription_id:this.actionRequiredSubscriptionForm.value.action_subscription_id,
         action:this.actionRequiredSubscriptionForm.value.action,

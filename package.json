@@ -50,6 +50,7 @@
     "ng-pick-datetime": "^7.0.0",
     "ngx-agora": "^2.0.1",
     "ngx-bootstrap": "^6.2.0",
+    "ngx-daterangepicker-material": "^2.4.2",
     "ngx-dropzone": "^3.0.0",
     "ngx-editor": "^10.1.0",
     "ngx-image-cropper": "^4.0.0",

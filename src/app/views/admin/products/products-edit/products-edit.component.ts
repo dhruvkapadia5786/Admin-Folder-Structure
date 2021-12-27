@@ -383,6 +383,13 @@ export class ProductsEditComponent implements OnInit {
     this.http.get(url).subscribe((res: any) => {
         this.productDetails = res;
 
+        this.filteredBrands.next([
+          res.brand_id
+        ]);
+        this.filteredManufacturers.next([
+          res.manufacturer_id
+        ]);
+
         this.productForm.patchValue({
           name:res.name,
           ucode:res.ucode,

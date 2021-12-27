@@ -1,8 +1,8 @@
 export interface State {
-    id?: number;
+    _id?: number;
     name: string;
     abbreviation:string;
     is_active: boolean;
-    created?: string;
-    updated?: string;
+    created_at?: string;
+    updated_at?: string;
 }

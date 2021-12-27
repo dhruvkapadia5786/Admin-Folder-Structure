@@ -49,11 +49,11 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
       let url = '';
       console.log(filterValue)
       if (this.orderType == 'ORDER') {
-        url = `api/v1/new_orders/logs/${this.orderId}?user_types=${filterValue}`; //
+        url = `api/v1/orders/logs/${this.orderId}?user_types=${filterValue}`; //
       } else if (this.orderType == 'CONSULTATION') {
         url = `api/consultation/logs/${this.orderId}?user_types=${filterValue}`; //
       } else if (this.orderType == 'DRUG_ORDER') {
-        url = `api/drug_orders/logs/${this.orderId}?user_types=${filterValue}`; //
+        url = `api/pharmacy_orders/logs/${this.orderId}?user_types=${filterValue}`; //
       }
 
       this.http.get(url)

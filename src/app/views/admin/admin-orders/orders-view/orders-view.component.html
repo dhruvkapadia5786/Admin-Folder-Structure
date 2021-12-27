@@ -8,7 +8,7 @@
                             ('+orderDetails.order_number_text+')'}}</h5>
                         <p class="mb-1"><strong class="mr-2">Order Type : </strong>{{orderDetails.order_type}}</p>
                         <p class="mb-1"><strong class="mr-2">Order Created By : </strong> <span
-                                [innerHTML]="getOrderCreatedWay(orderDetails.created_by)"></span></p>
+                                [innerHTML]="_orderHelper.getOrderCreatedWay(orderDetails.created_by)"></span></p>
                         <p class="mb-1"><strong class="mr-2">Created Date : </strong>{{orderDetails.created |
                             date:'DD-MM-YYYY'}}</p>
                         <p class="mb-1"><strong class="mr-2">Completed Date :
@@ -44,23 +44,24 @@
 
                     <div class="col-md-4">
                         <h5 class="mb-3">Shipping Address</h5>
-                        <div *ngIf="orderDetails.address">
-                            <p class="mb-0">{{orderDetails.address &&
-                                orderDetails.address.address_line_1?orderDetails.address.address_line_1:''}}{{
-                                orderDetails.address && orderDetails.address.address_line_2 ? ', ':''
-                                }}<br />{{orderDetails.address?.address_line_2}}</p>
-                            <p class="mb-0">{{orderDetails.address &&
-                                orderDetails.address.city_name?orderDetails.address.city_name:''}}{{orderDetails.address
-                                && orderDetails.address.state_name?', '+orderDetails.address.state_name:''}}
-                                {{orderDetails.address.zip_code?orderDetails.address.zip_code:''}}</p>
+                        <div *ngIf="orderDetails.shipping_address">
+                            <p class="mb-0">
+                                {{orderDetails.shipping_address &&
+                                orderDetails.shipping_address.address_line_1?orderDetails.shipping_address.address_line_1:''}}{{
+                                orderDetails.shipping_address && orderDetails.shipping_address.address_line_2 ? ', ':''
+                                }}<br />{{orderDetails.shipping_address?.address_line_2}}</p>
+                            <p class="mb-0">
+                                {{orderDetails.shipping_address && orderDetails.shipping_address.city ? orderDetails.shipping_address.city:''}}
+                                {{ orderDetails.shipping_address.state?', '+orderDetails.shipping_address.state:'' }}
+                                {{orderDetails.shipping_address.zip_code?orderDetails.shipping_address.zip_code:''}}</p>
                         </div>
-                        <div *ngIf="!orderDetails.address">
+                        <div *ngIf="!orderDetails.shipping_address">
                             <p class="mb-0">Address not added yet.</p>
                         </div>
                         <div class="text-500" *ngIf="orderDetails.is_express_shipping!=1"><strong> Shipping Method :
-                            </strong>FREE USPS First Class</div>
+                            </strong>FREE </div>
                         <div class="text-500" *ngIf="orderDetails.is_express_shipping==1"><strong> Shipping Method :
-                            </strong>USPS Priority Mail</div>
+                            </strong>Premium</div>
                         <button *ngIf="showChangeAddressBtn" class="btn btn-warning btn-sm" type="button" (click)="openEditAddressModal()"><i class="fa fa-pencil mr-2"></i>Change Address</button>
                     </div>
                 </div>
@@ -80,9 +81,6 @@
                 </div>
 
                 <div class="d-flex flex-row justify-content-start align-items-center  mt-2">
-                    <div *ngIf="orderDetails.is_transferred" class="alert alert-warning">This Order has been Transferred
-                        to Pharmacy : {{orderDetails.transferred_pharmacy.pharmacy_name}} on date
-                        {{orderDetails.order_transfer_datetime | date: 'DD-MM-YYYY'}}</div>
                     <div *ngIf="orderDetails.is_closed" class="ml-2 alert alert-dark">This Order has been Closed on date
                         {{orderDetails.order_closed_datetime | date: 'DD-MM-YYYY'}} , Reason :
                         {{orderDetails.order_closed_reason }}</div>
@@ -182,9 +180,9 @@
                                         </td>
                                         <td class="align-middle text-center">{{orderDetails.quantity}}</td>
                                         <td class="align-middle text-right">{{ orderDetails.medicine_kit_price |
-                                            currency}}</td>
+                                            currency:'INR'}}</td>
                                         <td class="align-middle text-right">{{ orderDetails.medicine_kit_price |
-                                            currency}}</td>
+                                            currency:'INR'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -199,14 +197,14 @@
                                                 orderDetails.payment.coupon_code?'( Coupon Code Used :
                                                 '+orderDetails.payment.coupon_code+' )':'' }}</th>
                                             <td class="font-weight-semi-bold text-right">
-                                                {{(orderDetails.coupon_discount||0) | currency}}</td>
+                                                {{(orderDetails.coupon_discount||0) | currency:'INR'}}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-900">Referral Discount {{ orderDetails.referral_code_details
                                                 ? '( Referral Code Used :
                                                 '+orderDetails.referral_code_details.referral_code+' )':''}}</th>
                                             <td class="font-weight-semi-bold text-right">
-                                                {{(orderDetails.referral_discount||0) | currency}}</td>
+                                                {{(orderDetails.referral_discount||0) | currency:'INR'}}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-900">Shipping Charges</th>
@@ -216,7 +214,7 @@
                                         <tr class="border-top">
                                             <th class="font-weight-bold">Total</th>
                                             <td class="font-weight-bold text-right">{{orderDetails.total_amount |
-                                                currency }}</td>
+                                                currency:'INR' }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -227,7 +225,7 @@
                             <table class="table border-bottom table-borderless table-sm">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>Charged From Stripe</th>
+                                        <th>Charged From Payment Gateway</th>
                                         <th>Charged From Wallet</th>
                                         <th class="text-right">Total</th>
                                     </tr>
@@ -235,7 +233,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <p class="font-weight-bold">{{orderDetails.charged_from_stripe | currency:'INR'}}
+                                            <p class="font-weight-bold">{{orderDetails.charged_from_paymentgateway | currency:'INR'}}
                                             </p>
                                             <div class="media"
                                                 *ngIf="orderDetails.used_payment_card && orderDetails.used_payment_card.card">
@@ -254,7 +252,7 @@
                                         </td>
                                         <td class="font-weight-bold">{{orderDetails.charged_from_wallet | currency:'INR'}}
                                         </td>
-                                        <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency}}
+                                        <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency:'INR'}}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -271,12 +269,12 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="font-weight-bold">{{orderDetails.refunded_in_stripe | currency:'INR'}}
+                                        <td class="font-weight-bold">{{orderDetails.refunded_in_paymentgateway | currency:'INR'}}
                                         </td>
                                         <td class="font-weight-bold">{{orderDetails.refunded_in_wallet | currency:'INR'}}
                                         </td>
                                         <td class="font-weight-bold text-right">{{orderDetails.refunded_total |
-                                            currency}}</td>
+                                            currency:'INR'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -303,14 +301,14 @@
                                         <td>{{i+1}}</td>
                                         <td>{{transaction.transaction_type}}</td>
                                         <td>{{transaction.payment_source}}</td>
-                                        <td>{{transaction.charged_amount | currency}}</td>
+                                        <td>{{transaction.charged_amount | currency:'INR'}}</td>
                                         <td>
                                             <a *ngIf="transaction.payment_source=='STRIPE'" target="_blank"
                                                 href="https://dashboard.stripe.com/payments/{{transaction.charge_id}}">{{transaction.charge_id}}</a>
                                             <span *ngIf="transaction.payment_source=='WALLET'"> {{transaction.charge_id
                                                 ? 'Wallet Transaction #'+transaction.charge_id :''}}</span>
                                         </td>
-                                        <td>{{transaction.refunded_amount | currency}}</td>
+                                        <td>{{transaction.refunded_amount | currency:'INR'}}</td>
                                         <td>
                                             <span
                                                 *ngIf="transaction.refund_id && transaction.payment_source=='STRIPE'">{{transaction.refund_id}}</span>
@@ -356,8 +354,6 @@
                                             <p class="m-0"
                                                 [innerHTML]="_orderHelper.getPharmacyStatus(orderDetails.pharmacy_status)">
                                             </p>
-                                            <p *ngIf="orderDetails.is_transferred ==1" class="mt-2"><span
-                                                    class="p-2 badge badge-pill badge-warning">Transferred</span></p>
                                             <p *ngIf="orderDetails.is_closed ==1" class="mt-2"><span
                                                     class="p-2 badge badge-pill badge-dark">Closed</span></p>
                                         </td>
@@ -381,10 +377,7 @@
                                                 (orderDetails.shipped_on | date:'DD-MM-YYYY') || '--' }}</p>
                                             <p class="mb-1"><strong class="mr-2">Pickedup On : </strong>{{
                                                 (orderDetails.picked_up_on | date:'DD-MM-YYYY') || '--' }}</p>
-                                            <p class="mb-1" *ngIf="orderDetails.is_transferred ==1"><strong
-                                                    class="mr-2">Transferred On : </strong>{{
-                                                (orderDetails.order_transfer_datetime | date:'DD-MM-YYYY') || '--' }}
-                                            </p>
+
                                             <p class="mb-1" *ngIf="orderDetails.is_closed ==1"><strong
                                                     class="mr-2">Closed On : </strong>{{
                                                 (orderDetails.order_closed_datetime | date:'DD-MM-YYYY') || '--' }}</p>
@@ -466,50 +459,7 @@
                                                     orderDetails.special_pharmacy.zip_code }}</p>
                                             </ng-container>
 
-                                            <div class="mt-4" *ngIf="orderDetails.transferred_pharmacy">
-                                                <p class="font-weight-bold text-warning">Transferred Pharmacy</p>
-                                                <ng-container>
-                                                    <p class="mb-1"><strong class="mr-2">Name :
-                                                        </strong>{{orderDetails.transferred_pharmacy.pharmacy_name}}</p>
-                                                    <p class="mb-1"><strong class="mr-2">Pharmacist:
-                                                        </strong>{{orderDetails.transferred_pharmacy.contact_name }}</p>
-                                                    <p class="mb-1"><strong class="mr-2">Address: </strong>
-                                                        {{orderDetails.transferred_pharmacy.address_line_1 }}
-                                                        <span
-                                                            *ngIf="orderDetails.transferred_pharmacy.address_line_1">,<br /></span>
-                                                        {{orderDetails.transferred_pharmacy.address_line_2 }}
-                                                        <span
-                                                            *ngIf="orderDetails.transferred_pharmacy.address_line_2">,<br /></span>
-                                                        {{orderDetails.transferred_pharmacy.city }}
-                                                        <span *ngIf="orderDetails.transferred_pharmacy.city">,</span>
-                                                        {{orderDetails.transferred_pharmacy.state }}
-                                                        <span *ngIf="orderDetails.transferred_pharmacy.state">,</span>
-                                                        {{orderDetails.transferred_pharmacy.zip }}
-                                                    </p>
 
-                                                    <p class="mb-1"
-                                                        *ngIf="orderDetails.transferred_pharmacy.phone_number"><strong
-                                                            class="mr-2">Phone:
-                                                        </strong>{{orderDetails.transferred_pharmacy.phone_number |
-                                                        mask: '(000) 000-0000' || '-'}}</p>
-                                                    <p class="mb-1"
-                                                        *ngIf="orderDetails.transferred_pharmacy.fax_number"><strong
-                                                            class="mr-2">Fax:
-                                                        </strong>{{orderDetails.transferred_pharmacy.fax_number | mask:
-                                                        '(000) 000-0000' || '-'}}</p>
-                                                    <p class="mb-1"
-                                                        *ngIf="orderDetails.transferred_pharmacy.npi_number"><strong
-                                                            class="mr-2">NPI Number:
-                                                        </strong>{{orderDetails.transferred_pharmacy.npi_number}}</p>
-                                                    <p class="mb-1"
-                                                        *ngIf="orderDetails.transferred_pharmacy.dea_number"><strong
-                                                            class="mr-2">DEA Number:
-                                                        </strong>{{orderDetails.transferred_pharmacy.dea_number}}</p>
-                                                    <p class="mb-1" *ngIf="orderDetails.transferred_pharmacy.ncpdp">
-                                                        <strong class="mr-2">NCPDP Number:
-                                                        </strong>{{orderDetails.transferred_pharmacy.ncpdp}}</p>
-                                                </ng-container>
-                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -536,7 +486,7 @@
                     </div>
                     <div class="col-md-6">
                         <a href="javascript:void(0);" class="link" (click)="gotoPatientDetails()">
-                            <h5># {{patientUinqueNumber}}</h5>
+                            <h5># {{patient._id}}</h5>
                         </a>
                     </div>
                 </div>
@@ -610,13 +560,11 @@
                                             aria-controls="collapseTwo">License</button>
                                     </h3>
                                 </div>
-                                <div id="license" class="collapse show" aria-labelledby="headingTwo"
-                                    data-parent="#licenseAccordian">
+                                <div id="license" class="collapse show" aria-labelledby="headingTwo" data-parent="#licenseAccordian">
                                     <div class="card-body">
-                                        <div class="mt-2" *ngIf="profileLicense && profileLicense.license_photo">
+                                        <div class="mt-2" *ngIf="orderDetails && orderDetails.customer_license_photo">
                                             <div class="allergies">
-                                                <app-image-preview [imgPath]="profileLicense.license_photo" height="250"
-                                                    width="350" caption="License Image"></app-image-preview>
+                                                <app-image-preview [imgPath]="orderDetails.customer_license_photo" height="250" width="350" caption="License Image"></app-image-preview>
                                             </div>
                                         </div>
                                     </div>
@@ -635,10 +583,9 @@
                                 <div id="license" class="collapse show" aria-labelledby="headingTwo"
                                     data-parent="#fullFaceAccordian">
                                     <div class="card-body">
-                                        <div class="mt-2" *ngIf="profileLicense && profileLicense.profile_photo">
+                                        <div class="mt-2" *ngIf="orderDetails && orderDetails.customer_profile_photo">
                                             <div class="allergies">
-                                                <app-image-preview [imgPath]="profileLicense.profile_photo" height="250"
-                                                    width="350" caption="Full Face Image"></app-image-preview>
+                                                <app-image-preview [imgPath]="orderDetails.customer_profile_photo" height="250" width="350" caption="Full Face Image"></app-image-preview>
                                             </div>
                                         </div>
                                     </div>
@@ -657,21 +604,20 @@
         </div>
     </mat-tab>
     <mat-tab label="Kit" *ngIf="orderDetails">
-        <app-order-medicine-kit [orderDetails]="orderDetails"></app-order-medicine-kit>
+           <app-order-medicine-kit [orderDetails]="orderDetails"></app-order-medicine-kit>
     </mat-tab>
     <mat-tab label="Questionnaire">
         <div class="container-fluid doctorDetails">
-            <app-order-question-answer [orderDetails]="orderDetails" (reloadOrderDetails)="getOrderDetailsAgain()">
-            </app-order-question-answer>
+            <app-order-question-answer [orderDetails]="orderDetails" (reloadOrderDetails)="getOrderDetailsAgain()"></app-order-question-answer>
         </div>
     </mat-tab>
     <mat-tab label="Logs">
         <app-order-logs></app-order-logs>
     </mat-tab>
 </mat-tab-group>
+
 <div class="form-group mt-1">
     <div class="text-center">
-        <a routerLink="/admin/orders/list" routerLinkActive="active" class="btn btn-primary"><i
-                class="fa fa-arrow-left mr-2" aria-hidden="true"></i>Back To Orders</a>
+        <a routerLink="/admin/orders/list" routerLinkActive="active" class="btn btn-primary"><i  class="fa fa-arrow-left mr-2" aria-hidden="true"></i>Back To Orders</a>
     </div>
 </div>

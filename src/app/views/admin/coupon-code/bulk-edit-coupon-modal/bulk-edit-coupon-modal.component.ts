@@ -49,7 +49,7 @@ export class BulkEditCouponModalComponent implements OnInit {
       return;
     }
 
-    this.onEventCompleted.emit({form: this.bulkUpdateCouponCode});
+    this.onEventCompleted.emit(this.bulkUpdateCouponCode.value);
     this.closeModal();
   }
 

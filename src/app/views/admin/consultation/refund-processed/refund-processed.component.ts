@@ -100,7 +100,7 @@ export class RefundProcessedComponent implements OnInit, AfterViewInit, OnDestro
           }
         },
         {
-          data: 'charged_from_stripe',
+          data: 'charged_from_paymentgateway',
           title: 'Charged From Stripe',
           className: 'text-center  font-weight-normal',
           render: (data) => {
@@ -125,7 +125,7 @@ export class RefundProcessedComponent implements OnInit, AfterViewInit, OnDestro
           title: 'Stripe Refund Id',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return data? (full.charged_from_stripe>0? `<a target="_blank" href="https://dashboard.stripe.com/payments/${full.charge_id}">${data}</a>`:data) : '-';
+            return data? (full.charged_from_paymentgateway>0? `<a target="_blank" href="https://dashboard.stripe.com/payments/${full.charge_id}">${data}</a>`:data) : '-';
           }
         },
         {

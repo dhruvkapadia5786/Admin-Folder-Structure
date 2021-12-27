@@ -88,6 +88,19 @@
                     </div>
 
                     <div class="row">
+                        <div class="col-md-4 col-sm-12"  *ngIf="productForm.get('product_type')?.value == 'LENS'">
+                            <div class="form-group">
+                                <label>Lens Type :</label>
+
+                                <mat-select placeholder="Select Lenstype" formControlName="lens_type_ids" multiple>
+                                  <mat-option color="primary" *ngFor="let lenstype of lenstypeList" [value]="lenstype._id">{{lenstype.name}}</mat-option>
+                                </mat-select>
+
+                                <div class="invalid-feedback" *ngIf="lens_type_ids?.invalid && (lens_type_ids?.dirty || lens_type_ids?.touched)" class="text-danger font-weight-bold">
+                                  <div *ngIf="lens_type_ids?.errors?.required">Lens Type is required.</div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-12 col-12">
                             <label>Name :</label>
                             <input type="text" class="form-control" placeholder="Enter Name" formControlName="name" />
@@ -106,7 +119,21 @@
                         </div>
                         <div class="col-md-3 col-12">
                             <label>Packform :</label>
-                            <input type="text" class="form-control" placeholder="Enter Packform" formControlName="packform" />
+                            <mat-form-field class="w-100">
+                                      <mat-select formControlName="packform" placeholder="">
+                                        <mat-option>
+                                          <ngx-mat-select-search
+                                          [formControl]="packformFilteringCtrl"
+                                          [searching]="searchingPackform"
+                                          placeholderLabel="Find Packform..."
+                                          noEntriesFoundLabel="'no matching Packform found'"
+                                          ></ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let packform of filteredPackforms | async" [value]="packform._id">
+                                          {{packform.name}}
+                                        </mat-option>
+                                      </mat-select>
+                            </mat-form-field>
                             <div class="invalid-feedback" *ngIf="packform?.invalid && (packform?.dirty || packform?.touched)"
                               class="text-danger font-weight-bold">
                               <div *ngIf="packform?.errors?.required">Packform is required.</div>
@@ -115,7 +142,21 @@
 
                         <div class="col-md-3 col-12">
                             <label>Drug Form :</label>
-                            <input type="text" class="form-control" placeholder="Enter Drug Form" formControlName="form_name" />
+                            <mat-form-field class="w-100">
+                                      <mat-select formControlName="form_name" placeholder="">
+                                        <mat-option>
+                                          <ngx-mat-select-search
+                                          [formControl]="drugformFilteringCtrl"
+                                          [searching]="searchingDrugform"
+                                          placeholderLabel="Find Drugform..."
+                                          noEntriesFoundLabel="'no matching Drugform found'"
+                                          ></ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let drugform of filteredDrugforms | async" [value]="drugform._id">
+                                          {{drugform.name}}
+                                        </mat-option>
+                                      </mat-select>
+                            </mat-form-field>
                             <div class="invalid-feedback" *ngIf="form_name?.invalid && (form_name?.dirty || form_name?.touched)"
                               class="text-danger font-weight-bold">
                               <div *ngIf="form_name?.errors?.required">Drug Form is required.</div>
@@ -140,6 +181,47 @@
                               <div *ngIf="measurement_unit?.errors?.required">Measurement Unit is required.</div>
                             </div>
                         </div>
+
+                         <div class="col-md-12 col-12">
+                            <label>Therapies :</label>
+                            <mat-form-field class="w-100">
+                                      <mat-select formControlName="therapies" multiple>
+                                        <mat-option>
+                                          <ngx-mat-select-search
+                                          [formControl]="therapyFilteringCtrl"
+                                          [searching]="searchingTherapy"
+                                          placeholderLabel="Find Therapy..."
+                                          noEntriesFoundLabel="'no matching Therapy found'"
+                                          ></ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let therapy of filteredTherapies | async" [value]="therapy._id">
+                                          {{therapy.name}}
+                                        </mat-option>
+                                      </mat-select>
+                            </mat-form-field>
+                        </div>
+
+
+                        <div class="col-md-12 col-12">
+                          <button type="button" class="float-right btn btn-primary" (click)="openSelectOTCCategoryModal()">Select OTC Category</button>
+                          <table class="table w-100" *ngIf="selected_otc_categories_forindex && get_selected_otc_categories_forindex(0)">
+                            <thead class="thead-light">
+                              <tr>
+                                  <th>OTC Category</th>
+                                  <th>Subcategories</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of get_selected_otc_categories_forindex(0)">
+                                    <td class="font-weight-normal">{{item.name}}</td>
+                                    <td>
+                                        <p *ngFor="let subitem of item.sub_categories" class="font-weight-normal">{{subitem.name}}</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
                     </div>
 
               </div>

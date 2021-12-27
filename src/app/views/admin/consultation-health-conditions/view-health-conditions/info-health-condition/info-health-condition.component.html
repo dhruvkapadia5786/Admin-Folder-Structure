@@ -1,6 +1,6 @@
 <ng-container *ngIf="healthCondition; else nohealthCondition">
 
-  <h4 class="bg-dark text-white p-2 mt-3">Display Information</h4>
+  <h6 class="bg-light text-dark p-2 mt-3">Display Information</h6>
   <div class="row">
     <div class="col-md-6">
         <div class="table-responsive">
@@ -46,19 +46,19 @@
     </div>
   </div>
 
-  <h4 class="bg-dark text-white p-2 mt-3">Pricing</h4>
+  <h6 class="bg-light text-dark p-2 mt-3">Pricing</h6>
   <div class="row">
     <div class="col-md-6">
         <div class="table-responsive">
           <table class="table table-hover">
                 <tr>
                   <td class="font-weight-bold">Actual Price</td>
-                  <td class="font-weight-normal"> {{(healthCondition.price | currency) || '-' }} </td>
+                  <td class="font-weight-normal"> {{(healthCondition.price | currency:'INR') || '-' }} </td>
                 </tr>
                 <tr *ngIf="healthCondition.is_offer">
                   <td class="font-weight-bold"><i class="fa fa-tag mr-1"></i> Offer Price</td>
                   <td class="font-weight-normal">
-                    {{(healthCondition.offer_price | currency) || '-' }}
+                    {{(healthCondition.offer_price | currency:'INR') || '-' }}
                   </td>
                 </tr>
           </table>
@@ -70,7 +70,7 @@
                 <tr>
                   <td class="font-weight-bold">Doctor Price</td>
                   <td class="font-weight-normal">
-                    {{(healthCondition.doctor_price | currency) || '-'}}
+                    {{(healthCondition.doctor_price | currency:'INR') || '-'}}
                   </td>
                 </tr>
             </table>
@@ -78,9 +78,9 @@
     </div>
   </div>
 
-  <h4 class="bg-dark text-white p-2 mt-3">
+  <h6 class="bg-light text-dark p-2 mt-3">
     Attributes
-  </h4>
+  </h6>
   <div class="row" *ngIf="healthCondition?.attributes.length > 0; else noAttributes">
     <div class="col-md-12">
       <app-change-sequence [mode]="'ATTRIBUTES'" [data]="healthCondition.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
@@ -93,7 +93,7 @@
     </div>
   </ng-template>
 
-  <h4 class="bg-dark text-white p-2 mt-3">FAQ</h4>
+  <h6 class="bg-light text-dark p-2 mt-3">FAQ</h6>
   <div class="row" *ngIf="healthCondition?.faqs.length > 0; else noFaqs">
     <div class="col-md-12">
       <app-change-sequence [mode]="'FAQS'" [data]="healthCondition.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
@@ -106,7 +106,7 @@
     </div>
   </ng-template>
 
-   <h4 class="bg-dark text-white p-2 mt-3">Images</h4>
+   <h6 class="bg-light text-dark p-2 mt-3">Images</h6>
   <div class="row" *ngIf="healthCondition?.images.length > 0; else noImgs">
     <div class="col-md-12">
       <app-change-sequence [mode]="'IMAGES'" [data]="healthCondition.images" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
@@ -119,7 +119,7 @@
     </div>
   </ng-template>
 
-  <h4 class="bg-dark text-white p-2 mt-3">PDF Documents</h4>
+  <h6 class="bg-light text-dark p-2 mt-3">PDF Documents</h6>
   <div class="row" *ngIf="healthCondition?.documents.length > 0; else noDocs">
     <div class="col-md-12">
       <app-change-sequence [mode]="'DOCUMENTS'" [data]="healthCondition.documents" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
@@ -132,7 +132,7 @@
     </div>
   </ng-template>
 
-  <h4 class="bg-dark text-white p-2 mt-3">Videos</h4>
+  <h6 class="bg-light text-dark p-2 mt-3">Videos</h6>
   <div class="row" *ngIf="healthCondition?.videos.length > 0; else noVideos">
     <div class="col-md-12">
       <app-change-sequence [mode]="'VIDEOS'" [data]="healthCondition.videos" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
