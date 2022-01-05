@@ -2,18 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RefundProcessedOrdersComponent } from './refund-processed-orders.component';
 import {RefundProcessedOrdersRoutingModule} from './refund-processed-orders-routing.module';
-import { DataTablesModule } from 'angular-datatables';
-import { BlockUIModule } from 'ng-block-ui';
-import { Helper } from 'src/app/services/helper.service';
-
+import {NgxPaginationModule} from 'ngx-pagination';
+import {orderHelper} from 'src/app/services/orderHelper.service';
+import {FormsModule} from '@angular/forms';
 @NgModule({
   declarations: [RefundProcessedOrdersComponent],
   imports: [
     RefundProcessedOrdersRoutingModule,
     CommonModule,
-    DataTablesModule,
-    BlockUIModule.forRoot({message:'Loading ...'})
+    FormsModule,
+    NgxPaginationModule
   ],
-  providers:[Helper]
+  providers:[orderHelper]
 })
 export class RefundProcessedOrdersModule { }

@@ -2,20 +2,27 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RefundIncompleteOrdersComponent } from './refund-incomplete-orders.component';
 import { RefundIncompleteOrdersRoutingModule } from './refund-incomplete-orders-routing.module';
-import { DataTablesModule } from 'angular-datatables';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { BlockUIModule } from 'ng-block-ui';
-import { Helper } from 'src/app/services/helper.service';
+import {FormsModule} from '@angular/forms';
+import {orderHelper} from 'src/app/services/orderHelper.service';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
+import { ProcessRefundModalModule } from '../../../../components/process-refund-modal/process-refund-modal.module';
+import { ProcessRefundModalComponent } from '../../../../components/process-refund-modal/process-refund-modal.component';
+import { ProcessRefundModalService } from '../../../../components/process-refund-modal/process-refund-modal.service';
 
 @NgModule({
   declarations: [RefundIncompleteOrdersComponent],
   imports: [
     RefundIncompleteOrdersRoutingModule,
     CommonModule,
+    BlockUIModule,
+    NgxPaginationModule,
+    FormsModule,
     ModalModule.forRoot(),
-    DataTablesModule,
-    BlockUIModule.forRoot({message:'Loading ...'})
+    ProcessRefundModalModule
   ],
-  providers:[Helper]
+  providers:[orderHelper,BsModalService,ProcessRefundModalService],
+  entryComponents:[ProcessRefundModalComponent]
 })
 export class RefundIncompleteOrdersModule { }

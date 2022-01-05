@@ -16,20 +16,17 @@
                       <label class="custom-control-label" for="refund_all_checkbox">Select All</label>
                   </div>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let drug of order.drugs">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let drug of order.products">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="checkbox_{{drug.id}}"
+                        <input type="checkbox" class="custom-control-input" id="checkbox_{{drug._id}}"
                             (change)="selectDrug(drug,$event)"
                             [checked]="checkDrugSelectedForRefund(drug)"
                             [disabled]="checkDrugDisabledForRefund(drug)" />
-                        <label class="custom-control-label " for="checkbox_{{drug.id}}">
-                        {{drug.drug_name+' '+drug.drug_dosage+' '+drug.drug_quantity+'  '+drug.drug_form }}
-
+                        <label class="custom-control-label " for="checkbox_{{drug._id}}">
+                        {{drug.product_name }}
                         <span *ngIf="drug.product_type && drug.product_type=='LENS'">{{ ' - '+drug.eye_type }}</span>
-                        <span class="ml-2">- {{ drug.drug_quantity_price | currency:'INR' }} </span>
-
+                        <span class="ml-2">- {{ drug.price | currency:'INR' }} </span>
                         <span *ngIf="drug.tax_amount > 0" > + Tax {{ drug.tax_amount | currency:'INR' }} </span>
-
                         </label>
                     </div>
                 </li>

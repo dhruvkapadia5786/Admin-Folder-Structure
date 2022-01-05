@@ -25,7 +25,7 @@ export class UserIllnessesAllergiesComponent implements OnChanges {
     this._getUserAllergies(userIdVal)
   }
   private _getUserIllnesses(userId) {
-    const url = 'api/v1/orders/getUserLastOrderIllnesses?user_id=' + userId;
+    const url = 'api/orders/getUserLastOrderIllnesses?user_id=' + userId;
     this.http.post(url, {}).subscribe(
       (data: UserOrderIllnesses[]) => {
         if (data.length) {
@@ -42,7 +42,7 @@ export class UserIllnessesAllergiesComponent implements OnChanges {
     );
   }
   private _getUserAllergies(userId) {
-    const url = 'api/v1/orders/getUserLastOrderAllergies?user_id=' + userId;
+    const url = 'api/orders/getUserLastOrderAllergies?user_id=' + userId;
     this.http.post(url, {}).subscribe(
       (data: UserOrderAllergies[]) => {
         if (data.length) {

@@ -1,8 +1,6 @@
 <div class="tab-pane mt-4">
-
 <ng-container>
- <h4 class="mb-3 font-weight-normal" *ngIf="medicineKit">{{medicineKit.name}}</h4>
-
+ <h4 class="mb-3 font-weight-normal" *ngIf="orderDetails.medicine_kit_details">{{orderDetails.medicine_kit_details.name}}</h4>
  <div class="table-responsive">
   <table class="table">
     <thead class="thead-light">
@@ -16,21 +14,15 @@
         <th class="py-1" scope="col">Prescibed</th>
       </tr>
     </thead>
-    <tbody  *ngIf="medicineKit">
-      <tr *ngFor="let medicine of medicineKit.medicines">
+    <tbody  *ngIf="orderDetails.medicine_kit_details">
+      <tr *ngFor="let medicine of orderDetails.medicine_kit_details.medicines">
           <td class="font-weight-normal">
-              <a class="text-primary" target="_blank" [href]="kitUrl"><h5 class="font-weight-normal">{{medicine.medicine_name}}</h5></a>
-
-                <p class="mb-0">Fax Send to Pharmacy : <span *ngIf="medicine.is_prescribed_by_fax==1"><i class="fa fa-check text-success"></i></span><span *ngIf="medicine.is_prescribed_by_fax!=1"><i class="fa fa-times text-danger"></i></span></p>
-
-                <p class="mt-3 mb-0" *ngIf="medicine.is_prescribed_by_weno && medicine.weno_prescription">
-                    MessageId :  {{medicine.weno_prescription.message_id}} <br/>
-                    Status : {{ medicine.weno_prescription.status }}<br/>
-                    Status Text : {{ medicine.weno_prescription.status_text }}
+                <h5 class="font-weight-normal">{{medicine.name}}</h5>
+                <p class="mb-0">Fax Send to Pharmacy :
+                <span *ngIf="medicine.is_prescribed_by_fax"><i class="fa fa-check text-success"></i></span>
+                <span *ngIf="!medicine.is_prescribed_by_fax"><i class="fa fa-times text-danger"></i></span>
                 </p>
-
-              <p class="mt-3 mb-0">DIRECTION : {{medicine.direction}}</p>
-
+              <p class="mt-3 mb-0">DIRECTION : {{medicine.default_direction}}</p>
               <div class="mt-3" *ngIf="medicine.prescription_send_to_pharmacy">
                 <p class="font-weight-bold mb-0">Prescription Send To Pharmacy</p>
                 <p class="mb-0">{{ medicine.prescription_send_to_pharmacy.name }}</p>
@@ -44,15 +36,13 @@
           <td class="font-weight-normal">{{medicine.quantity}}</td>
           <td class="font-weight-normal">{{medicine.doseform}}</td>
           <td class="font-weight-normal">{{medicine.route}}</td>
-          <td class="font-weight-normal">{{medicine.refills || '-'}}</td>
+          <td class="font-weight-normal">{{medicine.refills}}</td>
           <td class="font-weight-normal">
-            <span class="text-warning" *ngIf="medicine.is_prescribed!=1">Not Prescribed</span>
-            <a *ngIf="medicine.is_prescribed==1 && medicine.prescription_url" target="_blank" class="btn btn-primary btn-sm mb-1 text-white" href="{{api_url + medicine.prescription_url }}">View Rx</a>
-
+            <span class="text-warning" *ngIf="!medicine.is_prescribed">Not Prescribed</span>
+            <a *ngIf="medicine.is_prescribed && medicine.prescription_url" target="_blank" class="btn btn-primary btn-sm mb-1 text-white" href="{{api_url + medicine.prescription_url }}">View Rx</a>
           </td>
       </tr>
      </tbody>
-
   </table>
  </div>
 </ng-container>

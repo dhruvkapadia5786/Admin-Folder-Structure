@@ -1,10 +1,4 @@
 import { Injectable } from '@angular/core';
-import { SYSTEM_STATUS } from 'src/app/enums/order-status.enum';
-import { DOCTOR_STATUS } from 'src/app/enums/order-status.enum';
-import { TECHNICIAN_STATUS } from 'src/app/enums/order-status.enum';
-import { CUSTOMER_STATUS } from 'src/app/enums/order-status.enum';
-import { PHARMACY_STATUS } from 'src/app/enums/order-status.enum';
-
 @Injectable()
 export class orderHelper {
 
@@ -76,7 +70,14 @@ export class orderHelper {
       }
       else if (status == 'SEND_TO_PHARMACY'){
         badge= `<span class='badge  badge-pill badge-primary  p-2'>Sent To Pharmacy</span>`;
-      } else if (status == 'COMPLETED'){
+      }
+      else if (status == 'SHIPPED'){
+        badge= `<span class='badge  badge-pill badge-success  p-2'>Shipped</span>`;
+      }
+      else if (status == 'PICKEDUP_DELIVERY'){
+        badge= `<span class='badge  badge-pill badge-success  p-2'>Pickedup / Delivery</span>`;
+      }
+      else if (status == 'COMPLETED'){
         badge= `<span class='badge  badge-pill badge-success  p-2'>Completed</span>`;
       } else if (status == 'REFUNDED'){
         badge= `<span class='badge  badge-pill badge-danger  p-2'>Refunded</span>`;
@@ -106,7 +107,14 @@ export class orderHelper {
       let badge='';
       if (status == 'INCOMPLETE'){
         badge= `<span class='badge  badge-pill badge-info p-2'>Incomplete</span>`;
-      }else if (status == 'COMPLETED'){
+      }
+      else if (status == 'SHIPPED'){
+        badge= `<span class='badge  badge-pill badge-success  p-2'>Shipped</span>`;
+      }
+      else if (status == 'PICKEDUP_DELIVERY'){
+        badge= `<span class='badge  badge-pill badge-success  p-2'>Pickedup / Delivery</span>`;
+      }
+      else if (status == 'COMPLETED'){
         badge= `<span class='badge  badge-pill badge-success  p-2'>Completed</span>`;
       } else if (status == 'REFUNDED'){
         badge= `<span class='badge  badge-pill badge-danger  p-2'>Refunded</span>`;
@@ -142,7 +150,14 @@ export class orderHelper {
         badge= `<span class='badge  badge-pill badge-danger  p-2'>Rejected</span>`;
       } else if (status == 'ASSIGNED_TO_PHARMACY') {
         badge= `<span class='badge  badge-pill badge-primary  p-2'>Assigned To Pharmacy</span>`;
-      } else if (status == 'COMPLETED'){
+      }
+      else if (status == 'SHIPPED'){
+        badge= `<span class='badge  badge-pill badge-success  p-2'>Shipped</span>`;
+      }
+      else if (status == 'PICKEDUP_DELIVERY'){
+        badge= `<span class='badge  badge-pill badge-success  p-2'>Pickedup / Delivery</span>`;
+      }
+      else if (status == 'COMPLETED'){
         badge= `<span class='badge  badge-pill badge-success  p-2'>Completed</span>`;
       } else if (status == 'REFUND_REQUESTED'){
         badge= `<span class='badge  badge-pill badge-danger  p-2'>Refund Requested</span>`;

@@ -15,6 +15,9 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { RefundDrugModalComponent } from '../../common-components/refund-drug-modal/refund-drug-modal.component';
 import { RefundDrugModalService } from '../../common-components/refund-drug-modal/refund-drug-modal.service';
 
+import { ChangeAddressModalComponent } from 'src/app/components/change-address-modal/change-address-modal.component';
+import { ChangeAddressModalService } from 'src/app/components/change-address-modal/change-address-modal.service';
+
 @Component({
   selector: 'app-drug-orders-view',
   templateUrl: './drug-orders-view.component.html',
@@ -25,13 +28,9 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   orderId: any;
   parentSub: any;
   patient: any;
-
   orderDetails: any;
-  patientUinqueNumber: any;
-  addressForm:FormGroup;
-  states:any[]=[];
 
-  iframeMapURL: string = `https://www.google.com/maps/embed/v1/directions`;
+  iframeMapURL: string = `https://www.google.com/maps/embed/v1/place`;
   @ViewChild('mapIframe') input: any;
   imageUrl: any = '../../../../assets/img/no-image.png';
   _albums = [{
@@ -113,69 +112,47 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     public _drugOrderHelper:drugOrderHelper,
     private modalService: BsModalService,
     private _refundDrugModalService: RefundDrugModalService,
-  ) {
+    private _changeAddressModalService:ChangeAddressModalService){
+
     this.orderId = this.route.snapshot.paramMap.get('id');
-
     this.getOrderDetails();
-
-    this.addressForm = new FormGroup({
-      user_id:new FormControl(null),
-      order_id: new FormControl(null),
-      address_line_1: new FormControl(null, [Validators.required]),
-      address_line_2: new FormControl(null),
-      city_name: new FormControl(null, [Validators.required]),
-      state_id: new FormControl(null, [Validators.required]),
-      state_name: new FormControl(null, [Validators.required]),
-      state_abbreviation: new FormControl(null, [Validators.required]),
-      zip_code: new FormControl(null, [Validators.required]),
-   });
-
-   this.changeSubscriptionForm=new FormGroup({
-    subscription_id:new FormControl(null,[Validators.required]),
-    medicine_name:new FormControl(null,[Validators.required]),
-    custom_duration:new FormControl(null,[Validators.required])
-   });
-
+    this.changeSubscriptionForm=new FormGroup({
+        subscription_id:new FormControl(null,[Validators.required]),
+        medicine_name:new FormControl(null,[Validators.required]),
+        custom_duration:new FormControl(null,[Validators.required])
+    });
   }
-
-  get user_id() { return this.addressForm.get('user_id'); }
-  get order_id() { return this.addressForm.get('order_id'); }
-  get address_line_1() { return this.addressForm.get('address_line_1'); }
-  get address_line_2() { return this.addressForm.get('address_line_2'); }
-  get city_name() { return this.addressForm.get('city_name'); }
-  get state_id() { return this.addressForm.get('state_id'); }
-  get state_name() { return this.addressForm.get('state_name'); }
-  get state_abbreviation() { return this.addressForm.get('state_abbreviation'); }
-  get zip_code() { return this.addressForm.get('zip_code'); }
-
 
   get subscription_id () {return this.changeSubscriptionForm.get('subscription_id');}
 	get medicine_name () {return this.changeSubscriptionForm.get('medicine_name');}
 	get custom_duration () {return this.changeSubscriptionForm.get('custom_duration');}
 
-  closeAddressModal(modal:any){
-    this.addressForm.reset();
-    modal.hide();
-  }
 
   openEditAddressModal(){
-    this.addressForm.patchValue({
+    this._changeAddressModalService.setFormData({
+      type: 'EDIT_ADDRESS',
       order_id:this.orderId,
       user_id:this.orderDetails.user_id._id,
+      contact_name:this.orderDetails.shipping_address.contact_name,
+      contact_number:this.orderDetails.shipping_address.contact_number,
       address_line_1: this.orderDetails.shipping_address.address_line_1,
       address_line_2: this.orderDetails.shipping_address.address_line_2?this.orderDetails.shipping_address.address_line_2:'',
+      landmark:this.orderDetails.shipping_address.landmark,
       city_name: this.orderDetails.shipping_address.city,
       state_id: this.orderDetails.shipping_address.state_id,
       state_name: this.orderDetails.shipping_address.state,
-      state_abbreviation: this.orderDetails.shipping_address.state_abbreviation,
-      zip_code: this.orderDetails.shipping_address.zip_code
+      zip_code: this.orderDetails.shipping_address.zip_code,
+      user_address_type: this.orderDetails.shipping_address.user_address_type,
+      addressModalTitle: 'Change Address'
     });
-    this.cdr.detectChanges();
+    this.modalRef = this.modalService.show(ChangeAddressModalComponent, { class: 'modal-lg' });
+    this.modalRef.content.onEventCompleted.subscribe((address: any) => {
+      /* CALL METHOD TO MAKE API CALL TO SAVE ADDRESS */
+        this.saveUserAddress(address);
+    });
+  }
 
- }
-
-  ngOnInit() {
-    this._getState();
+  ngOnInit(){
   }
 
   openRefundModal(){
@@ -193,7 +170,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     if(form.valid){
       // this.drugorderDetailsLoader.start();
       this.formSubmitting = true;
-      const apiURL = 'api/pharmacy_orders/refund_request';
+      const apiURL = 'api/pharmacy_orders/refund_request/'+this.orderId;
       const obj = {
         initiated_by: 'admin',
         order_id: this.orderId,
@@ -216,67 +193,22 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     }
   }
 
-  _getState() {
-    const url = 'api/states/active';
-    this.http.get(url).subscribe(
-      (data:any) => {
-        this.states = data;
-      },
-      (err) => {
-      }
-    );
-  }
-
-
-  loadMapIframe () {
-    this.iframeMapURL = `https://www.google.com/maps/embed/v1/directions?key=${environment.google_map_api_key}&origin=28.5483592,-81.5886492&destination=`;
-    if (this.orderDetails.shipping_address.latitude && this.orderDetails.shipping_address.longitude) {
-      this.iframeMapURL += this.orderDetails.shipping_address.latitude + ',' + this.orderDetails.shipping_address.longitude;
-    } else {
-      this.iframeMapURL += (this.orderDetails.shipping_address.address_line_1 !== null ? this.orderDetails.shipping_address.address_line_1 : '') + ' ' + (this.orderDetails.address.address_line_2 !== null ? this.orderDetails.address.address_line_2 : '') + ' ' + (this.orderDetails.address.city_name !== null ? this.orderDetails.address.city_name : '') + ' ' + (this.orderDetails.address.zip_code !== null ? this.orderDetails.address.zip_code : '')
-    }
+  loadMapIframe(){
+    this.iframeMapURL = `https://www.google.com/maps/embed/v1/place?key=${environment.google_map_api_key}&q=`
+    this.iframeMapURL += (this.orderDetails.shipping_address.address_line_1 !== null ? this.orderDetails.shipping_address.address_line_1 : '') + ' ' + (this.orderDetails.address.address_line_2 !== null ? this.orderDetails.address.address_line_2 : '') + ' ' + (this.orderDetails.address.city !== null ? this.orderDetails.address.city : '') + ' ' + (this.orderDetails.address.zip_code !== null ? this.orderDetails.address.zip_code : '')
     this.input.nativeElement.src = this.iframeMapURL;
     this.input.nativeElement.style.display = 'block';
   }
 
-  saveUserAddress(valid:boolean){
-    if(valid){
-          this.validateShippingAddress().then((res:any) => {
-            if (res) {
-              const url = 'api/pharmacy_orders/save_order_address';
-              this.http.post(url,{
-                  order_id:this.orderId,
-                  user_id:this.orderDetails.user_id._id,
-                  address:this.addressForm.value
-                }).subscribe((data:any) => {
-
-                    this.getOrderDetails();
-                },
-                (err) => {
-
-                }
-              );
-           }
-        });
-    }else{
-      return ;
-    }
+  saveUserAddress(address:any){
+    const url = 'api/pharmacy_orders/change_address/' + this.orderId;
+    this.http.post(url,address).subscribe((data:any) => {
+        this.toastr.showSuccess('Address Successfully Updated');
+        this.getOrderDetails();
+      }, err => {
+        this.toastr.showError('Unable to update order address. Please try again');
+      });
   }
-
-
-  getStateNameFromId(state_id:any){
-    let stateFound =  this.states.find((state:any)=>state._id == state_id);
-    return stateFound && stateFound.name ? stateFound.name:'Florida';
-  }
-
-  setStateInfo(state_id:any){
-    let stateFound =  this.states.find((state:any)=>state._id == state_id);
-    this.addressForm.patchValue({
-      state_name: stateFound.name,
-      state_abbreviation: stateFound.abbreviation
-    });
-  }
-
 
   deactivateSubscription(subscription:any) {
     const url = 'api/pharmacy_orders/cancle_subscription/' + this.orderId;
@@ -382,9 +314,8 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
     this.http.get(url).subscribe((data: any) => {
       this.orderDetails = data;
-       this.patient = data.user_id;
+      this.patient = data.user_id;
       this.patient.age = this.helper.calculateAge(this.patient.date_of_birth,'YYYY-MM-DDTHH:mm:ss.000Z');
-      this.patientUinqueNumber = this.helper.getUserUniqueId(this.patient._id, this.patient.type);
       this.anyDrugRefunded = data.products.filter((drg:any)=> {
         let is_disabled_refund= (drg.order_drug_status == 'REFUND_PROCESSED' || drg.order_drug_status == 'REFUND_REQUESTED');
         if(!is_disabled_refund) this.all_drugs_for_refund_length++;
@@ -392,13 +323,13 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
         return is_disabled_refund
       }).length>0?true:false;
 
-      console.log('Order Details >> ', this.orderDetails)
       if(data.system_status=='COMPLETED' || data.system_status=='REFUNDED' || data.system_status=='REJECTED'){
         this.showChangeAddressBtn =false;
       }else{
         this.showChangeAddressBtn =true;
       }
-      if (this.patient.license_photo) {
+
+      if (this.patient.license_photo){
         this.getImage(this.patient.license_photo);
       } else {
         this.imageUrl = '../../../../assets/img/no-image.png';
@@ -413,46 +344,6 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     },
       err => {
         this.toastr.showError('Unable to fetch order detials');
-      });
-  }
-
-
-validateShippingAddress(): Promise<boolean> {
-
-      let state_name= this.getStateNameFromId(this.addressForm.value.state_id);
-      let ValidationAddress = {
-        address_line1: this.addressForm.value.address_line_1,
-        city_locality: this.addressForm.value.city,
-        company_name: '',
-        country_code: 'US',
-        postal_code: this.addressForm.value.zip_code,
-        state_province: state_name
-      };
-      const url = 'api/states/validateShippingAddress';
-      let isValid = false;
-      const obj = {
-        address: [ValidationAddress]
-      };
-      return new Promise((resolve, reject) => {
-        this.http.post(url, obj).subscribe((data: any) => {
-            if (data[0].status === 'verified') {
-              isValid = true;
-              resolve(isValid);
-            } else if (data[0].status === 'unverified') {
-              isValid = false;
-              this.toastr.showError('Shipping Address is not verified');
-              reject(isValid);
-            } else {
-              isValid = false;
-              this.toastr.showError('Shipping Address is invalid');
-              reject(isValid);
-            }
-          },
-          err => {
-            isValid = false;
-            this.toastr.showError('Shipping Address is invalid');
-            reject(isValid);
-          });
       });
   }
 

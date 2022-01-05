@@ -10,7 +10,7 @@ import {AdminDrugOrdersRoutingModule} from './admin-drug-orders-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { DataTablesModule } from 'angular-datatables';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { ModalModule ,BsModalService} from 'ngx-bootstrap/modal';
 import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.module';
 import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
 import {NgxPaginationModule} from 'ngx-pagination';
@@ -21,6 +21,12 @@ import { RefundDrugModalComponent } from '../common-components/refund-drug-modal
 import { RefundDrugModalService } from '../common-components/refund-drug-modal/refund-drug-modal.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ChangeAddressModalModule } from 'src/app/components/change-address-modal/change-address-modal.module';
+import { ChangeAddressModalComponent } from 'src/app/components/change-address-modal/change-address-modal.component';
+
+import { ProcessRefundModalModule } from 'src/app/components/process-refund-modal/process-refund-modal.module';
+import { ProcessRefundModalComponent } from 'src/app/components/process-refund-modal/process-refund-modal.component';
+import { ProcessRefundModalService } from 'src/app/components/process-refund-modal/process-refund-modal.service';
 
 @NgModule({
   declarations: [AdminDrugOrdersComponent, DrugOrdersListComponent, DrugOrdersViewComponent, RefundRequestedDrugOrdersComponent, RefundProcessedDrugOrdersComponent],
@@ -36,9 +42,11 @@ import { MatTabsModule } from '@angular/material/tabs';
     ImagePreviewModule,
     NgxPaginationModule,
     OrderLogsModule,
-    RefundDrugModalModule
+    RefundDrugModalModule,
+    ChangeAddressModalModule,
+    ProcessRefundModalModule
   ],
-  providers:[drugOrderHelper],
-  entryComponents: [RefundDrugModalComponent]
+  providers:[drugOrderHelper,BsModalService,ProcessRefundModalService],
+  entryComponents: [RefundDrugModalComponent,ChangeAddressModalComponent,ProcessRefundModalComponent]
 })
 export class AdminDrugOrdersModule { }

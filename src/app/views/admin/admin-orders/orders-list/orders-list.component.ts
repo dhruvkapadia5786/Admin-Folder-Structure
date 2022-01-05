@@ -20,7 +20,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
     filter: {
       STATE: [],
       MEDICINE_KIT: [],
-      ORDER_STATUS: ['NONE','ASSIGNED_TO_TECHNICIAN','REJECTED','APPROVED_BY_TECHNICIAN','ASSIGNED_TO_DOCTOR','PRESCRIBED_BY_DOCTOR','REFUND_REQUESTED','REFUND_PROCESSED','ASSIGNED_TO_PHARMACY','COMPLETED','TOO_SOON'],
+      ORDER_STATUS: ['NONE','INCOMPLETE','ASSIGNED_TO_TECHNICIAN','REJECTED','APPROVED_BY_TECHNICIAN','ASSIGNED_TO_DOCTOR','PRESCRIBED_BY_DOCTOR','REFUND_REQUESTED','REFUND_PROCESSED','ASSIGNED_TO_PHARMACY','SHIPPED','PICKEDUP_DELIVERY'],
       ORDER_TYPE: ['MAIN','REFILL']
     }
   };
@@ -122,7 +122,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
+              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
@@ -134,19 +134,19 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
+              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
           }
         },
         {
-          data: 'user_id.first_name',
+          data: 'user.first_name',
           title: 'Customer Name',
           className: 'text-center font-weight-normal',
           render: function (data: any, type: any, full: any) {
             // tslint:disable-next-line:max-line-length
-            return `<a href="javascript:void(0);" class="text-primary font-weight-bold" customerId=${full.user_id._id}>${full.user_id.first_name} ${full.user_id.last_name} </a>`;
+            return `<a href="javascript:void(0);" class="text-primary font-weight-bold" customerId=${full.user_id}>${full.user.first_name} ${full.user.last_name} </a>`;
           }
         },
         {

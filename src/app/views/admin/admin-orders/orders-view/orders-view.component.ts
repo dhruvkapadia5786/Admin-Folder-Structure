@@ -29,12 +29,7 @@ export class OrdersViewComponent implements OnInit {
   orderDetails: any;
   drugRXCUI = '';
   userDrugs: any[] = [];
-  orderCurrentStatus: any = {};
   loadingReminderButton: boolean = false;
-
-  refundData: any;
-  refundOrderForm:FormGroup;
-  formSubmitting:boolean=false;
 
   iframeMapURL: string = `https://www.google.com/maps/embed/v1/directions`;
   @ViewChild('mapIframe') input: any;
@@ -65,49 +60,50 @@ export class OrdersViewComponent implements OnInit {
   ) {
     this.orderId = this.route.snapshot.paramMap.get('id');
 
-    this.refundOrderForm = new FormGroup({
-      refund_reason:new FormControl(null, [Validators.required])
-    });
   }
-
-  get refund_reason(){return this.refundOrderForm.get('refund_reason');}
 
   openEditAddressModal(){
     this._changeAddressModalService.setFormData({
       type: 'EDIT_ADDRESS',
       order_id:this.orderId,
       user_id:this.orderDetails.user_id._id,
+      contact_name:this.orderDetails.shipping_address.contact_name,
+      contact_number:this.orderDetails.shipping_address.contact_number,
       address_line_1: this.orderDetails.shipping_address.address_line_1,
       address_line_2: this.orderDetails.shipping_address.address_line_2?this.orderDetails.shipping_address.address_line_2:'',
+      landmark:this.orderDetails.shipping_address.landmark,
       city_name: this.orderDetails.shipping_address.city,
       state_id: this.orderDetails.shipping_address.state_id,
       state_name: this.orderDetails.shipping_address.state,
       zip_code: this.orderDetails.shipping_address.zip_code,
+      user_address_type: this.orderDetails.shipping_address.user_address_type,
       addressModalTitle: 'Change Address'
     });
     this.modalRef = this.modalService.show(ChangeAddressModalComponent, { class: 'modal-lg' });
-    this.modalRef.content.onEventCompleted.subscribe((file: any) => {
+    this.modalRef.content.onEventCompleted.subscribe((address: any) => {
       /* CALL METHOD TO MAKE API CALL TO SAVE ADDRESS */
+        this.saveUserAddress(address);
     });
   }
 
   openRefundOrderModal(){
     this.modalRef = this.modalService.show(RefundRequestModalComponent, { class: 'modal-lg' });
-    this.modalRef.content.onEventCompleted.subscribe((submittedForm: any) => {
+    this.modalRef.content.onEventCompleted.subscribe((formVal: any) => {
       /* CALL METHOD TO MAKE API CALL TO SAVE ADDRESS */
+       this.refundOrderFormSubmit(formVal);
     });
   }
 
-  ngOnInit() {
+  ngOnInit(){
     this.getOrderDetails();
-    this.customFrequency =30;
+    this.customFrequency = 30;
   }
 
   getOrderDetailsAgain(){
     this.getOrderDetails();
   }
 
-  sendMail(orderId:number) {
+  sendMail(orderId:number){
     this.loadingReminderButton = true
     this.http
     .post<any>(`api/orders/email/incompleteOrder/${orderId}`, {})
@@ -120,28 +116,20 @@ export class OrdersViewComponent implements OnInit {
     })
   }
 
-  loadMapIframe () {
-    this.iframeMapURL = `https://www.google.com/maps/embed/v1/directions?key=${environment.google_map_api_key}&origin=28.5483592,-81.5886492&destination=`;
-    if (this.orderDetails.address.latitude && this.orderDetails.address.longitude) {
-      this.iframeMapURL += this.orderDetails.address.latitude + ',' + this.orderDetails.address.longitude;
-    } else {
-      this.iframeMapURL += (this.orderDetails.address.address_line_1 !== null ? this.orderDetails.address.address_line_1 : '') + ' ' + (this.orderDetails.address.address_line_2 !== null ? this.orderDetails.address.address_line_2 : '') + ' ' + (this.orderDetails.address.city_name !== null ? this.orderDetails.address.city_name : '') + ' ' + (this.orderDetails.address.zip_code !== null ? this.orderDetails.address.zip_code : '')
-    }
+  loadMapIframe(){
+    this.iframeMapURL = `https://www.google.com/maps/embed/v1/place?key=${environment.google_map_api_key}&q=`;
+    this.iframeMapURL += (this.orderDetails.address.address_line_1 !== null ? this.orderDetails.address.address_line_1 : '') + ' ' + (this.orderDetails.address.address_line_2 !== null ? this.orderDetails.address.address_line_2 : '') + ' ' + (this.orderDetails.address.city !== null ? this.orderDetails.address.city : '') + ' ' + (this.orderDetails.address.zip_code !== null ? this.orderDetails.address.zip_code : '')
     this.input.nativeElement.src = this.iframeMapURL;
     this.input.nativeElement.style.display = 'block';
   }
 
   saveUserAddress(address:any){
-      const url = 'api/order/save_address';
-      this.http.post(url,{
-              order_id:this.orderId,
-              user_id:this.orderDetails.user_id._id,
-              address:address
-      }).subscribe((data:any) => {
-                this.getOrderDetails();
-      },
-      (err) => {
-
+    const url = 'api/orders/change_address/' + this.orderId;
+    this.http.post(url,address).subscribe((data:any) => {
+        this.toastr.showSuccess('Address Successfully Updated');
+        this.getOrderDetails();
+      }, err => {
+        this.toastr.showError('Unable to update order address. Please try again');
       });
   }
 
@@ -166,7 +154,7 @@ export class OrdersViewComponent implements OnInit {
 
   getUserLastOrderDrugs() {
     this.drugRXCUI = '';
-    const url = 'api/v1/orders/getUserLastOrderDrugs?user_id=' + this.patient.id;
+    const url = 'api/orders/getUserLastOrderDrugs?user_id=' + this.patient.id;
     this.http.post(url, {}).subscribe(
       (data: any) => {
         this.userDrugs = data;
@@ -255,30 +243,14 @@ export class OrdersViewComponent implements OnInit {
     a.click();
   }
 
-  refundOrderFormSubmit(formValid:boolean,modal:any) {
-    if(formValid){
-      this.formSubmitting = true;
-      const apiURL = 'api/orders/refund_request';
-      const obj = {
-        initiated_by: 'admin',
-        order_id: this.orderId,
-        refund_reason:this.refundOrderForm.value.refund_reason
-      };
-
-      this.http.post(apiURL, obj)
-        .subscribe((data) => {
-          this.formSubmitting = false;
-          this.refundData = data;
+  refundOrderFormSubmit(formValue:any){
+      const apiURL = 'api/orders/refund_request/'+this.orderId;
+      this.http.post(apiURL, formValue).subscribe((data) => {
           this.toastr.showSuccess('Refund request send successfully');
           this.getOrderDetails();
-          this.cdr.detectChanges();
         }, err => {
-          this.formSubmitting = false;
           this.toastr.showError('Unable to send refund request');
         });
-    }else{
-      return;
-    }
   }
 
 }

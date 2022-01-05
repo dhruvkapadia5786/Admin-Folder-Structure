@@ -22,26 +22,34 @@ export class CreateCouponCodeComponent implements OnInit {
   public kitList: any = [];
   public healthKitList: any = [];
   public categoryList: any = [
-    { 'name': 'Pharmacy Order', 'value': 'PET_PHARMACY_ORDER'},
-    { 'name': 'Order', 'value': 'PET_DTC_ORDER'},
-    { 'name': 'Consultation', 'value': 'PET_CONSULTATION'}
+    { 'name': 'Pharmacy Order', 'value': 'PHARMACY_ORDER'},
+    { 'name': 'Order', 'value': 'DTC_ORDER'},
+    { 'name': 'Consultation', 'value': 'CONSULTATION'}
   ]
-  setDiscountValidators() {
-    if (this.discountType == 'AMOUNT') {
-      this.divDiscountAmount = true;
-      this.divDiscountPercentage = false
-      this.addCouponCode.get('discount_percent')?.setValidators([]);
-      this.addCouponCode.get('discount_percent')?.setValue(null);
-      this.addCouponCode.get('discount_amount')?.setValidators([Validators.required]);
+  setDiscountValidators(){
+    let discount_percent_control = this.addCouponCode.get('discount_percent');
+    let discount_amount_control = this.addCouponCode.get('discount_amount');
+    if(this.discountType == 'AMOUNT'){
+          this.divDiscountAmount = true;
+          this.divDiscountPercentage = false
+          if(discount_percent_control){
+            discount_percent_control.setValidators([]);
+            discount_percent_control.setValue(null);
+          }
+          discount_amount_control? discount_amount_control.setValidators([Validators.required]):'';
     } else {
-      this.divDiscountAmount = false;
-      this.divDiscountPercentage = true;
-      this.addCouponCode.get('discount_percent')?.setValidators([Validators.required]);
-      this.addCouponCode.get('discount_amount')?.setValidators([]);
-      this.addCouponCode.get('discount_amount')?.setValue(null);
+        this.divDiscountAmount = false;
+        this.divDiscountPercentage = true;
+        if(discount_percent_control){
+          discount_percent_control.setValidators([Validators.required]);
+        }
+        if(discount_amount_control){
+          discount_amount_control.setValidators([]);
+          discount_amount_control.setValue(null);
+        }
     }
-    this.addCouponCode.get('discount_amount')?.updateValueAndValidity();
-    this.addCouponCode.get('discount_percent')?.updateValueAndValidity();
+    discount_amount_control?discount_amount_control.updateValueAndValidity():'';
+    discount_percent_control?discount_percent_control.updateValueAndValidity():'';
   }
 
   public addCouponCode!: FormGroup;
@@ -170,14 +178,14 @@ export class CreateCouponCodeComponent implements OnInit {
   }
 
   public handleCategoryChange(event: any) {
-    if (event.value.includes("PET_DTC_ORDER")) {
+    if (event.value.includes("DTC_ORDER")) {
       this.addCouponCode.addControl('kits', new FormControl(this.couponCodeObj.kits, [Validators.required]))
     } else {
       this.addCouponCode.removeControl('kits');
       this.couponCodeObj.kits = [];
     }
 
-    if (event.value.includes("PET_CONSULTATION")) {
+    if (event.value.includes("CONSULTATION")) {
       this.addCouponCode.addControl('health_conditions', new FormControl(this.couponCodeObj.health_conditions, [Validators.required]))
     } else {
       this.addCouponCode.removeControl('health_conditions');

@@ -14,7 +14,7 @@
                            [checked]="!notSelectedCategory">All</mat-checkbox>
                             <mat-option *ngFor="let category of categoryList" [value]="category.value">{{category.name}}</mat-option>
                         </mat-select>
-                    </mat-form-field>     
+                    </mat-form-field>
                     <div class="invalid-feedback" *ngIf="coupon_category?.invalid && (coupon_category?.dirty || coupon_category?.touched)" class="text-danger">
                         <div *ngIf="coupon_category?.errors?.required">Please select category.</div>
                     </div>
@@ -38,11 +38,11 @@
                             <mat-option *ngFor="let st of statesList" [value]="st._id">{{st.name}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    
+
                     <div class="invalid-feedback" *ngIf="states?.invalid && (states?.dirty || states?.touched)" class="text-danger">
                         <div *ngIf="states?.errors?.required">Please select state.</div>
                     </div>
-                </div>  
+                </div>
             </div>
         </div>
 
@@ -51,14 +51,14 @@
                 <div class="col-6" *ngIf="editCouponCode.get('kits')" >
                         <label for="kits">Kits</label>
                         <mat-form-field class="w-100">
-                            <mat-select formControlName="kits" [(ngModel)]="couponCodeObj.pet_dtc_medicine_kits" multiple>
+                            <mat-select formControlName="kits" [(ngModel)]="couponCodeObj.kits" multiple>
                                 <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'kit')"
                                 [indeterminate]="(couponCodeObj && couponCodeObj?.kits?.length) && notSelectedKits"
                                 [checked]="!notSelectedKits">All</mat-checkbox>
                                 <mat-option *ngFor="let kit of kitList" [value]="kit._id">{{kit.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
-                        
+
                         <div class="invalid-feedback" *ngIf="kits?.invalid && (kits?.dirty || kits?.touched)" class="text-danger">
                             <div *ngIf="kits?.errors?.required">Please select kit.</div>
                         </div>
@@ -66,14 +66,14 @@
                  <div class="col-6" *ngIf="editCouponCode.get('health_conditions')">
                     <label for="health_conditions">Health Conditions</label>
                     <mat-form-field class="w-100">
-                        <mat-select formControlName="health_conditions"  [(ngModel)]="couponCodeObj.pet_consultation_health_conditions" multiple>
+                        <mat-select formControlName="health_conditions"  [(ngModel)]="couponCodeObj.health_conditions" multiple>
                              <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'health_conditions')"
                            [indeterminate]="(couponCodeObj && couponCodeObj?.health_conditions?.length) && notSelectedhealthKits"
                            [checked]="!notSelectedhealthKits">All</mat-checkbox>
                             <mat-option *ngFor="let kit of healthKitList" [value]="kit._id">{{kit.name}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    
+
                     <div class="invalid-feedback" *ngIf="health_conditions?.invalid && (health_conditions?.dirty || health_conditions?.touched)" class="text-danger">
                         <div *ngIf="health_conditions?.errors?.required">Please select health condition.</div>
                     </div>
@@ -184,7 +184,7 @@
                 </div>
             </div>
         </div>
- 
+
         <div class="form-group">
             <div class="form-row">
                 <div class="col-sm-6">

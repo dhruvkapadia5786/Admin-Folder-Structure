@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '../../../../guards/auth.guard';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 import { RefundIncompleteOrdersComponent } from './refund-incomplete-orders.component';
 
 const routes: Routes = [

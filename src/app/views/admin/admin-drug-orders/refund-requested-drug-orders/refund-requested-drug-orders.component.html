@@ -54,8 +54,8 @@
                             <div class="d-flex flex-lg-row flex-md-row flex-sm-column  flex-column justify-content-between align-items-lg-top align-items-md-top align-items-sm-start align-items-start" style="border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;">
                                 <div  class="magic-width d-flex flex-lg-row flex-md-row flex-sm-column flex-column justify-content-start align-items-lg-top align-items-md-top align-items-sm-start align-items-start">
                                     <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER NO.</small></p><p class="font-weight-bold mb-0">#{{order.order_number}}</p></div>
-                                    <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER DATE</small></p><p class="font-weight-bold mb-0">{{order.order_created_datetime  | date: 'MM/dd/yyyy'}}</p></div>
-                                    <div class="mr-3 text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">CUSTOMER</small></p><p class="font-weight-bold mb-0">{{order.customer_name }}</p></div>
+                                    <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER DATE</small></p><p class="font-weight-bold mb-0">{{order.order_place_datetime  | date: 'dd-MM-yyyy'}}</p></div>
+                                    <div class="mr-3 text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">CUSTOMER</small></p><p class="font-weight-bold mb-0">{{order.user.first_name+' '+order.user.last_name }}</p></div>
                                     <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">TOTAL</small></p><p class="font-weight-bold mb-0">{{ order.total_amount | currency:'INR'}}</p></div>
                                     <div class="magic-width-box text-center mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start">
                                         <p class="mb-0"><small class="mb-0">ORDER STATUS</small></p>
@@ -94,8 +94,8 @@
                                         <td class="align-middle text-left font-weight-bold">{{drug.quantity}}</td>
                                         <td class="align-middle text-left">
                                             <strong [innerHTML]="_drugOrderHelper.getOrderDrugStatus(drug.order_drug_status)"></strong>
-                                            <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Date time : {{drug.refund_requested_on | date: 'MM/dd/yyyy HH:mm a' }}</p>
-                                            <p class="mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Reason : {{drug.refund_reason}}</p>
+                                            <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Date time : {{drug.refund_requested_on | date: 'dd-MM-yyyy hh:mm a' }}</p>
+                                            <p class="mb-0 font-weight-normal text-danger"  *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Reason : {{drug.refund_reason}}</p>
                                         </td>
                                         <td class="align-middle text-right font-weight-bold">{{ drug.tax_amount | currency:'INR'}}</td>
                                         <td class="align-middle text-right font-weight-bold">{{ drug.price | currency:'INR'}}</td>
@@ -118,108 +118,3 @@
             </div>
         </div>
     </div>
-
-<!-- Refund Details Modal -->
-<!--<div  mdbModal #refundDetailsModal="mdbModal" class="modal fade" id="refundDetailsModal" tabindex="-1" role="dialog" aria-labelledby="refundDetailsModalLabel" aria-hidden="true"  [config]="{backdrop: 'static',keyboard:false}">
-  <div class="modal-dialog modal-info modal-lg" role="document">
-    <div class="modal-content" *ngIf="selectedOrder" style="max-height:600px;overflow-y:scroll;">
-        <div class="modal-header">
-        <h5 class="modal-title"> Refund Order {{ '#'+selectedOrder.order_number }}</h5>
-        <button type="button" class="close"  (click)="closeModal(refundDetailsModal)">
-          <span aria-hidden="true">&times;</span>
-        </button>
-
-        </div>
-        <div class="modal-body">
-
-            <h5>Order Summary</h5>
-            <table class="table table-sm">
-                <thead class="thead-light">
-                <tr>
-                  <th>Order Subtotal</th>
-                  <th>Shipping Charge</th>
-                  <th>Discount</th>
-                  <th>Total</th>
-                  <th>Stripe</th>
-                  <th>Wallet</th>
-                </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>${{selectedOrder.subtotal}}</td>
-                    <td>${{selectedOrder.shipping_charge}}</td>
-                    <td>${{selectedOrder.total_discount}}</td>
-                    <td  class="alert-success">${{selectedOrder.total_amount}}</td>
-                    <td  class="alert-success">${{selectedOrder.charged_from_paymentgateway}}</td>
-                    <td  class="alert-success">${{selectedOrder.charged_from_wallet}}</td>
-                  </tr>
-                </tbody>
-            </table>
-
-
-            <h5>Refund Summary Until Now</h5>
-            <table class="table table-sm">
-                <thead class="thead-light">
-                <tr>
-                  <th>Refunded Shipping Charge</th>
-                  <th>Refunded Discount</th>
-                  <th>Refunded Total</th>
-                  <th>Refunded in Stripe</th>
-                  <th>Refunded in Wallet</th>
-                </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>${{selectedOrder.refunded_shipping_charge}}</td>
-                    <td>${{selectedOrder.refunded_discount}}</td>
-                    <td>${{selectedOrder.refunded_total}}</td>
-                    <td>${{selectedOrder.refunded_in_paymentgateway}}</td>
-                    <td>${{selectedOrder.refunded_in_wallet}}</td>
-                  </tr>
-                </tbody>
-            </table>
-
-            <h5>Refund Summary</h5>
-            <table class="table table-sm" *ngIf="refundObject">
-                <thead class="thead-light">
-                <tr>
-                  <th>Refund Shipping Charge</th>
-                  <th>Refund Discount</th>
-                  <th>Refund Total</th>
-                  <th>Refund To Stripe</th>
-                  <th>Refund To Wallet</th>
-                </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="alert-primary font-weight-bold">${{refundObject.amount_to_process_refund_in_shipping_charge}}</td>
-                    <td class="alert-primary font-weight-bold">${{refundObject.amount_to_process_refund_in_discount}}</td>
-                    <td class="alert-primary font-weight-bold">${{refundObject.amount_to_precess_refund_total}}</td>
-                    <td class="alert-primary font-weight-bold">${{refundObject.amount_to_process_refund_in_stripe}}</td>
-                    <td class="alert-primary font-weight-bold">${{refundObject.amount_to_process_refund_in_wallet}}</td>
-                  </tr>
-                </tbody>
-            </table>
-             <div class="form-group" *ngIf="!selectedOrder.result">
-                    <mat-checkbox color="primary"
-                    [(ngModel)]="full_refund_in_wallet"
-                    (change)="recalculateRefund($event)">Process all amount to be refunded in Wallet ?</mat-checkbox>
-            </div>
-            <div class="text-center" *ngIf="refund_processing">
-                Processing ...
-            </div>
-            <div class="alert alert-success font-weight-bold" role="alert" *ngIf="selectedOrder.result && selectedOrder.result.refunded">
-               Order Refunded Successfully.
-               <p class="mb-0">Refunded To Stripe : {{ selectedOrder.result.stripeRefund ? selectedOrder.result.stripeRefund.id:'N/A' }} </p>
-               <p> Refunded To Wallet : {{ selectedOrder.result.walletRefund ? 'Yes':'N/A' }} </p>
-            </div>
-            <div class="alert alert-danger" role="alert" *ngIf="selectedOrder.result && !selectedOrder.result.refunded">
-               Unable to process refund order. Please Check Payment Method!
-            </div>
-            <button *ngIf="!(selectedOrder.result && selectedOrder.result.refunded)" class="btn btn-block btn-success" [disabled]="refund_processing" (click)="refundOrder(selectedOrder._id)">PROCESS REFUND</button>
-            <button *ngIf="selectedOrder.result && selectedOrder.result.refunded" class="btn btn-block btn-dark"  (click)="closeModal(refundDetailsModal)">CLOSE</button>
-
-        </div>
-    </div>
-  </div>
-</div>-->

@@ -11,7 +11,7 @@ export const environment = {
 	stripeKey: 'pk_test_J1qdy5OTEEIhXIdoCT1arBrk',
 	websocket_url: 'http://localhost:3001/',
 	agora_app_id: '51be4b52db464404b35cba61cdbb3a82',
-  	google_map_api_key:'AIzaSyCI53DNz8ya-neDPgwYH-TS__Wwxl_f3ms'
+  	google_map_api_key:'AIzaSyC6rcSc_T8SsfqPiJBi5W42Oz4jLFXCyLU'
 };
 
 /*

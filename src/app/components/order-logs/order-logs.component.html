@@ -2,12 +2,13 @@
     <div class="row mb-2">
         <div class="col-md-4">
             <label>User Filter</label>
-            <mat-select [ngModel]="userType"  (selectionChange)="getOrderLogs($event.value)" class="form-control" placeholder="SELECT USER TYPE">
-                <mat-option value="">ALL</mat-option>
-                <mat-option value="1,5,6">DOCTOR</mat-option>
-                <mat-option value="4">TECHNICIAN</mat-option>
-                <mat-option value="3">CUSTOMER</mat-option>
-                <mat-option value="2,7,8,9,10">PHARMACY</mat-option>
+            <mat-select [(ngModel)]="userType"  (selectionChange)="getOrderLogs($event.value)" class="form-control" placeholder="SELECT USER TYPE">
+                <mat-option value="admin,technician,doctor,user,pharmacy_manager,pharmacist,pharmacy_technician,pharmacy_cashier">ALL</mat-option>
+                <mat-option value="admin">ADMIN</mat-option>
+                <mat-option value="doctor">DOCTOR</mat-option>
+                <mat-option value="technician">TECHNICIAN</mat-option>
+                <mat-option value="user">CUSTOMER</mat-option>
+                <mat-option value="pharmacy_manager,pharmacist,pharmacy_technician,pharmacy_cashier">PHARMACY</mat-option>
             </mat-select>
         </div>
     </div>
@@ -24,7 +25,7 @@
             <tbody>
                 <tr *ngFor="let log of orderLogs; let idx = index">
                     <td class="font-weight-normal">{{log.event}}</td>
-                    <td class="font-weight-normal">{{log.full_name}}</td>
+                    <td class="font-weight-normal">{{log.user_id.first_name+' '+log.user_id.last_name}}</td>
                     <td class="font-weight-normal">
                         {{log.data}}
                         <button *ngIf="log.request_input && log.response_output" (click)="showLogDetailsModal(log)" class="btn btn-primary btn-sm float-right">Details</button>

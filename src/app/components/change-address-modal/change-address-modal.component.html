@@ -11,56 +11,92 @@
     <div class="modal-body">
         <form [formGroup]="addressForm" (ngSubmit)="saveUserAddress(addressForm.valid)">
             <div class="form-group">
-                <label class="float-left">Address Line 1:</label>
-                <input type="text" class="form-control" formControlName="address_line_1" />
-                <div class="invalid-feedback"
-                    *ngIf="address_line_1?.invalid && (address_line_1?.dirty || address_line_1?.touched)"
-                    class="text-danger">
-                    <div *ngIf="address_line_1?.errors?.required">Address Line 1 is required</div>
-                </div>
-            </div>
+                  <label class="float-left">Full name (First and Last name)</label>
+                  <input type="text" class="form-control" formControlName="contact_name"  />
+                  <div class="text-small text-secondary">The bill will be prepared against this name</div>
+                  <div class="invalid-feedback" *ngIf="contact_name?.invalid && (contact_name?.dirty || contact_name?.touched)" class="text-danger">
+                      <div *ngIf="contact_name?.errors?.required">Full name is required</div>
+                  </div>
+              </div>
 
-            <div class="form-group">
-                <label class="float-left">Address Line 2:</label>
-                <input type="text" class="form-control" formControlName="address_line_2" />
-            </div>
+              <div class="form-group">
+                  <label class="float-left">Mobile number</label>
+                  <input type="text" class="form-control" formControlName="contact_number" placeholder="10-digit mobile number without prefixes"  pattern="[6789][0-9]{9}" />
+                  <div class="text-small text-secondary">For all delivery related communication</div>
+                  <div class="invalid-feedback" *ngIf="contact_number?.invalid && (contact_number?.dirty || contact_number?.touched)" class="text-danger">
+                      <div *ngIf="contact_number?.errors?.required">Mobile number is required</div>
+                      <div *ngIf="contact_number?.errors?.pattern">enter valid Mobile number</div>
+                  </div>
+              </div>
 
-            <div class="form-row">
-                <div class="col-md-6 col-12">
+
+              <div class="form-group">
+                  <label class="float-left">Flat, House no., Building, Apartment:</label>
+                  <input type="text" class="form-control" formControlName="address_line_1"  />
+                  <div class="invalid-feedback" *ngIf="address_line_1?.invalid && (address_line_1?.dirty || address_line_1?.touched)" class="text-danger">
+                      <div *ngIf="address_line_1?.errors?.required">Flat, House no., Building, Apartment is required</div>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="float-left">Area, Colony, Street, Sector, Village :</label>
+                  <input type="text" class="form-control" formControlName="address_line_2" />
+              </div>
+
+               <div class="form-group">
+                  <label class="float-left">Landmark :</label>
+                  <input type="text" class="form-control" formControlName="landmark" />
+               </div>
+
+              <div class="form-row">
+                  <div class="col-md-6 col-12">
+                      <div class="form-group">
+                          <label class="float-left">Town/City:</label>
+                          <input type="text" class="form-control" formControlName="city_name" />
+                          <div class="invalid-feedback" *ngIf="city_name?.invalid && (city_name?.dirty || city_name?.touched)" class="text-danger">
+                              <div *ngIf="city_name?.errors?.required">city name is required</div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="col-md-6 col-12">
+                      <div class="form-group">
+                          <label class="float-left">State / Province / Region :</label>
+                          <select formControlName="state_id" class="form-control">
+                                  <option *ngFor="let state of states" [value]="state._id">{{ state.name }}</option>
+                          </select>
+                          <div class="invalid-feedback" *ngIf="state_id?.invalid && (state_id?.dirty || state_id?.touched)" class="text-danger">
+                              <div *ngIf="state_id?.errors?.required">state is required</div>
+                          </div>
+                      </div>
+                  </div>
+
+
+                  <div class="col-md-6 col-12">
                     <div class="form-group">
-                        <label class="float-left">City:</label>
-                        <input type="text" class="form-control" formControlName="city_name" />
-                        <div class="invalid-feedback"
-                            *ngIf="city_name?.invalid && (city_name?.dirty || city_name?.touched)" class="text-danger">
-                            <div *ngIf="city_name?.errors?.required">city name is required</div>
+                        <label class="float-left">PIN code:</label>
+                        <input type="text" class="form-control" formControlName="zip_code" placeholder="6 digits [0-9] PIN code" pattern="[1-9][0-9]{5}"/>
+                        <div class="invalid-feedback" *ngIf="zip_code?.invalid && (zip_code?.dirty || zip_code?.touched)" class="text-danger">
+                            <div *ngIf="zip_code?.errors?.required">PIN code is required</div>
+                            <div *ngIf="zip_code?.errors?.pattern">enter valid PIN code</div>
                         </div>
                     </div>
-                </div>
+                  </div>
 
-                <div class="col-md-6 col-12">
-                    <div class="form-group">
-                        <label class="float-left">State:</label>
-                        <select formControlName="state_id" class="form-control" (change)="setStateInfo($event)">
-                            <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
-                        </select>
-                        <div class="invalid-feedback"
-                            *ngIf="state_id?.invalid && (state_id?.dirty || state_id?.touched)" class="text-danger">
-                            <div *ngIf="state_id?.errors?.required">state is required</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-12">
-                    <div class="form-group">
-                        <label class="float-left">ZipCode:</label>
-                        <input type="text" class="form-control" formControlName="zip_code" />
-                        <div class="invalid-feedback"
-                            *ngIf="zip_code?.invalid && (zip_code?.dirty || zip_code?.touched)" class="text-danger">
-                            <div *ngIf="zip_code?.errors?.required">zipcode is required</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                  <div class="col-md-6 col-12">
+                      <div class="form-group">
+                          <label class="float-left">Address Type :</label>
+                          <select formControlName="user_address_type" class="form-control">
+                                  <option value="HOME">Home</option>
+                                  <option value="WORK">Work</option>
+                                  <option value="OTHER">Other</option>
+                          </select>
+                          <div class="invalid-feedback" *ngIf="user_address_type?.invalid && (user_address_type?.dirty || user_address_type?.touched)" class="text-danger">
+                              <div *ngIf="user_address_type?.errors?.required">Address type is required</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
             <div class="text-center">
                 <button class="btn btn-primary" [disabled]="addressForm.invalid" type="submit">Save Address</button>
             </div>

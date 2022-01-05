@@ -77,7 +77,10 @@ export class drugOrderHelper {
 
     getOrderDrugStatus(status: string) {
         let badge = '';
-        if(status=='WAITING_FOR_PHARMACY_PROCESSING'){
+        if(status=='UNDER_REVIEW'){
+          badge = `<span class='badge badge-pill badge-info p-2'>UNDER REVIEW</span>`;
+        }
+        else if(status=='WAITING_FOR_PHARMACY_PROCESSING'){
           badge = `<span class='badge badge-pill badge-primary p-2'>WAITING FOR PROCESS ORDER</span>`;
         }
         else if (status == 'WAITING_FOR_RX_FROM_MAIL'){

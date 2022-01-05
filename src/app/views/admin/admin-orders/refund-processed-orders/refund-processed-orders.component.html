@@ -10,15 +10,109 @@
   </li>
 </ul>
 
-<div class="row p-3">
-  <div class="col-sm-12">
-    <h3>Refund Processed Orders</h3>
-  </div>
-</div>
-<hr>
 
-<div class="p-2">
-    <div class="table-responsive-md" *blockUI="'datatable'">
-      <table  hover="true" id="ordersList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"></table>
+  <div class="card mb-3">
+      <div class="card-header bg-dark-grey">
+          <div class="row">
+            <div class="col-md-5 col-12">
+              <div class="form-group">
+                  <label class="text-white">Search Order</label>
+                  <input type="text" class="form-control"  (keyup)="handleChange('SEARCH',$event)" [(ngModel)]="drug_orders_search" placeholder="Search By OrderNumber, CustomerName" />
+              </div>
+            </div>
+
+            <div class="col-md-4 col-12">
+              <div class="form-group">
+              <label class="text-white">Sorting</label>
+              <select class="form-control" (change)="handleChange('SORT',$event)" [(ngModel)]="drug_orders_sort_selected_option">
+                    <option *ngFor="let option of drug_orders_sort_options" [value]="option.id">{{option.title}}</option>
+              </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-12">
+              <div class="form-group">
+                <label class="text-white">Limit</label>
+                <select class="form-control" (change)="handleChange('LIMIT',$event)" [(ngModel)]="drug_orders_limit">
+                    <option *ngFor="let option of drug_orders_limit_options" [value]="option">{{option}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-1 col-12">
+              <div class="form-group">
+                <label class="text-white">Records</label>
+                <p class="mb-0"><span class="badge badge-success p-2">{{drug_orders_collection.count}}</span></p>
+              </div>
+            </div>
+
+          </div>
+      </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+          <div *ngIf="drug_orders_collection.count > 0 ">
+                    <div class="card mb-3"  *ngFor = "let order of drug_orders_collection.data | paginate: drug_orders_config">
+                    <div class="bg-light-grey p-3">
+                        <div class="d-flex flex-lg-row flex-md-row flex-sm-column  flex-column justify-content-between align-items-lg-top align-items-md-top align-items-sm-start align-items-start" style="border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;">
+                            <div  class="magic-width d-flex flex-lg-row flex-md-row flex-sm-column flex-column justify-content-start align-items-lg-top align-items-md-top align-items-sm-start align-items-start">
+                                <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER NO.</small></p><p class="font-weight-bold mb-0">#{{order.order_number}}</p></div>
+                                <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER DATE</small></p><p class="font-weight-bold mb-0">{{(order.order_place_datetime?order.order_place_datetime:order.created_at)  | date: 'MM/dd/yyyy'}}</p></div>
+                                <div class="mr-3 text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">CUSTOMER NAME</small></p><p class="font-weight-bold mb-0">{{order.user.first_name+' '+order.user.last_name}}</p></div>
+                                <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">TOTAL</small></p><p class="font-weight-bold mb-0">{{ order.total_amount | currency:'INR'}}</p></div>
+                                <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">REFUNDED TOTAL</small></p><p class="font-weight-bold mb-0">{{ order.refunded_total | currency:'INR'}}</p></div>
+                                <div class="magic-width-box text-center mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start">
+                                    <p class="mb-0"><small class="mb-0">ORDER STATUS</small></p>
+                                    <p class="mb-0">
+                                        <span [innerHtml]="_orderHelper.getSystemStatus(order.system_status)"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" class="float-right btn btn-sm btn-outline-primary" (click)="goToDetailsPage(order._id)">View</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                            <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="border-0 text-left">#</th>
+                                    <th class="border-0 text-left">MEDICINE</th>
+                                    <th class="border-0 text-left">DRUG STATUS</th>
+                                    <th class="border-0 text-left">REFUND REASON</th>
+                                    <th class="border-0 text-right">REFUND PROCESSED</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="order.system_status == 'REFUND_PROCESSED' || order.system_status == 'REFUND_REQUESTED'">
+                                    <td class="align-middle text-left font-weight-bold">1 .</td>
+                                    <td class="align-middle text-left font-weight-bold">{{order.medicine_kit_details.name}}</td>
+                                    <td class="align-middle text-left">
+                                        <strong [innerHTML]="_orderHelper.getSystemStatus(order.system_status)"></strong>
+                                        <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="order.system_status=='REFUND_REQUESTED'">Date time : {{order.order_refund_requested_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
+                                        <p class="mb-0 font-weight-normal text-danger"  >Reason : {{order.order_refund_reason}}</p>
+                                    </td>
+                                     <td class="align-middle text-right font-weight-bold">{{ order.refund_reason}}</td>
+                                     <td class="align-middle text-right font-weight-bold">{{ order.order_refund_processed_on | date:'dd-MM-yyyy HH:mm a'}}</td>
+                                </tr>
+                            </tbody>
+                            </table>
+                    </div>
+                </div>
+                <div class="text-center mt-2">
+                    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                </div>
+        </div>
+          <div *ngIf="drug_orders_collection.count == 0 ">
+              <div class="card p-2">
+                  <div class="text-center text-muted">
+                      <h2><i class="fa fa-shopping-cart" aria-hidden="true"></i></h2>
+                      <h4 class="font-weight-normal">No Orders </h4>
+                  </div>
+              </div>
+          </div>
     </div>
-</div>
+  </div>

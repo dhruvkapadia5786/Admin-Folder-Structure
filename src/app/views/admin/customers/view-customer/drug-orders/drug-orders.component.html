@@ -27,17 +27,17 @@
                                 <p *ngIf="order.address_line_1" class="font-weight-bold mb-0">{{order.address_line_1}}{{order.address_line_2 ? (' , '+order.address_line_2) : '' }}{{' , '+order.city_name+' , '+order.state_name+' , '+order.zip_code}}</p>
                                 <p *ngIf="!order.address_line_1" class="font-weight-bold mb-0">Address Not Added</p>
                             </div>
-                            
+
                         </div>
                         <div>
-                            <div class="text-right">                                   
+                            <div class="text-right">
                                 <button type="button" class="btn btn-sm btn-outline-primary" (click)="goToOrderDetails(order.id)">View Order Details</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    
+
                         <table class="table table-sm table-hover">
                          <thead>
                             <tr>
@@ -57,16 +57,16 @@
                                 <td class="align-middle text-left font-weight-bold">{{drug.drug_quantity+'  '+drug.drug_form}}</td>
                                 <td class="align-middle text-left">
                                     <strong [innerHTML]="_drugOrderHelper.getOrderDrugStatus(drug.order_drug_status)"></strong>
-                                    <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Date time : {{drug.refund_requested_on | date: 'MM/dd/yyyy HH:mm a' }}</p>
+                                    <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Date time : {{drug.refund_requested_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
                                     <p class="mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Reason : {{drug.refund_reason}}</p>
                                 </td>
                                 <td class="align-middle text-right font-weight-bold">{{ drug.drug_quantity_price | currency:'INR'}}</td>
                             </tr>
                          </tbody>
-                        </table>                   
+                        </table>
                 </div>
             </div>
-            <div class="text-center mt-2"> 
+            <div class="text-center mt-2">
                 <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
             </div>
     </div>

@@ -51,7 +51,7 @@ export class RefundDrugModalComponent implements OnInit {
 
   checkDrugSelectedForRefund(drug:any){
     let oldValue= this.refundOrderForm.value.selected_drug_ids || [];
-    return  oldValue.indexOf(drug.id)!=-1?true:false;
+    return  oldValue.indexOf(drug._id)!=-1?true:false;
   }
 
   checkSelectAllOptionForEvent(event_name:string) {
@@ -71,10 +71,10 @@ export class RefundDrugModalComponent implements OnInit {
     if(checked){
       this.refundOrderForm.patchValue({selected_drug_ids:[]});
       let oldValue= this.refundOrderForm.value.selected_drug_ids;
-      for(let drug of this.order.drugs){
+      for(let drug of this.order.products){
           let is_disabled= this.checkDrugDisabledForRefund(drug);
           if(!is_disabled){
-            oldValue.push(drug.id);
+            oldValue.push(drug._id);
             this.refundOrderForm.patchValue({selected_drug_ids:oldValue});
           }
       }
@@ -87,13 +87,13 @@ export class RefundDrugModalComponent implements OnInit {
     let oldValue= this.refundOrderForm.value.selected_drug_ids || [];
 
      if(event.target.checked){
-      if(oldValue && oldValue.indexOf(drug.id)==-1){
-        oldValue.push(drug.id);
+      if(oldValue && oldValue.indexOf(drug._id)==-1){
+        oldValue.push(drug._id);
         this.refundOrderForm.patchValue({selected_drug_ids:oldValue});
       }
      }else{
-       if(oldValue && oldValue.indexOf(drug.id)!=-1){
-        let indexFound = this.refundOrderForm.value.selected_drug_ids.indexOf(drug.id);
+       if(oldValue && oldValue.indexOf(drug._id)!=-1){
+        let indexFound = this.refundOrderForm.value.selected_drug_ids.indexOf(drug._id);
          oldValue.splice(indexFound, 1);
          this.refundOrderForm.patchValue({selected_drug_ids:oldValue});
        }

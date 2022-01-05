@@ -30,6 +30,7 @@ export class RefundRequestModalComponent implements OnInit {
   refundRequestFormSubmit(isValid:boolean){
       if(isValid){
         this.onEventCompleted.emit(this.refundRequestForm.value);
+        this.closeModal();
         return true;
       }else{
         return false;

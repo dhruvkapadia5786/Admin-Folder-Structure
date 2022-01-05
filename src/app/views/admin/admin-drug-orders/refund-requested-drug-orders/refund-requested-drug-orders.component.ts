@@ -2,9 +2,11 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Toastr } from '../../../../services/toastr.service';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
 import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
+import { ProcessRefundModalComponent } from 'src/app/components/process-refund-modal/process-refund-modal.component';
+import { ProcessRefundModalService } from 'src/app/components/process-refund-modal/process-refund-modal.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-refund-requested-drug-orders',
@@ -13,21 +15,7 @@ import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
 })
 export class RefundRequestedDrugOrdersComponent implements OnInit {
 
-  selectedOrder:any;
-  full_refund_in_wallet:boolean=false;
-  defaultCalculatedRefundObject:any;
-  refundObject:any={
-    order_id:null,
-    selected_drug_id:[],
-    amount_to_precess_refund_total:0,
-    amount_to_process_refund_in_stripe:0,
-    amount_to_process_refund_in_wallet:0,
-    amount_to_process_refund_in_discount:0,
-    amount_to_process_refund_in_shipping_charge:0
-  };
-
-  refund_processing:boolean=false;
-
+  modalRef!:BsModalRef;
   drug_orders_config:any;
 	drug_orders_collection:any = { count: 0, data: [] };
   drug_order_hasMorePages:boolean=false;
@@ -97,6 +85,8 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
     private _toastr: Toastr,
     private http: HttpClient,
     public _drugOrderHelper:drugOrderHelper,
+    private _modalService:BsModalService,
+    private _processRefundModalService:ProcessRefundModalService,
     private _changeDetectorRef: ChangeDetectorRef){
 
 
@@ -113,28 +103,24 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
   }
 
 
-  recalculateRefund(event:any){
-    let default_stripe_amount = this.defaultCalculatedRefundObject.amount_to_process_refund_in_stripe;
-    let default_wallet_amount = this.defaultCalculatedRefundObject.amount_to_process_refund_in_wallet;
-     if(event.checked){
-      this.refundObject.amount_to_process_refund_in_stripe = 0;
-      this.refundObject.amount_to_process_refund_in_wallet = default_wallet_amount+ default_stripe_amount;
+  async calculateRefundForOrder(order:any,refundType:any){
+
+    let paymentgateway_charge_refunded= null;
+    if(order.charged_from_paymentgateway>0){
+      let chargeDetails:any = await this._getPaymentDetailsForOrder(order._id);
+      order.charge_details = chargeDetails &&  chargeDetails.id ?chargeDetails.id :null;
+      paymentgateway_charge_refunded = order.charge_details && order.charge_details.refund_status=='full'? true : false;
     }else{
-      this.refundObject.amount_to_process_refund_in_stripe = default_stripe_amount;
-      this.refundObject.amount_to_process_refund_in_wallet = default_wallet_amount;
+      order.charge_details=null;
+      paymentgateway_charge_refunded=null;
     }
-    this._changeDetectorRef.detectChanges();
-  }
 
-  calculateRefundForOrder(order:any,refundType:any){
-    this.selectedOrder = order;
-
-    let drug_ids= order.drugs.map((item:any)=>item.id);
+    let drug_ids= order.products.map((item:any)=>item._id);
     let amount_to_precess_refund_total=0;
-    let amount_to_process_refund_in_stripe=0;
+    let amount_to_process_refund_in_paymentgateway=0;
     let amount_to_process_refund_in_wallet=0;
     let amount_to_process_refund_in_discount=0;
-    let amount_to_process_refund_in_shipping_charge=  (order.refund_processed_drugs + order.drugs.length == order.total_drugs) ? order.shipping_charge : 0;
+    let amount_to_process_refund_in_shipping_charge=  (order.refund_processed_drugs + order.products.length == order.total_drugs) ? order.shipping_charge : 0;
     let final_total = 0;
 
     let temp_total = order.refund_request_total + amount_to_process_refund_in_shipping_charge;
@@ -153,7 +139,7 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
     }
 
     let total_balance_remaining   =    order.total_amount - order.refunded_total  ;
-    let stripe_balance_remaining  =   order.charged_from_paymentgateway  -  order.refunded_in_paymentgateway;
+    let paymentgateway_balance_remaining  =   order.charged_from_paymentgateway  -  order.refunded_in_paymentgateway;
     let wallet_balance_remaining =    order.charged_from_wallet -  order.refunded_in_wallet;
 
     if(wallet_balance_remaining>0){
@@ -161,65 +147,41 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
         final_total = final_total - amount_to_process_refund_in_wallet;
     }
 
-    if(stripe_balance_remaining>0){
-        amount_to_process_refund_in_stripe = final_total>=stripe_balance_remaining ? stripe_balance_remaining:final_total ;
-        final_total= final_total - amount_to_process_refund_in_stripe;
+    if(paymentgateway_balance_remaining>0){
+        amount_to_process_refund_in_paymentgateway = final_total>=paymentgateway_balance_remaining ? paymentgateway_balance_remaining:final_total ;
+        final_total= final_total - amount_to_process_refund_in_paymentgateway;
     }
 
     amount_to_precess_refund_total = Math.round(amount_to_precess_refund_total * 100) / 100 ;
-    amount_to_process_refund_in_stripe = Math.round(amount_to_process_refund_in_stripe * 100) / 100 ;
+    amount_to_process_refund_in_paymentgateway = Math.round(amount_to_process_refund_in_paymentgateway * 100) / 100 ;
     amount_to_process_refund_in_wallet = Math.round(amount_to_process_refund_in_wallet * 100) / 100 ;
     amount_to_process_refund_in_discount = Math.round(amount_to_process_refund_in_discount * 100) / 100 ;
     amount_to_process_refund_in_shipping_charge = Math.round(amount_to_process_refund_in_shipping_charge * 100) / 100 ;
 
 
-    this.refundObject={
-      order_id:order.id,
+    let refundObject={
+      order_id:order._id,
       selected_drug_id:drug_ids,
+      paymentgateway_charge_already_refunded:paymentgateway_charge_refunded,
       amount_to_precess_refund_total:amount_to_precess_refund_total,
-      amount_to_process_refund_in_stripe:amount_to_process_refund_in_stripe,
+      amount_to_process_refund_in_paymentgateway:amount_to_process_refund_in_paymentgateway,
       amount_to_process_refund_in_wallet:amount_to_process_refund_in_wallet,
       amount_to_process_refund_in_discount:amount_to_process_refund_in_discount,
       amount_to_process_refund_in_shipping_charge:amount_to_process_refund_in_shipping_charge
     }
-    this.defaultCalculatedRefundObject = JSON.parse(JSON.stringify(this.refundObject));
-    //modal.show();
+    let defaultCalculatedRefundObject = JSON.parse(JSON.stringify(refundObject));
+
+    this._processRefundModalService.setFormData({
+      eventType:'PHARMACY_ORDER',
+      selectedOrder:order,
+      refundObject:refundObject,
+      defaultCalculatedRefundObject:defaultCalculatedRefundObject,
+    });
+    this.modalRef = this._modalService.show(ProcessRefundModalComponent,{class:'modal-x-lg'});
+    this.modalRef.content.onRefundProcessedCompleted.subscribe(()=>{
+      this.getRefundRequestedOrders(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,this.drug_orders_sort_by,this.drug_orders_sort_order,this.drug_orders_search);
+    });
   }
-
-
-  refundOrder(orderId: number) {
-    let url:string = `api/pharmacy_orders/processRefund/${orderId}`;
-    this.refund_processing=true;
-    this.http.post(url,this.refundObject)
-      .subscribe((res: any) => {
-
-        this.refund_processing=false;
-        this.selectedOrder.result = res;
-
-        if (res.refunded) {
-          let stripeRefund= res.stripeRefund ? res.stripeRefund.id:'N/A';
-          let walletRefund= res.walletRefund ? 'Yes':'N/A';
-          this._toastr.showSuccess(`Order Refunded Successfully. Refunded To Stripe : ${stripeRefund} , Refunded To Wallet : ${walletRefund}`);
-          this.getRefundRequestedOrders(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,this.drug_orders_sort_by,this.drug_orders_sort_order,this.drug_orders_search);
-
-        } else {
-          this._toastr.showWarning('Unable to refund order. Please Check Payment Method!');
-        }
-      },(err) => {
-        this.refund_processing=false;
-        this._toastr.showError('Unable to refund order. Please try again');
-      });
-  }
-
-  openModal(modal:any){
-    modal.show();
-  }
-
-  closeModal(modal:any){
-    this.selectedOrder = null;
-    modal.hide();
-  }
-
 
  handleChange(eventName:string,event:any){
    let value = event.target.value;
@@ -257,5 +219,9 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
     this.router.navigate(['admin', 'drug-order','view',orderId]);
   }
 
+  async _getPaymentDetailsForOrder(orderId:any){
+    const url = `api/pharmacy_orders/charge_details/${orderId}`;
+    return await this.http.get(url).toPromise();
+  }
 
 }

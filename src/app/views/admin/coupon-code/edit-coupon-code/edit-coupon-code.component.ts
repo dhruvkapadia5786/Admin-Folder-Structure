@@ -23,31 +23,39 @@ export class EditCouponCodeComponent implements OnInit {
   public kitList:any[]=[];
   public digitalTherapyList:any[]=[];
   public healthKitList: any=[];
-  public categoryList: any[] = [
-    { 'name': 'Pharmacy Order', 'value': 'PET_PHARMACY_ORDER'},
-    { 'name': 'Order', 'value': 'PET_DTC_ORDER'},
-    { 'name': 'Consultation', 'value': 'PET_CONSULTATION'}
+  public categoryList: any = [
+    { 'name': 'Pharmacy Order', 'value': 'PHARMACY_ORDER'},
+    { 'name': 'Order', 'value': 'DTC_ORDER'},
+    { 'name': 'Consultation', 'value': 'CONSULTATION'}
   ]
+  public editCouponCode: FormGroup;
 
-  setDiscountValidators() {
-    if (this.discountType == 'AMOUNT') {
-      this.divDiscountAmount = true;
-      this.divDiscountPercentage = false;
-      this.editCouponCode.get('discount_percent')?.setValidators([]);
-      this.couponCodeObj.discount_percent = null;
-      this.editCouponCode.get('discount_amount')?.setValidators([Validators.required]);
+  setDiscountValidators(){
+    let discount_percent_control = this.editCouponCode.get('discount_percent');
+    let discount_amount_control = this.editCouponCode.get('discount_amount');
+    if(this.discountType == 'AMOUNT'){
+          this.divDiscountAmount = true;
+          this.divDiscountPercentage = false
+          if(discount_percent_control){
+            discount_percent_control.setValidators([]);
+            discount_percent_control.setValue(null);
+          }
+          discount_amount_control? discount_amount_control.setValidators([Validators.required]):'';
     } else {
-      this.divDiscountAmount = false;
-      this.divDiscountPercentage = true;
-      this.editCouponCode.get('discount_percent')?.setValidators([Validators.required]);
-      this.editCouponCode.get('discount_amount')?.setValidators([]);
-      this.couponCodeObj.discount_amount = null;
+        this.divDiscountAmount = false;
+        this.divDiscountPercentage = true;
+        if(discount_percent_control){
+          discount_percent_control.setValidators([Validators.required]);
+        }
+        if(discount_amount_control){
+          discount_amount_control.setValidators([]);
+          discount_amount_control.setValue(null);
+        }
     }
-    this.editCouponCode.get('discount_amount')?.updateValueAndValidity();
-    this.editCouponCode.get('discount_percent')?.updateValueAndValidity();
+    discount_amount_control?discount_amount_control.updateValueAndValidity():'';
+    discount_percent_control?discount_percent_control.updateValueAndValidity():'';
   }
 
-  public editCouponCode: FormGroup;
   public couponCodeObj: any = {
     coupon_type:'REGULAR',
     coupon_code: null,
@@ -62,8 +70,8 @@ export class EditCouponCodeComponent implements OnInit {
     is_active: true,
     coupon_code_id: null,
     states:[],
-    pet_dtc_medicine_kits:[],
-    pet_consultation_health_conditions: [],
+    kits:[],
+    health_conditions: [],
     coupon_category: []
   };
   public couponCodeId: any;
@@ -90,6 +98,7 @@ export class EditCouponCodeComponent implements OnInit {
       'discount_type': new FormControl(this.discountType),
       'states': new FormControl(this.couponCodeObj.states, [Validators.required]),
       'kits': new FormControl(this.couponCodeObj.kits, [Validators.required]),
+      'health_conditions':new FormControl(this.couponCodeObj.health_conditions, [Validators.required]),
       'coupon_category': new FormControl(this.couponCodeObj.coupon_category, [Validators.required])
     });
   }
@@ -122,16 +131,17 @@ export class EditCouponCodeComponent implements OnInit {
   public getCouponCode() {
     const url = 'api/coupon_codes/view/' + this.couponCodeId;
     this._http.get(url)
-      .subscribe((couponCode: any) => {
-        this.couponCodeObj = couponCode;
+      .subscribe((data: any) => {
+        this.couponCodeObj = data;
+        this.couponCodeObj.kits=this.couponCodeObj.dtc_medicine_kits.map((kit: any)=>kit._id);
+        this.couponCodeObj.health_conditions= this.couponCodeObj.consultation_health_conditions ? this.couponCodeObj.consultation_health_conditions.map((kit: any)=>kit._id) : [];
+
         this.couponCodeObj.states=this.couponCodeObj.states.map((state: any)=>state._id);
-        this.couponCodeObj.pet_dtc_medicine_kits=this.couponCodeObj.pet_dtc_medicine_kits.map((kit: any)=>kit._id);
         this.couponCodeObj.coupon_category= this.couponCodeObj.coupon_category ? this.couponCodeObj.coupon_category : [];
-        this.couponCodeObj.pet_consultation_health_conditions= this.couponCodeObj.pet_consultation_health_conditions ? this.couponCodeObj.pet_consultation_health_conditions.map((kit: any)=>kit._id) : [];
 
         this.handleCategoryChange({value: this.couponCodeObj.coupon_category})
 
-        this.couponCodeObj.coupon_code_id = couponCode.id;
+        this.couponCodeObj.coupon_code_id = data._id;
         if (this.couponCodeObj.discount_amount != 0) {
           this.divDiscountAmount = true;
           this.discountType = 'AMOUNT';
@@ -153,14 +163,14 @@ export class EditCouponCodeComponent implements OnInit {
       }
 
       get notSelectedKits () {
-        return this.kitList.filter(({ _id: a }) => !this.couponCodeObj.pet_dtc_medicine_kits.some((b: any) => b === a)).length
+        return this.kitList.filter(({ _id: a }) => !this.couponCodeObj.kits.some((b: any) => b === a)).length
       }
       get notSelectedCategory () {
-        return this.categoryList.filter(({ value: a }) => !this.couponCodeObj.coupon_category.some((b: any) => b === a)).length
+        return this.categoryList.filter((item:any)=> !this.couponCodeObj.coupon_category.some((b: any) => b === item.value)).length
       }
 
       get notSelectedhealthKits () {
-        return this.healthKitList.filter((data: any) => !this.couponCodeObj.pet_consultation_health_conditions.some((b: any) => b === data._id)).length
+        return this.healthKitList.filter((data: any) => !this.couponCodeObj.health_conditions.some((b: any) => b === data._id)).length
       }
 
       public handleCheckAll (event: any, flag: any) {
@@ -172,63 +182,59 @@ export class EditCouponCodeComponent implements OnInit {
           }
         } else if (flag == 'kit') {
           if (event.checked) {
-            this.couponCodeObj.pet_dtc_medicine_kits = this.kitList.map(({_id}) => _id);
+            this.couponCodeObj.kits = this.kitList.map(({_id}) => _id);
           } else {
-            this.couponCodeObj.pet_dtc_medicine_kits = [];
+            this.couponCodeObj.kits = [];
           }
       } else if (flag == 'category') {
         if (event.checked) {
-          this.couponCodeObj.coupon_category = this.categoryList.map(({value}) => value);
-          this.editCouponCode.addControl('kits', new FormControl(this.couponCodeObj.pet_dtc_medicine_kits, [Validators.required]));
-          this.editCouponCode.addControl('health_conditions', new FormControl(this.couponCodeObj.pet_consultation_health_conditions, [Validators.required]));
+          this.couponCodeObj.coupon_category = this.categoryList.map((item:any) => item.value);
+          this.editCouponCode.addControl('kits', new FormControl(this.couponCodeObj.kits, [Validators.required]));
+          this.editCouponCode.addControl('health_conditions', new FormControl(this.couponCodeObj.health_conditions, [Validators.required]));
           this._changeDetectorRef.detectChanges();
         } else {
           this.couponCodeObj.coupon_category = [];
           this.editCouponCode.removeControl('kits');
-          this.couponCodeObj.pet_dtc_medicine_kits=[];
-
+          this.couponCodeObj.kits=[];
           this.editCouponCode.removeControl('health_conditions');
-          this.couponCodeObj.pet_consultation_health_conditions=[];
+          this.couponCodeObj.health_conditions=[];
           this._changeDetectorRef.detectChanges();
         }
       } else if (flag == 'health_conditions') {
         if (event.checked) {
-          this.couponCodeObj.pet_consultation_health_conditions = this.healthKitList.map((data: any) => data._id);
+          this.couponCodeObj.health_conditions = this.healthKitList.map((data: any) => data._id);
         } else {
-          this.couponCodeObj.pet_consultation_health_conditions = [];
+          this.couponCodeObj.health_conditions = [];
         }
       }
     }
 
   public handleCategoryChange(event: any) {
-      if (event.value.includes("PET_DTC_ORDER")) {
-        this.editCouponCode.addControl('kits', new FormControl(this.couponCodeObj.pet_dtc_medicine_kits, [Validators.required]))
+      if (event.value.includes("DTC_ORDER")) {
+        this.editCouponCode.addControl('kits', new FormControl(this.couponCodeObj.kits, [Validators.required]))
       } else {
         this.editCouponCode.removeControl('kits');
-        this.couponCodeObj.pet_dtc_medicine_kits=[];
+        this.couponCodeObj.kits=[];
       }
-
-      if (event.value.includes("PET_CONSULTATION")) {
-        this.editCouponCode.addControl('health_conditions', new FormControl(this.couponCodeObj.pet_consultation_health_conditions, [Validators.required]))
+      if (event.value.includes("CONSULTATION")) {
+        this.editCouponCode.addControl('health_conditions', new FormControl(this.couponCodeObj.consultation_health_conditions, [Validators.required]))
       } else {
         this.editCouponCode.removeControl('health_conditions');
-        this.couponCodeObj.pet_consultation_health_conditions=[];
+        this.couponCodeObj.health_conditions=[];
       }
   }
 
   public getMedicineKits() {
      const url = 'api/medicine_kits/all';
-    this._http.get(url)
-      .subscribe((medicineKitList: any) => {
+     this._http.get(url).subscribe((medicineKitList: any) => {
           this.kitList= medicineKitList;
-      }, err => {
+    }, err => {
 
-      });
+    });
   }
 
-  public getHealthKits() {
-    this._http.get('api/consultation_health_conditions/all')
-      .subscribe((data: any) => {
+  public getHealthKits(){
+    this._http.get('api/consultation_health_conditions/all').subscribe((data: any) => {
         this.healthKitList = data;
       }, err => {
 
@@ -236,16 +242,15 @@ export class EditCouponCodeComponent implements OnInit {
   }
 
 public getStateList() {
-  this._http.get('api/system_states/all')
-    .subscribe((data: any) => {
+  this._http.get('api/system_states/all').subscribe((data: any) => {
       this.statesList = data;
     }, err => {
 
     });
 }
 
-  public saveCreateCouponCode() {
-    if (this.editCouponCode.invalid) {
+  public saveCreateCouponCode(){
+    if (this.editCouponCode.invalid){
       this._helper.markFormGroupTouched(this.editCouponCode);
       return;
     }

@@ -245,7 +245,7 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
           className: 'text-center  font-weight-normal',
           render: (data: any) => {
             if (data > 0) {
-              return '<span>' + '$'+ data + '</span>'
+              return '<span>' + '₹'+ data + '</span>'
             } else {
               return '<span> - </span>';
             }

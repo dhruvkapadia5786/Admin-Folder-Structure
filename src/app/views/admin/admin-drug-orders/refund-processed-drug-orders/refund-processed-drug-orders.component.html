@@ -55,9 +55,9 @@
                         <div class="d-flex flex-lg-row flex-md-row flex-sm-column  flex-column justify-content-between align-items-lg-top align-items-md-top align-items-sm-start align-items-start" style="border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;">
                             <div  class="magic-width d-flex flex-lg-row flex-md-row flex-sm-column flex-column justify-content-start align-items-lg-top align-items-md-top align-items-sm-start align-items-start">
                                 <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER NO.</small></p><p class="font-weight-bold mb-0">#{{order.order_number}}</p></div>
-                                <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER DATE</small></p><p class="font-weight-bold mb-0">{{order.order_created_datetime  | date: 'MM/dd/yyyy'}}</p></div>
-                                <div class="mr-3 text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">CUSTOMER NAME</small></p><p class="font-weight-bold mb-0">{{order.customer_name}}</p></div>
-                                <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">TOTAL</small></p><p class="font-weight-bold mb-0">{{order.total_amount| currency:'INR' }}</p></div>
+                                <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER DATE</small></p><p class="font-weight-bold mb-0">{{order.order_place_datetime  | date: 'dd-MM-yyyy'}}</p></div>
+                                <div class="mr-3 text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">CUSTOMER NAME</small></p><p class="font-weight-bold mb-0">{{order.user.first_name+' '+order.user.last_name}}</p></div>
+                                <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">REFUNDED TOTAL</small></p><p class="font-weight-bold mb-0">{{order.refunded_total | currency:'INR' }}</p></div>
                                 <div class="magic-width-box text-center mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start">
                                     <p class="mb-0"><small class="mb-0">ORDER STATUS</small></p>
                                     <p class="mb-0">
@@ -66,7 +66,7 @@
                                 </div>
                             </div>
                             <div>
-                                <button type="button" class="float-right btn btn-sm btn-outline-primary" (click)="goToDrugOrderDetails(order.id)">View</button>
+                                <button type="button" class="float-right btn btn-sm btn-outline-primary" (click)="goToDrugOrderDetails(order._id)">View</button>
                             </div>
                         </div>
                     </div>
@@ -85,16 +85,16 @@
                             <tbody>
                                 <tr *ngFor="let drug of order.products;let i=index;">
                                     <td class="align-middle text-left font-weight-bold">{{i+1}} .</td>
-                                    <td class="align-middle text-left font-weight-bold">{{drug.drug_name}} {{ drug.drug_dosage }}
+                                    <td class="align-middle text-left font-weight-bold">{{drug.product_name }}
                                         <span *ngIf="drug.product_type=='LENS'">{{ ' - '+drug.eye_type }}</span>
                                     </td>
-                                    <td class="align-middle text-left font-weight-bold">{{drug.drug_quantity+'  '+drug.drug_form}}</td>
+                                    <td class="align-middle text-left font-weight-bold">{{drug.quantity}}</td>
                                     <td class="align-middle text-left">
                                         <strong [innerHTML]="_drugOrderHelper.getOrderDrugStatus(drug.order_drug_status)"></strong>
-                                        <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Date time : {{drug.refund_requested_on | date: 'MM/dd/yyyy HH:mm a' }}</p>
-                                        <p class="mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Reason : {{drug.refund_reason}}</p>
+                                        <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED'">Date time : {{drug.refund_requested_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
+                                        <p class="mb-0 font-weight-normal text-danger">Reason : {{drug.refund_reason}}</p>
                                     </td>
-                                    <td class="align-middle text-right font-weight-bold">{{ drug.refund_processed_on | date:'MM/dd/yyyy HH:mm a'}}</td>
+                                    <td class="align-middle text-right font-weight-bold">{{ drug.refund_processed_on | date:'dd-MM-yyyy HH:mm a'}}</td>
                                 </tr>
                             </tbody>
                             </table>

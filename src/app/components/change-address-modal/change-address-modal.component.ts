@@ -26,24 +26,32 @@ export class ChangeAddressModalComponent implements OnInit {
     private _changeAddressModalService:ChangeAddressModalService) {
     this.addressForm = new FormGroup({
       user_id:new FormControl(null),
+      contact_name: new FormControl(null, [Validators.required]),
+      contact_number: new FormControl(null, [Validators.required]),
       address_line_1: new FormControl(null, [Validators.required]),
       address_line_2: new FormControl(null),
+      landmark: new FormControl(null),
       city_name: new FormControl(null, [Validators.required]),
       state_id: new FormControl(null, [Validators.required]),
       state_name: new FormControl(null, [Validators.required]),
-      state_abbreviation: new FormControl(null, [Validators.required]),
+      state_abbreviation: new FormControl(null, []),
       zip_code: new FormControl(null, [Validators.required]),
+      user_address_type:new FormControl(null, []),
     });
   }
 
   get user_id() { return this.addressForm.get('user_id'); }
+  get contact_name(){return this.addressForm.get('contact_name');}
+  get contact_number(){return this.addressForm.get('contact_number');}
   get address_line_1() { return this.addressForm.get('address_line_1'); }
   get address_line_2() { return this.addressForm.get('address_line_2'); }
+  get landmark() { return this.addressForm.get('landmark'); }
   get city_name() { return this.addressForm.get('city_name'); }
   get state_id() { return this.addressForm.get('state_id'); }
   get state_name() { return this.addressForm.get('state_name'); }
   get state_abbreviation() { return this.addressForm.get('state_abbreviation'); }
   get zip_code() { return this.addressForm.get('zip_code'); }
+  get user_address_type() { return this.addressForm.get('user_address_type'); }
 
   ngOnInit(): void {
     this._getState();
@@ -54,13 +62,17 @@ export class ChangeAddressModalComponent implements OnInit {
     if (this.modalType == 'EDIT_ADDRESS') {
       this.addressForm.patchValue({
         user_id:details.user_id,
+        contact_name:details.contact_name,
+        contact_number:details.contact_number,
         address_line_1: details.address_line_1,
         address_line_2: details.address_line_2?details.address_line_2:'',
+        landmark: details.landmark,
         city_name: details.city_name,
         state_id: details.state_id,
         state_name: details.state_name,
         state_abbreviation: details.state_abbreviation,
-        zip_code: details.zip_code
+        zip_code: details.zip_code,
+        user_address_type:details.user_address_type
       });
     } else {
       this.addressForm.patchValue({
@@ -74,7 +86,7 @@ export class ChangeAddressModalComponent implements OnInit {
   }
 
   _getState(){
-    const url = 'api/v1/address/states/all';
+    const url = 'api/system_states/all';
     this.http.get(url).subscribe((data:any) => {
       this.states = data;
     }, (err:any) => {});
@@ -83,12 +95,12 @@ export class ChangeAddressModalComponent implements OnInit {
 
 
   getStateNameFromId(state_id:number){
-    let stateFound =  this.states.find((state:any)=>state.id == state_id);
-    return stateFound && stateFound.name ? stateFound.name:'Florida';
+    let stateFound =  this.states.find((state:any)=>state._id == state_id);
+    return stateFound && stateFound.name ? stateFound.name:null;
   }
 
   setStateInfo(event:any){
-    let stateFound =  this.states.find((state:any)=>state.id == event.target.value);
+    let stateFound =  this.states.find((state:any)=>state._id == event.target.value);
     this.addressForm.patchValue({
       state_name: stateFound.name,
       state_abbreviation: stateFound.abbreviation
@@ -101,13 +113,13 @@ export class ChangeAddressModalComponent implements OnInit {
     let state_name= this.getStateNameFromId(this.addressForm.value.state_id);
     let ValidationAddress = {
       address_line1: this.addressForm.value.address_line_1,
-      city_locality: this.addressForm.value.city,
+      city_locality: this.addressForm.value.city_name,
       company_name: '',
-      country_code: 'US',
+      country_code: 'IN',
       postal_code: this.addressForm.value.zip_code,
       state_province: state_name
     };
-    const url = 'api/v1/address/validateShippingAddress';
+    const url = 'api/system_states/validateShippingAddress';
     let isValid = false;
     const obj = {
       address: [ValidationAddress]
@@ -140,6 +152,7 @@ export class ChangeAddressModalComponent implements OnInit {
         this.validateShippingAddress().then((res:any) => {
           if(res){
             this.onEventCompleted.emit(this.addressForm.value);
+            this.closeModal();
             return true;
           }else{
             return false;

@@ -1,9 +1,7 @@
-import { Component, OnInit, ViewChild, Renderer2, AfterViewInit } from '@angular/core';
-import { DataTableDirective } from 'angular-datatables';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Subject } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Helper } from '../../../../services/helper.service';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {orderHelper} from 'src/app/services/orderHelper.service';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -11,162 +9,131 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './refund-processed-orders.component.html',
   styleUrls: ['./refund-processed-orders.component.scss']
 })
-export class RefundProcessedOrdersComponent implements OnInit,AfterViewInit {
+export class RefundProcessedOrdersComponent implements OnInit {
 
-  ordersTableData:any[]=[];
-  dtOptions!: DataTables.Settings;
-  @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
-  @BlockUI('datatable') blockDataTable!: NgBlockUI;
-  dtTrigger: Subject<any> = new Subject();
-  constructor(private route: ActivatedRoute,
-    private _http: HttpClient,
-    public _helper: Helper,
-    private router: Router,
-    private _renderer: Renderer2) {
-    this.getDTOptions();
-  }
+  drug_orders_config:any;
+	drug_orders_collection:any = { count: 0, data: [] };
+  drug_order_hasMorePages:boolean=false;
 
-  getDTOptions() {
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 10,
-      paging: true,
-      serverSide: true,
-      // processing: true,
-      search: true,
-      searching: true,
-      autoWidth: true,
-      ordering: true,
-      order: [[8, 'desc']],
-      ajax: (dataTablesParameters: any, callback) => {
-        this.blockDataTable.start();
-        this._http
-          .post<any>(
-            `api/orders/refund_processed`,
-            dataTablesParameters,
-            {}
-          )
-          .subscribe((resp) => {
+  drug_orders_limit:number=10;
+  drug_orders_limit_options=[5,10,20,30,50];
 
-            this.ordersTableData = resp.data;
-            this.blockDataTable.stop();
-            callback({
-              recordsTotal: resp.recordsTotal,
-              recordsFiltered: resp.recordsFiltered,
-              data: resp.data
-            });
-          });
-      },
-      columns: [
-        {
-          data: 'order_number',
-          title: 'Order Number',
-          className: 'text-center  font-weight-normal',
-          render: function (data, type, record) {
-            if (data) {
-              return '<a href="javascript:void(0);" orderID=' + record.id + ' class="text-primary font-weight-bold">' + data + '</a>';
-            } else {
-              return '<span></span>';
-            }
-          }
-        },
-        {
-          data: 'customer_name',
-          title: 'Customer Name',
-          className: 'text-center  font-weight-normal',
-          render: function (data: any, type: any, full: any) {
-            return `<a href="javascript:void(0);" class="text-primary font-weight-bold" customerId=${full.tele_daddy_user_id}>${full.customer_name}</a>`;
-          }
-        },
-        {
-          data: 'medicine_kit_name',
-          title: 'Medicine Kit Name',
-          className: 'text-center  font-weight-normal'
-        },
-        {
-          data: 'total_amount',
-          title: 'Total Amount',
-          className: 'text-center  font-weight-normal',
-          render: (data) => {
-            return this._helper.getInINRFormat('INR', data);
-          }
-        },
-        {
-          data: 'charged_from_paymentgateway',
-          title: 'Charged From Stripe',
-          className: 'text-center  font-weight-normal',
-          render: (data) => {
-            return this._helper.getInINRFormat('INR', data);
-          }
-        },
-        {
-          data: 'charged_from_wallet',
-          title: 'Charged From Wallet',
-          className: 'text-center  font-weight-normal',
-          render: (data) => {
-            return this._helper.getInINRFormat('INR', data);
-          }
-        },
-        {
-          data: 'order_refund_reason',
-          title: 'Reason',
-          className: 'text-center  font-weight-normal'
-        },
-        {
-          data: 'refund_id',
-          title: 'Stripe Refund Id',
-          className: 'text-center  font-weight-normal',
-          render: function (data: any, type: any, full: any) {
-            return data? `<a target="_blank" href="https://dashboard.stripe.com/payments/${full.charge_id}">${data}</a>`:'-';
-          }
-        },
-        {
-          data: 'order_refund_processed_on',
-          title: 'Processed On',
-          className: 'text-center  font-weight-normal',
-          render: (data) => {
-            if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
-            } else {
-              return '<span></span>';
-            }
-          }
-        },
-      ]
+  drug_orders_sort_by:string='order_refund_processed_on';
+  drug_orders_sort_order:any=-1;
+  drug_orders_search:string='';
+
+  drug_orders_sort_selected_option=10;
+  drug_orders_sort_options=[
+    {
+      id:3,
+      sort_by:'order_number',
+      sort_order:-1,
+      title:'Sort By Order No descending'
+    },
+    {
+      id:4,
+      sort_by:'order_number',
+      sort_order:1,
+      title:'Sort By Order No ascending'
+    },
+    {
+      id:5,
+      sort_by:'total_amount',
+      sort_order:-1,
+      title:'Sort By Total descending'
+    },
+    {
+      id:6,
+      sort_by:'total_amount',
+      sort_order:1,
+      title:'Sort By Total ascending'
+    },
+    {
+      id:7,
+      sort_by:'order_place_datetime',
+      sort_order:-1,
+      title:'Sort By OrderDate descending'
+    },
+    {
+      id:8,
+      sort_by:'order_place_datetime',
+      sort_order:1,
+      title:'Sort By OrderDate ascending'
+    },
+    {
+      id:9,
+      sort_by:'order_refund_processed_on',
+      sort_order:-1,
+      title:'Sort By Last Refund Processed Date descending'
+    },
+    {
+      id:10,
+      sort_by:'order_refund_processed_on',
+      sort_order:1,
+      title:'Sort By  Last Refund Processed Date ascending'
+    }
+  ]
+
+  constructor(
+    private _route: ActivatedRoute,
+    private router:Router,
+    private http: HttpClient,
+    public _orderHelper:orderHelper,
+    private _changeDetectorRef: ChangeDetectorRef){
+
+
+    this.drug_orders_config = {
+			itemsPerPage:this.drug_orders_limit,
+			currentPage: 1,
+			totalItems: this.drug_orders_collection.count
     };
+
   }
 
-  ngOnInit() {
-    $.fn.dataTable.ext.errMode = 'none';
-    $(window).on('resize', () => {
-      this.rerender();
-    });
+  ngOnInit(){
+     this.getDrugOrderData(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,this.drug_orders_sort_by,this.drug_orders_sort_order,this.drug_orders_search);
   }
 
-  rerender(): void {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
-      dtInstance.destroy();
-      // Call the dtTrigger to rerender again
-      this.dtTrigger.next();
-    });
+
+  handleChange(eventName:string,event:any){
+    let value = event.target.value;
+    if(eventName=='SORT'){
+      let item:any= this.drug_orders_sort_options.find((obj:any)=>obj.id==value);
+      this.drug_orders_sort_by=item.sort_by;
+      this.drug_orders_sort_order=item.sort_order;
+    }
+    if(eventName=='LIMIT'){
+      this.drug_orders_config.itemsPerPage=this.drug_orders_limit;
+    }
+    this.drug_orders_config.currentPage  =1;
+    this.getDrugOrderData(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,this.drug_orders_sort_by,this.drug_orders_sort_order,this.drug_orders_search);
   }
 
-  ngAfterViewInit(): void {
-    this.dtTrigger.next();
-    this._renderer.listen('document', 'click', (event:any) => {
-      if (event.target.hasAttribute('orderId')) {
-        this.goToDetailsPage(event.target.getAttribute('orderId'));
-      }
-      if (event.target.hasAttribute('customerId')) {
-        this.goToPatientDetails(event.target.getAttribute('customerId'));
-      }
-    });
+  pageChanged(event:any){
+		this.drug_orders_config.currentPage = event;
+		this.getDrugOrderData(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,this.drug_orders_sort_by,this.drug_orders_sort_order,this.drug_orders_search);
+  }
+
+  getDrugOrderData(page:number,limit:number,sortBy:string='order_refund_processed_on',sortOrder:any=-1,search:string=''){
+		this.http.get<any>(`api/orders/list_refund_processed?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`).subscribe((resp) => {
+				this.drug_orders_collection.data = resp.data;
+				this.drug_orders_collection.count= resp.total;
+				this.drug_orders_config.itemsPerPage =  resp.perPage;
+				this.drug_orders_config.totalItems = resp.total;
+				this.drug_orders_config.currentPage  =  resp.currentPage;
+        this.drug_order_hasMorePages =  resp.hasMorePages;
+				window.scrollTo({
+					top: 0,
+  					behavior: 'smooth'
+				})
+		},err=>{
+		});
   }
 
   goToDetailsPage(orderId: any): any {
     this.router.navigate(['admin', 'orders', 'view', orderId]);
   }
+
   goToPatientDetails(customeId: any): any {
     this.router.navigate(['admin', 'patients', 'view', customeId, 'orders']);
   }
