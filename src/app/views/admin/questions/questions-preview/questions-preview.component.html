@@ -27,7 +27,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    
+
     <div class="col-sm-2">
       <label for="state">States</label>
       <mat-select placeholder="States" [(ngModel)]="selectedStateId" multiple>
@@ -61,52 +61,54 @@
       </div>
 
       <div class="card-body" *blockUI="'question'">
-        <p class="text-muted" *ngIf="currentQuestion && currentQuestion.question_id.category">
-          Category :  <span class="mr-3 py-1 px-2 badge badge-pill" [ngClass]="currentQuestion.question_id.category=='Generic'?'badge-warning':'badge-primary'">
-            {{ currentQuestion.question_id.category }}
+        <p class="text-muted" *ngIf="currentQuestion && currentQuestion.category">
+          Category :  <span class="mr-3 py-1 px-2 badge badge-pill" [ngClass]="currentQuestion.category=='Generic'?'badge-warning':'badge-primary'">
+            {{ currentQuestion.category }}
           </span>
         </p>
-        <p class="card-title font-weight-bold" style="transition: 0.5s ease; " *ngIf="currentQuestion && currentQuestion.question_id.text">
-          {{ (currentQuestionIndex + 1) + ". " + currentQuestion.question_id.text }}
+        <p class="card-title font-weight-bold" style="transition: 0.5s ease; " *ngIf="currentQuestion && currentQuestion.text">
+          {{ (currentQuestionIndex + 1) + ". " + currentQuestion.text }}
         </p>
 
-        <ul class="list-group list-group-flush" *ngIf="!currentQuestion.question_id.is_multi_select && !currentQuestion.question_id.has_input">
-          <li *ngFor="let option of currentQuestion.question_id.choices" class="mb-2">
+        <ul class="list-group list-group-flush" *ngIf="!currentQuestion.is_multi_select && !currentQuestion.has_input">
+          <li *ngFor="let option of currentQuestion.choices" class="mb-2">
             <div class="p-2">
               <div class="custom-control custom-radio">
                 <input type="radio" name="radioName" (click)="updateIschecked(option)" [checked]="option.isChecked" class="custom-control-input cursor-pointer"
-                id="radio{{ option.id }}" [disabled]="switchQuestion" />
-                <label class="custom-control-label cursor-pointer" for="radio{{ option.id }}">
+                id="radio{{ option._id }}" [disabled]="switchQuestion" />
+                <label class="custom-control-label cursor-pointer" for="radio{{ option._id }}">
                   {{ option.text }}
                   <span *ngIf="option.result == 1" class="ml-3 p-1 badge badge-pill badge-danger"><i class="fa fa-times" aria-hidden="true"></i></span>
                   <span *ngIf="option.result == 2" class="ml-3 p-1 badge badge-pill badge-success"><i class="fa fa-check" aria-hidden="true"></i></span>
                   <span *ngIf="option.result == 3" class="ml-3 p-1 badge badge-pill badge-warning"><i class="fa fa-info-circle" aria-hidden="true"></i></span>
 
+                  <span class="ml-3 p-1 badge badge-dark" *ngIf="option.has_subquestions">Sub Questions : {{option.sub_questions.length}}</span>
                 </label>
-                <div id='file-uploader-gallery-{{option.id}}'></div>
+                <div id='file-uploader-gallery-{{option._id}}'></div>
                 <p *ngIf="option.consent_message" class="text-muted"><small>Consent message : {{option.consent_message}}</small></p>
-
               </div>
             </div>
           </li>
         </ul>
-        <ul class="list-group list-group-flush" *ngIf="currentQuestion.question_id.type =='sub' && currentQuestion.question_id.has_input">
-              <input style="width: 100%;" type="text" [(ngModel)]="currentQuestion.question_id.custom_input"/><br>
+        <ul class="list-group list-group-flush" *ngIf="currentQuestion.question_type =='sub' && currentQuestion.has_input">
+              <input style="width: 100%;" type="text" [(ngModel)]="currentQuestion.custom_input"/><br>
         </ul>
 
-        <ul class="list-group list-group-flush" *ngIf="currentQuestion.question_id.is_multi_select">
-          <li *ngFor="let option of currentQuestion.question_id.choices">
+        <ul class="list-group list-group-flush" *ngIf="currentQuestion.is_multi_select">
+          <li *ngFor="let option of currentQuestion.choices">
             <div class="p-2 mb-2">
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" [(ngModel)]="option.isChecked" class="custom-control-input cursor-pointer" value="true" id="checkbox{{ option.id }}"
+                <input type="checkbox" [(ngModel)]="option.isChecked" class="custom-control-input cursor-pointer" value="true" id="checkbox{{ option._id }}"
                   [disabled]="switchQuestion" (change)="checkAnsIsValidForCheckboxQuestion(currentQuestion)" />
-                <label class="custom-control-label cursor-pointer" for="checkbox{{ option.id }}">
+                <label class="custom-control-label cursor-pointer" for="checkbox{{ option._id }}">
                   {{ option.text }}
                   <span *ngIf="option.result == 1" class="ml-3 p-1 badge badge-pill badge-danger"><i class="fa fa-times" aria-hidden="true"></i></span>
                   <span *ngIf="option.result == 2" class="ml-3 p-1 badge badge-pill badge-success"><i class="fa fa-check" aria-hidden="true"></i></span>
                   <span *ngIf="option.result == 3" class="ml-3 p-1 badge badge-pill badge-warning"><i class="fa fa-info-circle" aria-hidden="true"></i></span>
+
+                    <span class="ml-3 p-1 badge badge-dark" *ngIf="option.has_subquestions">Sub Questions : {{option.sub_questions.length}}</span>
                 </label>
-                <div id='file-uploader-gallery-{{option.id}}'></div>
+                <div id='file-uploader-gallery-{{option._id}}'></div>
                 <p *ngIf="option.consent_message" class="text-muted"><small>Consent message : {{option.consent_message}}</small></p>
               </div>
             </div>
@@ -133,10 +135,10 @@
       <div class="card-footer  bg-white">
         <button class="btn btn-sm btn-outline-primary" (click)="goToPreviousQuestion()">Previous</button>
         <div class="float-right">
-          <button *ngIf="currentQuestion.question_id.type == 'main'" type="button" (click)="getNextQuestion(currentQuestion)" class="btn btn-sm btn-primary">
+          <button *ngIf="currentQuestion.question_type == 'main'" type="button" (click)="getNextQuestion(currentQuestion)" class="btn btn-sm btn-primary">
             Next
           </button>
-          <button  *ngIf="currentQuestion.question_id.type=='sub' && currentQuestion.question_id.has_input" type="button" (click)="_saveSubQuestionAnswer(currentQuestion)" class="btn btn-sm btn-primary">
+          <button  *ngIf="currentQuestion.question_type=='sub' && currentQuestion.has_input" type="button" (click)="_saveSubQuestionAnswer(currentQuestion)" class="btn btn-sm btn-primary">
             Next
           </button>
         </div>
@@ -161,8 +163,8 @@
       <div class="card-header bg-dark-grey">
         <div class="row">
           <div class="col-8 text-white font-weight-normal">State wise avaibility</div>
-          <div class="col-4 text-white font-weight-normal text-right" *ngIf="currentQuestion && currentQuestion.question_id.states">
-            {{ currentQuestion.question_id.states.length }}/{{ stateList.length?stateList.length:0 }}
+          <div class="col-4 text-white font-weight-normal text-right" *ngIf="currentQuestion && currentQuestion.states">
+            {{ currentQuestion.states.length }}/{{ stateList.length?stateList.length:0 }}
           </div>
         </div>
       </div>

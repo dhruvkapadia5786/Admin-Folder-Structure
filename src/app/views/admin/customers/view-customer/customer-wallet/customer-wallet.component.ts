@@ -70,7 +70,7 @@ export class CustomerWalletComponent implements OnInit,AfterViewInit, OnDestroy 
           this.blockDataTable.start();
           this._http
             .post<any>(
-              `api/customer/wallet_transactions/${this.customerId}`,
+              `api/customers/wallet_transactions/${this.customerId}`,
               dataTablesParameters,
               {}
             )
@@ -93,7 +93,7 @@ export class CustomerWalletComponent implements OnInit,AfterViewInit, OnDestroy 
             title: 'Date',
             className: 'text-center',
             render: function (data) {
-              return that._helper.getFormattedDate(data,'MM/DD/YYYY');
+              return that._helper.getFormattedDate(data,'DD-MM-YYYY');
             }
           },
           { data: 'description', title: 'Description', className: 'text-center' },
@@ -120,8 +120,7 @@ export class CustomerWalletComponent implements OnInit,AfterViewInit, OnDestroy 
             render: function (data) {
               return that._helper.getInINRFormat('INR', data);
             }
-          },
-
+          }
         ],
         responsive: true
       };

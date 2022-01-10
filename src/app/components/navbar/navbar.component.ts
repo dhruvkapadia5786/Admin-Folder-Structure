@@ -218,7 +218,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		this.newNotificationCount = 0;
 		this.hasNewNotifications = false;
 		this.notifications.forEach(notification => {
-			if (notification.status == 1) {
+			if (notification.read_at == null){
 				this.newNotificationCount += 1;
 				this.hasNewNotifications = true;
 			}

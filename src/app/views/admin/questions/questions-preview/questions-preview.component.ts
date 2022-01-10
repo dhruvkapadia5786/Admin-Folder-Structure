@@ -1,21 +1,10 @@
 import { Component, OnInit,OnDestroy, ViewEncapsulation, ChangeDetectorRef, AfterViewInit ,ViewChild,ElementRef } from '@angular/core';
-
-import { MedicineKit } from 'src/app/models/MedicineKit';
-
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Question } from 'src/app/models/Question';
-
 import { Choice } from 'src/app/models/choice';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Toastr } from 'src/app/services/toastr.service';
-import { User } from 'src/app/models/User';
-import { FormControl } from '@angular/forms';
-
-import { Payment } from 'src/app/models/Payment';
-import { Order } from 'src/app/models/order';
-import { Observable } from 'rxjs/Observable';
 import { Helper} from 'src/app/services/helper.service';
 
 @Component({
@@ -24,12 +13,12 @@ import { Helper} from 'src/app/services/helper.service';
   styleUrls: ['./questions-preview.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit {
+export class QuestionPreviewComponent implements OnInit,OnDestroy {
   public conditions: any = [];
   public medicineKits: any = [];
   public stateList: any = [];
   public tempStateList: any = [];
-  
+
   public selectedConditionId: any = null;
   public selectedKitId: any = null;
   public selectedStateId: any = [];
@@ -40,18 +29,13 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
   public categoryList: any = [
     { type: 'Order', value: 'ORDER' },
     { type: 'Consultation', value: 'CONSULTATION' }
-  ]
-
+  ];
   screen_mode='QUESTION_ANSWER';
-  showReAuthorizePaymentScreen:boolean=false;
 
   @BlockUI('question') blockQuestionAnswerUI!: NgBlockUI;
   @BlockUI('statesAvaibility') blockStatesAvaibilityUI!: NgBlockUI;
 
-  incompleteOrder!:boolean;
-  videoConsultationRequiredByState:boolean=false;
   questions: Array<Question>;
-  incompleteOrderAnswers!: any[];
   currentQuestion: any;
   currentChoice!: Choice;
   currentQuestionIndex = 0;
@@ -59,35 +43,12 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
   showSelectAnsMsg = false;
   submitted = false;
   isAnsCorrect = false;
-  medicineKit = new MedicineKit();
-  loggedInUser = new User();
   switchQuestion = false;
-  options: any = [];
-  selectDrug: any = [];
-  myControl: any = new FormControl();
-  globalMedicineKit: any;
-  public illnessesForm!: any[];
-  public allergiesForm!: any[];
-  public userIllnesses = '';
-  public userAllergies = '';
-  public isDrugCheck = false;
-  public isIllnessesCheck = false;
-  public allergiesCheck = false;
-  orderAttemptId = null;
-  orderId :any;
-
- 
-  payment: Payment;
-  order!: Order;
-
-  api_url = environment.api_url;
-  chargeApiCallObservable!: Observable<any>;
-
-  @ViewChild('cardInfo') cardInfo!: ElementRef;
 
   medicineKitId: any;
   healthConditionId: any;
   showHeaderAndFilter: boolean = true;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -99,11 +60,12 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
     this.getMedicineKits();
     this.getAllHealthConditions();
 
-    this.medicineKitId = this.route.parent?.parent?.snapshot.paramMap.get('kit_id');
-    this.healthConditionId = this.route.parent?.parent?.snapshot.paramMap.get('condition_id');
+    let activeRoute:any = this.route;
+    this.medicineKitId = activeRoute.parent.parent.snapshot.paramMap.get('kit_id');
+    this.healthConditionId = activeRoute.parent.parent.snapshot.paramMap.get('condition_id');
 
     let self= this
-    if (this.medicineKitId) {
+    if (this.medicineKitId){
       self.getAllStates().then((result) => {
         self.stateList = result;
         self.showHeaderAndFilter = false;
@@ -112,8 +74,7 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
         this.getQuestionsList();
       });
     }
-    
-    if (this.healthConditionId) {
+    if(this.healthConditionId){
       self.getAllStates().then((result) => {
         self.selectedCategory = 'CONSULTATION';
         self.stateList = result;
@@ -124,11 +85,8 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
       });
     }
 
-    this.payment = new Payment();
-
     this.questions = new Array<Question>();
     this.currentQuestion = new Question();
-    this.medicineKit = new MedicineKit();
   }
 
   ngOnInit(){
@@ -140,21 +98,53 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
   }
 
   ngOnDestroy(){
-  } 
 
-  public getQuestionsList() {
+  }
+
+  public getQuestionsList(){
     if (this.selectedConditionId != null || this.selectedKitId != null || this.selectedKitId.length > 0 ) {
-      let url: string = this.selectedCategory == 'ORDER' ? `api/medicine_kits/questions/${this.selectedKitId}?states=${this.selectedStateId}` : `api/consultation_health_conditions/questions/${this.selectedConditionId}?states=${this.selectedStateId}` 
-  
-      this.http.get(url)
-        .subscribe((data: any) => {
-          this.questions = data
+      let url: string = this.selectedCategory == 'ORDER' ? `api/medicine_kits/questions/${this.selectedKitId}?states=${this.selectedStateId}` : `api/consultation_health_conditions/questions/${this.selectedConditionId}?states=${this.selectedStateId}`
+      this.http.get(url).subscribe((data: any) => {
+          this.questions = data.map((item:any)=>item.question_id);
+          this.questions = this.questions.map((qitem:any)=>{
+              if(qitem.choices){
+                qitem.choices = qitem.choices.map((citem:any)=>{
+                    if(citem.has_subquestions && citem.sub_questions){
+                        citem.sub_questions = citem.sub_questions.map((sq:any)=>{
+                            let updated_item={
+                                  created_at: sq.created_at,
+                                  update_at: sq.update_at,
+                                  parent_question_id:  sq.parent_question_id,
+                                  question_type: "sub",
+                                  choices: sq.subquestion_option_type=='choise' && sq.choices ? sq.choices:[],
+                                  is_active: sq.is_active,
+                                  option_type: sq.subquestion_option_type,
+                                  has_input: sq.subquestion_option_type=='input'?true:false,
+                                  custom_input:'',
+                                  is_multi_select:false,
+                                  text:sq.subquestion_question_text,
+                                  states:qitem.states,
+                                  dtc_medicine_kits:qitem.dtc_medicine_kits,
+                                  consultation_health_conditions:qitem.consultation_health_conditions,
+                                  _id: sq._id
+                            };
+                            return updated_item;
+                        });
+                        return citem;
+                    }else{
+                      return citem;
+                    }
+                });
+                return qitem;
+              }else{
+                return qitem;
+              }
+          });
           this.currentQuestionIndex = 0;
           this.currentQuestion = this.questions[this.currentQuestionIndex];
           this.getStateCount()
           this._changeDetectorRef.detectChanges();
         }, err => {
-          
         });
     } else {
       this._toastr.showWarning('Please select kit/condition.');
@@ -169,19 +159,18 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
         this.conditions = conditionsList;
         this._changeDetectorRef.detectChanges();
       }, err => {
-        
+
       });
   }
 
   public getMedicineKits() {
     this.resetValues();
     const url = 'api/medicine_kits/all';
-    this.http.get(url)
-      .subscribe((medicineKitList: any) => {
+    this.http.get(url).subscribe((medicineKitList: any) => {
         this.medicineKits = medicineKitList;
         this._changeDetectorRef.detectChanges();
       }, err => {
-        
+
       });
   }
 
@@ -189,20 +178,16 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
     return await this.http.get<any>('api/system_states/all').toPromise();
   }
 
-  public resetValues() {
+  public resetValues(){
     this.medicineKits = [];
     this.questions = [];
     this.selectedKitId = null;
   }
-  
-  public resetKit() {
+
+  public resetKit(){
     this.questions = [];
   }
-  
-  ngAfterViewInit() {
-    this.selectDrug = [];
-    this._changeDetectorRef.detectChanges();
-  }
+
 
   public handleCheckAll (event:any, flag:any) {
     if (flag == 'STATE') {
@@ -214,32 +199,36 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
     }
   }
 
-  get notSelectedStates () {
+  get notSelectedStates(){
     return this.stateList.filter((data: any) => !this.selectedStateId.some((b: any) => b === data._id)).length
   }
 
   public goToPreviousQuestion(){
+    this.switchQuestion = true;
     this.showSelectAnsMsg = false;
     if(this.currentQuestionIndex > 0){
       this.currentQuestionIndex = (this.currentQuestionIndex - 1);
       this.currentQuestion = this.questions[this.currentQuestionIndex];
-      // this.setFilesForQuestionsChoises();
-      this.getStateCount()
+      this.getStateCount();
       let outerThis= this;
       let preQues= this.questions.filter((question,index)=>{return index<=outerThis.currentQuestionIndex});
       let nextQues = this.questions.filter(function(question,index){
-        return index > outerThis.currentQuestionIndex && question.type=='main';
+        return index > outerThis.currentQuestionIndex && question.question_type=='main';
       });
       this.questions=Array.prototype.concat(preQues,nextQues);
     }
+    this.switchQuestion = false;
   }
 
-  getNextQuestion(currentQuestion: any) {
+  getNextQuestion(currentQuestion: any){
     this.switchQuestion = true;
     this.showValidationMsg = false;
     this.showSelectAnsMsg = false;
     this.blockQuestionAnswerUI.start();
-    if (this._checkAnsIsSelected(currentQuestion.type,currentQuestion.has_input,currentQuestion.choices)) {
+
+    console.log('getNextQuestion  = currentQuestion ==',currentQuestion);
+
+    if (this._checkAnsIsSelected(currentQuestion.question_type,currentQuestion.has_input,currentQuestion.choices)){
       if (this._checkAnsIsValid(currentQuestion)){
         setTimeout(() => {
           if(this.questions[this.currentQuestionIndex + 1]){
@@ -248,11 +237,6 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
             this.getStateCount();
             // this.setFilesForQuestionsChoises();
             this.switchQuestion = false;
-            let preventedQuestionIds=[33,34,35];
-            let previousQuestionId = this.questions[this.currentQuestionIndex-1].id;
-            if(preventedQuestionIds.indexOf(previousQuestionId)==-1){
-              this.blockQuestionAnswerUI.stop();
-            }
           }else{
             this.screen_mode= 'QUESTION_COMPLETED';
           }
@@ -269,6 +253,7 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
       this.switchQuestion = false;
     }
   }
+
   _saveSubQuestionAnswer(currentQuestion:Question){
     if (currentQuestion.custom_input && currentQuestion.custom_input.length>0) {
       this.showSelectAnsMsg = false;
@@ -279,10 +264,9 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
     }
   }
 
-  skipAndGotoNextQuestion () {
+  skipAndGotoNextQuestion(){
     this.showSelectAnsMsg = false;
     this.showValidationMsg = false;
-
     this.blockQuestionAnswerUI.start();
     setTimeout(() => {
       if(this.questions[this.currentQuestionIndex + 1]){
@@ -291,11 +275,6 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
         this.getStateCount();
         // this.setFilesForQuestionsChoises();
         this.switchQuestion = false;
-        let preventedQuestionIds=[33,34,35];
-        let previousQuestionId = this.questions[this.currentQuestionIndex-1].id;
-        if(preventedQuestionIds.indexOf(previousQuestionId)==-1){
-          this.blockQuestionAnswerUI.stop();
-        }
       }else{
         this.screen_mode= 'QUESTION_COMPLETED';
       }
@@ -304,24 +283,24 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
     });
   }
 
-  
+
   _checkAnsIsSelected(questionType:string,questionHasInput:any,choices: Array<Choice>): any {
-    //console.log('_checkAnsIsSelected ==',`questionType ==${questionType} , questionHasInput==${questionHasInput} , choices == ${choices.length}`);
-     if(questionType=='sub' || questionHasInput==1){
+    console.log('_checkAnsIsSelected ==',`questionType ==${questionType} , questionHasInput==${questionHasInput} , choices == ${choices.length}`);
+     if(questionType=='sub' || questionHasInput){
        return true;
      }
      else{
-      let checkedChoices = choices.filter((cho:any)=>cho.isChecked);
-      let checkedChoicesRequiredFiles = checkedChoices.filter((ccho:any)=>ccho.has_file_upload);
-      let checkedChoicesAddedFiles = checkedChoicesRequiredFiles.filter((ccho:any)=> ccho.custom_file_upload!=null);
+      let checkedChoices = choices && choices.length ? choices.filter((cho:any)=>cho.isChecked):[];
+      let checkedChoicesRequiredFiles = checkedChoices.length>0 ? checkedChoices.filter((ccho:any)=>ccho.has_file_upload):[];
+      let checkedChoicesAddedFiles = checkedChoicesRequiredFiles.length>0 ? checkedChoicesRequiredFiles.filter((ccho:any)=> ccho.custom_file_upload!=null):[];
 
       // CHECK IF AT LEAST ONE CHOISE CHEKED
-      if (checkedChoices.length>0) {
+      if (checkedChoices.length>0){
         if(checkedChoicesRequiredFiles.length>0){
           if(checkedChoicesRequiredFiles.length==checkedChoicesAddedFiles.length){
-            return true; 
+            return true;
           }else{
-            return false; 
+            return false;
           }
         }else{
           return true;
@@ -332,55 +311,66 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
       }
      }
    }
- 
+
 
   _checkAnsIsValid(currentQuestion: any): any {
     //console.log(' ===  _checkAnsIsValid called==');
-    //console.log('currentQuestion.type =',currentQuestion.type);
-    if (currentQuestion.type=='sub' && currentQuestion.has_input==1){ 
+    //console.log('currentQuestion.question_type =',currentQuestion.question_type);
+    if (currentQuestion.question_type=='sub' && currentQuestion.has_input){
       return true;
     } else {
       let isValid:boolean = false;
-      for (var i = 0; i < currentQuestion.choices.length; i++) {
-        if (
-          currentQuestion.choices[i].isChecked &&
-          //(only Red choises) currentQuestion.choices[i].result == 1 &&
-          currentQuestion.choices[i].has_subquestions ==1
-        ){
-          // Adding Choise's subquestions to Question Flow
-          //console.log('inside if condition');
-          let choiseSubQAll=currentQuestion.choices[i].sub_questions;
-          let choiseSubQ= choiseSubQAll.filter((csq:any)=>{return csq.is_deleted!=1;});
-          //console.log('choiseSubQ ==',choiseSubQ);
-          for(let j=0 ; j< choiseSubQ.length ;j++){
-              //console.log('inside for loop');
-              let sub_question=  choiseSubQ[j];
-              if(this.questions.filter((q:any)=>q.id==sub_question.id).length==0){
-                this.questions.splice(this.currentQuestionIndex+j+1, 0,sub_question);
-                //console.log('this.questions =', this.questions);
-              }
-          }
-          isValid = true;
-         }else{
-            //console.log('=====inside else ====');
-            let outerThis=this;
-           if (
-             currentQuestion.choices[i].isChecked &&
-            // (not Red choises) currentQuestion.choices[i].result != 1 &&
-             (currentQuestion.choices[i].has_subquestions == 0 || currentQuestion.choices[i].has_subquestions ==null)
-           ){
-             //console.log('INSIDE CONDItiON choises',currentQuestion.choices[i]);
-             let preQues= this.questions.filter((question,index)=>{return index<=outerThis.currentQuestionIndex});
-             //console.log('preQues ==',preQues);
-             let nextQues = this.questions.filter(function(question,index){
-               return index > outerThis.currentQuestionIndex;// && question.type=='main';
-             });
-             //console.log('nextQues ==',nextQues);
-             this.questions=Array.prototype.concat(preQues,nextQues);
-             //console.log('this.questions ==',this.questions);
+      if(currentQuestion.choices){
+        for (var i = 0; i < currentQuestion.choices.length; i++){
+          if (currentQuestion.choices[i].isChecked &&
+            //(only Red choises) currentQuestion.choices[i].result == 1 &&
+            currentQuestion.choices[i].has_subquestions){
+                // Adding Choise's subquestions to Question Flow
+                //console.log('inside if condition');
+                let choiseSubQAll=currentQuestion.choices[i].sub_questions;
+                let choiseSubQ= choiseSubQAll.filter((csq:any)=>{return csq.is_deleted!=1;});
+                //console.log('choiseSubQ ==',choiseSubQ);
+                for(let j=0 ; j< choiseSubQ.length ;j++){
+                    //console.log('inside for loop');
+                    let sub_question=  choiseSubQ[j];
+                    if(this.questions.filter((q:any)=>q._id==sub_question._id).length==0){
+                      this.questions.splice(this.currentQuestionIndex+j+1, 0,sub_question);
+                      //console.log('this.questions =', this.questions);
+                    }
+                }
+                isValid = true;
+           }else{
+                  //console.log('=====inside else ====');
+                  let outerThis=this;
+                if (
+                  currentQuestion.choices[i].isChecked &&
+                  // (not Red choises) currentQuestion.choices[i].result != 1 &&
+                  (!currentQuestion.choices[i].has_subquestions)
+                ){
+                  //console.log('INSIDE CONDItiON choises',currentQuestion.choices[i]);
+                  let preQues= this.questions.filter((question,index)=>{return index<=outerThis.currentQuestionIndex});
+                  //console.log('preQues ==',preQues);
+                  let nextQues = this.questions.filter(function(question,index){
+                    return index > outerThis.currentQuestionIndex;// && question.type=='main';
+                  });
+                  //console.log('nextQues ==',nextQues);
+                  this.questions=Array.prototype.concat(preQues,nextQues);
+                  //console.log('this.questions ==',this.questions);
+                }
+
+
+                if(!currentQuestion.choices[i].isChecked){
+                  let preQues= this.questions.filter((question,index)=>{return index<=outerThis.currentQuestionIndex});
+                  let nextQues = this.questions.filter(function(question,index){
+                  return index > outerThis.currentQuestionIndex && question.question_type=='main';
+                  });
+                  this.questions=Array.prototype.concat(preQues,nextQues);
+                }
+                isValid = true;
            }
-           isValid = true;
-         }
+        }
+      }else{
+        isValid=true;
       }
       //console.log('isValid ==',isValid);
       return isValid;
@@ -388,128 +378,70 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy,AfterViewInit 
   }
 
   checkAnsIsValidForCheckboxQuestion(question: Question): any {
-    question.choices.forEach((t: any, index: any) => {
-      if(t.isChecked && t.has_file_upload) {
-        // this.creatUploader(t.id);
-      }else {
-        // this.removeUploader(t);
-      }
-    });
-    if (this._checkAnsIsValid(question)) {
+    if(question && question.choices){
+        question.choices.forEach((t: any, index: any) => {
+          if(t.isChecked && t.has_file_upload) {
+            // this.creatUploader(t._id);
+          }else {
+            // this.removeUploader(t);
+          }
+        });
+    }
+    if(this._checkAnsIsValid(question)){
       this.showSelectAnsMsg = false;
     } else {
       this.showSelectAnsMsg = true;
     }
   }
 
-  updateIschecked(choice: Choice) {
+  updateIschecked(choice: Choice){
     this.currentChoice = choice;
-    this.currentQuestion.choices.forEach((t: any) => {
-      t.isChecked = t.id == choice.id;
-    });
+    if(this.currentQuestion.choices){
+      this.currentQuestion.choices.forEach((t: any) => {
+        t.isChecked = t._id == choice._id;
+      });
+    }
+
     if (!choice.has_file_upload) {
       this.getNextQuestion(this.currentQuestion);
     }
   }
 
 
-  getStateCount() {
+  getStateCount(){
     this.blockStatesAvaibilityUI.start()
     this.tempStateList = this.stateList.map((object: any) => ({ ...object }))
-    if (this.currentQuestion && this.currentQuestion.states) {
-
+    if (this.currentQuestion && this.currentQuestion.states){
       this.currentQuestion.states.filter((cs: any) => {
-        let inx = this.tempStateList.findIndex((state: any, index: any) => state._id == cs.id)
+        let inx = this.tempStateList.findIndex((state: any, index: any) => state._id == cs._id)
         this.tempStateList[inx].isAvailable = true
       })
     }
     this.blockStatesAvaibilityUI.stop();
   }
 
-  selectedDrug(ele: any) {
-    this.isDrugCheck = false;
-    this.resetCurentQuestionOptions();
-    const obj = {
-      rxcui: ele.rxcui,
-      name: ele.name
-    };
-    this.selectDrug.push(obj);
-    this.myControl.setValue(null);
-    this.myControl.reset();
-    this.myControl.updateValueAndValidity()
-    this._changeDetectorRef.detectChanges();
-  }
 
   restartQuestionnaire(){
     for(let i=0;i<this.questions.length;i++){
-      this.questions[i].choices.forEach(t => {
-        t.isChecked = false;
-      });
+      if(this.questions[i] && this.questions[i].choices){
+        this.questions[i].choices.forEach(t => {
+          t.isChecked = false;
+        });
+      }
     }
     this.currentQuestionIndex = 0;
     this.currentQuestion = this.questions[0];
     this.getStateCount();
     this.screen_mode='QUESTION_ANSWER';
-    this.options = [];
     this.fileUploader = [];
     this._changeDetectorRef.detectChanges();
   }
 
-  resetCurentQuestionOptions() {
-    this.currentQuestion.choices.forEach((t: any) => {
-      t.isChecked = false;
-    });
-    this.options = [];
-    this._changeDetectorRef.detectChanges();
-  }
-
-  public resetAllergiesOptionChecked() {
-    this.allergiesCheck = false;
-  }
-
-  public resetIllnessesOptionChecked() {
-    this.isIllnessesCheck = false;
-  }
-
-  removeDrug(index:number) {
-    if (index !== -1) {
-      this.selectDrug.splice(index, 1);
-    }
-    this._changeDetectorRef.detectChanges();
-  }
-
-  customeInputRadioChecked(isValid:boolean) {
-    // var isValid = false;
-    if (isValid) {
-      this.myControl.reset();
-      this.selectDrug = [];
-      this.options = [];
-      this.isDrugCheck = true;
-    } else {
-      this.isDrugCheck = false;
-      this.myControl.reset();
-      this.myControl.enable();
-    }
-    this._changeDetectorRef.detectChanges();
-  }
-
-  illnessesRadioChecked(isChecked:boolean) {
-    if(isChecked){
-      this.userIllnesses = '';
-      this.isIllnessesCheck = true;
-    } else {
-      this.isIllnessesCheck = false;
-    }
-    this._changeDetectorRef.detectChanges();
-  }
-
-   
-  allergiesRadioChecked(isChecked:boolean) {
-    if (isChecked) {
-      this.userAllergies = '';
-      this.allergiesCheck = true;
-    } else {
-      this.allergiesCheck = false;
+  resetCurentQuestionOptions(){
+    if(this.currentQuestion && this.currentQuestion.choices){
+      this.currentQuestion.choices.forEach((t: any) => {
+        t.isChecked = false;
+      });
     }
     this._changeDetectorRef.detectChanges();
   }

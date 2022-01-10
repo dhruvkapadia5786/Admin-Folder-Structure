@@ -5,9 +5,9 @@ import { DataTableDirective } from 'angular-datatables';
 
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Helper } from '../../../../../services/helper.service';
-import { CUSTOMER_STATUS } from 'src/app/enums/order-status.enum';
+import { Helper } from 'src/app/services/helper.service';
 import { NgBlockUI, BlockUI } from 'ng-block-ui';
+import { orderHelper } from 'src/app/services/orderHelper.service';
 
 @Component({
   selector: 'app-orders',
@@ -24,27 +24,31 @@ export class OrdersComponent implements OnInit, AfterViewInit {
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
   dtTrigger: Subject<any> = new Subject();
+
   constructor(
     private route: ActivatedRoute,
     private _http: HttpClient,
     public _helper: Helper,
+    public _orderHelper:orderHelper,
     private router: Router,
-    private _renderer: Renderer2
-  ) { this.getDTOptions(); }
+    private _renderer: Renderer2){
+      this.getDTOptions();
+    }
 
-  ngOnInit() {
-    this.parentSub = this.route.parent?.parent?.params.subscribe(params => {
+  ngOnInit(){
+    let activeRoute:any=this.route;
+    this.parentSub = activeRoute.parent.parent.params.subscribe((params:any) => {
       this.customerId = params['id'];
     });
+
     $.fn.dataTable.ext.errMode = 'none';
     $(window).on('resize', () => {
       this.rerender();
     });
   }
 
-  getAllOrders() {
-  }
   getDTOptions() {
+    let that=this;
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -56,10 +60,13 @@ export class OrdersComponent implements OnInit, AfterViewInit {
       ordering: true,
       order: [[0, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
+        dataTablesParameters.filter = {};
+        dataTablesParameters.filter.CUSTOMER_ID = this.customerId;
+
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/orders/forCustomer/' + this.customerId,
+            'api/orders/list',
             dataTablesParameters,
             {}
           )
@@ -80,72 +87,35 @@ export class OrdersComponent implements OnInit, AfterViewInit {
           className: 'text-right',
           render: function (data, type, record) {
             if (data) {
-              return `<a href="javascript:void(0);" orderDetailsID="${record.id}">${data}</a>`;
+              return `<a href="javascript:void(0);" orderDetailsID="${record._id}">${data}</a>`;
             } else {
               return '<span></span>';
             }
           }
         },
-        { data: 'medicine_kit_name', title: 'Medicine Kit' },
-        { data: 'quantity', title: 'Quantity', className: 'text-right' },
+        { data: 'medicine_kit_details.name', title: 'Medicine Kit' },
         {
           data: 'total_amount',
           title: 'Total Amount',
           className: 'text-right',
-          render: function (data) {
-            let _helper = new Helper();
-            return _helper.getInINRFormat('INR', data);
+          render: function (data){
+            return that._helper.getInINRFormat('INR', data);
           }
         },
         {
-          data: 'customer_status',
+          data: 'system_status',
           title: 'Order Status',
           className: 'text-center',
-          render: function (data,type,full) {
-            let badge='';
-            if (data == 1 || data==2) {
-              badge= `<span class='badge badge-info'>${CUSTOMER_STATUS[data]}</span>`;
-            }
-            else if (data == 3) {
-              badge= `<span class='badge badge-warning'>${CUSTOMER_STATUS[data]}</span>`;
-            } else if (data == 4) {
-              badge= `<span class='badge badge-success'>${CUSTOMER_STATUS[data]}</span>`;
-            } else if (data == 5) {
-              badge= `<span class='badge badge-info'>${CUSTOMER_STATUS[data]}</span>`;
-            } else if (data == 6) {
-              badge= `<span class='badge badge-success'>${CUSTOMER_STATUS[data]}</span>`;
-            } else if (data == 7) {
-              badge= `<span class='badge badge-danger'>${CUSTOMER_STATUS[data]}</span>`;
-            } else if (data == 8) {
-              badge= `<span class='badge badge-danger'>${CUSTOMER_STATUS[data]}</span>`;
-            } else if (data == 9) {
-              badge= `<span class='badge badge-success'>${CUSTOMER_STATUS[data]}</span>`;
-            } else {
-              badge= '<span></span>';
-            }
-            if(full.is_transferred==1){
-              badge+= `<span class='badge badge-warning'>Transferred</span>`;
-            }
-            return badge;
+          render: function (data,type,full){
+            return that._orderHelper.getSystemStatus(data);
           }
         },
         {
-          data: 'tracking_id', title: 'Tracking ID',
-          render: function (data: any, type: any, full: any) {
-            if (full.customer_status > 3 && full.customer_status != 5 && full.customer_status != 8 && full.customer_status != 9) {
-              return `<a target="_blank" href="${full.tracking_url}">${full.tracking_id}</a>`
-            }
-            else {
-              return '<span></span>'
-            }
-          }
-        },
-        {
-          data: 'created',
+          data: 'created_at',
           title: 'Order Date',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
@@ -154,6 +124,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
       ]
     };
   }
+
   rerender(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first

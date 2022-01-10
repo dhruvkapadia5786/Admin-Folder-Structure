@@ -1,16 +1,12 @@
 export interface AppNotification {
-  id: number,
-  user_id: number,
-  datetime: any,
-  status?: number,
-  text: string,
-  link?: any,
-  type?: number,
-  event_type: string,
-  event_id?: number,
-  priority?: number,
-  created?: string,
-  updated?: string,
+  _id: number;
+  user_id: any;
+  notification_text: string;
+  event_type: string;
+  event_id?: number;
+  created_at?: string;
+  updated_at?: string;
+  read_at?: any;
   notification_style:string,
   notification_type:string
 };

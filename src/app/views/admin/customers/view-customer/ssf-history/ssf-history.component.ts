@@ -18,47 +18,23 @@ export class SsfHistoryComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit(){
-    let activeRoute:any;
+    let activeRoute:any=this.route;
     activeRoute.parent.parent.params.subscribe((params:any) => {
       this.customerId = params['id'];
       this.getLatestFamilyHistory();
-      this.getLatestSurgicalHistory();
-      this.getLatestSocialHistory();
     })
   }
 
-  getLatestFamilyHistory() {
-    const url = `api/v1/customer/latest_family_history?show_default_json=1&customerId=${this.customerId}`;
+  getLatestFamilyHistory(){
+    const url = 'api/customers/view/' + this.customerId;
     this.http.get(url).subscribe((data: any) => {
-        if (data)
-          this.familyHistory = data.details;
+          this.familyHistory = data.family_history ? data.family_history:[];
+          this.socialHistory = data.social_history ? data.social_history :[];
+          this.surgicalHistory = data.surgical_history?data.surgical_history:[];
       },
       (err) => {
-        console.log(err)
-      }
-    );
-  }
-  getLatestSocialHistory() {
-    const url = `api/v1/customer/latest_social_history?show_default_json=1&customerId=${this.customerId}`;
-    this.http.get(url).subscribe((data: any) => {
-        if(data)
-          this.socialHistory = data.details;
-      },
-      (err) => {
-        console.log(err)
-      }
-    );
-  }
-  getLatestSurgicalHistory() {
-    const url = `api/v1/customer/latest_surgical_history?show_default_json=1&customerId=${this.customerId}`;
-    this.http.get(url).subscribe((data: any) => {
-        if(data)
-          this.surgicalHistory = data.details;
-      },
-      (err) => {
-        console.log(err)
-      }
-    );
+
+      });
   }
 
 }

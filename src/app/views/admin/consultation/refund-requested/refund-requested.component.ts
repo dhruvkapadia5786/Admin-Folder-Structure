@@ -23,7 +23,7 @@ export class RefundRequestedComponent implements OnInit{
   drug_orders_limit:number=10;
   drug_orders_limit_options=[5,10,20,30,50];
 
-  drug_orders_sort_by:string='order_refund_requested_on';
+  drug_orders_sort_by:string='refund_requested_on';
   drug_orders_sort_order:any=-1;
   drug_orders_search:string='';
 
@@ -31,13 +31,13 @@ export class RefundRequestedComponent implements OnInit{
   drug_orders_sort_options=[
     {
       id:3,
-      sort_by:'order_number',
+      sort_by:'consultation_number',
       sort_order:-1,
       title:'Sort By Order No descending'
     },
     {
       id:4,
-      sort_by:'order_number',
+      sort_by:'consultation_number',
       sort_order:1,
       title:'Sort By Order No ascending'
     },
@@ -55,25 +55,25 @@ export class RefundRequestedComponent implements OnInit{
     },
     {
       id:7,
-      sort_by:'order_place_datetime',
+      sort_by:'consultation_place_datetime',
       sort_order:-1,
       title:'Sort By OrderDate descending'
     },
     {
       id:8,
-      sort_by:'order_place_datetime',
+      sort_by:'consultation_place_datetime',
       sort_order:1,
       title:'Sort By OrderDate ascending'
     },
     {
       id:9,
-      sort_by:'order_refund_requested_on',
+      sort_by:'refund_requested_on',
       sort_order:-1,
       title:'Sort By Last Refund Requested Date descending'
     },
     {
       id:10,
-      sort_by:'order_refund_requested_on',
+      sort_by:'refund_requested_on',
       sort_order:1,
       title:'Sort By  Last Refund Requested Date ascending'
     }
@@ -100,17 +100,15 @@ export class RefundRequestedComponent implements OnInit{
     this.getRefundRequestedOrders(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,this.drug_orders_sort_by,this.drug_orders_sort_order,this.drug_orders_search);
   }
 
-
-  async calculateRefundForOrder(order_id:any,refundType:any){
-    let order:any = this.drug_orders_collection.data.find((order:any)=>order._id==order_id);
-
+  async calculateRefundForOrder(consultation_id:any,refundType:any){
+    let consultation:any = this.drug_orders_collection.data.find((consultation:any)=>consultation._id==consultation_id);
     let paymentgateway_charge_refunded= null;
-    if(order.charged_from_paymentgateway>0){
-      let chargeDetails:any = await this._getPaymentDetailsForOrder(order._id);
-      order.charge_details = chargeDetails &&  chargeDetails.id ?chargeDetails.id :null;
-      paymentgateway_charge_refunded = order.charge_details && order.charge_details.status=='refunded'? true : false;
+    if(consultation.charged_from_paymentgateway>0){
+      let chargeDetails:any = await this._getPaymentDetailsForOrder(consultation._id);
+      consultation.charge_details = chargeDetails &&  chargeDetails.id ?chargeDetails.id :null;
+      paymentgateway_charge_refunded = consultation.charge_details && consultation.charge_details.status=='refunded'? true : false;
     }else{
-      order.charge_details=null;
+      consultation.charge_details=null;
       paymentgateway_charge_refunded=null;
     }
 
@@ -118,13 +116,9 @@ export class RefundRequestedComponent implements OnInit{
     let amount_to_process_refund_in_paymentgateway=0;
     let amount_to_process_refund_in_wallet=0;
     let amount_to_process_refund_in_discount=0;
-    let amount_to_process_refund_in_shipping_charge= order.shipping_charge  ?  order.shipping_charge : 0;
-    let amount_to_process_refund_in_packing_charge = order.packing_charge ?  order.packing_charge : 0;
     let final_total = 0;
-
-    let temp_total = order.subtotal_amount + amount_to_process_refund_in_shipping_charge + amount_to_process_refund_in_packing_charge;
-
-    let pending_discount =(order.coupon_discount+order.referral_discount) - order.refunded_discount;
+    let temp_total = consultation.subtotal_amount;
+    let pending_discount =(consultation.coupon_discount+consultation.referral_discount) - consultation.refunded_discount;
 
     if(temp_total>=pending_discount){
       amount_to_process_refund_in_discount=pending_discount;
@@ -136,9 +130,9 @@ export class RefundRequestedComponent implements OnInit{
       final_total= amount_to_precess_refund_total;
     }
 
-    let total_balance_remaining   =    order.total_amount - order.refunded_total  ;
-    let paymentgateway_balance_remaining  =   order.charged_from_paymentgateway  -  order.refunded_in_paymentgateway;
-    let wallet_balance_remaining =    order.charged_from_wallet -  order.refunded_in_wallet;
+    let total_balance_remaining   =    consultation.total_amount - consultation.refunded_total  ;
+    let paymentgateway_balance_remaining  =   consultation.charged_from_paymentgateway  -  consultation.refunded_in_paymentgateway;
+    let wallet_balance_remaining =    consultation.charged_from_wallet -  consultation.refunded_in_wallet;
 
     if(wallet_balance_remaining>0){
         amount_to_process_refund_in_wallet = amount_to_precess_refund_total>=wallet_balance_remaining ? wallet_balance_remaining : amount_to_precess_refund_total;
@@ -154,24 +148,20 @@ export class RefundRequestedComponent implements OnInit{
     amount_to_process_refund_in_paymentgateway = Math.round(amount_to_process_refund_in_paymentgateway * 100) / 100 ;
     amount_to_process_refund_in_wallet = Math.round(amount_to_process_refund_in_wallet * 100) / 100 ;
     amount_to_process_refund_in_discount = Math.round(amount_to_process_refund_in_discount * 100) / 100 ;
-    amount_to_process_refund_in_shipping_charge = Math.round(amount_to_process_refund_in_shipping_charge * 100) / 100 ;
-    amount_to_process_refund_in_packing_charge = Math.round(amount_to_process_refund_in_packing_charge * 100) / 100 ;
     let refundObject={
-      order_id:order._id,
+      order_id:consultation._id,
       refund_kit:true,
       paymentgateway_charge_already_refunded:paymentgateway_charge_refunded,
       amount_to_precess_refund_total:amount_to_precess_refund_total,
       amount_to_process_refund_in_paymentgateway:amount_to_process_refund_in_paymentgateway,
       amount_to_process_refund_in_wallet:amount_to_process_refund_in_wallet,
       amount_to_process_refund_in_discount:amount_to_process_refund_in_discount,
-      amount_to_process_refund_in_shipping_charge:amount_to_process_refund_in_shipping_charge,
-      amount_to_process_refund_in_packing_charge:amount_to_process_refund_in_packing_charge
     }
     let defaultCalculatedRefundObject = JSON.parse(JSON.stringify(refundObject));
 
     this._processRefundModalService.setFormData({
-      eventType:'ORDER',
-      selectedOrder:order,
+      eventType:'CONSULTATION',
+      selectedOrder:consultation,
       refundObject:refundObject,
       defaultCalculatedRefundObject:defaultCalculatedRefundObject,
     });

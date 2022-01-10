@@ -50,13 +50,14 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
     this.treatmentConditionId = activeRoute.parent.parent.snapshot.paramMap.get('treatment_id');
 
     if (this.medicineKitId && this.treatmentConditionId) {
-      this.showHeaderAndFilter = false
-      this.disableMedicineKitSelect = true
+      this.showHeaderAndFilter = false;
+      this.disableMedicineKitSelect = true;
       this.order_config.filter.MEDICINE_KIT.push(this.medicineKitId);
     }
   }
 
   ngOnInit() {
+
     this.getAllFilterList();
     this.getDTOptions();
     $.fn.dataTable.ext.errMode = 'none';
@@ -167,7 +168,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
           title: 'State',
           className: 'text-center font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `${full.shipping_address.state}`;
+            return full.shipping_address ? `${full.shipping_address.state}`:'-';
           }
         },
         {
@@ -255,7 +256,7 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
 
     // Medicine kits
     this._http.get<any>('api/medicine_kits/all').subscribe((resp) => {
-      this.medicinekitList = resp.data;
+      this.medicinekitList = resp;
     }, err=> {});
   }
 
@@ -283,7 +284,9 @@ export class OrdersListComponent implements OnInit, AfterViewInit,OnDestroy {
   }
 
   clearFilter() {
-    this.order_config = {filter: {STATE: [], MEDICINE_KIT: [], ORDER_STATUS:['NONE','ASSIGNED_TO_TECHNICIAN','REJECTED','APPROVED_BY_TECHNICIAN','ASSIGNED_TO_DOCTOR','PRESCRIBED_BY_DOCTOR','REFUND_REQUESTED','REFUND_PROCESSED','ASSIGNED_TO_PHARMACY','COMPLETED','TOO_SOON'], ORDER_TYPE: ['MAIN','REFILL']}}
+    this.order_config = {filter: {STATE: [], MEDICINE_KIT: [],
+      ORDER_STATUS: ['NONE','INCOMPLETE','ASSIGNED_TO_TECHNICIAN','REJECTED','APPROVED_BY_TECHNICIAN','ASSIGNED_TO_DOCTOR','PRESCRIBED_BY_DOCTOR','REFUND_REQUESTED','REFUND_PROCESSED','ASSIGNED_TO_PHARMACY','SHIPPED','PICKEDUP_DELIVERY'],
+      ORDER_TYPE: ['MAIN','REFILL']}}
     if (this.medicineKitId && this.treatmentConditionId) {
       this.order_config.filter.MEDICINE_KIT.push(this.medicineKitId);
     }

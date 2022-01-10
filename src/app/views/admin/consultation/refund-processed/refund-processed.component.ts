@@ -18,7 +18,7 @@ export class RefundProcessedComponent implements OnInit {
   drug_orders_limit:number=10;
   drug_orders_limit_options=[5,10,20,30,50];
 
-  drug_orders_sort_by:string='order_refund_processed_on';
+  drug_orders_sort_by:string='refund_processed_on';
   drug_orders_sort_order:any=-1;
   drug_orders_search:string='';
 

@@ -9,18 +9,19 @@ import { DataTablesModule } from 'angular-datatables';
 import { ConsultationService } from '../consultation.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { consultationHelper } from 'src/app/services/consultationHelper.service';
 
 @NgModule({
   declarations: [ConsultationListComponent],
   imports: [
-    CommonModule,
+  CommonModule,
     SharedModule,
-    MatCheckboxModule, 
+    MatCheckboxModule,
     MatSelectModule,
     ConsultationListRoutingModule,
     NgxMaskModule,
     DataTablesModule
   ],
-  providers:[ConsultationService]
+  providers:[ConsultationService,consultationHelper]
 })
 export class ConsultationListModule { }

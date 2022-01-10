@@ -6,6 +6,5 @@ export class State extends BaseModel {
     is_vcr?:number;
     constructor(){
         super();
-        this.id=0;
     }
 }

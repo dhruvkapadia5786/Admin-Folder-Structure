@@ -1,7 +1,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <h4 class="font-weight-bold modal-title w-100" id="ModalTitle">
-            Refund Order {{ '#'+selectedOrder.order_number }}
+             {{  eventType=='CONSULTATION'? 'Refund Consultation #'+selectedOrder.consultation_number:'Refund Order #'+selectedOrder.order_number }}
         </h4>
         <button (click)="closeModal()" type="button" id="closeModalBtn" class="close float-right"  aria-label="Close" data-dismiss="modal">
             <span aria-hidden="true">×</span>
@@ -26,9 +26,9 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{{selectedOrder.subtotal_amount |currency:'INR'}}</td>
-                    <td>{{selectedOrder.shipping_charge|currency:'INR'}}</td>
-                    <td>{{selectedOrder.packing_charge|currency:'INR'}}</td>
+                    <td>{{(selectedOrder.subtotal_amount?selectedOrder.subtotal_amount:0) |currency:'INR'}}</td>
+                    <td>{{(selectedOrder.shipping_charge?selectedOrder.shipping_charge:0) |currency:'INR'}}</td>
+                    <td>{{(selectedOrder.packing_charge?selectedOrder.packing_charge:0) |currency:'INR'}}</td>
                     <td>{{(selectedOrder.coupon_discount+selectedOrder.referral_discount)|currency:'INR'}}</td>
                     <td  class="alert-success">{{selectedOrder.total_amount|currency:'INR'}}</td>
                     <td  class="alert-success">{{selectedOrder.charged_from_paymentgateway|currency:'INR'}}</td>

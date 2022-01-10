@@ -5,14 +5,16 @@ import { OrdersRoutingModule } from './orders-routing.module';
 import { OrdersComponent } from './orders.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { DataTablesModule } from 'angular-datatables';
+import { orderHelper } from 'src/app/services/orderHelper.service';
 
 @NgModule({
   declarations: [OrdersComponent],
   imports: [
-    CommonModule,
+  CommonModule,
     OrdersRoutingModule,
     NgxMaskModule,
     DataTablesModule
-  ]
+  ],
+  providers:[orderHelper]
 })
 export class OrdersModule { }

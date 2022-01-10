@@ -12,6 +12,9 @@ import { OrderLogsModule } from 'src/app/components/order-logs/order-logs.module
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { consultationHelper } from 'src/app/services/consultationHelper.service';
+import { ChangeAddressModalComponent } from 'src/app/components/change-address-modal/change-address-modal.component';
+import { ChangeAddressModalModule } from 'src/app/components/change-address-modal/change-address-modal.module';
 
 @NgModule({
   declarations: [ConsultationComponent, ConsultationViewComponent],
@@ -20,13 +23,15 @@ import { MatSelectModule } from '@angular/material/select';
     SharedModule,
     DataTablesModule,
     MatTabsModule,
-    MatCheckboxModule, 
+    MatCheckboxModule,
     MatSelectModule,
     NgxMaskModule,
     ConsultationRoutingModule,
     ImagePreviewModule,
-    OrderLogsModule
+    OrderLogsModule,
+    ChangeAddressModalModule
   ],
-  providers:[ConsultationService]
+  providers:[ConsultationService,consultationHelper],
+  entryComponents:[ChangeAddressModalComponent]
 })
 export class ConsultationModule { }

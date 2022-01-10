@@ -40,7 +40,7 @@
       </div>
       <div class="col-md-3">
         <mat-label>Medicine Kits</mat-label>
-        <mat-select placeholder="Select Medicine Kits" (selectionChange)="handleChange('MK', $event.value)" [(ngModel)]="order_config.filter.MEDICINE_KIT" [disabled]="disableMedicineKitSelect" multiple>
+        <mat-select placeholder="Select Medicine Kits" (selectionChange)="handleChange('MK', $event.value)" [(ngModel)]="order_config.filter.MEDICINE_KIT" [disabled]="disableMedicineKitSelect"  multiple>
           <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'MK')"
           [indeterminate]="order_config.filter.MEDICINE_KIT.length && notSelectedMedicineKit"
           [checked]="!notSelectedMedicineKit">All</mat-checkbox>

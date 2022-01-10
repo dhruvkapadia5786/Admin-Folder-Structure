@@ -13,24 +13,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let lh of loginHistory">
+                <tr *ngFor="let loginItem of loginHistory">
                     <td>
-                        <p class="font-weight-normal mb-0">{{ getFormatedDate(lh.created) }}</p>
+                        <p class="font-weight-normal mb-0">{{ _helper.getFormattedDateFromUnixTimestamp(loginItem.created_at,'DD-MM-YYYY hh:mm:ss A') }}</p>
                     </td>
                     <td>
-                        <p class="font-weight-normal mb-0">{{lh.city}}, {{lh.region_name}}, {{lh.country}}</p>
+                        <p class="font-weight-normal mb-0">{{loginItem.city}}, {{loginItem.region_name}}, {{loginItem.country}}</p>
                     </td>
                     <td>
-                        <p class="font-weight-normal mb-0">{{lh.device_os}} - {{lh.device_os_version}}</p>
+                        <p class="font-weight-normal mb-0">{{loginItem.device_os}} - {{loginItem.device_os_version}}</p>
                     </td>
                     <td>
-                        <p class="font-weight-normal mb-0">{{lh.browser_name}} - {{lh.browser_version}}</p>
+                        <p class="font-weight-normal mb-0">{{loginItem.browser_name}} - {{loginItem.browser_version}}</p>
                     </td>
                     <td>
-                        <p class="font-weight-normal mb-0">{{lh.ip_address}}</p>
+                        <p class="font-weight-normal mb-0">{{loginItem.ip_address}}</p>
                     </td>
                     <td>
-                        <p class="font-weight-normal mb-0">{{lh.isp}}</p>
+                        <p class="font-weight-normal mb-0">{{loginItem.isp}}</p>
                     </td>
                 </tr>
             </tbody>
@@ -42,13 +42,14 @@
             <h4>No Login History!</h4>
         </div>
     </ng-template>
-    
+
     <hr />
     <div> <h5 class="text-dark font-weight-bold">Device History</h5> </div>
     <ng-container *ngIf="deviceList.length; else elseEmptyDevices">
         <table *ngIf="deviceList.length" class="table table-sm">
             <thead class="thead-light">
                 <tr>
+                    <th>Date Time</th>
                     <th>Device Type</th>
                     <th>Device OS</th>
                     <th>Os Version</th>
@@ -58,6 +59,9 @@
             </thead>
             <tbody>
                 <tr *ngFor="let item of deviceList">
+                     <td>
+                        <p class="font-weight-normal mb-0">{{ _helper.getFormattedDateFromUnixTimestamp(item.created_at,'DD-MM-YYYY hh:mm:ss A') }}</p>
+                    </td>
                     <td>{{item.device_type.charAt(0).toUpperCase() + item.device_type.slice(1)}}</td>
                     <td>{{item.device_os}}</td>
                     <td>{{item.device_os_version}}</td>
@@ -73,4 +77,4 @@
             <h4>No Devices Found!</h4>
         </div>
     </ng-template>
-</div> 
+</div>

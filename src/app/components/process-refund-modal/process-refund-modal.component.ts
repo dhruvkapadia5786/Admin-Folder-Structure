@@ -42,7 +42,6 @@ export class ProcessRefundModalComponent implements OnInit {
 
   ngOnInit(): void {
     let details = this._processRefundModalService.getFormData();
-    console.log('details.refundObject=',details.refundObject);
     this.eventType = details.eventType;
     this.selectedOrder = details.selectedOrder;
     this.refundObject =  details.refundObject;
@@ -67,7 +66,15 @@ export class ProcessRefundModalComponent implements OnInit {
   }
 
   refundOrder(orderId: any) {
-    let url:string = this.eventType =='ORDER' ? `api/orders/refund_process/${orderId}`:`api/pharmacy_orders/refund_process/${orderId}`;
+    let url:string ='';
+    if(this.eventType =='ORDER'){
+       url=`api/orders/refund_process/${orderId}`;
+    }
+    else if(this.eventType =='CONSULTATION'){
+      url=`api/consultations/refund_process/${orderId}`;
+    }else{
+      url= `api/pharmacy_orders/refund_process/${orderId}`;
+    }
     this.refund_processing=true;
     this.http.post(url,this.refundObject).subscribe((res: any) => {
         this.refund_processing=false;
@@ -77,7 +84,6 @@ export class ProcessRefundModalComponent implements OnInit {
           let walletRefund= res.walletRefund ? res.walletRefund._id :'N/A';
           this._toastr.showSuccess(`Order Refunded Successfully. Refunded To Payment Gateway : ${paymentgatewayRefund} , Refunded To Wallet : ${walletRefund}`);
           this.onRefundProcessedCompleted.emit(true);
-
         } else {
           this._toastr.showWarning('Unable to refund order. Please Check Payment Method!');
         }

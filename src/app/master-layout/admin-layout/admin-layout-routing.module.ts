@@ -36,6 +36,7 @@ const routes: Routes = [
   { path:'contactlenses-types',loadChildren:()=>import('../../views/admin/contactlenses-types/contactlenses-types.module').then(lensType=>lensType.ContactlensesTypesModule)},
   { path:'contactlenses-colors',loadChildren:()=>import('../../views/admin/contactlenses-colors/contactlenses-colors.module').then(lensColor=>lensColor.ContactlensesColorsModule)},
   { path:'contactlenses-brands',loadChildren:()=>import('../../views/admin/contactlenses-brands/contactlenses-brands.module').then(lensBrand=>lensBrand.ContactlensesBrandsModule)},
+  { path:'contactlenses-products',loadChildren:()=>import('../../views/admin/contactlenses-products/contactlenses-products.module').then(lensProducts=>lensProducts.ContactlensesProductsModule)},
   { path: 'coupon-code', loadChildren:()=>import('../../views/admin/coupon-code/coupon-code.module').then(CC=>CC.CouponCodeModule) },
   { path: 'coupon-transaction', loadChildren:()=>import('../../views/admin/coupon-transactions/coupon-transactions.module').then(couponTransaction=>couponTransaction.CouponTransactionsModule) },
   { path: 'referral-transaction', loadChildren:()=>import('../../views/admin/referral-transactions/referral-transactions.module').then(referral=>referral.ReferralTransactionsModule) },

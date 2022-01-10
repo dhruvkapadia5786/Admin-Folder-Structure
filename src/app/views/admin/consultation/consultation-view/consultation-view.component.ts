@@ -1,35 +1,31 @@
 import { Component, Renderer2, OnInit, ChangeDetectorRef, ViewChild, ViewRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { ConsultationService } from '../consultation.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Toastr } from '../../../../services/toastr.service';
+import { Toastr } from 'src/app/services/toastr.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Helper } from 'src/app/services/helper.service';
 import { environment } from 'src/environments/environment';
-import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { DataTableDirective } from 'angular-datatables';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NgBlockUI, BlockUI } from 'ng-block-ui';
 import { Subject } from 'rxjs';
-
 import { RefundRequestModalComponent } from 'src/app/components/refund-request-modal/refund-request-modal.component';
+import { consultationHelper } from 'src/app/services/consultationHelper.service';
+import { ChangeAddressModalService } from 'src/app/components/change-address-modal/change-address-modal.service';
+import { ChangeAddressModalComponent } from 'src/app/components/change-address-modal/change-address-modal.component';
 
 @Component({
   selector: 'app-consultation-view',
   templateUrl: './consultation-view.component.html',
   styleUrls: ['./consultation-view.component.scss']
 })
-export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ConsultationViewComponent implements OnInit {
   modalRef!: BsModalRef;
-  dtOptions!: DataTables.Settings;
-  @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
-  @BlockUI('datatable') blockDataTable!: NgBlockUI;
-  dtTrigger: Subject<any> = new Subject();
 
   loading = false;
   consultationId: any;
   consultationDetails: any;
   patient: any;
-  profileLicense: any;
 
   followupSymptoms: any;
 
@@ -58,8 +54,7 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
   selectedCondition: any;
   selectedConditionId!: string;
 
-  refundData: any;
-  formSubmitting: boolean = false;
+  showChangeAddressBtn!:boolean;
 
   constructor(
     public _helper: Helper,
@@ -70,181 +65,24 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
     public _cdr: ChangeDetectorRef,
     private _activeRoute: ActivatedRoute,
     private modalService: BsModalService,
-    private _consultationService: ConsultationService) {
+    public _consultationHelper:consultationHelper,
+    private _changeAddressModalService: ChangeAddressModalService,
+    private _consultationService: ConsultationService){
 
     this.consultationId = this._activeRoute.snapshot.paramMap.get('id');
   }
 
 
-  async ngOnInit() {
-    $.fn.dataTable.ext.errMode = 'none';
-    $(window).on('resize', () => {
-      this.rerender();
-    });
+  async ngOnInit(){
     this.loadRiskFactors();
     await this.loadConsultationDetails();
   }
 
 
-  rerender(): void {
-    if (this.dtElement && this.dtElement.dtInstance) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        // Destroy the table first
-        dtInstance.destroy();
-        // Call the dtTrigger to rerender again
-        this.dtTrigger.next();
-      });
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this._renderer.listen('document', 'click', (event: any) => {
-      if (event.target.hasAttribute('consultationDetailID')) {
-        this.gotoConsultation(event.target.getAttribute('consultationDetailID'));
-      }
-    });
-  }
-
-
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    if (this.dtTrigger) {
-      this.dtTrigger.unsubscribe();
-    }
-    if (this.dtElement && this.dtElement.dtInstance) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        // Destroy the table first
-        dtInstance.destroy();
-      });
-    }
-  }
-
-
-  gotoConsultation(consultationID: number) {
-    //this._router.navigate(['admin','consultation','view',consultationID]);
+  gotoConsultation(consultationID: any) {
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._router.navigate([`/admin/consultation/view/${consultationID}`])
     });
-  }
-
-  getDTOptions(patientId: number) {
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 10,
-      paging: true,
-      serverSide: true,
-      search: true,
-      searching: true,
-      autoWidth: true,
-      ordering: true,
-      order: [[0, 'desc']],
-      ajax: (dataTablesParameters: any, callback: any) => {
-        this.blockDataTable.start();
-        this._consultationService.getConsultationList(patientId, dataTablesParameters).then((resp: any) => {
-          this.blockDataTable.stop();
-          callback({
-            recordsTotal: resp.recordsTotal,
-            recordsFiltered: resp.recordsFiltered,
-            data: resp.data
-          });
-        });
-      },
-      columns: [
-        {
-          data: 'consultation_number',
-          title: 'Consultation Number',
-          className: 'text-center',
-          render: function (data: any, type: any, record: any) {
-            return `<a consultationDetailID=${record.id} href="javascript:void(0);" class="text-primary font-weight-bold">C-${data}</a>`;
-          }
-        },
-        {
-          data: 'consultation_type',
-          title: 'Consultation Type',
-          className: 'text-center',
-          render: function (data: any, type: any, record: any) {
-            if (data == 'NEW') {
-              return '<span class="badge badge-success">NEW</span>'
-            } else {
-              return '<span class="badge badge-primary">FOLLOWUP</span>'
-            }
-          }
-        },
-        {
-          data: 'type',
-          title: 'Type',
-          className: 'text-center',
-          render: function (data: any, type: any, record: any) {
-            if (data == 'REFERRED_BY_PHYSICIAN') {
-              return '<span class="badge badge-primary">Referred By Physician</span>'
-            } else {
-              return '<span class="badge badge-warning">First Available Physician</span>'
-            }
-          }
-        },
-        {
-          data: 'doctor_name',
-          title: 'Physician Name',
-          className: 'text-center',
-          render: function (data: any, type: any, record: any) {
-            if (data) {
-              return data;
-            } else {
-              return '-'
-            }
-          }
-        },
-        {
-          data: 'pharmacy_name',
-          title: 'Pharmacy Name',
-          className: 'text-center',
-          render: function (data: any, type: any, record: any) {
-            if (data) {
-              return data;
-            } else {
-              return '-'
-            }
-          }
-        },
-        {
-          data: 'consultation_charge',
-          title: 'Consultation Charge',
-          className: 'text-center',
-          render: function (data) {
-            const _helper = new Helper();
-            return _helper.getInINRFormat('INR', data);
-          }
-        },
-        {
-          data: 'system_status',
-          title: 'Status',
-          className: 'text-center',
-          render: function (data: any, type: any, record: any) {
-            if (data == 'ASSIGNED_TO_TECHNICIAN') { return `<span class="badge badge-info">Assigned To Technician</span>`; }
-            if (data == 'APPROVED_BY_TECHNICIAN') { return `<span class="badge badge-info">Approved To Technician</span>`; }
-            else if (data == 'ASSIGNED_TO_DOCTOR') { return `<span class="badge badge-primary">Assigned To Doctor</span>` }
-            else if (data == 'CONSULTATION_COMPLETED') { return `<span class="badge badge-success">Completed</span>` }
-            else if (data == 'CONSULTATION_REFUNDED') { return `<span class="badge badge-danger">Refunded</span>` }
-            else { return ''; }
-          }
-        },
-        {
-          data: 'created_at',
-          title: 'Date',
-          className: 'text-center',
-          render: (data) => {
-            if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'MM/DD/YYYY');
-            } else {
-              return '<span></span>';
-            }
-          }
-        }
-      ]
-    };
-    if (this._cdr && !(this._cdr as ViewRef).destroyed) {
-      this._cdr.detectChanges();
-    }
   }
 
   async loadRiskFactors() {
@@ -252,18 +90,17 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   gotoPatientDetails() {
-    this._router.navigate(['admin', 'patients', 'view', this.consultationDetails.patient_details.id, 'orders']);
+    this._router.navigate(['admin', 'patients', 'view', this.consultationDetails.user_id._id, 'orders']);
   }
 
   async loadConsultationDetails() {
     this.loading = true;
     this.consultationDetails = await this._consultationService.getConsultationDetails(this.consultationId);
-    this.patient = this.consultationDetails.patient_details;
-    this.profileLicense = this.consultationDetails.profile_license;
+    this.patient = this.consultationDetails.user_id;
     this.patient.age = this._helper.calculateAge(this.patient.date_of_birth, 'YYYY-MM-DDTHH:mm:ss.000Z');
-
     this.loading = false;
-    this.patientUinqueNumber = this._helper.getUserUniqueId(this.consultationDetails.patient_details.id, this.consultationDetails.patient_details.type);
+    this.showChangeAddressBtn =true;
+
     this._getQuestions();
 
     if (this.consultationDetails && this.consultationDetails.consultation_type == 'NEW' && this.consultationDetails.details) {
@@ -296,9 +133,6 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
     if (this.consultationDetails && this.consultationDetails.consultation_type == 'FOLLOWUP' && this.consultationDetails.details) {
       this.followupSymptoms = this.consultationDetails.details.followup_input ? JSON.parse(this.consultationDetails.details.followup_input) : [];
     }
-
-    this.getDTOptions(this.consultationDetails.user_id);
-    this.dtTrigger.next();
   }
 
   async getMultipleConditionsDetails(condition_ids: any) {
@@ -318,7 +152,7 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
       this.healthQueAndAnswers = this.healthQueAndAnswers.filter(q => q.type == 'MAIN');
       this.healthQueAndAnswers = JSON.parse(JSON.stringify(this.healthQueAndAnswers));
       this.healthQueAndAnswers.map(q => {
-        q.sub_questions = filteredSubQuestions.filter(fq => fq.parent_question_id == q.id);
+        q.sub_questions = filteredSubQuestions.filter(fq => fq.parent_question_id == q._id);
         return q;
       });
 
@@ -391,8 +225,8 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   getUploadedBy(uploaded_by_id: number) {
-    if (uploaded_by_id == this.consultationDetails.user_id) { return 'By Patient' }
-    else if (uploaded_by_id == this.consultationDetails.doctor_id) { return 'By Physician' }
+    if (uploaded_by_id == this.consultationDetails.user_id._id) { return 'By Patient' }
+    else if (uploaded_by_id == this.consultationDetails.doctor_id._id) { return 'By Physician' }
     else { return ''; }
   }
 
@@ -400,7 +234,7 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
     this._router.navigate([]).then(result => { window.open(`${environment.api_url + path.substring(1)}`, '_blank'); });
   }
 
-  async removeMediaById(id: number) {
+  async removeMediaById(id: any) {
     let bodyData = {
       media_id: id,
       consultation_id: this.consultationId
@@ -409,7 +243,7 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
     await this.reloadMedia();
   }
 
-  async reloadMedia() {
+  async reloadMedia(){
     let allMedia: any = await this._consultationService.getConsultationMedia(this.consultationId);
     this.consultationDetails.media = allMedia.media;
     this.consultationDetails.documents = allMedia.documents;
@@ -424,84 +258,14 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
   async showConditionDetails(conditionId: string, modal: any) {
     this.selectedConditionId = conditionId;
     this.selectedCondition = await this._consultationService.getConditionById(conditionId);
-    document.getElementById('conditionModalBtn')?.click();
+    //document.getElementById('conditionModalBtn')?.click();
   }
 
-
-  getSystemStatus(status: string) {
-    if (status == 'ASSIGNED_TO_TECHNICIAN') {
-      return `<span class='p-2 badge badge-pill badge-info'>Assigned To Technician</span>`;
-    }
-    else if (status == 'APPROVED_BY_TECHNICIAN') {
-      return `<span class='p-2 badge badge-pill badge-info'>Approved By Technician</span>`;
-    }
-    else if (status == 'ASSIGNED_TO_DOCTOR') {
-      return `<span class='p-2 badge badge-pill badge-primary'>Assigned To Doctor</span>`;
-    } else if (status == 'CONSULTATION_COMPLETED') {
-      return `<span class='p-2 badge badge-pill badge-success'>Completed</span>`;
-    } else if (status == 'CONSULTATION_REFUND_REQUESTED') {
-      return `<span class='p-2 badge badge-pill badge-danger'>Refund Requested</span>`;
-    } else if (status == 'CONSULTATION_REFUND_PROCESSED') {
-      return `<span class='p-2 badge badge-pill badge-danger'>Refund Processed</span>`;
-    }
-    else if (status == 'REJECTED_BY_TECHNICIAN') {
-      return `<span class='p-2 badge badge-pill badge-danger'>Rejected By Technician</span>`;
-    }
-    else if (status == 'INCOMPLETE') {
-      return `<span class='p-2 badge badge-pill badge-warning'>Incomplete</span>`;
-    } else {
-      return '';
-    }
-  }
-
-  getCustomerStatus(status: string) {
-    if (status == 'UNDER_REVIEW') {
-      return `<span class="p-2 badge badge-pill badge-info">Under Review</span>`;
-    }
-    else if (status == 'SCHEDULED') {
-      return `<span class="p-2 badge badge-pill badge-primary">Scheduled</span>`;
-    }
-    else if (status == 'REFUNDED') {
-      return `<span class="p-2 badge badge-pill badge-danger">Refunded</span>`;
-    }
-    else if (status == 'COMPLETED') {
-      return `<span class="p-2 badge badge-pill badge-success">Completed</span>`;
-    }
-    else if (status == 'INCOMPLETE') {
-      return `<span class="p-2 badge badge-pill badge-warning">Incomplete</span>`;
-    }
-    else {
-      return '';
-    }
-  }
-  getTechnicianStatus(status: string) {
-    if (status == 'RECEIVED') {
-      return `<span class="p-2 badge badge-pill  badge-info">Received</span>`;
-    } else if (status == 'APPROVED') {
-      return `<span class="p-2 badge badge-pill  badge-success">Approved</span>`;
-    } else if (status == 'REJECTED') {
-      return `<span class="p-2 badge badge-pill  badge-danger">Rejected</span>`;
-    } else if (status == 'REFUNDED') {
-      return `<span class="p-2 badge badge-pill  badge-danger">Refunded</span>`;
-    } else { return ''; }
-  }
-
-  getDoctorStatus(status: string) {
-    if (status == 'RECEIVED') {
-      return `<span class="p-2 badge badge-pill badge-info">Received</span>`;
-    } else if (status == 'PRESCRIBED') {
-      return `<span class="p-2 badge badge-pill badge-warning">Prescibed</span>`;
-    } else if (status == 'COMPLETED') {
-      return `<span class="p-2 badge badge-pill badge-success">Completed</span>`;
-    } else if (status == 'REFUNDED') {
-      return `<span class="p-2 badge badge-pill badge-danger">Refunded</span>`;
-    } else { return ''; }
-  }
 
   async downloadReceipt() {
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');
-    const url = `api/v1/consultation/download?consultation_number=${this.consultationDetails.consultation_number_text}&consultation_id=${this.consultationId}`;
+    const url = `api/v1/consultation/${this.consultationId}/download`;
     await this._http.get(url, { headers: headers, responseType: 'arraybuffer' }).toPromise().then((result) => {
       let fileName = 'consultation_receipt_' + this.consultationDetails.consultation_number_text + '.pdf';
       this.writeContents(result, fileName, 'application/pdf', true);
@@ -529,29 +293,53 @@ export class ConsultationViewComponent implements OnInit, AfterViewInit, OnDestr
   openRefundOrderModal() {
     this.modalRef = this.modalService.show(RefundRequestModalComponent, { class: 'modal-lg' });
     this.modalRef.content.onEventCompleted.subscribe((submittedForm: any) => {
-      /* CALL METHOD TO MAKE API CALL TO SAVE ADDRESS */
-      // this.refundConsultationFormSubmit()
+      this.refundOrderFormSubmit(submittedForm);
     });
   }
 
-  refundConsultationFormSubmit(formValues: any) {
-    this.formSubmitting = true;
-    const apiURL = 'api/v1/consultation/refund_requested';
-    const obj = {
-      consultation_id: this.consultationId,
-      refund_reason: formValues.refund_reason
-    };
-    this._http.post(apiURL, obj).subscribe((data) => {
-      this.formSubmitting = false;
-      this.refundData = data;
-      document.getElementById('hiderefundModal')?.click();
-      this._toastr.showSuccess('Refund request send successfully');
-      this.loadConsultationDetails();
-      this._cdr.detectChanges();
-    }, err => {
-      document.getElementById('hiderefundModal')?.click();
-      this.formSubmitting = false;
-      this._toastr.showError('Unable to send refund request');
+
+  refundOrderFormSubmit(formValue:any){
+    const apiURL = 'api/consultations/refund_request/'+this.consultationId;
+    this._http.post(apiURL, formValue).subscribe((data) => {
+        this._toastr.showSuccess('Refund request send successfully');
+        this.loadConsultationDetails();
+      }, err => {
+        this._toastr.showError('Unable to send refund request');
+      });
+  }
+
+  openEditAddressModal(){
+    this._changeAddressModalService.setFormData({
+      type: 'EDIT_ADDRESS',
+      order_id:this.consultationId,
+      user_id:this.consultationDetails.user_id._id,
+      contact_name:this.consultationDetails.shipping_address.contact_name,
+      contact_number:this.consultationDetails.shipping_address.contact_number,
+      address_line_1: this.consultationDetails.shipping_address.address_line_1,
+      address_line_2: this.consultationDetails.shipping_address.address_line_2?this.consultationDetails.shipping_address.address_line_2:'',
+      landmark:this.consultationDetails.shipping_address.landmark,
+      city_name: this.consultationDetails.shipping_address.city,
+      state_id: this.consultationDetails.shipping_address.state_id,
+      state_name: this.consultationDetails.shipping_address.state,
+      zip_code: this.consultationDetails.shipping_address.zip_code,
+      user_address_type: this.consultationDetails.shipping_address.user_address_type,
+      addressModalTitle: 'Change Address'
+    });
+    this.modalRef = this.modalService.show(ChangeAddressModalComponent, { class: 'modal-lg' });
+    this.modalRef.content.onEventCompleted.subscribe((address: any) => {
+      /* CALL METHOD TO MAKE API CALL TO SAVE ADDRESS */
+        this.saveUserAddress(address);
     });
   }
+
+  saveUserAddress(address:any){
+    const url = 'api/consultations/change_address/' + this.consultationId;
+    this._http.post(url,address).subscribe((data:any) => {
+        this._toastr.showSuccess('Address Successfully Updated');
+        this.loadConsultationDetails();
+      }, (err:any) => {
+        this._toastr.showError('Unable to update order address. Please try again');
+      });
+  }
+
 }

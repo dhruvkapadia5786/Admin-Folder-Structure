@@ -1,7 +1,7 @@
 export default class CommentCategory {
-    name!: string;
-    id!:  number;
+  name!: string;
+  _id!:  any;
 
-    constructor() {
-    }
+  constructor() {
+  }
 }

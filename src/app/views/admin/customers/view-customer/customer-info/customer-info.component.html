@@ -2,10 +2,10 @@
     <ng-container *ngIf="customerDetails; else noCustomerDetails">
         <div class="row">
             <div class="col-md-3">
-                <label>Stripe Customer</label>
-                <h5>{{stripeCustomerId?stripeCustomerId:'Not Found'}}</h5>
-                <a *ngIf="stripeCustomerId" class="btn btn-info" target="_blank"
-                    [href]="'https://dashboard.stripe.com/customers/'+stripeCustomerId">View Details</a>
+                <label>PaymentGateway Customer</label>
+                <h5>{{customerDetails.paymentgateway_customer_id ? customerDetails.paymentgateway_customer_id:'Not Found'}}</h5>
+                <a *ngIf="customerDetails.paymentgateway_customer_id" class="btn btn-info" target="_blank"
+                    [href]="'https://dashboard.stripe.com/customers/'+customerDetails.paymentgateway_customer_id">View Details</a>
             </div>
 
         </div>
@@ -131,69 +131,7 @@
                 </tbody>
             </table>
         </div>
-        <br>
-        <label>Payment Details</label>
-        <div *ngIf="userCards && userCards.length > 0 ; else noUserCards">
-            <div class="card" *ngFor="let userCard of userCards"
-                style="max-width:320px;background:linear-gradient(25deg, #011726, #045289)">
-                <div class="card-body">
-                    <h5 class="text-white">{{userCard.brand | titlecase}}
-                        <span class="float-right"><i class="fa fa-credit-card-alt"></i></span>
-                    </h5>
-                    <div class="text-white d-flex align-items-center justify-content-between my-3">
-                        <span class="payment-card-number">••••</span>
-                        <span class="payment-card-number">••••</span>
-                        <span class="payment-card-number">••••</span>
-                        <span class="payment-card-number">{{userCard.last4}}</span>
-                    </div>
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div *ngIf="userCard.name">
-                                <small class="text-white">Card Holder</small><br />
-                                <b class="text-white text-uppercase">{{userCard.name}}</b>
-                            </div>
-                            <div>
-                                <small class="text-white mb-1">Expires</small><br />
-                                <b class="text-white">{{ userCard.exp_month | number: '2.0-0' }} /
-                                    {{userCard.exp_year}}</b>
-                            </div>
-                            <h5 class="remove-card">
-                                <!-- data-target="#confirmRemoveCard" -->
-                                <span data-toggle="modal"  class="float-right"><i
-                                        class="fa fa-trash-o"></i></span>
-                            </h5>
-                        </div>
-                        <!-- Confirm Remove Card Modal -->
-                        <!-- <div class="modal fade" id="confirmRemoveCard" tabindex="-1" role="dialog"
-                            aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-body text-center">
-                                        <h3 style="color: rgb(243, 180, 62)"><i class="fa fa-exclamation-circle"></i>
-                                        </h3>
-                                        <h4 style="font-weight: bold;">Are you sure?</h4>
-                                        <h6>You won't be able to revert this!</h6>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" id="closeRemoveCardBtn" class="btn btn-primary"
-                                            data-dismiss="modal">No, cancel!</button>
-                                        <button type="button" (click)="deleteCard(userCard.id)"
-                                            class="btn btn-danger">Yes, delete it!</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <ng-template #noUserCards>
-            <div class="text-center text-muted">
-                <h2><i class="fa fa-info-circle"></i></h2>
-                <h4>No Cards!</h4>
-            </div>
-        </ng-template>
-        <br />
+
         <div>
             <table class="table table-sm">
                 <thead class="thead-light">

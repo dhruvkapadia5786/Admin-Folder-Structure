@@ -42,17 +42,17 @@ export class AuthService {
 	}
 
 	getUserId() {
-		if (this.loggedInUser && this.loggedInUser['id'] == 0) {
+		if (this.loggedInUser && this.loggedInUser['_id'] == 0) {
       let user =localStorage.getItem('loggedInUser');
 			this.loggedInUser = user ? JSON.parse(user) : null;
 		}
-		return this.loggedInUser && this.loggedInUser.id ? this.loggedInUser.id:null;
+		return this.loggedInUser && this.loggedInUser._id ? this.loggedInUser._id:null;
 	}
 
   getAccountServiceEnabled(){
     let user:any =localStorage.getItem('loggedInUser');
     user = user ? JSON.parse(user) : null;
-		return user && user.account_service_enabled == 1 ? true:false;
+		return user && user.account_service_enabled;
 	}
 
 	saveUser(_user: any) {

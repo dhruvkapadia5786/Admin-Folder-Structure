@@ -39,27 +39,28 @@ export class DrugOrdersComponent implements OnInit {
   }
 
   ngOnInit(){
-     this.getDrugOrderData(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,'id','DESC');
+     this.getDrugOrderData(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,'created_at',-1);
   }
-
 
 	pageChanged(event:any){
 		this.drug_orders_config.currentPage = event;
-		this.getDrugOrderData(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,'id','DESC');
+		this.getDrugOrderData(this.drug_orders_config.currentPage,this.drug_orders_config.itemsPerPage,'created_at',-1);
   }
 
-  getDrugOrderData(page:number,limit:number,sortBy:string='id',sortOrder:string='DESC'){
+  getDrugOrderData(page:number,limit:number,sortBy:string='created_at',sortOrder:any=-1){
 		this.http.get<any>(`api/pharmacy_orders/history/${this.patientId}?page=${page}&limit=${limit}`).subscribe((resp) => {
 				this.drug_orders_collection.data = resp.data;
 				this.drug_orders_collection.count= resp.total;
 				this.drug_orders_config.itemsPerPage =  resp.perPage;
 				this.drug_orders_config.totalItems = resp.total;
 				this.drug_orders_config.currentPage  =  resp.currentPage;
+        this.drug_order_hasMorePages = resp.hasMorePages;
 		},err=>{
+
 		});
   }
 
-  goToOrderDetails(orderId:number){
+  goToOrderDetails(orderId:any){
     this.router.navigate(['admin','drug-order','view',orderId]);
   }
 }

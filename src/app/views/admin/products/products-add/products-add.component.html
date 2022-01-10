@@ -185,7 +185,7 @@
                          <div class="col-md-12 col-12">
                             <label>Therapies :</label>
                             <mat-form-field class="w-100">
-                                      <mat-select formControlName="therapies" multiple>
+                                      <mat-select formControlName="therapies" (selectionChange)="handleTherapySelected($event)" multiple>
                                         <mat-option>
                                           <ngx-mat-select-search
                                           [formControl]="therapyFilteringCtrl"

@@ -1,5 +1,5 @@
 export interface TreatmentCondition {
-    id?: number;
+    _id?: any;
     name: string;
     is_active: boolean;
 }

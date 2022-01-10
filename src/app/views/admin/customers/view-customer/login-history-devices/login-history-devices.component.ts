@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import * as moment from 'moment';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-login-history-devices',
@@ -13,7 +13,10 @@ export class LoginHistoryDevicesComponent implements OnInit {
   deviceList:any[]=[];
   loginHistory:any[]=[];
 
-  constructor(public http: HttpClient,private route: ActivatedRoute){
+  constructor(
+    public http: HttpClient,
+    private route: ActivatedRoute,
+    public _helper:Helper){
 
   }
 
@@ -27,12 +30,8 @@ export class LoginHistoryDevicesComponent implements OnInit {
 
   }
 
-  getFormatedDate(date: any) {
-		return date ? moment(date,'YYYY-MM-DDTHH:mm:ss.Z').format('MM/DD/YYYY HH:mm A') : 'Not Available';
-	}
-
   getCustomerDevices() {
-    const url = 'api/users/device/' + this.customerId;
+    const url = 'api/auth/device_history/' + this.customerId;
     this.http.get(url).subscribe((devices: any) => {
       this.deviceList = devices
     }, (error: any) => {
@@ -41,7 +40,7 @@ export class LoginHistoryDevicesComponent implements OnInit {
   }
 
   getCustomerLoginHistory(){
-    const url = 'api/users/login_history/' + this.customerId;
+    const url = 'api/auth/login_history/' + this.customerId;
     this.http.get(url).subscribe((history: any) => {
       this.loginHistory = history
     }, (error: any) => {

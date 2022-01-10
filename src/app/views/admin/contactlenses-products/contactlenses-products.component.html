@@ -1,22 +1,38 @@
 <div class="w-100 p-2 bg-dark-grey d-flex justify-content-between align-items-center">
-      <h4 class="text-white font-weight-bold mb-0">OTC Drugs List
+      <h4 class="text-white font-weight-bold mb-0">Contactlens products
         <span class="badge badge-success ml-2 p-2">{{config.totalItems}}</span>
       </h4>
       <div>
-      <a   [routerLink]="'/admin/products/add'" [queryParams]="{product_type: 'DRUG',drug_type:'OTC'}"  routerLinkActive="active" class="btn btn-primary"><i class="fa fa-plus mr-2" aria-hidden="true"></i> Add OTC Drug</a>
+      <a   [routerLink]="'/admin/products/add'" [queryParams]="{product_type: 'LENS'}"  routerLinkActive="active" class="btn btn-primary"><i class="fa fa-plus mr-2" aria-hidden="true"></i> Add Product</a>
       </div>
 </div>
 
 <div class="p-2">
     <div class="row mb-3">
+         <div class="col-md-3">
+            <mat-label>Product Type</mat-label>
+              <mat-select (selectionChange)="handleChange('PRODUCT_TYPE', $event.value)" [(ngModel)]="config.filter.PRODUCT_TYPE" multiple>
+                <mat-option color="primary" value="LENS">LENS</mat-option>
+                <mat-option color="primary" value="SOLUTION">SOLUTION</mat-option>
+            </mat-select>
+        </div>
         <div class="col-md-3">
-          <mat-label>Categories</mat-label>
-          <mat-select placeholder="Select OTC Categories" (selectionChange)="handleChange('CATEGORIES', $event.value)" [(ngModel)]="config.filter.CATEGORIES" multiple>
-            <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'CATEGORIES')"
-            [indeterminate]="config.filter.CATEGORIES.length && notSelectedCategories"
-            [checked]="!notSelectedCategories">All</mat-checkbox>
-            <mat-option color="primary" *ngFor="let category of categoriesSubcategoriesList" [value]="category._id">{{category.name}}</mat-option>
-          </mat-select>
+           <mat-label>Brands</mat-label>
+            <mat-select placeholder="Select Brands" (selectionChange)="handleChange('BRAND_IDS', $event.value)" [(ngModel)]="config.filter.BRAND_IDS" multiple>
+              <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'BRAND_IDS')"
+              [indeterminate]="config.filter.BRAND_IDS.length && notSelectedBrand"
+              [checked]="!notSelectedBrand">All</mat-checkbox>
+              <mat-option color="primary" *ngFor="let brand of brandsList" [value]="brand._id">{{brand.name}}</mat-option>
+            </mat-select>
+        </div>
+        <div class="col-md-3">
+            <mat-label>Lens Type</mat-label>
+              <mat-select placeholder="Select Lenstype" (selectionChange)="handleChange('LENS_TYPE_IDS', $event.value)" [(ngModel)]="config.filter.LENS_TYPE_IDS" multiple>
+                <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'LENS_TYPE_IDS')"
+                [indeterminate]="config.filter.LENS_TYPE_IDS.length && notSelectedlensTypes"
+                [checked]="!notSelectedlensTypes">All</mat-checkbox>
+                <mat-option color="primary" *ngFor="let lenstype of lenstypeList" [value]="lenstype._id">{{lenstype.name}}</mat-option>
+            </mat-select>
         </div>
     </div>
 

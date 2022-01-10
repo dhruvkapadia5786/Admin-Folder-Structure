@@ -57,6 +57,8 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
 
   public therapyFilteringCtrl: FormControl = new FormControl();
   public searchingTherapy = false;
+
+  public searchedTherapiesResult:any[]=[];
   public filteredTherapies: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   protected _onDestroyTherapy = new Subject<void>();
 
@@ -188,6 +190,14 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
         .subscribe((filteredTherapies:any) => {
           this.searching = false;
           this.filteredTherapies.next(filteredTherapies);
+
+          for(let item of filteredTherapies){
+            if(this.searchedTherapiesResult.filter((a)=>a._id==item._id).length==0){
+              this.searchedTherapiesResult.push(item);
+            }
+          }
+
+
         },
           error => {
             // no errors in our simulated example
@@ -353,6 +363,11 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   get has_fixed_color_options(){return this.productForm.get('has_fixed_color_options');}
 
   get lens_type_ids(){return this.productForm.get('lens_type_ids');}
+
+  handleTherapySelected(event:any){
+      let selectedTherapies = this.searchedTherapiesResult.filter((a)=>event.value.indexOf(a._id)!=-1);
+      this.filteredTherapies.next(selectedTherapies);
+  }
 
   async filterManufacturesResults(token: string) {
     return this.getAllManufacturers(token).then((data:any)=>{

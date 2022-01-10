@@ -1,14 +1,11 @@
 
 export class BaseModel {
-    id!:number;
-    name:string|null;
-    createdOn:Date|null;
-    updatedOn:Date|null;
+    _id!:any;
+    name?:string|null;
+    created_at!:Date|number|null;
+    updated_at!:Date|number|null;
     constructor() {
-        this.id = 0;
-        this.name='';
-        this.createdOn = null;
-        this.updatedOn = null;
+
     }
 
 }

@@ -4,68 +4,44 @@
             <ng-container *ngIf="consultationDetails; else noConsultationDetails">
                 <div class="row">
                     <div class="col-md-4">
-                        <h5 class="mb-3"> #{{'C-'+consultationDetails.consultation_number + '
-                            ('+'C-'+consultationDetails.consultation_number_text+')'}}</h5>
-                        <p class="mb-1"><strong class="mr-2">Consultation Type : </strong>
-                            <span *ngIf="consultationDetails.consultation_type=='NEW'"
-                                class="badge badge-success badge-pill p-2">New</span>
-                            <span *ngIf="consultationDetails.consultation_type=='FOLLOWUP'"
-                                class="badge badge-primary  badge-pill p-2">Followup</span>
-                        </p>
-
-                        <p class="mb-1"><strong class="mr-2"> Type : </strong>
-                            <span *ngIf="consultationDetails.type=='REFERRED_BY_PHYSICIAN'">Referred By Physician</span>
-                            <span *ngIf="consultationDetails.type=='FIRST_AVAILABLE_PHYSICIAN'">First Available
-                                Physician</span>
-                        </p>
-
-                        <p class="mb-1"><strong class="mr-2">Created Date : </strong>{{consultationDetails.created_at |
-                            date:'MM/dd/yyyy'}}</p>
-                        <p class="mb-1"><strong class="mr-2">Completed Date :
-                            </strong>{{consultationDetails.completed_by_customer_at | date:'MM/dd/yyyy'}}</p>
+                        <h5 class="mb-3"> #{{'C-'+consultationDetails.consultation_number + '('+'C-'+consultationDetails.consultation_number_text+')'}}</h5>
+                        <p class="mb-1"><strong class="mr-2">Created Date : </strong>{{consultationDetails.created_at | date:'dd-MM-yyyy'}}</p>
+                        <p class="mb-1"><strong class="mr-2">Completed Date :</strong>{{consultationDetails.completed_by_customer_at | date:'dd-MM-yyyy'}}</p>
                         <p>
                             <strong class="mr-2">System Status: </strong>
-                            <span class="m-0" [innerHTML]="getSystemStatus(consultationDetails.system_status)"></span>
+                            <span class="m-0" [innerHTML]="_consultationHelper.getSystemStatus(consultationDetails.system_status)"></span>
                         </p>
-
                     </div>
                     <div class="col-md-4">
                         <h5 class="mb-3">Patient Details</h5>
-                        <h6 class="mb-2">{{consultationDetails.patient_details.first_name}}
-                            {{consultationDetails.patient_details.last_name}}</h6>
-                        <p class="mb-1"><strong> DOB: </strong>{{consultationDetails.patient_details.dob_formatted }} |
-                            Age: {{patient.age}}</p>
-                        <p class="mb-0"><strong>Email: </strong>{{consultationDetails.patient_details.email}}</p>
-                        <p class="mb-0"><strong>Phone: </strong>{{consultationDetails.patient_details.cell_phone_number
-                            | mask: '(000) 000-0000'}}</p>
+                        <h6 class="mb-2">{{consultationDetails.user_id.first_name +'  '+consultationDetails.user_id.last_name}}</h6>
+                        <p class="mb-1"><strong> DOB: </strong>{{consultationDetails.user_id.date_of_birth|date:'dd-MM-yyyy' }} | Age: {{patient.age}}</p>
+                        <p class="mb-0"><strong>Email: </strong>{{consultationDetails.user_id.email}}</p>
+                        <p class="mb-0"><strong>Phone: </strong>{{consultationDetails.user_id.cell_phone_number}}</p>
                     </div>
 
                     <div class="col-md-4">
                         <h5 class="mb-3">Shipping Address</h5>
-                        <div *ngIf="consultationDetails.address">
+                        <div *ngIf="consultationDetails.shipping_address">
+                            <p class="mb-0">{{ consultationDetails.shipping_address.contact_name}}</p>
+                            <p class="mb-0">{{ consultationDetails.shipping_address.contact_number}}</p>
+                            <p class="mb-0">{{ consultationDetails.shipping_address.address_line_1 }}</p>
+                            <p class="mb-0">{{ consultationDetails.shipping_address?.address_line_2}}</p>
                             <p class="mb-0">
-                                {{consultationDetails.address.address_line_1?consultationDetails.address.address_line_1:''}}{{
-                                consultationDetails.address.address_line_2 ? ', ':''
-                                }}<br />{{consultationDetails.address?.address_line_2}}</p>
-                            <p class="mb-0">
-                                {{consultationDetails.address.city_name?consultationDetails.address.city_name:''}}{{consultationDetails.address.state_name?',
-                                '+consultationDetails.address.state_name:''}}
-                                {{consultationDetails.address.zip_code?consultationDetails.address.zip_code:''}}</p>
+                                {{  consultationDetails.shipping_address.city+' , '+consultationDetails.shipping_address.state + ' - '+consultationDetails.shipping_address.zip_code }}
+                            </p>
                         </div>
-                        <div *ngIf="!consultationDetails.address">
+                        <div *ngIf="!consultationDetails.shipping_address">
                             <p class="mb-0">Address not added yet.</p>
                         </div>
+                        <button *ngIf="showChangeAddressBtn" class="btn btn-outline-primary btn-sm" type="button" (click)="openEditAddressModal()"><i class="fas fa-pencil-alt mr-2"></i>Change Address</button>
                     </div>
                 </div>
 
                 <div class="d-flex flex-row justify-content-end align-items-center  mt-2">
-                    <button class="btn btn-sm btn-success mr-2" *ngIf="consultationDetails?.customer_status != 'INCOMPLETE'"
-                        (click)="downloadReceipt()"><i class="mr-2 fa fa-download"></i>Consultation Receipt</button>
-                    <button class="btn btn-sm btn-primary mr-2" *ngIf="consultationDetails?.customer_status == 'COMPLETED'"
-                        (click)="downloadConsultationSummary()"><i class="mr-2 fa fa-download"></i>Consultation
-                        Summary</button>
-                    <button class="btn btn-sm btn-danger" *ngIf="consultationDetails?.customer_status != 'REFUNDED'"
-                    (click)="openRefundOrderModal()" type="button"><i class="fa fa-refresh mr-2" aria-hidden="true"></i>Refund</button><!-- data-target="#refundConsultationModal" -->
+                    <button class="btn btn-sm btn-success mr-2" *ngIf="consultationDetails?.customer_status != 'INCOMPLETE'"  (click)="downloadReceipt()"><i class="mr-2 fas fa-download"></i>Consultation Receipt</button>
+                    <button class="btn btn-sm btn-primary mr-2" *ngIf="consultationDetails?.customer_status == 'COMPLETED'" (click)="downloadConsultationSummary()"><i class="mr-2 fas fa-download"></i>Consultation Summary</button>
+                    <button class="btn btn-sm btn-danger" *ngIf="consultationDetails?.customer_status != 'REFUNDED'" (click)="openRefundOrderModal()" type="button"><i class="fas fa-sync-alt mr-2" aria-hidden="true"></i>Refund</button><!-- data-target="#refundConsultationModal" -->
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12">
@@ -148,12 +124,9 @@
                                     <tr>
                                         <td class="align-middle">
                                             <h6 class="mb-0 text-nowrap font-weight-bold">
-                                                {{consultationDetails.health_condition_id ? 'Consultation For
-                                                '+consultationDetails.health_condition.name:'Consulation with
-                                                physician'}}</h6>
+                                                {{consultationDetails.health_condition_id ? 'Consultation For '+consultationDetails.health_condition_name:'Consulation with physician'}}</h6>
                                         </td>
-                                        <td class="align-middle text-right">{{ consultationDetails.consultation_charge |
-                                            currency}}</td>
+                                        <td class="align-middle text-right">{{ consultationDetails.total_amount | currency:'INR'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -168,19 +141,19 @@
                                                 consultationDetails.coupon_details?'( Coupon Code Used :
                                                 '+consultationDetails.coupon_details.coupon_code+' )':'' }}</th>
                                             <td class="font-weight-semi-bold text-right">
-                                                {{(consultationDetails.coupon_discount||0) | currency}}</td>
+                                                {{(consultationDetails.coupon_discount||0) | currency:'INR'}}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-900">Referral Discount {{
                                                 consultationDetails.referral_code_details ? '( Referral Code Used :
                                                 '+consultationDetails.referral_code_details.referral_code+' )':''}}</th>
                                             <td class="font-weight-semi-bold text-right">
-                                                {{(consultationDetails.referral_discount||0) | currency}}</td>
+                                                {{(consultationDetails.referral_discount||0) | currency:'INR'}}</td>
                                         </tr>
                                         <tr class="border-top">
                                             <th class="font-weight-bold">Total</th>
                                             <td class="font-weight-bold text-right">
-                                                {{consultationDetails.consultation_charge | currency }}</td>
+                                                {{consultationDetails.total_amount | currency:'INR' }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -191,7 +164,7 @@
                             <table class="table border-bottom table-borderless table-sm">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>Charged From Stripe</th>
+                                        <th>Charged From Payment Gateway</th>
                                         <th>Charged From Wallet</th>
                                         <th class="text-right">Total</th>
                                     </tr>
@@ -199,30 +172,33 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <p class="font-weight-bold">{{consultationDetails.charged_from_paymentgateway |
-                                                currency }}</p>
-                                            <div class="media"
-                                                *ngIf="consultationDetails.payment_details && consultationDetails.payment_details.details && consultationDetails.payment_details.details.card">
-                                                <div class="media-body">
-                                                    <h6 class="mb-0">
-                                                        {{consultationDetails.payment_details.details.card.brand.toUpperCase()}}
-                                                    </h6>
-                                                    <p class="mb-0">**** **** ****
-                                                        {{consultationDetails.payment_details.details.card.last4 + '
-                                                        (Expires :
-                                                        '+consultationDetails.payment_details.details.card.exp_month+'/'+consultationDetails.payment_details.details.card.exp_year+')'}}
-                                                    </p>
-                                                </div>
+                                            <p class="font-weight-bold">{{consultationDetails.charged_from_paymentgateway | currency:'INR' }}</p>
+                                            <div  *ngIf="consultationDetails.payment_transactions && consultationDetails.payment_transactions[0]">
+                                                    <div class="media">
+                                                        <div class="media-body" *ngIf="consultationDetails.payment_transactions[0].payment_source == 'PAYMENT_GATEWAY'">
+                                                            <p class="mb-0"><strong>Payment Method : </strong>{{ consultationDetails.payment_transactions[0].details.method | titlecase }}</p>
+                                                            <div *ngIf="consultationDetails.payment_transactions[0].details.method=='netbanking'">
+                                                              <p class="mb-0"><strong>Bank : </strong>{{ consultationDetails.payment_transactions[0].details.bank }}</p>
+                                                              <p class="mb-0"><strong>Bank Transaction ID : </strong>{{ consultationDetails.payment_transactions[0].details.acquirer_data.bank_transaction_id }}</p>
+                                                            </div>
+                                                            <div *ngIf="consultationDetails.payment_transactions[0].details.method=='upi'">
+                                                              <p class="mb-0"><strong>RRN : </strong>{{ consultationDetails.payment_transactions[0].details.acquirer_data.rrn }}</p>
+                                                              <p class="mb-0"><strong>UPI Transaction ID : </strong>{{ consultationDetails.payment_transactions[0].details.acquirer_data.upi_transaction_id }}</p>
+                                                            </div>
+                                                            <div *ngIf="consultationDetails.payment_transactions[0].details.method=='wallet'">
+                                                              <p class="mb-0"><strong>Wallet Name : </strong>{{ consultationDetails.payment_transactions[0].details.wallet | titlecase }}</p>
+                                                              <p class="mb-0" *ngIf="consultationDetails.payment_transactions[0].details.acquirer_data.transaction_id"><strong>Transaction ID : </strong>{{ consultationDetails.payment_transactions[0].details.acquirer_data.transaction_id }}</p>
+                                                            </div>
+                                                            <div *ngIf="consultationDetails.payment_transactions[0].details.method=='card'">
+                                                              <p class="mb-0" *ngIf="consultationDetails.payment_transactions[0].details.card_id"><strong>Card ID : </strong>{{ consultationDetails.payment_transactions[0].details.card_id }}</p>
+                                                              <p class="mb-0"><strong>Authorization Code : </strong>{{ consultationDetails.payment_transactions[0].details.acquirer_data.auth_code }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                             </div>
-                                            <a *ngIf="consultationDetails.payment_details && consultationDetails.payment_details.receipt_url"
-                                                class="btn btn-sm btn-primary" target="_blank"
-                                                [href]="consultationDetails.payment_details.receipt_url">Stripe
-                                                Receipt</a>
                                         </td>
-                                        <td class="font-weight-bold">{{consultationDetails.charged_from_wallet |
-                                            currency }}</td>
-                                        <td class="font-weight-bold text-right">
-                                            {{consultationDetails.consultation_charge | currency}}</td>
+                                        <td class="font-weight-bold">{{consultationDetails.charged_from_wallet | currency:'INR' }}</td>
+                                        <td class="font-weight-bold text-right">{{consultationDetails.total_amount | currency:'INR'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -232,19 +208,16 @@
                             <table class="table border-bottom table-borderless table-sm">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>Refunded to Stripe</th>
+                                        <th>Refunded to Payment Gateway</th>
                                         <th>Refunded to Wallet</th>
                                         <th class="text-right">Refunded Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="font-weight-bold">{{consultationDetails.refunded_in_paymentgateway | currency
-                                            }}</td>
-                                        <td class="font-weight-bold">{{consultationDetails.refunded_in_wallet | currency
-                                            }}</td>
-                                        <td class="font-weight-bold text-right">{{consultationDetails.refunded_total |
-                                            currency}}</td>
+                                        <td class="font-weight-bold">{{consultationDetails.refunded_in_paymentgateway | currency:'INR'}}</td>
+                                        <td class="font-weight-bold">{{consultationDetails.refunded_in_wallet | currency:'INR'}}</td>
+                                        <td class="font-weight-bold text-right">{{consultationDetails.refunded_total |currency:'INR'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -272,20 +245,15 @@
                                         <td>{{i+1}}</td>
                                         <td>{{transaction.transaction_type}}</td>
                                         <td>{{transaction.payment_source}}</td>
-                                        <td>{{transaction.charged_amount | currency}}</td>
+                                        <td>{{transaction.charged_amount | currency:'INR'}}</td>
                                         <td>
-                                            <a *ngIf="transaction.payment_source=='STRIPE'" target="_blank"
-                                                href="https://dashboard.stripe.com/payments/{{transaction.charge_id}}">{{transaction.charge_id}}</a>
-                                            <span *ngIf="transaction.payment_source=='WALLET'"> {{transaction.charge_id
-                                                ? 'Wallet Transaction #'+transaction.charge_id :''}}</span>
+                                            <a *ngIf="transaction.payment_source=='PAYMENT_GATEWAY'" target="_blank"  href="https://dashboard.razorpay.com/app/payments/{{transaction.charge_id}}">{{transaction.charge_id}}</a>
+                                            <span *ngIf="transaction.payment_source=='WALLET'"> {{transaction.charge_id ? 'Wallet Transaction #'+transaction.charge_id :''}}</span>
                                         </td>
-                                        <td>{{transaction.refunded_amount | currency}}</td>
+                                        <td>{{transaction.refunded_amount | currency:'INR'}}</td>
                                         <td>
-                                            <span
-                                                *ngIf="transaction.refund_id && transaction.payment_source=='STRIPE'">{{transaction.refund_id}}</span>
-                                            <span
-                                                *ngIf="transaction.refund_id && transaction.payment_source=='WALLET'">{{'Wallet
-                                                Transaction #'+transaction.refund_id}}</span>
+                                            <span  *ngIf="transaction.refund_id && transaction.payment_source=='PAYMENT_GATEWAY'">{{transaction.refund_id}}</span>
+                                            <span *ngIf="transaction.refund_id && transaction.payment_source=='WALLET'">{{'Wallet Transaction #'+transaction.refund_id}}</span>
                                         </td>
                                         <td>{{transaction.created_at | date:'dd-MM-yyyy HH:mm a'}}</td>
                                     </tr>
@@ -308,45 +276,37 @@
                                     <tr>
                                         <td>
                                             <p class="m-0"
-                                                [innerHTML]="getCustomerStatus(consultationDetails.customer_status)">
+                                                [innerHTML]="_consultationHelper.getCustomerStatus(consultationDetails.customer_status)">
                                             </p>
                                         </td>
                                         <td>
                                             <p class="m-0"
-                                                [innerHTML]="getTechnicianStatus(consultationDetails.technician_status)">
+                                                [innerHTML]="_consultationHelper.getTechnicianStatus(consultationDetails.technician_status)">
                                             </p>
                                         </td>
                                         <td>
                                             <p class="m-0"
-                                                [innerHTML]="getDoctorStatus(consultationDetails.doctor_status)"></p>
+                                                [innerHTML]="_consultationHelper.getDoctorStatus(consultationDetails.doctor_status)"></p>
                                         </td>
                                         <td>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <p class="mb-1"><strong class="mr-2">Created Date :
-                                                </strong>{{consultationDetails.created_at | date:'MM/dd/yyyy'}}</p>
-                                            <p class="mb-1"><strong class="mr-2">Completed Date :
-                                                </strong>{{consultationDetails.completed_by_customer_at |
-                                                date:'MM/dd/yyyy'}}</p>
+                                            <p class="mb-1"><strong class="mr-2">Created Date :</strong>{{consultationDetails.created_at | date:'dd-MM-yyyy'}}</p>
+                                            <p class="mb-1"><strong class="mr-2">Completed Date :</strong>{{consultationDetails.consultation_place_datetime | date:'dd-MM-yyyy'}}</p>
                                         </td>
                                         <td>
 
                                         </td>
                                         <td>
                                             <p class="mb-1"><strong class="mr-2">Is Schedule ? : </strong>
-                                                <span *ngIf="consultationDetails.is_scheduled==1"><i
-                                                        class="text-success fa fa-check"></i></span><span
-                                                    *ngIf="consultationDetails.is_scheduled==0"><i
-                                                        class="text-danger fa fa-close"></i></span>
+                                                <span *ngIf="consultationDetails.is_scheduled"><i class="text-success fas fa-check"></i></span><span *ngIf="!consultationDetails.is_scheduled"><i class="text-danger fas fa-close"></i></span>
                                             </p>
-                                            <p class="mb-1"><strong class="mr-2">Schedule Type : </strong><span
-                                                    *ngIf="consultationDetails.schedule_type=='MANUAL'"
-                                                    class="badge badge-primary badge-pill p-2">Manually
-                                                    Scheduled</span><span
-                                                    *ngIf="consultationDetails.schedule_type=='AUTO'"
-                                                    class="badge badge-success  badge-pill p-2">Auto Scheduled</span>
+                                            <p class="mb-1">
+                                                <strong class="mr-2">Schedule Type : </strong>
+                                                <span *ngIf="consultationDetails.schedule_type=='MANUAL'" class="badge badge-primary badge-pill p-2">Manually Scheduled</span>
+                                                <span  *ngIf="consultationDetails.schedule_type=='AUTO'" class="badge badge-success  badge-pill p-2">Auto Scheduled</span>
                                             </p>
                                             <p class="mb-1"><strong class="mr-2">Visit Type : </strong><span
                                                     *ngIf="consultationDetails.schedule_execution_type=='FIX_DATE_TIME'"
@@ -359,7 +319,7 @@
                                                     *ngIf="consultationDetails.schedule_note">{{consultationDetails.schedule_note}}</span>
                                             </p>
                                             <p class="mb-1"><strong class="mr-2">Completed Date :
-                                                </strong>{{consultationDetails.completed_at | date:'MM/dd/yyyy'}}</p>
+                                                </strong>{{consultationDetails.completed_at | date:'dd-MM-yyyy'}}</p>
 
                                         </td>
                                         <td>
@@ -395,20 +355,12 @@
                                             </ng-template>
                                             <br />
                                             <ng-container
-                                                *ngIf="consultationDetails.physician_details; else elseTemplate">
-                                                <p class="mb-1"><strong class="mr-2">Name :
-                                                    </strong>{{consultationDetails.physician_details.first_name+'
-                                                    '+consultationDetails.physician_details.last_name}}</p>
-                                                <p class="mb-1"><strong class="mr-2">Email :
-                                                    </strong>{{consultationDetails.physician_details.email}}</p>
-                                                <p class="mb-1"><strong class="mr-2">Phone :
-                                                    </strong>{{consultationDetails.physician_details.cell_phone_number |
-                                                    mask: '(000) 000-0000' || '-'}}</p>
-                                                <p class="mb-1"><strong class="mr-2">NPI Number
-                                                        :</strong>{{consultationDetails.physician_details.npi_number}}
-                                                </p>
-                                                <p class="mb-1"><strong class="mr-2">DEA Number:
-                                                    </strong>{{consultationDetails.physician_details.dea_number}}</p>
+                                                *ngIf="consultationDetails.doctor_id; else elseTemplate">
+                                                <p class="mb-1"><strong class="mr-2">Name :</strong>{{consultationDetails.doctor_id.first_name+' '+consultationDetails.doctor_id.last_name}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Email :</strong>{{consultationDetails.doctor_id.email}}</p>
+                                                <p class="mb-1"><strong class="mr-2">Phone :</strong>{{consultationDetails.doctor_id.cell_phone_number |  mask: '(000) 000-0000' || '-'}}</p>
+                                                <p class="mb-1"><strong class="mr-2">NPI Number :</strong>{{consultationDetails.doctor_id.npi_number}}</p>
+                                                <p class="mb-1"><strong class="mr-2">DEA Number:</strong>{{consultationDetails.doctor_id.dea_number}}</p>
                                             </ng-container>
                                             <ng-template #elseTemplate>
                                                 <div class="text-center text-muted">
@@ -465,7 +417,7 @@
                     </div>
                     <div class="col-md-6">
                         <a href="javascript:void(0);" class="link" (click)="gotoPatientDetails()">
-                            <h5># {{patientUinqueNumber}}</h5>
+                            <h5># {{patient._id}}</h5>
                         </a>
                     </div>
                 </div>
@@ -485,11 +437,11 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label>Gender</label>
-                        <h5>{{patient.gender==1?"Male":"Female"}}</h5>
+                        <h5>{{patient.gender|titlecase}}</h5>
                     </div>
                     <div class="col-md-6">
                         <label>Date Of Birth</label>
-                        <h5>{{patient.dob_formatted || '-'}} <br> Age: {{patient.age}}</h5>
+                        <h5>{{patient.date_of_birth | date:'dd-MM-yyyy' }} <br> Age: {{patient.age}}</h5>
                     </div>
                 </div>
                 <div class="row">
@@ -499,19 +451,19 @@
                     </div>
                     <div class="col-md-6">
                         <label>Mobile No</label>
-                        <h5>{{patient.cell_phone_number | mask: '(000) 000-0000'}}</h5>
+                        <h5>{{patient.cell_phone_number}}</h5>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <label>Shipping Addresses</label>
                         <h5 class="m-0">
-                            {{consultationDetails.address.address_line_1?consultationDetails.address.address_line_1:''}}{{consultationDetails.address.address_line_2
-                            ? ', ' + consultationDetails.address.address_line_2:''}}</h5>
+                            {{consultationDetails.shipping_address.address_line_1?consultationDetails.shipping_address.address_line_1:''}}{{consultationDetails.shipping_address.address_line_2
+                            ? ', ' + consultationDetails.shipping_address.address_line_2:''}}</h5>
                         <h5 class="m-0">
-                            {{consultationDetails.address.city_name?consultationDetails.address.city_name:''}}{{consultationDetails.address.state_name?',
-                            '+consultationDetails.address.state_name:''}}
-                            {{consultationDetails.address.zip_code?consultationDetails.address.zip_code:''}}
+                            {{consultationDetails.shipping_address.city_name?consultationDetails.shipping_address.city_name:''}}{{consultationDetails.shipping_address.state_name?',
+                            '+consultationDetails.shipping_address.state_name:''}}
+                            {{consultationDetails.shipping_address.zip_code?consultationDetails.shipping_address.zip_code:''}}
                         </h5>
 
                     </div>
@@ -530,10 +482,9 @@
                                 <div id="license" class="collapse show" aria-labelledby="headingTwo"
                                     data-parent="#licenseAccordian">
                                     <div class="card-body">
-                                        <div class="mt-2" *ngIf="profileLicense && profileLicense.license_photo">
+                                         <div class="mt-2" *ngIf="consultationDetails && consultationDetails.customer_license_photo">
                                             <div class="allergies">
-                                                <app-image-preview [imgPath]="profileLicense.license_photo" height="250"
-                                                    width="350" caption="License Image"></app-image-preview>
+                                                <app-image-preview [imgPath]="consultationDetails.customer_license_photo" height="250" width="350" caption="License Image"></app-image-preview>
                                             </div>
                                         </div>
                                     </div>
@@ -552,10 +503,9 @@
                                 <div id="license" class="collapse show" aria-labelledby="headingTwo"
                                     data-parent="#fullFaceAccordian">
                                     <div class="card-body">
-                                        <div class="mt-2" *ngIf="profileLicense && profileLicense.profile_photo">
+                                        <div class="mt-2" *ngIf="consultationDetails && consultationDetails.customer_profile_photo">
                                             <div class="allergies">
-                                                <app-image-preview [imgPath]="profileLicense.profile_photo" height="250"
-                                                    width="350" caption="Full Face Image"></app-image-preview>
+                                                <app-image-preview [imgPath]="consultationDetails.customer_profile_photo" height="250" width="350" caption="Full Face Image"></app-image-preview>
                                             </div>
                                         </div>
                                     </div>
@@ -677,25 +627,13 @@
                                 </td>
                                 <td>
                                     <button
-                                        (click)="viewERx(consultationDetails.patient_details.doesspot_patient_id,medicine.prescription_id)"
+                                        (click)="viewERx(consultationDetails.user_id.doesspot_patient_id,medicine.prescription_id)"
                                         class="btn btn-sm btn-success" *ngIf="medicine.is_prescribed==1">{{'View ERx
                                         #'+medicine.prescription_id}}</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-    </mat-tab>
-    <mat-tab label="History">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 p-2">
-                    <div class="table-responsive-md">
-                        <table  hover="true" id="consultationList" datatable [dtOptions]="dtOptions"
-                            [dtTrigger]="dtTrigger"></table>
-                    </div>
                 </div>
             </div>
         </div>
@@ -707,33 +645,3 @@
     </mat-tab>
 </mat-tab-group>
 
-
-<!-- Refund Consultation Modal HTML -->
-<!-- <div mdbModal #refundConsultationModal="mdbModal" class="modal fade" id="refundConsultationModal" tabindex="-1"
-    role="dialog" aria-labelledby="refundConsultationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <form (ngSubmit)="refundConsultationFormSubmit(refundConsultationForm.valid,refundConsultationModal)"
-                [formGroup]="refundConsultationForm" novalidate>
-                <div class="modal-header p-2 pl-3">
-                    <h4 class="modal-title">Request for Refund Consultation</h4>
-                    <button id="hiderefundModal" type="button" class="close" data-dismiss="modal" aria-label="Close"
-                        (click)="refundConsultationModal.hide()">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Enter Reason For Refund Consultation</label>
-                        <textarea class="form-control" id="refund_reason" rows="3" formControlName="refund_reason"
-                            required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-end">
-                    <button type="submit" [disabled]="refundConsultationForm.invalid || formSubmitting"
-                        class="btn btn-sm btn-success waves-effect m-0 mr-2">Request Refund</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> -->

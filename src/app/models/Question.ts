@@ -3,9 +3,9 @@ import { Choice } from "./choice";
 
 export class Question extends BaseModel {
     text!:string;
-    type!:string;
-    isMultiSelect!:boolean;
-    hasInput!:boolean;
+    question_type!:string;
+    is_multi_select!:boolean;
+    has_input!:boolean;
     choices:Array<Choice>;
     custom_input?:any;
     sub_questions?:any[];

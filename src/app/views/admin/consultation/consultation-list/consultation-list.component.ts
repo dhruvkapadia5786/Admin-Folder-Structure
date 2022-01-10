@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Helper } from 'src/app/services/helper.service';
 import { HttpClient } from '@angular/common/http';
+import { consultationHelper } from 'src/app/services/consultationHelper.service';
 
 @Component({
   selector: 'app-consultation-list',
@@ -23,20 +24,11 @@ export class ConsultationListComponent implements OnInit,AfterViewInit,OnDestroy
     filter: {
       STATE: [],
       HEALTH_CONDITION: [],
-      CONSULTATION_STATUS: ''
+      CONSULTATION_STATUS:['INCOMPLETE','ASSIGNED_TO_TECHNICIAN','REJECTED','APPROVED_BY_TECHNICIAN','ASSIGNED_TO_DOCTOR','PRESCRIBED_BY_DOCTOR','REFUND_REQUESTED','REFUND_PROCESSED','COMPLETED']
     }
   };
-  consultationStatusList:any[] = [
-    {name: "-- SELECT --", id:''},
-    {name: "ASSIGNED TO TECHNICIAN", id:'ASSIGNED_TO_TECHNICIAN'},
-    {name: "APPROVED BY TECHNICIAN", id:'APPROVED_BY_TECHNICIAN'},
-    {name: "ASSIGNED TO DOCTOR", id:'ASSIGNED_TO_DOCTOR'},
-    {name: "CONSULTATION COMPLETED", id:'CONSULTATION_COMPLETED'},
-    {name: "CONSULTATION REFUND REQUESTED", id:'CONSULTATION_REFUND_REQUESTED'},
-    {name: "CONSULTATION REFUND PROCESSED", id:'CONSULTATION_REFUND_PROCESSED'},
-    {name: "REJECTED BY TECHNICIAN", id:'REJECTED_BY_TECHNICIAN'},
-    {name: "INCOMPLETE", id:'INCOMPLETE'}
-  ];
+  consultationStatusList:any[] = ['INCOMPLETE','ASSIGNED_TO_TECHNICIAN','REJECTED','APPROVED_BY_TECHNICIAN','ASSIGNED_TO_DOCTOR','PRESCRIBED_BY_DOCTOR','REFUND_REQUESTED','REFUND_PROCESSED','COMPLETED'];
+
   stateList:any[] = [];
   healthConditionList: any[] = [];
 
@@ -49,10 +41,12 @@ export class ConsultationListComponent implements OnInit,AfterViewInit,OnDestroy
     private route: ActivatedRoute,
     private router: Router,
     public _helper: Helper,
+    public _consultationHelper:consultationHelper,
     private _http: HttpClient,
     private _renderer: Renderer2) {
 
-    this.healthConditionId = this.route.parent?.parent?.snapshot.paramMap.get('condition_id') ? parseInt(this.route.parent.parent.snapshot.paramMap.get('condition_id')!) : null;
+    let activeRoute:any = this.route;
+    this.healthConditionId = activeRoute.parent.parent.snapshot.paramMap.get('condition_id');
     if (this.healthConditionId) {
       this.showHeaderAndFilter = false
       this.disableHealthConditionSelect = true
@@ -104,76 +98,36 @@ export class ConsultationListComponent implements OnInit,AfterViewInit,OnDestroy
           className: 'text-center  font-weight-normal',
           render: function (data, type, record) {
             if (data) {
-              return '<a href="javascript:void(0);" consultationID=' + record.id + ' class="text-primary font-weight-bold">C-' + data + '</a>';
+              return '<a href="javascript:void(0);" consultationID=' + record._id + ' class="text-primary font-weight-bold">C-' + data + '</a>';
             } else {
               return '<span></span>';
             }
           }
         },
         {
-          data:'consultation_type',
-          title: 'Consultation Type',
-          className: 'text-center  font-weight-normal',
-          render: function (data:any, type:any, record:any) {
-            if (data=='NEW') {
-            return '<span class="badge badge-success">New</span>'
-            }else{
-            return '<span class="badge badge-primary">Followup</span>'
-            }
-          }
-        },
-        {
-          data:'type',
-          title: 'Type',
-          className: 'text-center  font-weight-normal',
-          render: function (data, type, record) {
-            if (data=='REFERRED_BY_PHYSICIAN') {
-              return '<span class="badge badge-success">Referred By Physician</span>'
-            }else{
-              return '<span class="badge badge-warning">First Available Physician</span>'
-            }
-          }
-        },
-        {
-          data:'patient_name',
+          data:'user.first_name',
           title:'Patient Name',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<a href="javascript:void(0);" customerId=${full.user_id}>${data}</a>`;
+            return `<a href="javascript:void(0);" customerId=${full.user_id}>${full.user.first_name+' '+full.user.last_name}</a>`;
           }
         },
         {
-          data:'health_conditions_name',
+          data:'health_condition_name',
           title: 'Health Condition',
           className: 'text-center  font-weight-normal',
         },
-			  {
-				data:'clinic_name',
-				title:'Clinic',
-				className: 'text-center  font-weight-normal',
-				render: function (data:any, type:any, record:any) {
-				  if (data) {
-				    	return record.clinic_name +'<br/>'+record.city + ' , '+record.state;
-				  }else{
-					    return '-'
-				    }
-				  }
-			  },
         {
-          data:'doctor_name',
-          title:'Doctor Name',
-          className: 'text-center  font-weight-normal',
-          render: function (data, type, record) {
-            if (data) {
-              return data;
-            }else{
-              return '-'
-            }
+          data: 'shipping_address',
+          title: 'State',
+          className: 'text-center font-weight-normal',
+          render: function (data: any, type: any, full: any) {
+            return full.shipping_address ? `${full.shipping_address.state}`:'-';
           }
         },
         {
-          data: 'consultation_charge',
-          title: 'Charge Amount',
+          data: 'total_amount',
+          title: 'Total',
           className: 'text-center  font-weight-normal',
           render: (data) => {
             return this._helper.getInINRFormat('INR', data);
@@ -184,15 +138,7 @@ export class ConsultationListComponent implements OnInit,AfterViewInit,OnDestroy
           title: 'Status',
           className: 'text-center  font-weight-normal',
           render: (data) => {
-             if(data=='ASSIGNED_TO_TECHNICIAN'){return `<span class="badge badge-info">Assigned To Technician</span>`;}
-             else if(data=='APPROVED_BY_TECHNICIAN'){return `<span class="badge badge-info">Approved By Technician</span>`;}
-             else if(data=='REJECTED_BY_TECHNICIAN'){return `<span class="badge badge-danger">Rejected By Technician</span>`;}
-             else if(data=='ASSIGNED_TO_DOCTOR'){return `<span class="badge badge-primary">Assigned To Doctor</span>`}
-             else if(data=='CONSULTATION_COMPLETED'){return `<span class="badge badge-success">Completed</span>`}
-             else if(data=='CONSULTATION_REFUND_REQUESTED'){return `<span class="badge badge-danger">Refund Requested</span>`}
-             else if(data=='CONSULTATION_REFUND_PROCESSED'){return `<span class="badge badge-danger">Refund Processed</span>`}
-             else if(data=='INCOMPLETE'){return `<span class="badge badge-warning">Incomplete</span>`}
-             else {return '';}
+             return this._consultationHelper.getSystemStatus(data);
           }
         },
         {
@@ -201,19 +147,19 @@ export class ConsultationListComponent implements OnInit,AfterViewInit,OnDestroy
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
           }
         },
         {
-          data: 'completed_by_customer_at',
+          data: 'consultation_place_datetime',
           title: 'Completed By Customer',
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
@@ -262,27 +208,27 @@ export class ConsultationListComponent implements OnInit,AfterViewInit,OnDestroy
 
   getAllFilterList() {
     // health conditions
-    this._http.post<any>('api/consultation/health_condition/all', {}).subscribe((resp) => {
-      this.healthConditionList = resp.data;
+    this._http.get<any>('api/consultation_health_conditions/all').subscribe((resp) => {
+      this.healthConditionList = resp;
     }, err=> {});
 
-    // states
-    this._http.post<any>('api/states/all', {}).subscribe((resp) => {
-      this.stateList = resp.data;
+     // states
+     this._http.get<any>('api/system_states/all').subscribe((resp) => {
+      this.stateList = resp;
     }, err=> {});
 
   }
 
   get notSelectedStates () {
-    return this.stateList.filter(({ abbreviation: a }) => !this.consultation_config.filter.STATE.some((b: any) => b === a)).length;
+    return this.stateList.filter(({ _id: a }) => !this.consultation_config.filter.STATE.some((b: any) => b === a)).length;
   }
 
   get notSelectedHealthConditions () {
-    return this.healthConditionList.filter(({ id: a }) => !this.consultation_config.filter.HEALTH_CONDITION.some((b: any) => b === a)).length;
+    return this.healthConditionList.filter(({ _id: a }) => !this.consultation_config.filter.HEALTH_CONDITION.some((b: any) => b === a)).length;
   }
 
   handleChange(event: string, value: any) {
-    if(event == 'STATE' || event == 'HC'  || event == 'CS') {
+    if(event == 'STATE' || event == 'HEALTH_CONDITION'  || event == 'CONSULTATION_STATUS') {
       this.rerender()
     }
   }
@@ -291,16 +237,23 @@ export class ConsultationListComponent implements OnInit,AfterViewInit,OnDestroy
   public handleCheckAll (event:any, flag:any) {
     if (flag == 'STATE') {
       if (event.checked) {
-        this.consultation_config.filter.STATE = this.stateList.map(({abbreviation}) => abbreviation);
+        this.consultation_config.filter.STATE = this.stateList.map(({_id}) => _id);
       } else {
         this.consultation_config.filter.STATE = [];
       }
     }
-    if (flag == 'HC') {
+    if (flag == 'HEALTH_CONDITION') {
       if (event.checked) {
-        this.consultation_config.filter.HEALTH_CONDITION = this.healthConditionList.map(({name}) => name);
+        this.consultation_config.filter.HEALTH_CONDITION = this.healthConditionList.map(({_id}) => _id);
       } else {
         this.consultation_config.filter.HEALTH_CONDITION = [];
+      }
+    }
+    if (flag == 'CONSULTATION_STATUS') {
+      if (event.checked) {
+        this.consultation_config.filter.CONSULTATION_STATUS = this.consultationStatusList;
+      } else {
+        this.consultation_config.filter.CONSULTATION_STATUS = [];
       }
     }
     this.rerender()
