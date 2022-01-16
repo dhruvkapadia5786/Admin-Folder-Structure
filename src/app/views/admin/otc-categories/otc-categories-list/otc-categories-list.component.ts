@@ -97,7 +97,7 @@ export class OtcCategoriesListComponent implements OnInit, AfterViewInit, OnDest
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[2, 'desc']],
+      order: [[1, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         this.blockDataTable.start();
         this._http
@@ -138,9 +138,20 @@ export class OtcCategoriesListComponent implements OnInit, AfterViewInit, OnDest
           className: 'text-left  font-weight-normal'
         },
         {
-          data: 'slug',
-          title: 'Slug',
-          className: 'text-center  font-weight-normal'
+          data: 'sub_categories',
+          title: 'Sub Categories',
+          className: 'text-center  font-weight-normal',
+          render: (data: any) => {
+            if(data){
+              let liItem='';
+              for(let item of data){
+                liItem+=`<li>${item.name}</li>`
+              }
+              return `<ul>${liItem}</ul>`;
+            }else{
+              return '';
+            }
+          }
         },
         {
           data: 'is_active',

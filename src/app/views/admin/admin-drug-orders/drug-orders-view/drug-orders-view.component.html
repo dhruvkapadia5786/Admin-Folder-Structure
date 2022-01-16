@@ -5,44 +5,65 @@
                 <div class="row">
                     <div class="col-md-4">
                             <h5 class="mb-3">Order : #{{orderDetails.order_number + '  ('+orderDetails.order_number_text+')'}}</h5>
-                            <p class="mb-1"><strong class="mr-2">Created Date  : </strong>{{ orderDetails.created_at|date:'dd-MM-yyyy hh:mm:ss a'}}</p>
-                            <p class="mb-1"><strong class="mr-2">Completed Date : </strong>{{ orderDetails.completed_at|date:'dd-MM-yyyy hh:mm:ss a'}}</p>
+                            <p class="mb-1 mr-2">Created Date  :{{ orderDetails.created_at|date:'dd-MM-yyyy hh:mm:ss a'}}</p>
+                            <p class="mb-1 mr-2">Completed Date :{{ orderDetails.completed_at|date:'dd-MM-yyyy hh:mm:ss a'}}</p>
                             <p>
-                                <strong class="mr-2">System Status: </strong>
+                                <span class="mr-2">System Status: </span>
                                 <span class="m-0" [innerHTML]="_drugOrderHelper.getSystemStausDrugOrder(orderDetails.system_status)"></span>
                             </p>
+
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-sm btn-block btn-success mb-2" (click)="downloadReceipt('billing_statement')"><i class="mr-2 fas fa-download"></i>Billing Statement</button>
+                                <button type="button" *ngIf="anyDrugRefunded" class="btn btn-sm btn-block btn-primary mb-2" (click)="downloadReceipt('refund_receipt')"><i class="mr-2 fas fa-download"></i>Refund Receipt</button>
+                                <button type="button" class="btn btn-sm btn-block btn-danger mb-2" (click)="openRefundModal()" *ngIf="!(orderDetails.system_status == 'REFUND_PROCESSED' || orderDetails.system_status == 'REFUND_REQUESTED')"><i class="fas fa-sync-alt mr-2"></i>Refund Request</button>
+                            </div>
                     </div>
                     <div class="col-md-4">
                        <h5 class="mb-3">Customer Details</h5>
-                        <h6 class="mb-2">{{patient.first_name}} {{patient.last_name}}</h6>
+                        <h6 class="mb-2 text-primary cursor-pointer"  (click)="gotoPatientDetails()">{{patient.first_name}} {{patient.last_name}}</h6>
                         <p class="mb-1"><strong> DOB:  </strong>{{patient.date_of_birth|date:'dd-MM-yyyy' }} | Age: {{patient.age}}</p>
                         <p class="mb-0"><strong>Email: </strong>{{patient.email}}</p>
                         <p class="mb-0"><strong>Phone: </strong>{{patient.cell_phone_number }}</p>
+
+                        <div class="mt-4">
+                            <h5 class="mb-3">Shipping Address</h5>
+                            <div *ngIf="orderDetails.shipping_address">
+                                <p class="mb-0">{{orderDetails.shipping_address.contact_name}}</p>
+                                <p class="mb-2">{{orderDetails.shipping_address.contact_number}}</p>
+                                <p class="mb-0">
+                                {{ orderDetails.shipping_address.address_line_1 ? orderDetails.shipping_address.address_line_1:''}}
+                                {{ orderDetails.shipping_address.address_line_2 ? ', ':'' }}<br/>{{orderDetails.shipping_address?.address_line_2}}</p>
+                                <p class="mb-0">{{orderDetails.shipping_address.city +', '+orderDetails.shipping_address.state +' - '+orderDetails.shipping_address.zip_code}}</p>
+                            </div>
+                            <div *ngIf="!orderDetails.shipping_address">
+                                <p class="mb-0">Address not added yet.</p>
+                            </div>
+                            <div class="text-500"><strong> Shipping Method : </strong>{{orderDetails.shipping_method}}</div>
+                            <button *ngIf="showChangeAddressBtn" class="btn btn-outline-primary btn-sm" type="button" (click)="openEditAddressModal()"><i class="fas fa-pencil-alt mr-2"></i>Change Address</button>
+                        </div>
+
                     </div>
 
-                    <div class="col-md-4">
-                        <h5 class="mb-3">Shipping Address</h5>
-                        <div *ngIf="orderDetails.shipping_address">
-                            <p class="mb-0">{{orderDetails.shipping_address.contact_name}}</p>
-                            <p class="mb-2">{{orderDetails.shipping_address.contact_number}}</p>
-                            <p class="mb-0">
-                            {{ orderDetails.shipping_address.address_line_1 ? orderDetails.shipping_address.address_line_1:''}}
-                            {{ orderDetails.shipping_address.address_line_2 ? ', ':'' }}<br/>{{orderDetails.shipping_address?.address_line_2}}</p>
-                            <p class="mb-0">{{orderDetails.shipping_address.city +', '+orderDetails.shipping_address.state +' - '+orderDetails.shipping_address.zip_code}}</p>
+
+                     <div class="col-md-4">
+                        <h5 class="mb-2">Profile Photo</h5>
+                        <app-image-preview *ngIf="orderDetails.customer_profile_photo" [imgPath]="orderDetails.customer_profile_photo" height="200" width="250" caption="Full Face Image"></app-image-preview>
+                        <div *ngIf="!orderDetails.customer_profile_photo" class="text-center text-muted">
+                            <h4><i class="fa fa-info-circle"></i></h4>
+                            <h6>Not Added Yet</h6>
                         </div>
-                        <div *ngIf="!orderDetails.shipping_address">
-                            <p class="mb-0">Address not added yet.</p>
+
+                        <h5 class="mt-3 mb-2">License Photo</h5>
+                        <app-image-preview *ngIf="orderDetails.customer_license_photo"  [imgPath]="orderDetails.customer_license_photo" height="200" width="250" caption="License Image"></app-image-preview>
+                        <div *ngIf="!orderDetails.customer_license_photo" class="text-center text-muted">
+                            <h4><i class="fa fa-info-circle"></i></h4>
+                            <h6>Not Added Yet</h6>
                         </div>
-                        <div class="text-500"><strong> Shipping Method : </strong>{{orderDetails.shipping_method}}</div>
-                        <button *ngIf="showChangeAddressBtn" class="btn btn-outline-primary btn-sm" type="button" (click)="openEditAddressModal()"><i class="fas fa-pencil-alt mr-2"></i>Change Address</button>
+
                     </div>
+
                 </div>
 
-                <div class="d-flex flex-row justify-content-end align-items-center  mt-2">
-                    <button type="button" class="btn btn-sm btn-success mr-2" (click)="downloadReceipt('billing_statement')"><i class="mr-2 fas fa-download"></i>Billing Statement</button>
-                    <button type="button" *ngIf="anyDrugRefunded" class="btn btn-sm btn-primary" (click)="downloadReceipt('refund_receipt')"><i class="mr-2 fas fa-download"></i>Refund Receipt</button>
-                    <button type="button" class="btn btn-sm btn-danger mr-2" (click)="openRefundModal()" *ngIf="!(orderDetails.system_status == 'REFUND_PROCESSED' || orderDetails.system_status == 'REFUND_REQUESTED')"><i class="fas fa-sync-alt mr-2"></i>Refund</button>
-                </div>
                 <div class="row mt-3">
                     <div class="col-md-12">
                             <div class="table-responsive">
@@ -335,113 +356,7 @@
             </ng-template>
         </div>
     </mat-tab>
-    <mat-tab label="Patient">
-        <div class="container-fluid details">
-            <ng-container *ngIf="patient; else noDetails ">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>Patient Details</h3>
-                    </div>
-                    <div class="col-md-6">
-                         <a href="javascript:void(0);" class="link" (click)="gotoPatientDetails()"><h5># {{patient._id}}</h5></a>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>First Name</label>
-                        <h5>{{patient.first_name}}</h5>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Last Name</label>
-                        <h5>{{patient.last_name}}</h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>Gender</label>
-                        <h5>{{patient.gender | titlecase}}</h5>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Date Of Birth</label>
-                        <h5>{{patient.date_of_birth|date:'dd-MM-yyyy'}}
-                        <br/>
-                        Age: {{patient.age}}
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>Email</label>
-                        <h5>{{patient.email}}</h5>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Mobile No</label>
-                        <h5>{{patient.cell_phone_number}}</h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>Shipping Addresses</label>
-                        <h5 class="m-0">
-                        {{orderDetails.shipping_address.address_line_1?orderDetails.shipping_address.address_line_1:''}}
-                        {{orderDetails.shipping_address.address_line_2 ? ', ' + orderDetails.shipping_address.address_line_2:''}}</h5>
-                        <h5 class="m-0">{{orderDetails.shipping_address.city?orderDetails.shipping_address.city:''}}{{orderDetails.shipping_address.state?', '+orderDetails.shipping_address.state:''}} {{orderDetails.shipping_address.zip_code?orderDetails.shipping_address.zip_code:''}}</h5>
-                        <button class="btn btn-primary" (click)="loadMapIframe()" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">View Shipping Address on Map<i class="ml-2 fa fa-map-marker" aria-hidden="true"></i></button>
-                        <div class="collapse" id="collapseExample">
-                            <iframe #mapIframe style="display: none;" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="accordion td-accordian mt-4" id="licenseAccordian">
-                            <div class="card">
-                                <div class="card-header" id="headingTwo">
-                                    <h3 class="mb-0"><button class="btn btn-link waves-effect waves-light" type="button" data-toggle="collapse" data-target="#license" aria-expanded="true" aria-controls="collapseTwo">License</button></h3>
-                                </div>
-                                <div id="license" class="collapse show" aria-labelledby="headingTwo" data-parent="#licenseAccordian">
-                                    <div class="card-body">
-                                        <div class="mt-2">
-                                            <div class="allergies">
-                                                <app-image-preview *ngIf="orderDetails.customer_license_photo" [imgPath]="orderDetails.customer_license_photo" height="250" width="350" caption="License Image"></app-image-preview>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="accordion td-accordian mt-4" id="fullFaceAccordian">
-                            <div class="card">
-                                <div class="card-header" id="headingTwo"><h3 class="mb-0"><button class="btn btn-link waves-effect waves-light" type="button" data-toggle="collapse" data-target="#license" aria-expanded="true" aria-controls="collapseTwo">Full Face Image</button></h3></div>
-                                <div id="license" class="collapse show" aria-labelledby="headingTwo" data-parent="#fullFaceAccordian">
-                                    <div class="card-body">
-                                        <div class="mt-2">
-                                            <div class="allergies">
-                                                <app-image-preview  *ngIf="orderDetails.customer_profile_photo" [imgPath]="orderDetails.customer_profile_photo" height="250" width="350" caption="Full Face Image"></app-image-preview>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
-            <ng-template #noDetails>
-                <div class="text-center text-muted">
-                    <h2><i class="fa fa-info-circle"></i></h2>
-                    <h4>No Details!</h4>
-                </div>
-            </ng-template>
-        </div>
-    </mat-tab>
+
     <mat-tab label="Subscriptions" *ngIf="orderDetails">
         <div *ngIf="userSubscriptions && userSubscriptions.length>0">
           <button class="btn btn-sm btn-primary float-right" type="button" (click)="openCreateRefillOrderModal()">Create Refill Order</button>

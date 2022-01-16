@@ -12,6 +12,8 @@ const routes: Routes = [
       { path: 'question-list', loadChildren:()=>import('../../questions/questions-list/questions-list.module').then(QL=>QL.QuestionsListModule) },
       { path: 'question-sequence', loadChildren:()=>import('../../questions/change-sequence/change-sequence.module').then(CS=>CS.ChangeSequenceModule) },
       { path: 'question-preview', loadChildren:()=>import('../../questions/questions-preview/questions-preview.module').then(QP=>QP.QuestionPreviewModule) },
+      { path: 'consultations-list', loadChildren:()=>import('../../consultation/consultation-list/consultation-list.module').then(CS=>CS.ConsultationListModule) }
+
     ]
   }
 ];

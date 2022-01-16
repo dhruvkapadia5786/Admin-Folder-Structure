@@ -15,6 +15,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import {NcpdpDrugFormsModule} from '../../ncpdp-drug-forms/ncpdp-drug-forms.module';
 import {NcpdpDrugFormsComponent} from '../../ncpdp-drug-forms/ncpdp-drug-forms.component';
 
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [CreateMedicineKitsComponent],
@@ -29,6 +31,8 @@ import {NcpdpDrugFormsComponent} from '../../ncpdp-drug-forms/ncpdp-drug-forms.c
     MatTabsModule,
     MatAutocompleteModule,
     MatChipsModule,
+    MatFormFieldModule,
+    NgxMatSelectSearchModule,
     FormsModule,
     NcpdpDrugFormsModule
   ],

@@ -116,7 +116,7 @@ export class QuestionPreviewComponent implements OnInit,OnDestroy {
                                   update_at: sq.update_at,
                                   parent_question_id:  sq.parent_question_id,
                                   question_type: "sub",
-                                  choices: sq.subquestion_option_type=='choise' && sq.choices ? sq.choices:[],
+                                  choices: sq.subquestion_option_type=='choise' && sq.subquestion_choices ? sq.subquestion_choices:[],
                                   is_active: sq.is_active,
                                   option_type: sq.subquestion_option_type,
                                   has_input: sq.subquestion_option_type=='input'?true:false,

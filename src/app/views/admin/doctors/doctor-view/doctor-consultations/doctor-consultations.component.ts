@@ -5,6 +5,7 @@ import { Helper } from 'src/app/services/helper.service';
 import { DataTableDirective } from 'angular-datatables';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subject } from 'rxjs';
+import { consultationHelper } from 'src/app/services/consultationHelper.service';
 
 @Component({
   selector: 'app-doctor-consultations',
@@ -21,7 +22,8 @@ export class DoctorConsultationsComponent implements OnInit, AfterViewInit {
   constructor(
     public http: HttpClient,
     private route: ActivatedRoute,
-    private _helper: Helper,
+    public _helper: Helper,
+    public _consultationHelper:consultationHelper,
     private router: Router,
     private _renderer: Renderer2
   ) {
@@ -37,6 +39,7 @@ export class DoctorConsultationsComponent implements OnInit, AfterViewInit {
   }
 
   getConsultations() {
+    let that=this;
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -50,9 +53,12 @@ export class DoctorConsultationsComponent implements OnInit, AfterViewInit {
       order: [[0, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         this.blockDataTable.start();
+        dataTablesParameters.filter = {};
+        dataTablesParameters.filter.DOCTOR_ID = this.doctorId;
+
         this.http
           .post<any>(
-            'api/v1/consultation/consultation_history_for_doctor/' + this.doctorId,
+            'api/consultations/list',
             dataTablesParameters,
             {}
           )
@@ -72,39 +78,15 @@ export class DoctorConsultationsComponent implements OnInit, AfterViewInit {
 				title: 'Consultation Number',
 				className: 'text-center',
 				render: function (data:any, type:any, record:any) {
-				  return `<a consultationDetailID=${record.id} href="javascript:void(0);" class="text-primary font-weight-bold">C-${data}</a>`;
+				  return `<a consultationDetailID=${record._id} href="javascript:void(0);" class="text-primary font-weight-bold">C-${data}</a>`;
 				}
         },
-        {
-          data:'consultation_type',
-          title: 'Consultation Type',
-          className: 'text-center',
-            render: function (data:any, type:any, record:any) {
-              if (data=='NEW') {
-              return '<span class="badge badge-success">NEW</span>'
-              }else{
-              return '<span class="badge badge-primary">FOLLOWUP</span>'
-              }
-            }
-          },
-          {
-          data:'type',
-          title: 'Type',
-          className: 'text-center',
-          render: function (data:any, type:any, record:any) {
-            if (data=='REFERRED_BY_PHYSICIAN') {
-            return '<span class="badge badge-primary">Referred By Physician</span>'
-            }else{
-            return '<span class="badge badge-warning">First Available Physician</span>'
-            }
-          }
-        },
 			  {
-          data:'patient_name',
+          data:'user.first_name',
           title:'Patient Name',
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
-            return `<a href="javascript:void(0);" customerId=${full.user_id}>${data}</a>`;
+            return `<a href="javascript:void(0);" customerId=${full.user_id}>${full.user.first_name+' '+full.user.last_name}</a>`;
           }
         },
         {
@@ -120,50 +102,33 @@ export class DoctorConsultationsComponent implements OnInit, AfterViewInit {
           }
         },
 			  {
-				data:'pharmacy_name',
-				title:'Pharmacy Name',
-				className: 'text-center',
-				render: function (data:any, type:any, record:any) {
-				  if (data) {
-					return data;
-				  }else{
-					return '-'
+          data:'total_amount',
+          title:'Consultation Charge',
+          className: 'text-center',
+          render: function (data) {
+            const _helper = new Helper();
+            return _helper.getInINRFormat('INR', data);
+          }
+			  },
+			  {
+          data:'system_status',
+          title: 'Status',
+          className: 'text-center',
+          render: function (data:any, type:any, record:any) {
+            return that._consultationHelper.getSystemStatus(data);
 				  }
-				}
 			  },
 			  {
-				data:'consultation_charge',
-				title:'Consultation Charge',
-				className: 'text-center',
-				render: function (data) {
-					const _helper = new Helper();
-					return _helper.getInINRFormat('INR', data);
-				}
-			  },
-			  {
-				data:'system_status',
-				title: 'Status',
-				className: 'text-center',
-				render: function (data:any, type:any, record:any) {
-          if(data=='ASSIGNED_TO_TECHNICIAN'){return `<span class="badge badge-info">Assigned To Technician</span>`;}
-          if(data=='APPROVED_BY_TECHNICIAN'){return `<span class="badge badge-info">Approved To Technician</span>`;}
-          else if(data=='ASSIGNED_TO_DOCTOR'){return `<span class="badge badge-primary">Assigned To Doctor</span>`}
-          else if(data=='CONSULTATION_COMPLETED'){return `<span class="badge badge-success">Completed</span>`}
-          else if(data=='CONSULTATION_REFUNDED'){return `<span class="badge badge-danger">Refunded</span>`}
-          else {return '';}
-				}
-			  },
-			  {
-				data: 'created_at',
-				title: 'Date',
-				className: 'text-center',
-				render: (data) => {
-				  if (data) {
-					return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
-				  } else {
-					return '<span></span>';
-				  }
-				}
+          data: 'consultation_place_datetime',
+          title: 'Date',
+          className: 'text-center',
+          render: (data) => {
+            if (data) {
+            return this._helper.getFormattedDate(data, 'DD-MM-YYYY hh:mm A');
+            } else {
+            return '<span></span>';
+            }
+          }
         }
 			]
     };

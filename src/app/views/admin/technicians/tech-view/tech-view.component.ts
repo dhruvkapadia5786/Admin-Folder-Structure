@@ -5,10 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subject } from 'rxjs';
-import { TECHNICIAN_STATUS } from '../../../../enums/order-status.enum';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { Toastr } from 'src/app/services/toastr.service';
+import { orderHelper } from 'src/app/services/orderHelper.service';
+import { consultationHelper } from 'src/app/services/consultationHelper.service';
 
 @Component({
   selector: 'app-tech-view',
@@ -34,6 +35,8 @@ export class TechViewComponent implements OnInit, AfterViewInit {
   constructor(public http: HttpClient,
     private route: ActivatedRoute,
     public helper: Helper,
+    public _orderHelper:orderHelper,
+    public _consultationHelper:consultationHelper,
     private router: Router,
     private _toastr: Toastr,
     private _renderer: Renderer2) {
@@ -70,16 +73,6 @@ export class TechViewComponent implements OnInit, AfterViewInit {
     return environment.api_url + documentURL.substring(3);
   }
 
-  getGender(gender: any) {
-    if (gender == '1') {
-      return 'Male';
-    } else if (gender == '2') {
-      return 'Female';
-    } else {
-      return gender;
-    }
-  }
-
   rerender(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
@@ -101,8 +94,8 @@ export class TechViewComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-  getConsultationDTOptions() {
+  getConsultationDTOptions(){
+    let that=this;
     this.dtOptionsConsultation ={
 			pagingType: 'full_numbers',
 			pageLength: 10,
@@ -115,8 +108,10 @@ export class TechViewComponent implements OnInit, AfterViewInit {
 			order: [[0, 'desc']],
 			ajax: (dataTablesParameters: any, callback:any) => {
 			  this.blockDataTable.start();
+        dataTablesParameters.filter = {};
+        dataTablesParameters.filter.TECHNICIAN_ID = this.techId;
         this.http.post<any>(
-          `api/v1/consultation/forTechnician?tId=${this.techId}`,
+          `api/consultations/list`,
           dataTablesParameters
         ).subscribe((resp) => {
           this.blockDataTable.stop();
@@ -133,34 +128,29 @@ export class TechViewComponent implements OnInit, AfterViewInit {
 				title: 'Consultation Number',
 				className: 'text-center',
 				render: function (data:any, type:any, record:any) {
-				  return `<a consultationDetailID=${record.id} href="javascript:void(0);" class="text-primary font-weight-bold">C-${data}</a>`;
+				  return `<a consultationDetailID=${record._id} href="javascript:void(0);" class="text-primary font-weight-bold">C-${data}</a>`;
 				}
         },
         {
-          data:'consultation_type',
-          title: 'Consultation Type',
-          className: 'text-center',
-            render: function (data:any, type:any, record:any) {
-              if (data=='NEW') {
-              return '<span class="badge badge-success">NEW</span>'
-              }else{
-              return '<span class="badge badge-primary">FOLLOWUP</span>'
-              }
-            }
-          },
-          {
-          data:'type',
-          title: 'Type',
-          className: 'text-center',
-          render: function (data:any, type:any, record:any) {
-            if (data=='REFERRED_BY_PHYSICIAN') {
-            return '<span class="badge badge-primary">Referred By Physician</span>'
-            }else{
-            return '<span class="badge badge-warning">First Available Physician</span>'
-            }
+          data: 'user.first_name',
+          title: 'Customer Name',
+          render: function (data: any, type: any, record: any){
+            return `${record.user.first_name} ${record.user.last_name}`
           }
-        },
-			  {
+      },
+      {
+        data: 'user.date_of_birth',
+        title: 'Age',
+        render: function (data: any) {
+          if (data) {
+            return moment().diff(data, 'years');
+          } else {
+            return '<span></span>';
+          }
+        }
+      },
+      { data: 'health_condition_name', title: 'Health Condition' },
+			  /* {
 				data:'doctor_name',
 				title: 'Physician Name',
 				className: 'text-center',
@@ -171,21 +161,9 @@ export class TechViewComponent implements OnInit, AfterViewInit {
 					  return '-'
 					}
 				}
-			  },
+			  }, */
 			  {
-				data:'pharmacy_name',
-				title:'Pharmacy Name',
-				className: 'text-center',
-				render: function (data:any, type:any, record:any) {
-				  if (data) {
-					return data;
-				  }else{
-					return '-'
-				  }
-				}
-			  },
-			  {
-				data:'consultation_charge',
+				data:'total_amount',
 				title:'Consultation Charge',
 				className: 'text-center',
 				render: function (data: any) {
@@ -194,25 +172,20 @@ export class TechViewComponent implements OnInit, AfterViewInit {
 				}
 			  },
 			  {
-				data:'system_status',
-				title: 'Status',
-				className: 'text-center',
-				render: function (data:any, type:any, record:any) {
-          if(data=='ASSIGNED_TO_TECHNICIAN'){return `<span class="badge badge-info">Assigned To Technician</span>`;}
-          if(data=='APPROVED_BY_TECHNICIAN'){return `<span class="badge badge-info">Approved To Technician</span>`;}
-          else if(data=='ASSIGNED_TO_DOCTOR'){return `<span class="badge badge-primary">Assigned To Doctor</span>`}
-          else if(data=='CONSULTATION_COMPLETED'){return `<span class="badge badge-success">Completed</span>`}
-          else if(data=='CONSULTATION_REFUNDED'){return `<span class="badge badge-danger">Refunded</span>`}
-          else {return '';}
-				}
+          data:'technician_status',
+          title: 'Status',
+          className: 'text-center',
+          render: function (data:any, type:any, record:any){
+              return that._consultationHelper.getTechnicianStatus(data);
+          }
 			  },
 			  {
-				data: 'created_at',
+				data: 'consultation_place_datetime',
 				title: 'Date',
 				className: 'text-center',
 				render: (data: any) => {
 				  if (data) {
-					return this.helper.getFormattedDateFromUnixTimestamp(data, 'MM/DD/YYYY');
+					return this.helper.getFormattedDate(data, 'DD-MM-YYYY hh:mm A');
 				  } else {
 					return '<span></span>';
 				  }
@@ -222,7 +195,7 @@ export class TechViewComponent implements OnInit, AfterViewInit {
     };
   }
 
-  loginAsUser () {
+  loginAsUser(){
     let url = 'api/users/temp-user/' + this.techId;
     this.http.get(url).subscribe((res: any) => {
       window.open(environment.client_app_url+'bypass-login?'+res.urlQuery);
@@ -230,7 +203,8 @@ export class TechViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getDTOptions() {
+  getDTOptions(){
+    let that=this;
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -244,15 +218,16 @@ export class TechViewComponent implements OnInit, AfterViewInit {
       order: [[0, 'desc']],
       ajax: (dataTablesParameters: any, callback: any) => {
         this.blockDataTable.start();
+        dataTablesParameters.filter = {};
+        dataTablesParameters.filter.TECHNICIAN_ID = this.techId;
         this.http
           .post<any>(
-            'api/v1/technician/orders/' + this.techId + '/' + this.selectedKitId,
+            'api/orders/list',
             dataTablesParameters,
             {}
           )
           .subscribe((resp) => {
             this.techOrderTableData = resp.data;
-
             this.blockDataTable.stop();
             callback({
               recordsTotal: resp.recordsTotal,
@@ -267,14 +242,19 @@ export class TechViewComponent implements OnInit, AfterViewInit {
           title: 'Order #',
           render: function (data: any, type: any, record: any) {
             if (data) {
-              return  `<a href="javascript:void(0);" orderDetailsID='${record.id}'>${data}</a>`;
+              return  `<a href="javascript:void(0);" orderDetailsID='${record._id}'>${data}</a>`;
             } else {
               return '<span></span>';
             }
           }
         },
-        { data: 'user.first_name', title: 'First Name' },
-        { data: 'user.last_name', title: 'Last Name' },
+        {
+            data: 'user.first_name',
+            title: 'Customer Name',
+            render: function (data: any, type: any, record: any){
+              return `${record.user.first_name} ${record.user.last_name}`
+            }
+        },
         {
           data: 'user.date_of_birth',
           title: 'Age',
@@ -286,39 +266,30 @@ export class TechViewComponent implements OnInit, AfterViewInit {
             }
           }
         },
-        { data: 'medicineKit.name', title: 'Medicine Kit' },
+        { data: 'medicine_kit_details.name', title: 'Medicine Kit' },
+        {
+          data:'total_amount',
+          title:'Total',
+          className: 'text-center',
+          render: function (data: any) {
+            const _helper = new Helper();
+            return _helper.getInINRFormat('INR', data);
+          }
+        },
         {
           data: 'technician_status',
           title: 'Order Status',
           className: 'text-center',
-          render: function (data: any) {
-            if (data == 1) {
-              return `<span class='badge badge-info'>${TECHNICIAN_STATUS[data]}</span>`;
-            }
-            if (data == 2) {
-              return `<span class='badge badge-success'>${TECHNICIAN_STATUS[data]}</span>`;
-            }
-            else if (data == 4) {
-              return `<span class='badge badge-warning'>${TECHNICIAN_STATUS[data]}</span>`;
-            }
-            else if (data == 5) {
-              return `<span class='badge badge-danger'>${TECHNICIAN_STATUS[data]}</span>`;
-            }
-            else if (data == 6) {
-              return `<span class='badge badge-danger'>${TECHNICIAN_STATUS[data]}</span>`;
-            }
-            else {
-              return '<span></span>';
-            }
+          render: function (data: any){
+             return that._orderHelper.getTechnicianStatus(data);
           }
         },
         {
-          data: 'createdOn',
+          data: 'order_place_datetime',
           title: 'Order Date',
           render: (data: any) => {
             if (data) {
-              //let _helper = new Helper();
-              return this.helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this.helper.getLocalDate(data, 'DD-MM-YYYY hh:mm A');
             } else {
               return '<span></span>';
             }

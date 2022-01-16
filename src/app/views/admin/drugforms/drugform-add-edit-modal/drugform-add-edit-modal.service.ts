@@ -18,10 +18,10 @@ export class DrugFormAddEditModalService {
   }
 
   async addNewDrugForm(bodyData: any):Promise<any>{
-    return await this._http.post('api/drugforms/create', bodyData).toPromise();
+    return await this._http.post('api/productforms/create', bodyData).toPromise();
   }
 
   async editDrugForm(id: any, bodyData: any):Promise<any>{
-		return await this._http.post('api/drugforms/update/'+id, bodyData).toPromise();
+		return await this._http.post('api/productforms/update/'+id, bodyData).toPromise();
   }
 }

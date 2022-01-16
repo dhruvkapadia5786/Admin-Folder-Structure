@@ -1,98 +1,229 @@
-<div class="tab-pane mt-4">
-    <ng-container *ngIf="!loading && questions.length;else noHealthQuestions">
-        <button class="btn btn-default float-right mb-3" type="button" (click)="sendAllConsent()">Take All Consent</button> 
-        <div class=" td-accordian" id="" *ngIf="!loading && questions.length && questions[0].id">
-          <div *ngFor="let question of questions; let idx = index"  [ngClass]="getBorderColorClass(question.type,question.choices[0].result,question.has_given_consent)">
-            <div class="card-header" id="headingOne">
-              <h5 class="mb-0">
-                <button class="btn btn-link collapsed text-left" type="button" data-toggle="collapse" [attr.data-target]="'#collapse'+question.id" aria-expanded="true" aria-controls="collapseOne">
-                  {{(idx+1)+". "+question.text}}
-                </button>
-              </h5>
-            </div>
-            <div [attr.id]="'collapse'+question.id" class="collapse" [ngClass]="{'show': (question.choices[0].result == 1 || question.choices[0].result == 3) }"
-              aria-labelledby="headingOne" data-parent="#questionAccordian">
-              <div class="card-body">
-                <p *ngFor="let answer of question.choices">{{answer.text}}</p>
-              </div>
-              <div *ngIf="question.choices[0].result == 1  || question.type=='sub'">
-                <div class="card-footer">
-                  <div class="consent-body">
-                    <div *ngIf="question.consent_sent_datetime != null && question.consent_message != null">
-                      <h4>Consent Message: {{question.consent_message}}</h4>
-                    </div>
-                    <div *ngIf="question.has_given_consent == 0 && (question.consent_sent_datetime == null || question.consent_sent_datetime == '')">
-                    <!-- <button class="btn btn-danger btn-sm" (click)="openConsentModal(consentModal,'QUESTION',question.user_answer_id,question.choices[0].consent_message)">Send Consent Message<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button> -->
-                    </div>
-                    <div *ngIf="question.has_given_consent == 0 && question.consent_sent_datetime != null">
-                      <h5>Consent Sent Date Time: {{helper.getUserLocalDate(question.consent_sent_datetime)}}</h5>
-                      <!-- <button type="button" class="btn-info btn btn-sm" (click)="openConsentModal(consentModal,'QUESTION',question.user_answer_id,question.consent_message)">Resend Consent Message<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button> -->
-                    </div>
-                    <div *ngIf="question.has_given_consent == 1 && question.consent_sent_datetime != null && question.consent_received_datetime != null">
-                      <h5>Consent Sent Date Time: {{helper.getUserLocalDate(question.consent_sent_datetime)}}</h5>
-                      <h5>Consent Received Date Time: {{helper.getUserLocalDate(question.consent_received_datetime)}}</h5>
-                    </div>
-                  </div>
-                </div>
-
-                  <div *ngFor="let sub_question of question.sub_questions; let sub_index = index">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <button class="btn btn-link collapsed text-left" type="button" data-toggle="collapse" [attr.data-target]="'#collapse'+sub_question.id"
-                                aria-expanded="true" aria-controls="collapseTwo">
-                                {{(idx+1)+"-"+(sub_index+1)+". "+sub_question.text}}
-                                </button>
-                            </h5>
-                        </div>
-                        <div [attr.id]="'collapse'+sub_question.id" class="collapse" data-parent="#questionAccordian"> <!-- [ngClass]="{'show': (question.choices[0].result == 1 || question.choices[0].result == 3) }" -->
-                            <div class="card-body">
-                                <div *ngIf="!sub_question.custom_input">
-                                      <p *ngFor="let ans of sub_question.choices">{{ans.text}}</p>
-                                </div>
-                                <p *ngIf="sub_question.custom_input">{{sub_question.custom_input}}</p>
-                            </div>
-                        </div>
-                  </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- CURRENT TAKING MADICINE, ILLNESS AND ALEGIES  -->
-    </ng-container>
-    <ng-template #noHealthQuestions>
-        <div class="text-center text-muted">
-            <h2><i class="fa fa-info-circle"></i></h2>
-            <h4>No Health Questions Found For this Order !</h4>
-        </div>
-    </ng-template>
- </div>
-
-
-<!-- <div mdbModal #consentModal="mdbModal" class="modal" id="consentModal" tabindex="-1" role="dialog" aria-labelledby="consentModalLabel" aria-hidden="true" [config]="{backdrop: 'false'}">
-    <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
-        <div class="modal-content   text-center">
-            <form [formGroup]="consentForm" (ngSubmit)="sendConsent(consentForm?.valid,consentModal)">                              
-                <div class="modal-header">
-                    <h5 class="modal-title">Send Consent Message</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeConsentModal(consentModal)">
-                            <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">                   
-                      <input type="hidden" formControlName="answerId" />     
-                      <div class="form-group">
-                          <label class="float-left">Consent Message :</label>
-                          <textarea formControlName="consentMsg" class="form-control form-control-sm" rows="5"></textarea>
-                          <div class="invalid-feedback" *ngIf="consentMsg?.invalid && (consentMsg?.dirty || consentMsg?.touched)" class="text-danger">
-                            <div *ngIf="consentMsg?.errors?.required">Consent message is required.</div>
-                          </div>
-                      </div>  
-                </div>
-                <div class="modal-footer justify-content-center">
-                      <button type="submit" class="btn-primary btn btn-sm"  [disabled]="consentForm?.invalid">Take Consent</button>
-                </div>
-            </form>
-        </div>
+<div class="tab-pane mt-4"  *blockUI="'questionsLoader'">
+    <div class="col-sm-12 text-right">
+      <button class="btn btn-sm btn-outline-primary" type="button" (click)="sendAllConsent()">Take All Consent</button>
     </div>
-</div> -->
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><p class="font-weight-bold mb-0">Health Questions</p></li>
+      <li class="list-group-item" *ngFor="let question of questions; let idx = index">
+          <div class="d-flex justify-content-start">
+              <div class="mr-2"><span [innerHtml]="getIconForAnswer(question.choices[0].result,question.has_given_consent)"></span></div>
+              <div>
+                    <p class="mb-0 font-weight-normal"> {{(idx+1)+". "+question.text}}</p>
+                    <div *ngFor="let answer of question.choices">
+                          <p class="mb-0 font-weight-bold text-primary">{{answer.text}}</p>
+                          <div style="max-width:350px;">
+                            <app-image-preview
+                            *ngIf="answer.has_file_upload && isFileTypeImage(answer.custom_file_upload)"
+                            [imgPath]="getPath(answer.custom_file_upload)" height="250" width="350"
+                            [caption]="'Preview ' + answer.text"></app-image-preview>
+                            <a  *ngIf="answer.has_file_upload && isFileTypeDoc(answer.custom_file_upload)" href="#">See Document File</a>
+                          </div>
+                    </div>
+                    <div class="mt-2" *ngIf="question.consents">
+                        <table class="table">
+                          <thead class="thead-light">
+                              <tr>
+                                  <th>Consent Message</th>
+                                  <th>Consent Sent Date Time</th>
+                                  <th>Consent Received Date Time</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let cItem of question.consents">
+                                  <td>{{cItem.consent_message}}</td>
+                                  <td>{{helper.getFormattedDate(cItem.consent_sent_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                                  <td>{{helper.getFormattedDate(cItem.consent_received_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                              </tr>
+                          </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" (click)="openConsentModal('QUESTION',question.question_id,question.consent_message)">Send Consent Message<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button>
+              </div>
+          </div>
+
+          <div class="d-flex justify-content-start">
+          <div class="mr-5"></div>
+          <div *ngFor="let sub_question of question.sub_questions; let sub_index = index">
+                <p class="mb-0 font-weight-normal">{{(idx+1)+"-"+(sub_index+1)+". "+sub_question.text}}</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div *ngIf="!sub_question.custom_input">
+                              <div *ngFor="let answer of sub_question.choices">
+                                  <p class="mb-0 font-weight-bold text-primary">{{answer.text}}</p>
+                                  <div style="max-width:350px;">
+                                    <app-image-preview
+                                    *ngIf="answer.has_file_upload && isFileTypeImage(answer.custom_file_upload)"
+                                    [imgPath]="getPath(answer.custom_file_upload)" height="250" width="350"
+                                    [caption]="'Preview ' + answer.text"></app-image-preview>
+                                    <a  *ngIf="answer.has_file_upload && isFileTypeDoc(answer.custom_file_upload)" href="#">See Document File</a>
+                                  </div>
+                              </div>
+                        </div>
+                        <p class="mb-0 font-weight-bold text-primary" *ngIf="sub_question.custom_input">
+                          {{sub_question.custom_input}}
+                        </p>
+                    </li>
+                </ul>
+          </div>
+          </div>
+
+      </li>
+
+      <li class="list-group-item">
+          <p class="mb-0 font-weight-normal">{{(questions.length + 1)}}. Please list all medications you are currently taking, including both prescription and over-the-counter medications.</p>
+          <ul>
+              <ng-container *ngIf="selectDrug.length; else elseTemplate">
+                <li *ngFor="let drug of selectDrug;">
+                    <p class="m-0">{{drug.drug_name}}</p>
+                </li>
+              </ng-container>
+              <ng-template #elseTemplate>
+                <li>None</li>
+              </ng-template>
+          </ul>
+
+           <div class="mt-2" *ngIf="orderDetails.drugs_taken_consents">
+                <table class="table">
+                  <thead class="thead-light">
+                      <tr>
+                          <th>Consent Message</th>
+                          <th>Consent Sent Date Time</th>
+                          <th>Consent Received Date Time</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let cItem of orderDetails.drugs_taken_consents">
+                          <td>{{cItem.consent_message}}</td>
+                          <td>{{helper.getFormattedDate(cItem.consent_sent_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                          <td>{{helper.getFormattedDate(cItem.consent_received_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                      </tr>
+                  </tbody>
+                </table>
+            </div>
+            <button class="btn btn-sm btn-outline-primary" (click)="openConsentModal('DRUG',0,null)">Send Consent Message For Drugs Taken<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button>
+      </li>
+
+      <li class="list-group-item">
+          <p class="mb-0 font-weight-normal">{{(questions.length + 2)}}. Please list any serious illnesses you currently have or had in the past.</p>
+          <ul>
+                <ng-container *ngIf="userIllnesses; else elseIllnessesEmptyTemplate">
+                  <li *ngFor="let illnesses of userIllnesses;">
+                      <p class="m-0">{{illnesses}}</p>
+                  </li>
+                </ng-container>
+                <ng-template #elseIllnessesEmptyTemplate>
+                  <li>None</li>
+                </ng-template>
+          </ul>
+          <div class="mt-2" *ngIf="orderDetails.illnesses_consents">
+              <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Consent Message</th>
+                        <th>Consent Sent Date Time</th>
+                        <th>Consent Received Date Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cItem of orderDetails.illnesses_consents">
+                        <td>{{cItem.consent_message}}</td>
+                        <td>{{helper.getFormattedDate(cItem.consent_sent_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                        <td>{{helper.getFormattedDate(cItem.consent_received_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                    </tr>
+                </tbody>
+              </table>
+          </div>
+          <button class="btn btn-sm btn-outline-primary" (click)="openConsentModal('ILLNESS',0,null)">Send Consent Message For Illnesses<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button>
+      </li>
+
+      <li class="list-group-item">
+          <p class="mb-0 font-weight-normal">{{(questions.length + 3)}}. Please list any current allergies you have or had in the past.</p>
+          <ng-container *ngIf="userAllergies && userAllergies!=null ; else elseAllergies">
+            <ul>
+                <ng-container *ngIf="userAllergies; else elseAllergiesEmptyTemplate">
+                    <li><p>{{userAllergies}}</p></li>
+                </ng-container>
+                <ng-template #elseAllergiesEmptyTemplate>
+                  <li>None</li>
+                </ng-template>
+            </ul>
+            <div class="mt-2" *ngIf="orderDetails.allergies_consents">
+                <table class="table">
+                  <thead class="thead-light">
+                      <tr>
+                          <th>Consent Message</th>
+                          <th>Consent Sent Date Time</th>
+                          <th>Consent Received Date Time</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let cItem of orderDetails.allergies_consents">
+                          <td>{{cItem.consent_message}}</td>
+                          <td>{{helper.getFormattedDate(cItem.consent_sent_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                          <td>{{helper.getFormattedDate(cItem.consent_received_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                      </tr>
+                  </tbody>
+                </table>
+            </div>
+            <button class="btn btn-sm btn-outline-primary" (click)="openConsentModal('ALLERGY',0,null)">Send Consent Message For Allergies<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button>
+          </ng-container>
+          <ng-template #elseAllergies>
+            <ul><li>None</li></ul>
+          </ng-template>
+      </li>
+
+      <li class="list-group-item" *ngIf="orderDetails && orderDetails.blood_pressure">
+          <p class="mb-0 font-weight-normal">{{(questions.length + 4)}}. Please enter your Blood Pressure.</p>
+          <p>
+            <span class="mr-2">{{orderDetails.blood_pressure ?  orderDetails.blood_pressure.systolic+' / '+orderDetails.blood_pressure.diastolic +' '+ orderDetails.blood_pressure.unit  : ' - '}}</span>
+            <span [innerHtml]="helper.getBPTextBadge(orderDetails.blood_pressure.result)"></span>
+          </p>
+          <div class="mt-2" *ngIf="orderDetails.blood_pressure_consents">
+                <table class="table">
+                  <thead class="thead-light">
+                      <tr>
+                          <th>Consent Message</th>
+                          <th>Consent Sent Date Time</th>
+                          <th>Consent Received Date Time</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let cItem of orderDetails.blood_pressure_consents">
+                          <td>{{cItem.consent_message}}</td>
+                          <td>{{helper.getFormattedDate(cItem.consent_sent_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                          <td>{{helper.getFormattedDate(cItem.consent_received_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                      </tr>
+                  </tbody>
+                </table>
+          </div>
+          <button class="btn btn-sm btn-outline-primary" (click)="openConsentModal('BP',0,null)">Send Consent Message For Blood Pressure<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button>
+      </li>
+
+      <li class="list-group-item" *ngIf="orderDetails && orderDetails.height_weight">
+          <p class="mb-0 font-weight-normal">{{(questions.length + 5)}}. Please enter your Weight and Height.</p>
+          <p>Weight : {{orderDetails.height_weight? orderDetails.height_weight.weight +' kg':'-' }}</p>
+          <p>Height : {{orderDetails.height_weight? orderDetails.height_weight.height_feet+' Feet  '+orderDetails.height_weight.height_inch+' Inch' : ' - '}}</p>
+          <p>Body Mass Index : {{orderDetails.height_weight ? orderDetails.height_weight.bmi : ' - ' }} <span *ngIf="orderDetails.height_weight" [innerHtml]="helper.getBMITextBadge(orderDetails.height_weight.bmi_text)"></span></p>
+
+          <div class="mt-2" *ngIf="orderDetails.height_weight_consents">
+                <table class="table">
+                  <thead class="thead-light">
+                      <tr>
+                          <th>Consent Message</th>
+                          <th>Consent Sent Date Time</th>
+                          <th>Consent Received Date Time</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let cItem of orderDetails.height_weight_consents">
+                          <td>{{cItem.consent_message}}</td>
+                          <td>{{helper.getFormattedDate(cItem.consent_sent_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                          <td>{{helper.getFormattedDate(cItem.consent_received_datetime,'DD-MM-YYYY hh:mm:ss A')}}</td>
+                      </tr>
+                  </tbody>
+                </table>
+          </div>
+          <button class="btn btn-sm btn-outline-primary" (click)="openConsentModal('BMI',0,null)">Send Consent Message For BMI<i class="ml-2 fa fa-commenting-o" aria-hidden="true"></i></button>
+      </li>
+    </ul>
+</div>

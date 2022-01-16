@@ -14,6 +14,7 @@ import { SelectOtcSubcategoryModalComponent } from '../select-otc-subcategory-mo
 import { LensParametersModalComponent } from '../lens-parameters-modal/lens-parameters-modal.component';
 import { LensParametersModalService } from '../lens-parameters-modal/lens-parameters-modal.service';
 import { SelectOtcSubcategoryModalService } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-products-add',
@@ -25,13 +26,19 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   modalRef!:BsModalRef;
   productForm:FormGroup;
   procurementChannels=['MEDICINE','OTC','PRIVATE LABEL','CONTACT LENS','LENS SOLUTION'];
-  productTypes= ['MEDICINE','OTC','LENS','SOLUTION'];
+  productTypes = [
+    {channel:'MEDICINE',name:'MEDICINE'},
+    {channel:'OTC',name:'OTC'},
+    {channel:'CONTACT LENS',name:'LENS'},
+    {channel:'LENS SOLUTION',name:'SOLUTION'},
+    {channel:'PRIVATE LABEL',name:'PRIVATE LABEL'}
+  ];
 
   selectedFiles:File[]=[];
   selectedDocuments:File[]=[];
   selectedVideos:File[]=[];
 
-  elementTypes=['DESCRIPTION','LIST','TABLE','LINK'];
+  elementTypes=['DESCRIPTION','LIST','TABLE'];
 
   protected brands: any[] = [];
   public brandFilteringCtrl: FormControl = new FormControl();
@@ -364,6 +371,20 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
 
   get lens_type_ids(){return this.productForm.get('lens_type_ids');}
 
+  setProductType(event:any){
+      let productType:any=this.productTypes.find((item:any)=>item.channel == event.target.value);
+      this.productForm.patchValue({
+        product_type:productType.name
+      });
+  }
+
+  setProductChannel(event:any){
+    let productType:any=this.productTypes.find((item:any)=>item.name == event.target.value);
+    this.productForm.patchValue({
+      procurement_channel:productType.channel
+    });
+  }
+
   handleTherapySelected(event:any){
       let selectedTherapies = this.searchedTherapiesResult.filter((a)=>event.value.indexOf(a._id)!=-1);
       this.filteredTherapies.next(selectedTherapies);
@@ -387,7 +408,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   }
 
   async getAllDrugForms(searchTerm:string):Promise<any>{
-    return await this.http.get(`api/drugforms/all`+`?search=${searchTerm}`).toPromise();
+    return await this.http.get(`api/productforms/all`+`?search=${searchTerm}`).toPromise();
   }
 
   async filterPackformResults(token: string) {
@@ -962,4 +983,7 @@ handleTypeChange(attributeIndex:number,event:any){
     }
   }
 
+  getUrl(url: string) {
+    return environment.api_url + url
+  }
 }

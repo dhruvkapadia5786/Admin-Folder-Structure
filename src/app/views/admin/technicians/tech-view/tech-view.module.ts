@@ -8,6 +8,8 @@ import { TechViewComponent } from './tech-view.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { DataTablesModule } from 'angular-datatables';
 import { MatTabsModule } from '@angular/material/tabs';
+import { orderHelper } from 'src/app/services/orderHelper.service';
+import { consultationHelper } from 'src/app/services/consultationHelper.service';
 
 @NgModule({
   declarations: [TechViewComponent],
@@ -18,6 +20,6 @@ import { MatTabsModule } from '@angular/material/tabs';
     NgxMaskModule,
     DataTablesModule
   ],
-  providers: []
+  providers: [orderHelper,consultationHelper]
 })
 export class TechViewModule { }

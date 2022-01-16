@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,8 +19,7 @@ import { NcpdpDrugFormsService } from '../../ncpdp-drug-forms/ncpdp-drug-forms.s
   templateUrl: './create-medicine-kits.component.html',
   styleUrls: ['./create-medicine-kits.component.scss']
 })
-export class CreateMedicineKitsComponent implements OnInit {
-  public brandsList: any[]=[];
+export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
   public statesList:any[]=[];
   public treatmentConditionList:any[]=[];
 
@@ -32,6 +31,13 @@ export class CreateMedicineKitsComponent implements OnInit {
   selectable = true;
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  protected brands: any[] = [];
+  public brandFilteringCtrl: FormControl = new FormControl();
+  public searchingBrand = false;
+  public filteredBrands: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  protected _onDestroyBrand = new Subject<void>();
+
 
    /* Similar Drugs */
   searchingDrug:boolean=false;
@@ -86,6 +92,27 @@ export class CreateMedicineKitsComponent implements OnInit {
     });
 
     this.images().push(this.newFileInput(1));
+
+      this.brandFilteringCtrl.valueChanges
+      .pipe(
+        filter(search => !!search),
+        tap(() => this.searchingBrand = true),
+        takeUntil(this._onDestroyBrand),
+        switchMap((search:any) => {
+          return this.filterBrandsResults(search);
+        }),
+        takeUntil(this._onDestroyBrand)
+      )
+      .subscribe((filteredBanks:any) => {
+        this.searchingBrand = false;
+        this.filteredBrands.next(filteredBanks);
+      },
+        error => {
+          // no errors in our simulated example
+          this.searchingBrand = false;
+          // handle error...
+        });
+
 
       // listen for search field value changes
       this.SimilarDrugsCtrl.valueChanges
@@ -336,9 +363,14 @@ export class CreateMedicineKitsComponent implements OnInit {
 
   ngOnInit() {
     this.getStateList();
-    this.getBrandsList();
     this.getTreatmentConditionList();
     this.addNewMedicine();
+  }
+
+  ngOnDestroy(){
+    this._onDestroyBrand.next();
+    this._onDestroyBrand.complete();
+
   }
 
    /*--- Similar Drug Helpers ---*/
@@ -368,6 +400,17 @@ export class CreateMedicineKitsComponent implements OnInit {
   }
   /*---End of Similar Drug Helpers ---*/
 
+
+
+  async filterBrandsResults(token: string) {
+    return this.getAllBrands(token).then((data:any)=>{
+      return data;
+    });
+  }
+
+  async getAllBrands(searchTerm:string):Promise<any>{
+    return await this.http.get(`api/brands/all`+`?search=${searchTerm}`).toPromise();
+  }
 
   public getStateList() {
     this.http.get('api/system_states/all').subscribe((data:any) => {
@@ -476,16 +519,6 @@ export class CreateMedicineKitsComponent implements OnInit {
     });
   }
 
-  public getBrandsList(){
-    const url = 'api/brands/all';
-    this.http.get(url).subscribe((brands:any) => {
-      this.brandsList = brands;
-      this.changeDetectorRef.detectChanges();
-    },(err:any) => {
-
-    });
-  }
-
 
   public saveMedicineKit(){
     if (this.addMedicineKit.invalid){
@@ -545,7 +578,8 @@ export class CreateMedicineKitsComponent implements OnInit {
     this.modalRef.content.selectedDrug.subscribe((receivedEntry:any) => {
       let controls = this.addMedicineKit.get('medicines') as FormArray;
       controls.at(index).patchValue({
-        ncpdp_unit_code:receivedEntry.ncit_code
+        ncpdp_unit_code:receivedEntry.ncit_code,
+        doseform:receivedEntry.ncpdp_preferred_term
       });
       this.modalRef.hide();
     });

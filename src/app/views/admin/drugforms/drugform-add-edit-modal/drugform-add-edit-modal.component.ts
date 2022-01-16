@@ -26,8 +26,8 @@ export class DrugFormAddEditModalComponent implements OnInit {
     this.drugForm = this.formBuilder.group({
       'id':new FormControl(null),
       'name': new FormControl(null, [Validators.required]),
-      'singular':new FormControl(null,[Validators.required]),
-      'plural':new FormControl(null,[Validators.required])
+      'singular':new FormControl(null,[]),
+      'plural':new FormControl(null,[])
     });
   }
 

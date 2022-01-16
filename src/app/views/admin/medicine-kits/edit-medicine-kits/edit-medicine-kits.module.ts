@@ -12,6 +12,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Helper } from 'src/app/services/helper.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import {NcpdpDrugFormsModule} from '../../ncpdp-drug-forms/ncpdp-drug-forms.module';
 import {NcpdpDrugFormsComponent} from '../../ncpdp-drug-forms/ncpdp-drug-forms.component';
 
@@ -29,6 +31,8 @@ import {NcpdpDrugFormsComponent} from '../../ncpdp-drug-forms/ncpdp-drug-forms.c
     MatTabsModule,
     MatAutocompleteModule,
     MatChipsModule,
+    MatFormFieldModule,
+    NgxMatSelectSearchModule,
     FormsModule,
     NcpdpDrugFormsModule
   ],

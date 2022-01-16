@@ -1,0 +1,761 @@
+<section>
+  <div class="row mt-3 p-3">
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/states">
+        <div class="card classic-admin-card purple-darken-4">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-globe" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p class="white-text">STATES</p>
+            <h4>
+              <strong>{{ counts.total_state }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('STATE','is_active', 1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_state_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('STATE','is_active', 0)">
+            <td  class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_state_inactive }}</span>
+            </td>
+        </table>
+        </div>
+    </div>
+
+
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/medicine-kits/list">
+        <div class="card classic-admin-card purple-darken-3">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-medkit" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>MEDICINE KITS</p>
+            <h4>
+              <strong>{{ counts.total_medicinekits }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('MEDICINE_KIT', 'is_special_kit', 0)">
+            <td  class="font-weight-normal">Regular</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_medicinekits_regular }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('MEDICINE_KIT', 'is_special_kit', 1)">
+            <td class="font-weight-normal">Special</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_medicinekits_special }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('MEDICINE_KIT','is_active', 1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_medicinekits_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('MEDICINE_KIT','is_active', 0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_medicinekits_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('MEDICINE_KIT', 'is_coming_soon', 1)">
+            <td class="font-weight-normal">Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_medicinekits_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/druginfo/list">
+        <div class="card classic-admin-card purple-darken-1">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-shopping-cart" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>MASTER DRUGS (RX + OTC)</p>
+            <h4>
+              <strong>{{ counts.total_master_drugs }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('DRUGS', 'is_active', 1)">
+            <td class="font-weight-normal">Master Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_master_drugs_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('DRUGS', 'is_active', 0)">
+            <td class="font-weight-normal">Master Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_master_drugs_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('DRUGS',null,null)">
+            <td class="font-weight-normal">Total Dosage</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_drugs }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('DRUGS','is_active', 1)">
+            <td class="font-weight-normal">Total Dosage Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_drugs_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('DRUGS','is_active', 0)">
+            <td class="font-weight-normal">Total Dosage Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_drugs_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3 p-3">
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/doctors/list">
+        <div class="card classic-admin-card amber-darken-4">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-user-md" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>DOCTORS</p>
+            <h4>
+              <strong>{{ counts.total_doctor }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('DOCTOR','is_active', 1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_doctor_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('DOCTOR','is_active', 0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_doctor_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/technicians/list">
+        <div class="card classic-admin-card amber-darken-3">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-user-secret" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>TECHNICIANS</p>
+            <h4>
+              <strong>{{ counts.total_technician }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('TECHNICIAN','is_active', 1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_technician_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('TECHNICIAN','is_active', 0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_technician_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/pharmacies/list">
+        <div class="card classic-admin-card amber-darken-2">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-ambulance" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>PHARMACY</p>
+            <h4>
+              <strong>{{ counts.total_pharmacy }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('PHARMACY','is_active', 1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_pharmacy_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('PHARMACY','is_active', 0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_pharmacy_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/arpns/list">
+        <div class="card classic-admin-card amber-darken-1">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-user-md" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>ARPN</p>
+            <h4>
+              <strong>{{ counts.total_arpn }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('ARPN','is_active', 1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_arpn_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('ARPN','is_active', 0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_arpn_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3 p-3">
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/clinic/list">
+        <div class="card classic-admin-card cyan-darken-4">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-hospital-o" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>CLINICS</p>
+            <h4>
+              <strong>{{ counts.total_clinic }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('CLINIC','is_active', 1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_clinic_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('CLINIC','is_active', 0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_clinic_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/health-conditions">
+        <div class="card classic-admin-card cyan-darken-3">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-stethoscope" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>HEALTH CONDITIONS</p>
+            <h4>
+              <strong>{{ counts.total_health_conditions }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('HEALTH_CONDITION','is_active', 1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_health_conditions_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('HEALTH_CONDITION', 'is_coming_soon', 1)">
+            <td class="font-weight-normal">Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_health_conditions_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/conditions/list">
+        <div class="card classic-admin-card cyan-darken-1">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-stethoscope" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>TREATMENT CONDITIONS</p>
+            <h4>
+              <strong>{{ counts.total_treatments }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('TREATMENT_CONDITION','is_active',1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_treatments_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('TREATMENT_CONDITION','is_coming_soon',1)">
+            <td class="font-weight-normal">Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_treatments_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3 p-3">
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/otc-categories">
+        <div class="card classic-admin-card red-darken-4">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-list" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>OTC CATEGORIES</p>
+            <h4>
+              <strong>{{ counts.total_otc_categories }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('OTC_CATEGORIES','is_active',1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_categories_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('OTC_CATEGORIES','is_active',0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_categories_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('OTC_CATEGORIES','is_coming_soon',1)">
+            <td class="font-weight-normal">Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_categories_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+     <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/otc-categories">
+        <div class="card classic-admin-card red-darken-4">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-list" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>OTC SUBCATEGORIES</p>
+            <h4>
+              <strong>{{ counts.total_otc_subcategories }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('OTC_CATEGORIES','is_active',1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_subcategories_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('OTC_CATEGORIES','is_active',0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_subcategories_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('OTC_CATEGORIES','is_coming_soon',1)">
+            <td class="font-weight-normal">Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_subcategories_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/otc-drugs">
+        <div class="card classic-admin-card red-darken-3">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-shopping-cart" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>OTC DRUGS</p>
+            <h4>
+              <strong>{{ counts.total_otc_drugs }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('OTC','is_active',1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_drugs_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('OTC','is_active',0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_drugs_inactive }}</span>
+            </td>
+          </tr>
+           <tr class="cursor-pointer" (click)="goToDetails('OTC','is_coming_soon',1)">
+            <td class="font-weight-normal">Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_otc_drugs_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/druginfo/list">
+        <div class="card classic-admin-card red-darken-2">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-shopping-cart" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>RX DRUGS</p>
+            <h4>
+              <strong>{{ counts.total_rx_drugs }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+
+          <tr class="cursor-pointer" (click)="goToDetails('DRUGS_INFO','is_active',1)">
+            <td class="font-weight-normal">Rx Drugs Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_rx_drugs_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('DRUGS_INFO','is_active',0)">
+            <td class="font-weight-normal">Rx Drugs Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_rx_drugs_inactive }}</span>
+            </td>
+          </tr>
+           <tr class="cursor-pointer" (click)="goToDetails('DRUGS_INFO','is_coming_soon',1)">
+            <td class="font-weight-normal">Rx Drugs Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_rx_drugs_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+   <div class="row mt-3 p-3">
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/contactlenses-brands">
+        <div class="card classic-admin-card light-green-darken-4">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-list" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>LENS BRANDS</p>
+            <h4>
+              <strong>{{ counts.total_lens_brands }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_BRANDS','is_active',1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_brands_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_BRANDS','is_active',0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_brands_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_BRANDS','is_coming_soon',1)">
+            <td class="font-weight-normal">Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_brands_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/contactlenses-colors">
+        <div class="card classic-admin-card light-green-darken-3">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-list" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>LENS COLORS</p>
+            <h4>
+              <strong>{{ counts.total_lens_colors }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_COLORS','is_active',1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_colors_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_COLORS','is_active',0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_colors_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/contactlenses-manufacturers">
+        <div class="card classic-admin-card light-green-darken-2">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-list" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>LENS MANUFACTURERS</p>
+            <h4>
+              <strong>{{ counts.total_lens_manufacturer }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_MANUFACTURERS','is_active',1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_manufacturer_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_MANUFACTURERS','is_active',0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_manufacturer_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/contactlenses-types">
+        <div class="card classic-admin-card light-green-darken-1">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-list" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>LENS TYPES</p>
+            <h4>
+              <strong>{{ counts.total_lens_types }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_TYPES','is_active',1)">
+            <td class="font-weight-normal">Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_types_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS_TYPES','is_active',0)">
+            <td class="font-weight-normal">Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_types_inactive }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+   <div class="row mt-3 p-3">
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/contactlenses-products/list">
+        <div class="card classic-admin-card indigo-darken-4">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-eye" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>CONTACT LENSES</p>
+            <h4>
+              <strong>{{ counts.total_master_lens }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('LENS','is_active',1)">
+            <td class="font-weight-normal">Master Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_master_lens_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS','is_active',0)">
+            <td class="font-weight-normal">Master Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_master_lens_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS','is_active',1)">
+            <td class="font-weight-normal">Lens Total</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS','is_active',1)">
+            <td class="font-weight-normal">Lens Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS','is_active',0)">
+            <td class="font-weight-normal">Lens Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('LENS','is_coming_soon',1)">
+            <td class="font-weight-normal">Lens Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_lens_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-r">
+      <a href="javascript:void(0)" routerLink="/admin/contactlenses-products/solutions">
+        <div class="card classic-admin-card indigo-darken-3">
+          <div class="card-body">
+            <div class="pull-right">
+              <i class="fa fa-3x fa-tint" style="opacity:0.1; transform: rotate(-35deg);"></i>
+            </div>
+            <p>CONTACT LENSES SOLUTION</p>
+            <h4>
+              <strong>{{ counts.total_master_solution }}</strong>
+            </h4>
+          </div>
+        </div>
+      </a>
+      <div *ngIf="counts">
+        <table class="table table-hover table-sm">
+          <tr class="cursor-pointer" (click)="goToDetails('SOLUTION','is_active',1)">
+            <td class="font-weight-normal">Master Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_master_solution_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('SOLUTION','is_active',0)">
+            <td class="font-weight-normal">Master Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_master_solution_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('SOLUTION','is_active',1)">
+            <td class="font-weight-normal">Solution Total</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_solutions }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('SOLUTION','is_active',1)">
+            <td class="font-weight-normal">Solution Active</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_solutions_active }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('SOLUTION','is_active',0)">
+            <td class="font-weight-normal">Solution Inactive</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_solutions_inactive }}</span>
+            </td>
+          </tr>
+          <tr class="cursor-pointer" (click)="goToDetails('SOLUTION','is_coming_soon',1)">
+            <td class="font-weight-normal">Solution Coming Soon</td>
+            <td class="text-right">
+              <span class="badge badge-primary badge-pill py-2 px-3">{{ counts?.total_solutions_coming_soon }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</section>

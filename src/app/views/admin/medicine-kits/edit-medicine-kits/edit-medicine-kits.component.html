@@ -19,18 +19,30 @@
          </div>
      </div>
 
-    <div class="col-md-4 col-12">
-       <label>Brand :</label>
-        <mat-select placeholder="Select Brand" class="form-control" formControlName="brand_id">
-          <mat-option *ngFor="let brand of brandsList" [value]="brand._id">
-            {{brand.name}}
-          </mat-option>
-        </mat-select>
-        <div class="invalid-feedback" *ngIf="brand_id?.invalid && (brand_id?.dirty || brand_id?.touched)"
-          class="text-danger font-weight-bold">
-          <div *ngIf="brand_id?.errors?.required">Brand is required.</div>
-        </div>
-    </div>
+    <div class="col-md-4 col-sm-12">
+          <div class="form-group">
+              <label>Brand :</label>
+              <mat-form-field class="w-100">
+                  <mat-select formControlName="brand_id" placeholder="">
+                    <mat-option>
+                      <ngx-mat-select-search
+                      [formControl]="brandFilteringCtrl"
+                      [searching]="searchingBrand"
+                      placeholderLabel="Find Brand..."
+                      noEntriesFoundLabel="'no matching brand found'"
+                      ></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand._id">
+                      {{brand.name}}
+                    </mat-option>
+                  </mat-select>
+              </mat-form-field>
+
+              <div class="invalid-feedback" *ngIf="brand_id?.invalid && (brand_id?.dirty || brand_id?.touched)" class="text-danger font-weight-bold">
+                <div *ngIf="brand_id?.errors?.required">Brand is required.</div>
+              </div>
+          </div>
+      </div>
 
       <div class="col-md-8 col-12">
         <label>Medicine Kit Name:</label>
@@ -508,7 +520,7 @@
                   <div *ngIf="kit.get('quantity_unit')?.errors?.required"> Quantity unit is required.</div>
                 </div>
               </div>
-  
+
             </div>
             <br>
             <div class="form-row">
@@ -524,18 +536,18 @@
                 </div>
               </div>
             </div><br>
-  
+
             <div class="form-row">
               <div class="col-md-3">
                 <label>Route</label>
                 <input type="text" class="form-control" placeholder="Enter Route" formControlName="route" />
               </div>
-  
+
               <div class="col-md-3">
                 <label>RXCUI</label>
                 <input type="text" class="form-control" placeholder="Enter RXCUI" formControlName="rxcui" />
               </div>
-  
+
               <div class="col-md-3">
                 <label>Days Supply</label>
                 <input type="number" class="form-control" placeholder="Enter Days Supply" min="0"
@@ -547,13 +559,13 @@
                 </div>
               </div>
             </div><br />
-  
+
             <div class="form-row">
               <div class="col-md-3">
                 <label class="d-block">Is Shippable?</label>
                 <mat-checkbox color="primary" formControlName="is_shippable">is shippable?</mat-checkbox>
               </div>
-  
+
               <div class="col-md-3" *ngIf="kit.get('is_shippable')?.value==true">
                 <label>Shipping Weight</label>
                 <input type="number" class="form-control" placeholder="Enter Shipping Weight" formControlName="shipping_weight" />
@@ -562,7 +574,7 @@
                   <div *ngIf="kit.get('shipping_weight')?.errors?.required">Shipping Weight is required.</div>
                 </div>
               </div>
-  
+
               <div class="col-md-3" *ngIf="kit.get('is_shippable')?.value==true">
                 <label>Shipping Weight Unit</label>
                 <input type="text" class="form-control" placeholder="Enter Days Supply" min="0" formControlName="shipping_weight_unit" />
@@ -572,9 +584,9 @@
                 </div>
               </div>
             </div><br />
-  
+
             <div class="form-row">
-  
+
               <div class="col-md-3">
                 <label>Substitutions</label><br />
                 <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
@@ -602,7 +614,7 @@
                 </div>
               </div>
             </div><br />
-  
+
             <div class="form-row">
               <div class="col-md-6">
                 <label class="d-block">Active</label>

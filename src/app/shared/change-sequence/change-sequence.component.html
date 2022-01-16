@@ -71,8 +71,34 @@
             <p class="font-weight-bold mb-0">{{(i+1)}}</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-dark font-weight-normal mb-0">{{item.name}}</p>
-            <p class="text-secondary font-weight-normal mb-0">{{item.value}}</p>
+
+            <ng-container *ngIf="item.type;else noType">
+                   <b class="text-dark mb-0">{{item.key}}</b>
+
+                   <div  *ngIf="item.type == 'DESCRIPTION'">
+                        <p class="text-secondary font-weight-normal mb-0">{{item.value}}</p>
+                   </div>
+                   <div  *ngIf="item.type == 'LIST'">
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item text-dark font-weight-normal mb-0" *ngFor="let liItem of item.list">{{liItem.name}}</li>
+                        </ul>
+                   </div>
+                   <div  *ngIf="item.type == 'TABLE'">
+                        <table class="table table-sm table-bordered">
+                            <tbody>
+                                <tr *ngFor="let trItem of item.table">
+                                    <td>{{trItem.label}}</td>
+                                    <td>{{trItem.value}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                   </div>
+            </ng-container>
+            <ng-template #noType>
+                <p class="text-dark font-weight-normal mb-0">{{item.name}}</p>
+                <p class="text-secondary font-weight-normal mb-0">{{item.value}}</p>
+            </ng-template>
+
           </div>
           <div class="col-sm-2 text-center">
             <p class="font-weight-bold mb-0">{{item.sequence}}</p>

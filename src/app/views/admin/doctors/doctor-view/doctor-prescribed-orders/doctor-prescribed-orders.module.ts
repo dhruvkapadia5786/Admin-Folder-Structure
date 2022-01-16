@@ -6,16 +6,18 @@ import { NgxMaskModule } from 'ngx-mask';
 import { DataTablesModule } from 'angular-datatables';
 import { MatTabsModule } from '@angular/material/tabs';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { orderHelper } from 'src/app/services/orderHelper.service';
 
 @NgModule({
     declarations: [DoctorPrescribedOrdersComponent],
     imports: [
-        SharedModule,
+    SharedModule,
         DoctorPrescribedOrdersRoutingModule,
         NgxMaskModule,
         DataTablesModule,
         MatTabsModule
     ],
-    exports: [DoctorPrescribedOrdersComponent]
+    exports: [DoctorPrescribedOrdersComponent],
+    providers:[orderHelper]
 })
 export class DoctorPrescribedOrdersModule { }

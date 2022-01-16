@@ -41,7 +41,8 @@ const routes: Routes = [
   { path: 'coupon-transaction', loadChildren:()=>import('../../views/admin/coupon-transactions/coupon-transactions.module').then(couponTransaction=>couponTransaction.CouponTransactionsModule) },
   { path: 'referral-transaction', loadChildren:()=>import('../../views/admin/referral-transactions/referral-transactions.module').then(referral=>referral.ReferralTransactionsModule) },
   { path: 'drug-order',loadChildren:()=>import('../../views/admin/admin-drug-orders/admin-drug-orders.module').then(drugOrder=>drugOrder.AdminDrugOrdersModule)},
-  { path: 'user-cart-list', loadChildren:()=>import('../../views/admin/user-cart-list/user-cart-list.module').then(cart=>cart.UserCartListModule) }
+  { path: 'user-cart-list', loadChildren:()=>import('../../views/admin/user-cart-list/user-cart-list.module').then(cart=>cart.UserCartListModule) },
+  { path: 'bannersets', loadChildren:()=>import('../../views/admin/banner-sets/banner-sets.module').then(bs=>bs.BannerSetsModule) }
 ];
 
 @NgModule({

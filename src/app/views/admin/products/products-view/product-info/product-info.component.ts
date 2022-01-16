@@ -62,4 +62,7 @@ export class ProductInfoComponent implements OnInit {
       });
   }
 
+  getUrl(url: string) {
+    return environment.api_url + url
+  }
 }

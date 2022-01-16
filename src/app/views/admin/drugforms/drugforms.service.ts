@@ -10,19 +10,19 @@ export class DrugFormsService {
 	constructor(private _http: HttpClient) {}
 
   async createState(data:any):Promise<any>{
-    return await this._http.post(`api/drugforms/add`,data).toPromise();
+    return await this._http.post(`api/productforms/add`,data).toPromise();
   }
 
   async updateState(data:any):Promise<any>{
-    return await this._http.post(`api/drugforms/update/${data.id}`,data).toPromise();
+    return await this._http.post(`api/productforms/update/${data.id}`,data).toPromise();
   }
 
   async findAllStates():Promise<any>{
-    return await this._http.get(`api/drugforms/list`).toPromise();
+    return await this._http.get(`api/productforms/list`).toPromise();
   }
 
   async findByIdState(id:number):Promise<any>{
-    return await this._http.get(`api/drugforms/view/${id}`).toPromise();
+    return await this._http.get(`api/productforms/view/${id}`).toPromise();
   }
 
 

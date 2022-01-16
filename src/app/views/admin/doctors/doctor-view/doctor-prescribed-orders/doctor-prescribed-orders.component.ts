@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Helper } from 'src/app/services/helper.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as moment from 'moment-timezone';
-import { DOCTOR_STATUS } from 'src/app/enums/order-status.enum';
+import { orderHelper } from 'src/app/services/orderHelper.service';
 
 @Component({
   selector: 'app-doctor-prescribed-orders',
@@ -24,6 +24,7 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
   constructor(
     private http: HttpClient,
     public helper: Helper,
+    public _orderHelper:orderHelper,
     private router: Router,
     private _renderer: Renderer2,
     private route: ActivatedRoute,
@@ -41,6 +42,7 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
   }
 
   getPrescribedOrders() {
+    let that=this;
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -54,9 +56,12 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
       order: [[0, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         this.blockDataTable.start();
+        dataTablesParameters.filter = {};
+        dataTablesParameters.filter.DOCTOR_ID = this.doctorId;
+        dataTablesParameters.filter.DOCTOR_STATUS = ['PRESCRIBED'];
         this.http
           .post<any>(
-            'api/v1/doctor/orders/prescribed/' + this.doctorId + '/' + 0,
+            'api/orders/list',
             dataTablesParameters,
             {}
           )
@@ -76,7 +81,7 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
           title: 'Order #',
           render: function (data, type, record) {
             if (data) {
-              return '<a href="javascript:void(0);" orderID=' + record.id + '>' + data + '</a>';
+              return '<a href="javascript:void(0);" orderID=' + record._id + '>' + data + '</a>';
             } else {
               return '<span></span>';
             }
@@ -87,13 +92,13 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             // tslint:disable-next-line:max-line-length
-            return `<a href="javascript:void(0);" customerId=${full.user.id}>${full.user.first_name} ${full.user.last_name} </a>`;
+            return `<a href="javascript:void(0);" customerId=${full.user_id}>${full.user.first_name} ${full.user.last_name} </a>`;
           }
         },
         {
-          data: 'user.dateOfBirth',
+          data: 'user.date_of_birth',
           title: 'Age',
-          render: function (data) {
+          render: function (data){
             if (data) {
               return moment().diff(data, 'years');
             } else {
@@ -106,7 +111,16 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             // tslint:disable-next-line:max-line-length
-            return `<a href="javascript:void(0);" medicineKitId=${full.medicineKit.id}>${full.medicineKit.name}</a>`;
+            return `<a href="javascript:void(0);" medicineKitId=${full.medicine_kit_id}>${full.medicine_kit_details.name}</a>`;
+          }
+        },
+        {
+          data:'total_amount',
+          title:'Total',
+          className: 'text-center',
+          render: function (data: any) {
+            const _helper = new Helper();
+            return _helper.getInINRFormat('INR', data);
           }
         },
         {
@@ -114,27 +128,15 @@ export class DoctorPrescribedOrdersComponent implements OnInit, AfterViewInit {
           title: 'Order Status',
           className: 'text-center',
           render: function (data) {
-            if (data == 1) {
-              return `<span class='badge badge-info'>${DOCTOR_STATUS[data]}</span>`;
-            } else if (data == 2) {
-              return `<span class='badge badge-success'>${DOCTOR_STATUS[data]}</span>`;
-            } else if (data == 4) {
-              return `<span class='badge badge-warning'>${DOCTOR_STATUS[data]}</span>`;
-            } else if (data == 5) {
-              return `<span class='badge badge-danger'>${DOCTOR_STATUS[data]}</span>`;
-            } else if (data == 6) {
-              return `<span class='badge badge-warning'>${DOCTOR_STATUS[data]}</span>`;
-            } else {
-              return '<span></span>';
-            }
+            return that._orderHelper.getDoctorStatus(data);
           }
         },
         {
-          data: 'createdOn',
+          data: 'order_place_datetime',
           title: 'Order Date',
           render: (data) => {
             if (data) {
-              return this.helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
+              return this.helper.getFormattedDate(data, 'DD-MM-YYYY hh:mm A');
             } else {
               return '<span></span>';
             }

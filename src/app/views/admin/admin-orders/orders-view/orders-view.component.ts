@@ -148,13 +148,13 @@ export class OrdersViewComponent implements OnInit {
   }
 
   gotoPatientDetails(){
-    this.router.navigate(['admin','patients','view',this.patient.id,'orders']);
+    this.router.navigate(['admin','patients','view',this.patient._id,'orders']);
   }
 
 
   getUserLastOrderDrugs() {
     this.drugRXCUI = '';
-    const url = 'api/orders/getUserLastOrderDrugs?user_id=' + this.patient.id;
+    const url = 'api/orders/getUserLastOrderDrugs?user_id=' + this.patient._id;
     this.http.post(url, {}).subscribe(
       (data: any) => {
         this.userDrugs = data;

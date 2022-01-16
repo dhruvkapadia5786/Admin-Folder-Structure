@@ -46,12 +46,12 @@ export class DrugFormsComponent implements OnInit,AfterViewInit,OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[4, 'desc']],
+      order: [[0, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/drugforms/list',
+            'api/productforms/list',
             dataTablesParameters,
             {}
           )
@@ -74,16 +74,6 @@ export class DrugFormsComponent implements OnInit,AfterViewInit,OnDestroy {
         {
           data: 'slug',
           title: 'Slug',
-          className: 'text-center  font-weight-normal'
-        },
-        {
-          data: 'singular',
-          title: 'singular',
-          className: 'text-center  font-weight-normal'
-        },
-        {
-          data: 'plural',
-          title: 'plural',
           className: 'text-center  font-weight-normal'
         },
         {

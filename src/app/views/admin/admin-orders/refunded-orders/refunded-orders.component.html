@@ -71,7 +71,7 @@
                                 </div>
                                 <div>
                                     <div class="text-right">
-                                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="goToOrderDetails(order.id)">View</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="goToOrderDetails(order._id)">View</button>
                                         <button *ngIf="order.full_refund_btn_enable" type="button" class="btn btn-outline-warning btn-sm" (click)="calculateRefundForOrder(order._id,'FULL')">Refund Order</button>
                                         <button *ngIf="!order.full_refund_btn_enable" type="button" class="btn btn-outline-warning btn-sm" (click)="calculateRefundForOrder(order._id,'PARTIAL')">Refund Order</button>
                                     </div>

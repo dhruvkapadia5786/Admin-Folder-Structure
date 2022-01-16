@@ -20,18 +20,30 @@
     </div>
 
 
-    <div class="col-md-4 col-12">
-       <label>Brand :</label>
-        <mat-select placeholder="Select Brand" class="form-control" formControlName="brand_id">
-          <mat-option *ngFor="let brand of brandsList" [value]="brand._id">
-            {{brand.name}}
-          </mat-option>
-        </mat-select>
-        <div class="invalid-feedback" *ngIf="brand_id?.invalid && (brand_id?.dirty || brand_id?.touched)"
-          class="text-danger font-weight-bold">
-          <div *ngIf="brand_id?.errors?.required">Brand is required.</div>
-        </div>
-    </div>
+      <div class="col-md-4 col-sm-12">
+          <div class="form-group">
+              <label>Brand :</label>
+              <mat-form-field class="w-100">
+                  <mat-select formControlName="brand_id" placeholder="">
+                    <mat-option>
+                      <ngx-mat-select-search
+                      [formControl]="brandFilteringCtrl"
+                      [searching]="searchingBrand"
+                      placeholderLabel="Find Brand..."
+                      noEntriesFoundLabel="'no matching brand found'"
+                      ></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand._id">
+                      {{brand.name}}
+                    </mat-option>
+                  </mat-select>
+              </mat-form-field>
+
+              <div class="invalid-feedback" *ngIf="brand_id?.invalid && (brand_id?.dirty || brand_id?.touched)" class="text-danger font-weight-bold">
+                <div *ngIf="brand_id?.errors?.required">Brand is required.</div>
+              </div>
+          </div>
+      </div>
 
       <div class="col-md-8 col-12">
         <label>Medicine Kit Name:</label>

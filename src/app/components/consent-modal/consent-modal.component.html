@@ -1,0 +1,23 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="font-weight-bold modal-title w-100" id="ModalTitle">
+            Send Consent Message
+        </h4>
+        <button (click)="closeModal()" type="button" id="ModalBtn" class="close float-right" aria-label="Close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="consentForm" (ngSubmit)="sendConsent(consentForm.valid)">
+              <input type="hidden" formControlName="answerId" />
+              <div class="form-group">
+                  <label class="float-left">Consent Message :</label>
+                  <textarea formControlName="consentMsg" class="form-control form-control-sm" rows="5"></textarea>
+                  <div class="invalid-feedback" *ngIf="consentMsg?.invalid && (consentMsg?.dirty || consentMsg?.touched)" class="text-danger">
+                    <div *ngIf="consentMsg?.errors?.required">Consent message is required.</div>
+                  </div>
+              </div>
+              <button type="submit" class="btn-primary btn btn-block btn-sm"  [disabled]="consentForm.invalid">Take Consent</button>
+        </form>
+    </div>
+</div>
