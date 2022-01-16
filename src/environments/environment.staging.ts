@@ -3,7 +3,7 @@
 export const environment = {
 	production: false,
 	current_environment:'local',
-  encryption_key:'teledaddyFloridaPatel_healthcare',
+  encryption_key:'Teledaddy_INDIA_Patel_Healthcare',
 	api_url: 'http://localhost:3001/',
   client_app_url: 'http://localhost:4200/',
 	stripeKey: 'pk_test_J1qdy5OTEEIhXIdoCT1arBrk',
