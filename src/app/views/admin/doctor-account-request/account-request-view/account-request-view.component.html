@@ -5,7 +5,7 @@
          <span *ngIf="doctorDetails.status=='APPROVED'" class="p-2 badge badge-pill badge-success mr-2">Approved</span>
          <span *ngIf="doctorDetails.status=='REJECTED'" class="p-2 badge  badge-pill  badge-danger mr-2">Rejected</span>
          <span *ngIf="doctorDetails.status=='PENDING'" class="p-2 badge  badge-pill  badge-warning mr-2">Pending</span>
-         <span *ngIf="doctorDetails.deleted==1" class="p-2 badge  badge-pill badge-danger mr-2">Deleted</span>
+         <span *ngIf="doctorDetails.deleted" class="p-2 badge  badge-pill badge-danger mr-2">Deleted</span>
          </h4>
 
          <div class="alert alert-success" role="alert" *ngIf="doctorDetails.teledaddy_doctor_id">
@@ -16,13 +16,13 @@
       </div>
       <div class="col-md-4 text-right">
         <button class="btn btn-info mr-2"  *ngIf="!doctorDetails.teledaddy_doctor_id" (click)="gotoEditAccountRequest()">Edit</button>
-        <a routerLink="/admin/account-request/registration/{{doctorId}}" class="btn btn-success mr-2" *ngIf="doctorDetails.status=='PENDING' && doctorDetails.deleted==0 && doctorDetails.updated_at && doctorDetails.portal_usage">Account Registration</a>
-        <button class="btn btn-danger mr-2" *ngIf="doctorDetails.status=='PENDING' && doctorDetails.deleted==0 " (click)="reject()" [disabled]="btnLoading">Reject</button>
-        <button class="btn btn-danger mr-2" *ngIf="doctorDetails.deleted==0" (click)="deleteRequest()" [disabled]="btnLoading">Delete</button>
+        <button class="btn btn-success mr-2" *ngIf="doctorDetails.status=='PENDING' && doctorDetails.deleted==null && doctorDetails.portal_usage!=null" (click)="approve()" [disabled]="btnLoading">Approve & Create Account</button>
+        <button class="btn btn-danger mr-2" *ngIf="doctorDetails.status=='PENDING' && !doctorDetails.deleted " (click)="reject()" [disabled]="btnLoading">Reject</button>
+        <button class="btn btn-danger mr-2" *ngIf="!doctorDetails.deleted" (click)="deleteRequest()" [disabled]="btnLoading">Delete</button>
       </div>
     </div>
 
-   <div class="row">
+   <div class="row" *ngIf="doctorDetails">
       <div class="col-md-6">
          <table class="table table-hover table-borderless">
             <thead class="thead-dark">
@@ -31,16 +31,22 @@
             </tr>
             </thead>
             <tbody>
-            <tr><td>Company Name</td><td>{{doctorDetails?.company_name}}</td></tr>
-            <tr><td>LLC Name</td><td>{{doctorDetails?.llc_name}}</td></tr>
-            <tr><td>First Name</td><td>{{doctorDetails?.first_name}}</td></tr>
-            <tr><td>Last Name</td><td>{{doctorDetails?.last_name}}</td></tr>
-            <tr><td>Suffix</td><td>{{doctorDetails?.suffix}}</td></tr>
-            <tr><td>Gender</td><td>{{getGender(doctorDetails?.gender)}}</td></tr>
-            <tr><td>Date of Birth</td><td>{{doctorDetails?.dateOfBirth}}</td></tr>
-            <tr><td>Email</td><td>{{doctorDetails?.email}}</td></tr>
-            <tr><td>Cell Phone Number</td><td>{{doctorDetails?.cell_phone_number}}</td></tr>
-            <tr><td>Fax</td><td>{{doctorDetails?.fax_number}}</td></tr>
+            <tr>
+            <td>Profile </td>
+            <td>
+              <app-image-preview [imgPath]="doctorDetails.profile_photo" height="200" width="200"></app-image-preview>
+            </td>
+            </tr>
+            <tr><td>First Name</td><td>{{doctorDetails.first_name}}</td></tr>
+            <tr><td>Middle Name</td><td>{{doctorDetails.middle_name}}</td></tr>
+            <tr><td>Last Name</td><td>{{doctorDetails.last_name}}</td></tr>
+            <tr><td>Prefix</td><td>{{doctorDetails.prefix}}</td></tr>
+            <tr><td>Suffix</td><td>{{doctorDetails.suffix}}</td></tr>
+            <tr><td>Gender</td><td>{{doctorDetails.gender}}</td></tr>
+            <tr><td>Date of Birth</td><td>{{doctorDetails.date_of_birth | date:'dd-MM-yyyy' }}</td></tr>
+            <tr><td>Email</td><td>{{doctorDetails.email}}</td></tr>
+            <tr><td>Cell Phone Number</td><td>{{doctorDetails.cell_phone_number}}</td></tr>
+            <tr><td>Fax</td><td>{{doctorDetails.fax_number}}</td></tr>
             </tbody>
          </table>
       </div>
@@ -53,13 +59,19 @@
             </tr>
             </thead>
             <tbody>
-            <tr><td>Work area</td><td>{{ doctorDetails?.workarea }}</td></tr>
-            <tr><td>Professional Liability Policy Number</td><td>{{doctorDetails?.professional_liability_policy_number}}</td></tr>
-            <tr><td>NPI Number</td><td>{{doctorDetails?.npi_number}}</td></tr>
-            <tr><td>DEA Number</td><td>{{doctorDetails?.dea_number}}</td></tr>
-            <tr><td>Check Payable To Name</td><td>{{doctorDetails?.check_payable_to_name}}</td></tr>
-            <tr><td>Professional Liability Document Expiry Date</td><td>{{doctorDetails?.professional_liability_document_expiry_date}}</td></tr>
-            <tr><td>Professional Liability Document</td><td> <img class="img-responsive license-image" [src]="imageUrl" (click)="open()" height="250px" width="250px" /></td></tr>
+            <tr><td>Category</td><td>{{ doctorDetails.category }}</td></tr>
+            <tr><td>Designation</td><td>{{doctorDetails.designation}}</td></tr>
+            <tr><td>Discipline</td><td>{{doctorDetails.discipline}}</td></tr>
+            <tr><td>Registration with</td><td>{{doctorDetails.registration_with}}</td></tr>
+            <tr><td>Check Payable To Name</td><td>{{doctorDetails.check_payable_to_name}}</td></tr>
+            <tr><td>Registration Date</td><td>{{doctorDetails.registration_date | date:'dd-MM-yyyy' }}</td></tr>
+            <tr><td>Registration number</td><td>{{ doctorDetails.registration_number }}</td></tr>
+            <tr>
+            <td>Registration Copy</td>
+            <td>
+                <app-image-preview  *ngIf="doctorDetails.registration_copy" [imgPath]="doctorDetails.registration_copy" height="200" width="200"></app-image-preview>
+            </td>
+            </tr>
             </tbody>
          </table>
       </div>
@@ -80,24 +92,24 @@
                   </tr>
                   </thead>
                   <tbody *ngIf="doctorDetails.selected_clinic_id==null">
-                        <tr><td>Clinic Name</td><td>{{doctorDetails?.clinic_name}}</td></tr>
-                        <tr><td>Clinic Name Long Form</td><td>{{doctorDetails?.clinic_long_name}}</td></tr>
-                        <tr><td>Clinic Phone</td><td>{{doctorDetails?.clinic_phone}}</td></tr>
-                        <tr><td>Address Line 1</td><td>{{doctorDetails?.clinic_address_line_1}}</td></tr>
-                        <tr><td>Address Line 2</td><td>{{doctorDetails?.clinic_address_line_2}}</td></tr>
-                        <tr><td>City</td><td>{{doctorDetails?.clinic_city_name}}</td></tr>
-                        <tr><td>State</td><td>{{doctorDetails?.clinic_state}}</td></tr>
-                        <tr><td>Zipcode</td><td>{{doctorDetails?.clinic_zip}}</td></tr>
+                        <tr><td>Clinic Name</td><td>{{doctorDetails.clinic_name}}</td></tr>
+                        <tr><td>Clinic Name Long Form</td><td>{{doctorDetails.clinic_long_name}}</td></tr>
+                        <tr><td>Clinic Phone</td><td>{{doctorDetails.clinic_phone}}</td></tr>
+                        <tr><td>Address Line 1</td><td>{{doctorDetails.clinic_address_line_1}}</td></tr>
+                        <tr><td>Address Line 2</td><td>{{doctorDetails.clinic_address_line_2}}</td></tr>
+                        <tr><td>City</td><td>{{doctorDetails.clinic_city_name}}</td></tr>
+                        <tr><td>State</td><td>{{doctorDetails.clinic_state}}</td></tr>
+                        <tr><td>Zipcode</td><td>{{doctorDetails.clinic_zip}}</td></tr>
                   </tbody>
                    <tbody *ngIf="doctorDetails.selected_clinic_id">
-                        <tr><td>Clinic Name</td><td>{{clinic?.clinic_name}}</td></tr>
-                        <tr><td>Clinic Name Long Form</td><td>{{clinic?.clinic_name_long_form}}</td></tr>
-                        <tr><td>Clinic Phone</td><td>{{clinic?.primary_phone}}</td></tr>
-                        <tr><td>Address Line 1</td><td>{{clinic?.address_line_1}}</td></tr>
-                        <tr><td>Address Line 2</td><td>{{clinic?.address_line_2}}</td></tr>
-                        <tr><td>City</td><td>{{clinic?.city}}</td></tr>
-                        <tr><td>State</td><td>{{clinic?.state}}</td></tr>
-                        <tr><td>Zipcode</td><td>{{clinic?.zipcode}}</td></tr>
+                        <tr><td>Clinic Name</td><td>{{clinic.clinic_name}}</td></tr>
+                        <tr><td>Clinic Name Long Form</td><td>{{clinic.clinic_name_long_form}}</td></tr>
+                        <tr><td>Clinic Phone</td><td>{{clinic.primary_phone}}</td></tr>
+                        <tr><td>Address Line 1</td><td>{{clinic.address_line_1}}</td></tr>
+                        <tr><td>Address Line 2</td><td>{{clinic.address_line_2}}</td></tr>
+                        <tr><td>City</td><td>{{clinic.city}}</td></tr>
+                        <tr><td>State</td><td>{{clinic.state}}</td></tr>
+                        <tr><td>Zipcode</td><td>{{clinic.zipcode}}</td></tr>
                   </tbody>
                </table>
             </div>
@@ -113,11 +125,11 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr><td>Address Line 1</td><td>{{doctorDetails?.residential_address_1}}</td></tr>
-                  <tr><td>Address Line 2</td><td>{{doctorDetails?.residential_address_2}}</td></tr>
-                  <tr><td>City</td><td>{{doctorDetails?.residential_city}}</td></tr>
-                  <tr><td>State</td><td>{{findStateNameById(doctorDetails?.residential_state_id)}}</td></tr>
-                  <tr><td>Zipcode</td><td>{{doctorDetails?.residential_zipcode}}</td></tr>
+                  <tr><td>Address Line 1</td><td>{{doctorDetails.residential_address.address_line_1}}</td></tr>
+                  <tr><td>Address Line 2</td><td>{{doctorDetails.residential_address.address_line_2}}</td></tr>
+                  <tr><td>City</td><td>{{doctorDetails.residential_address.city}}</td></tr>
+                  <tr><td>State</td><td>{{doctorDetails.residential_address.state}}</td></tr>
+                  <tr><td>Zipcode</td><td>{{doctorDetails.residential_address.zip_code}}</td></tr>
                   </tbody>
                </table>
             </div>
@@ -132,38 +144,36 @@
                   <tbody>
                   <tr><td>Address Line 1</td><td>{{practice_address.address_line_1}}</td></tr>
                   <tr><td>Address Line 2</td><td>{{practice_address.address_line_2}}</td></tr>
-                  <tr><td>City</td><td>{{practice_address?.city_name}}</td></tr>
-                  <tr><td>State</td><td>{{findStateNameById(practice_address.state_id)}}</td></tr>
+                  <tr><td>City</td><td>{{practice_address.city}}</td></tr>
+                  <tr><td>State</td><td>{{practice_address.state}}</td></tr>
                   <tr><td>Zipcode</td><td>{{practice_address.zip_code}}</td></tr>
                   </tbody>
                </table>
             </div>
          </div>
-   <hr>
-   <h5 class="font-weight-bold">Licenses</h5>
-   <hr>
-   <div *ngFor="let license of licenses;let i = index; ">
-         <div class="row">
-            <div class="col-md-4">
-               <label class="">License Number</label>
-               <div class="col-sm-8 p-1">
-                  <h4 class="pt-2">{{license.license_number}}</h4>
-               </div>
-            </div>
-            <div class="col-md-4">
-               <label class="">Expiry Date</label>
-               <div class="col-sm-8 p-1">
-                  <h4 class="pt-2">{{license.expiry_date | date:'DD-MM-YYYY'}}</h4>
-               </div>
-            </div>
-            <div class="col-md-4">
-               <label class="">State</label>
-               <div class="col-sm-8 p-1">
-                  <h4 class="pt-2">{{findStateNameById(license.state_id)}}</h4>
-               </div>
-            </div>
-         </div>
-   </div>
+
+
+  <div class="col-md-12">
+        <table class="table table-hover table-borderless">
+            <thead class="thead-dark">
+            <tr>
+                <th colspan="3"><h5 class="mb-0 text-white font-weight-bold">Licenses</h5></th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <th>License Number</th>
+                  <th>Expiry Date</th>
+                  <th>State</th>
+                </tr>
+                <tr  *ngFor="let license of licenses;let i = index; ">
+                  <td>{{license.license_number}}</td>
+                  <td>{{license.expiry_date | date:'dd-MM-yyyy'}}</td>
+                  <td>{{license.state_name}}</td>
+                </tr>
+            </tbody>
+        </table>
+  </div>
 
    <div class="form-group mt-1">
       <div class="row">

@@ -52,7 +52,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
 
 
   getImage(imageName:string){
-    if (imageName) {
+    if (imageName){
       this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(environment.api_url + imageName);
       this._albums = [];
       this._albums.push({
@@ -64,7 +64,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
   }
 
   open(){
-     if (this.isLightBox) {
+     if (this.isLightBox){
       this._lightbox.open(this._albums, 0, { centerVertically: true });
       return true;
     } else {

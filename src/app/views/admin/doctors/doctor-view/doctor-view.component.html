@@ -52,20 +52,26 @@
             <div class="table-responsive">
               <table class="table table-hover">
                 <tr>
-                  <td class="font-weight-bold">Company Name</td>
-                  <td class="font-weight-normal">{{doctorDetails.professional_details.company_name || '-'}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">LLC Name</td>
-                  <td class="font-weight-normal">{{doctorDetails.professional_details.llc_name || '-'}}</td>
+                  <td>Profile </td>
+                  <td>
+                    <app-image-preview [imgPath]="doctorDetails.profile_photo" height="200" width="200"></app-image-preview>
+                  </td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">First Name</td>
                   <td class="font-weight-normal">{{doctorDetails.first_name}}</td>
                 </tr>
                 <tr>
+                  <td class="font-weight-bold">Middle Name</td>
+                  <td class="font-weight-normal">{{doctorDetails.middle_name}}</td>
+                </tr>
+                <tr>
                   <td class="font-weight-bold">Last Name</td>
                   <td class="font-weight-normal">{{doctorDetails.last_name}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Prefix</td>
+                  <td class="font-weight-normal">{{doctorDetails.prefix}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Suffix</td>
@@ -130,27 +136,20 @@
                   <td class="font-weight-bold">Consultation Batch Size</td>
                   <td class="font-weight-normal"> {{doctorDetails.professional_details.consultation_batch_size}}</td>
                 </tr>
-                <tr>
-                  <td class="font-weight-bold">Policy Expiry Date</td>
-                  <td class="font-weight-normal"> {{helper.getFormattedDate(doctorDetails.professional_details.professional_liability_document_expiry_date)}}</td>
-                </tr>
+
                 <tr>
                   <td class="font-weight-bold">Check Payable To Name</td>
                   <td class="font-weight-normal"> {{doctorDetails.professional_details.check_payable_to_name || '-' }}</td>
                 </tr>
-                <tr>
-                  <td class="font-weight-bold">Professional Policy Liability Number</td>
-                  <td class="font-weight-normal">
-                    {{doctorDetails.professional_details.professional_liability_policy_number}}
-                  </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold" style="min-width: 200px;">Professional Policy Liability Document</td>
-                  <td class="font-weight-normal">
-                    <img class="img-responsive license-image" [src]="imageUrl"  height="250px"
-                      width="250px" />
-                      <!-- (click)="open()" -->
-                      <!-- <app-image-preview [imgPath]="imageUrl" height="250" width="250" caption="License Image"></app-image-preview> -->
+                <tr><td  class="font-weight-bold">Category</td><td  class="font-weight-normal">{{ doctorDetails.professional_details.category }}</td></tr>
+                <tr><td  class="font-weight-bold">Designation</td><td  class="font-weight-normal">{{doctorDetails.professional_details.designation}}</td></tr>
+                <tr><td  class="font-weight-bold">Discipline</td><td  class="font-weight-normal">{{doctorDetails.professional_details.discipline}}</td></tr>
+                <tr><td  class="font-weight-bold">Registration with</td><td  class="font-weight-normal">{{doctorDetails.professional_details.registration_with}}</td></tr>
+                <tr><td  class="font-weight-bold">Check Payable To Name</td><td  class="font-weight-normal">{{doctorDetails.professional_details.check_payable_to_name}}</td></tr>
+                <tr   *ngIf="doctorDetails.registration_copy">
+                  <td>Registration Copy</td>
+                  <td>
+                      <app-image-preview [imgPath]="doctorDetails.registration_copy" height="200" width="200"></app-image-preview>
                   </td>
                 </tr>
               </table>

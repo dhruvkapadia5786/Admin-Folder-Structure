@@ -66,7 +66,7 @@ export class AccountRequestListComponent implements OnInit, AfterViewInit,OnDest
       },
       columns: [
         {
-          data: 'id',
+          data: '_id',
           title: 'Id',
           className: 'text-center  font-weight-normal',
         },
@@ -121,7 +121,7 @@ export class AccountRequestListComponent implements OnInit, AfterViewInit,OnDest
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<button class="btn btn-default btn-sm m-0" doctorID=${full.id}><i class="fa fa-eye"></i></button>`;
+            return `<button class="btn btn-default btn-sm m-0" doctorID=${full._id}>View <i class="fas fa-eye"></i></button>`;
           },
           orderable: false
         }
@@ -152,7 +152,6 @@ export class AccountRequestListComponent implements OnInit, AfterViewInit,OnDest
     if (this.blockDataTable) { this.blockDataTable.unsubscribe(); }
     this.listenerFn();
   }
-
 
   goToDetailsPage(doctorID: any): any {
     this.router.navigate(['admin', 'account-request', 'view', doctorID]);

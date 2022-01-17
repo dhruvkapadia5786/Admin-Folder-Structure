@@ -6,36 +6,25 @@
     <!-- Personal Details -->
     <div class="alert alert-warning my-3">
       <h5 class="font-weight-bold mb-3">Personal Details</h5>
-      <div class="row">
-        <div class="col-md-6">
-          <label class="float-left">Company Name</label>
-          <input type="text" id="company_name" class="form-control" placeholder="Enter Company Name"
-            formControlName="company_name" />
-          <div class="invalid-feedback" *ngIf="company_name?.invalid && (company_name?.dirty || company_name?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="company_name?.errors?.required">Company name is required.</div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <label class="float-left">LLC Name</label>
-          <input type="text" id="llc_name" formControlName="llc_name" class="form-control input-lg"
-            placeholder="Enter LLC Name" />
-          <div class="invalid-feedback" *ngIf="llc_name?.invalid && (llc_name?.dirty || llc_name?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="llc_name?.errors?.required">LLC name is required.</div>
-          </div>
-        </div>
-      </div>
 
       <div class="row">
         <div class="col-md-4">
-          <label class="float-left">First Name</label>
-          <input type="text" id="first_name" class="form-control" placeholder="Enter First Name"
-            formControlName="first_name" />
-          <div class="invalid-feedback" *ngIf="first_name?.invalid && (first_name?.dirty || first_name?.touched)"
-            class="text-danger font-weight-bold">
-            <div *ngIf="first_name?.errors?.required">First name is required.</div>
-          </div>
+              <label class="float-left">First Name</label>
+              <input type="text" id="first_name" class="form-control" placeholder="Enter First Name" formControlName="first_name" />
+              <div class="invalid-feedback" *ngIf="first_name?.invalid && (first_name?.dirty || first_name?.touched)"  class="text-danger font-weight-bold">
+                <div *ngIf="first_name?.errors?.required">First name is required.</div>
+              </div>
+        </div>
+        <div class="col-md-4">
+              <div class="form-group">
+                <label>Middle Name</label>
+                <input type="text" id="middle_name" class="form-control" placeholder="Enter Middle Name"
+                  formControlName="middle_name" />
+                <div class="invalid-feedback" *ngIf="middle_name?.invalid && (middle_name?.dirty || middle_name?.touched)"
+                  class="text-danger">
+                  <div *ngIf="middle_name?.errors?.required">Middle name is required.</div>
+                </div>
+              </div>
         </div>
         <div class="col-md-4">
           <label class="float-left">Last Name</label>
@@ -46,29 +35,50 @@
             <div *ngIf="last_name?.errors?.required">Last name is required.</div>
           </div>
         </div>
-        <div class="col-md-4">
-          <label class="float-left">Suffix</label>
-          <select id="suffix" formControlName="suffix" class="form-control" placeholder="Enter Suffix">
-            <option value="R.PH">R.PH</option>
-            <option value="MD">MD</option>
-            <option value="DO">DO</option>
-            <option value="DDS">DDS</option>
-            <option value="DMD">DMD</option>
-            <option value="DVM">DVM</option>
-            <option value="DPM">DPM</option>
-            <option value="OD">OD</option>
-            <option value="NP">NP</option>
-            <option value="PA">PA</option>
-            <option value="RN">RN</option>
-            <option value="LVN">LVN</option>
-            <option value="LPN">LPN</option>
-            <option value="Other">Other</option>
-          </select>
-          <div class="invalid-feedback" *ngIf="suffix?.invalid && (suffix?.dirty || suffix?.touched)" class="text-danger font-weight-bold">
-            <div *ngIf="suffix?.errors?.required">Suffix is required.</div>
-          </div>
-        </div>
       </div>
+
+       <div class="form-row">
+              <div class="col">
+                <div class="form-group">
+                  <label>Prefix</label>
+                  <select id="prefix" formControlName="prefix" class="form-control" placeholder="Enter Prefix">
+                    <option value="Dr.">Dr.</option>
+                    <option value="Prof.">Prof.</option>
+                    <option value="Mr.">Mr.</option>
+                    <option value="Ms.">Ms.</option>
+                    <option value="Mrs.">Mrs.</option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="prefix?.invalid && (prefix?.dirty || prefix?.touched)"
+                    class="text-danger">
+                    <div *ngIf="prefix?.errors?.required">Prefix is required.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label>Suffix</label>
+                  <select id="suffix" formControlName="suffix" class="form-control" placeholder="Enter Suffix">
+                    <option value="BAMS">BAMS</option>
+                    <option value="BHMS">BHMS</option>
+                    <option value="BUMS">BUMS</option>
+                    <option value="BSMS">BSMS</option>
+                    <option value="BYNS">BYNS</option>
+                    <option value="BDS">BDS</option>
+                    <option value="MBBS">MBBS</option>
+                    <option value="MD">MD</option>
+                    <option value="MS">MS</option>
+                    <option value="DO">DO</option>
+                    <option value="R.PH">R.PH</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="suffix?.invalid && (suffix?.dirty || suffix?.touched)"
+                    class="text-danger">
+                    <div *ngIf="suffix?.errors?.required">Suffix is required.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
 
       <div class="row">
         <div class="col-md-6">
@@ -160,86 +170,171 @@
       </div>
     </div>
 
-    <div class="alert alert-success my-3">
-      <h5 class="font-weight-bold mb-3">Professional Details</h5>
-      <div class="form-group">
-        <div class="form-row">
-          <div class="col-md-6">
-            <label class="float-left">Professional Liability Policy Number</label>
-            <input type="text" id="professional_liability_policy_number" class="form-control"
-              placeholder="Enter Professional Liability Policy Number"
-              formControlName="professional_liability_policy_number" />
-            <div class="invalid-feedback"
-              *ngIf="professional_liability_policy_number?.invalid && (professional_liability_policy_number?.dirty || professional_liability_policy_number?.touched)"
-              class="text-danger font-weight-bold">
-              <div *ngIf="professional_liability_policy_number?.errors?.required">Professional liability policy number is
-                required.</div>
-            </div>
+      <div class="alert alert-success my-3">
+        <h5 class="font-weight-bold mb-3">Professional Details</h5>
+
+          <div class="form-group">
+            <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+              formControlName="portal_usage">
+              <mat-radio-button class="example-radio-button" value="DTC" color='primary'>
+                DTC (Direct To Consumer)
+              </mat-radio-button> &nbsp;
+              <mat-radio-button class="example-radio-button" value="CONSULTATION" color='primary'>
+                Consultation
+              </mat-radio-button>&nbsp;
+              <mat-radio-button class="example-radio-button" value="DTC_CONSULTATION" color='primary'>
+                DTC (Direct To Consumer) & Consultation Both
+              </mat-radio-button>
+            </mat-radio-group>
           </div>
-          <div class="col-md-6">
-            <label class="float-left">Registration Number</label>
-            <input type="text" id="registration_number" formControlName="registration_number" class="form-control input-lg"
-              placeholder="Enter Registration Number" />
-            <div class="invalid-feedback" *ngIf="registration_number?.invalid && (registration_number?.dirty || registration_number?.touched)"
-              class="text-danger font-weight-bold">
-              <div *ngIf="registration_number?.errors?.required">Registration number is required.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="form-row">
-          <div class="col-md-6">
-            <label class="float-left">Registration Date</label>
-            <input  class="form-control"  type="text"  placeholder="Enter Registration Date" formControlName="registration_date" bsDatepicker [maxDate]="maxDate"  [bsConfig]="bsConfig"/>
-          </div>
-          <div class="col-md-6">
-            <label class="float-left">Check Payable To Name</label>
-            <input type="text" id="check_payable_to_name" class="form-control" placeholder="Enter Check Payable To Name"
-              formControlName="check_payable_to_name" />
-            <div class="invalid-feedback"
-              *ngIf="check_payable_to_name?.invalid && (check_payable_to_name?.dirty || check_payable_to_name?.touched)"
-              class="text-danger font-weight-bold">
-              <div *ngIf="check_payable_to_name?.errors?.required">Check payable to name is required.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="form-row">
-          <div class="col-md-6">
-            <label class="float-left">Professional Liability Document</label>
-            <input type="file" id="professional_liability_document" class="form-control"
-              placeholder="Enter Rate Per Prescription" formControlName="professional_liability_document"
-              (change)="onFileSelect($event)" />
-            <div class="invalid-feedback"
-              *ngIf="professional_liability_document?.invalid && (professional_liability_document?.dirty || professional_liability_document?.touched)"
-              class="text-danger font-weight-bold">
-              <div *ngIf="professional_liability_document?.errors?.required">Professional liability document is required.
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6"
+                *ngIf="addDoctor.get('portal_usage')?.value=='DTC' || addDoctor.get('portal_usage')?.value=='DTC_CONSULTATION'">
+                <label>Treatment Conditions List</label>
+                <mat-select formControlName="treatment_conditions" class="form-control" multiple>
+                  <mat-option *ngFor="let condition of treatmentConditionsList" [(value)]="condition._id" color='primary'>
+                    {{condition.name}}</mat-option>
+                </mat-select>
+                <div class="invalid-feedback"
+                  *ngIf="treatment_conditions?.invalid && (treatment_conditions?.dirty || treatment_conditions?.touched)"
+                  class="text-danger">
+                  <div *ngIf="treatment_conditions?.errors?.required">Treatment is required.</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="col-md-6">
-            <label class="float-left">Professional Liability Document Expiry Date</label>
-            <input  class="form-control"  type="text"  placeholder="Ente Expiry date" formControlName="professional_liability_document_expiry_date" bsDatepicker  [bsConfig]="bsConfig"/>
-            <div class="invalid-feedback"
-              *ngIf="professional_liability_document_expiry_date?.invalid && (professional_liability_document_expiry_date?.dirty || professional_liability_document_expiry_date?.touched)"
-              class="text-danger font-weight-bold">
-              <div *ngIf="professional_liability_document_expiry_date?.errors?.required">Professional liability document
-                expiry
-                date is required.</div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6"
+                *ngIf="addDoctor.get('portal_usage')?.value=='CONSULTATION' || addDoctor.get('portal_usage')?.value=='DTC_CONSULTATION'">
+                <label>Health Conditions List</label>
+                <mat-select formControlName="consultation_health_conditions" class="form-control" multiple>
+                  <mat-option *ngFor="let healthCond of consultationHealthConditionsList" [(value)]="healthCond._id"
+                    color='primary'>{{healthCond.name}}</mat-option>
+                </mat-select>
+                <div class="invalid-feedback"
+                  *ngIf="consultation_health_conditions?.invalid && (consultation_health_conditions?.dirty || consultation_health_conditions?.touched)"
+                  class="text-danger">
+                  <div *ngIf="consultation_health_conditions?.errors?.required">Health Condition is required.</div>
+                </div>
+              </div>
             </div>
           </div>
 
-        </div>
+          <div class="form-row">
+              <div class="col">
+                    <div class="form-group">
+                      <label>Category</label>
+                      <select  id="category" formControlName="category" class="form-control" placeholder="Enter Category">
+                                  <option value="Government/Public">Government/Public</option>
+                                  <option value="Private">Private</option>
+                                  <option value="Both">Both</option>
+                      </select>
+                      <div class="invalid-feedback" *ngIf="category?.invalid && (category?.dirty || category?.touched)" class="text-danger">
+                        <div *ngIf="category?.errors?.required">category is required.</div>
+                      </div>
+                    </div>
+              </div>
+              <div class="col">
+                    <div class="form-group">
+                          <label>Designation</label>
+                          <select  id="designation" formControlName="designation" class="form-control" placeholder="Enter designation">
+                              <option [value]="option" *ngFor="let option of designationArray">{{option}}</option>
+                          </select>
+                          <div class="invalid-feedback" *ngIf="designation?.invalid && (designation?.dirty || designation?.touched)"
+                            class="text-danger">
+                            <div *ngIf="designation?.errors?.required">Designation is required.</div>
+                          </div>
+                    </div>
+              </div>
+              <div class="col">
+                    <div class="form-group">
+                          <label>Discipline</label>
+                          <select  id="discipline" formControlName="discipline" class="form-control" placeholder="Enter discipline">
+                                  <option [value]="option" *ngFor="let option of disciplineArray">{{option}}</option>
+                          </select>
+                          <div class="invalid-feedback" *ngIf="discipline?.invalid && (discipline?.dirty || discipline?.touched)"
+                            class="text-danger">
+                            <div *ngIf="discipline?.errors?.required">Discipline is required.</div>
+                          </div>
+                    </div>
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="col">
+                    <div class="form-group">
+                          <label>Registration with</label>
+                          <select  id="registration_with" formControlName="registration_with" class="form-control" placeholder="Enter registration_with">
+                                  <option [value]="option" *ngFor="let option of registrationWithArray">{{option}}</option>
+                          </select>
+                          <div class="invalid-feedback" *ngIf="registration_with?.invalid && (registration_with?.dirty || registration_with?.touched)"
+                            class="text-danger">
+                            <div *ngIf="registration_with?.errors?.required">registration with is required.</div>
+                          </div>
+                    </div>
+              </div>
+              <div class="col">
+                    <div class="form-group">
+                          <label>Registration Number</label>
+                          <input type="text" id="registration_number" formControlName="registration_number" class="form-control" placeholder="Enter Registration Number"/>
+                          <div class="invalid-feedback" *ngIf="registration_number?.invalid && (registration_number?.dirty || registration_number?.touched)" class="text-danger">
+                            <div *ngIf="registration_number?.errors?.required">Registration Number is required.</div>
+                          </div>
+                    </div>
+              </div>
+              <div class="col">
+                    <div class="form-group">
+                          <label>Registration Date</label>
+                          <input type="text"  placeholder="Enter Registration Date" formControlName="registration_date" bsDatepicker  class="form-control" [maxDate]="maxDate"  placeholder="DD-MM-YYYY" [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', isAnimated: true  }"/>
+                          <div class="invalid-feedback" *ngIf="registration_date?.invalid && (registration_date?.dirty || registration_date?.touched)" class="text-danger">
+                            <div *ngIf="registration_date?.errors?.pattern">Please enter Registration Date</div>
+                          </div>
+                    </div>
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="col">
+                    <div class="form-group">
+                          <label>Scanned Copy of Registration </label>
+                          <input type="file" id="registration_copy" class="form-control" placeholder="Enter Rate Per Prescription" formControlName="registration_copy" (change)="onFileSelect($event,'registration_copy')" />
+                          <div class="invalid-feedback" *ngIf="registration_copy?.invalid && (registration_copy?.dirty || registration_copy?.touched)"
+                            class="text-danger">
+                            <div *ngIf="registration_copy?.errors?.required">Scanned Copy of Registration is required.</div>
+                          </div>
+                    </div>
+              </div>
+              <div class="col">
+                    <div class="form-group">
+                          <label>Check Payable To Name</label>
+                          <input type="text" id="check_payable_to_name" class="form-control" placeholder="Enter Check Payable To Name" formControlName="check_payable_to_name" />
+                          <div class="invalid-feedback" *ngIf="check_payable_to_name?.invalid && (check_payable_to_name?.dirty || check_payable_to_name?.touched)"
+                            class="text-danger">
+                            <div *ngIf="check_payable_to_name?.errors?.required">Check payable to name is required.</div>
+                          </div>
+                    </div>
+              </div>
+          </div>
       </div>
-    </div>
 
     <div class="alert alert-secondary my-3">
       <h5 class="font-weight-bold mb-3">Rate</h5>
       <div class="form-group">
         <div class="form-row">
+          <div class="col-md-4">
+                <label class="float-left">Rate Per Prescription</label>
+                <input type="text" id="rate_per_prescription" class="form-control" placeholder="Enter Rate Per Prescription"
+                  formControlName="rate_per_prescription" />
+                <div class="invalid-feedback"
+                  *ngIf="rate_per_prescription?.invalid && (rate_per_prescription?.dirty || rate_per_prescription?.touched)"
+                  class="text-danger">
+                  <div *ngIf="rate_per_prescription?.errors?.required">Rate per prescription is required.</div>
+                </div>
+          </div>
           <div class="col-md-3">
             <label class="float-left">Order Batch Size</label>
             <input type="number" id="order_batch_size" formControlName="order_batch_size" class="form-control input-lg"

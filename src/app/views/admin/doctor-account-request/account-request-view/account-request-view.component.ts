@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Lightbox } from 'ngx-lightbox';
 import { Toastr } from 'src/app/services/toastr.service';
 import {ClinicService} from '../../clinic/clinic.service';
 
@@ -13,7 +12,6 @@ import {ClinicService} from '../../clinic/clinic.service';
 })
 export class AccountRequestViewComponent implements OnInit{
 
-  states:any[]=[];
   doctorId: any;
   doctorDetails: any;
   practice_addresses:any;
@@ -23,59 +21,21 @@ export class AccountRequestViewComponent implements OnInit{
   loading=false;
   btnLoading=false;
 
-  imageUrl: any = '../../../../assets/img/no-image.png';
-  _albums = [{
-    src: this.imageUrl,
-    caption: 'License image',
-    thumb: this.imageUrl
-  }];
-
-
   constructor(
     public http: HttpClient,
     private route: ActivatedRoute,
     private clinicService:ClinicService,
     private router: Router,
     private _toastr:Toastr,
-    private sanitizer: DomSanitizer,
-    private _lightbox: Lightbox
-  ) {
+    private sanitizer: DomSanitizer){
     this.doctorId = this.route.snapshot.params.id;
   }
 
-  ngOnInit() {
-    this._getStates();
+  ngOnInit(){
     this.getDoctorDetails();
   }
 
-  async getImage(path: string) {
-    await this.http.post('api/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
-      const fr = new FileReader();
-      fr.readAsDataURL(result);
-      fr.onloadend = () => {
-        this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(fr.result + '');
-        this._albums = [];
-        this._albums.push({
-          src: this.imageUrl,
-          caption: 'License image',
-          thumb: this.imageUrl
-        });
-      }
-    })
-      .catch(err => {
-        this.imageUrl = 'assets/img/no-image.png';
-        this._albums = [];
-        this._albums.push({
-          src: this.imageUrl,
-          caption: 'License image',
-          thumb: this.imageUrl
-        });
-        //
-      })
-  }
-
-
-  getDoctorDetails() {
+  getDoctorDetails(){
     this.loading=true;
     const url = 'api/doctor_account_requests/view/' + this.doctorId;
     this.http.get(url).subscribe((doctor: any) => {
@@ -83,31 +43,17 @@ export class AccountRequestViewComponent implements OnInit{
         if(doctor.selected_clinic_id){
           this.getClinicDetails(doctor.selected_clinic_id);
         }
-        this.practice_addresses = JSON.parse(doctor.practice_addresses);
-        this.licenses= JSON.parse(doctor.licenses);
-        if (this.doctorDetails.professional_liability_document) {
-          this.getImage(this.doctorDetails.professional_liability_document);
-        }
+        this.practice_addresses = doctor.practice_addresses;
+        this.licenses= doctor.licenses;
         this.loading=false;
       }, err => {
         this.loading=false;
-
       });
   }
 
-  async getClinicDetails(clinicId:number){
+  async getClinicDetails(clinicId:any){
     let details:any = await this.clinicService.viewClinicByDoesspotClinicId(clinicId).catch((e:any)=>e);
     this.clinic = details;
-  }
-
-  async _getStates() {
-    const url = 'api/states/active';
-    this.http.get(url).subscribe(
-      (data: any) => {
-        this.states = data;
-      },
-      (err) => { }
-    );
   }
 
   gotoEditAccountRequest(){
@@ -142,10 +88,6 @@ export class AccountRequestViewComponent implements OnInit{
     );
   }
 
-  getGender(data:number){
-    if(data==1){return 'Male';}
-    else {return 'Female';}
-  }
 
   async approve() {
     this.btnLoading=true;
@@ -166,16 +108,5 @@ export class AccountRequestViewComponent implements OnInit{
     );
   }
 
-  findStateNameById(state_id:number){
-    let stateFound=this.states.find((state:any)=>{return state.id==state_id});
-    return stateFound.name;
-  }
 
-  open(): void {
-    this._lightbox.open(this._albums, 0, { centerVertically: true });
-  }
-
-  close(){
-    this._lightbox.close();
-  }
 }

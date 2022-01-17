@@ -13,10 +13,9 @@ import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.m
 import { ClinicService } from '../clinic/clinic.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [DoctorAccountRequestComponent,AccountRequestListComponent,AccountRequestViewComponent, AccountRequestEditComponent],
@@ -27,7 +26,8 @@ import { MatSelectModule } from '@angular/material/select';
     NgxMaskModule,
     DataTablesModule,
     MatTabsModule,MatRadioModule,
-    MatDatepickerModule, MatNativeDateModule,
+    BsDatepickerModule.forRoot(),
+		DatepickerModule.forRoot(),
     MatCheckboxModule, MatSelectModule ,
     FormsModule,ReactiveFormsModule,
     ImagePreviewModule
