@@ -36,8 +36,6 @@ export class KitsDrugsComponent implements OnInit, AfterViewInit {
       this.router.navigate(['admin', 'states'], { queryParams: { [paramName]: paramValue}});
     } else if (type == 'MEDICINE_KIT') {
       this.router.navigate(['admin', 'medicine-kits', 'list'], { queryParams: { [paramName]: paramValue}});
-    } else if (type == 'DIGITAL_THERAPY') {
-      this.router.navigate(['admin', 'digital-therapies', 'list'], { queryParams: { [paramName]: paramValue}});
     } else if (type == 'DRUGS') {
       this.router.navigate(['admin', 'druginfo', 'list'], { queryParams: { [paramName]: paramValue}});
     } else if (type == 'DOCTOR') {
@@ -52,9 +50,7 @@ export class KitsDrugsComponent implements OnInit, AfterViewInit {
       this.router.navigate(['admin', 'clinic', 'list'], { queryParams: { [paramName]: paramValue}});
     } else if (type == 'HEALTH_CONDITION') {
       this.router.navigate(['admin', 'health-conditions'], { queryParams: { [paramName]: paramValue}});
-    } else if (type == 'DIGITAL_THERAPY_CATEGORIES') {
-      this.router.navigate(['admin', 'digital-therapy-categories'], { queryParams: { [paramName]: paramValue}});
-    } else if (type == 'TREATMENT_CONDITION') {
+    }else if (type == 'TREATMENT_CONDITION') {
       this.router.navigate(['admin', 'conditions', 'list'], { queryParams: { [paramName]: paramValue}});
     } else if (type == 'OTC_CATEGORIES') {
       this.router.navigate(['admin', 'otc-categories'], { queryParams: { [paramName]: paramValue}});

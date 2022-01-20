@@ -21,7 +21,6 @@ export class EditCouponCodeComponent implements OnInit {
   public discountType: any;
   public statesList: any[] = [];
   public kitList:any[]=[];
-  public digitalTherapyList:any[]=[];
   public healthKitList: any=[];
   public categoryList: any = [
     { 'name': 'Pharmacy Order', 'value': 'PHARMACY_ORDER'},
