@@ -70,69 +70,8 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="npi_number">NPI Number</label>
-                <input type="text" class="form-control" id="npi_number" placeholder="Enter NPI Number" formControlName="npi_number">
-                <div class="invalid-feedback" *ngIf="npi_number?.invalid && (npi_number?.dirty || npi_number?.touched)" class="text-danger font-weight-bold">
-                  <div *ngIf="npi_number?.errors?.required">NPI number is required.</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="dea_number">DEA Number</label>
-                <input type="text" class="form-control" placeholder="Enter DEA Number" id="dea_number" formControlName="dea_number">
-                <div class="invalid-feedback" *ngIf="dea_number?.invalid && (dea_number?.dirty || dea_number?.touched)" class="text-danger font-weight-bold">
-                  <div *ngIf="dea_number?.errors?.required">DEA number is required.</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="ncpdp">NCPDP</label>
-                <input type="text" class="form-control" placeholder="Enter NCPDP" id="ncpdp" formControlName="ncpdp">
-                <div class="invalid-feedback" *ngIf="ncpdp?.invalid && (ncpdp?.dirty || ncpdp?.touched)" class="text-danger font-weight-bold">
-                  <div *ngIf="ncpdp?.errors?.required">NCPDP is required.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="professional_liability_policy_number">Professional Liability Policy Number</label>
-                <input type="text" class="form-control" placeholder=" Enter Professional Liability Policy Number" id="professional_liability_policy_number" formControlName="professional_liability_policy_number">
-                <div class="invalid-feedback" *ngIf="professional_liability_policy_number?.invalid && (professional_liability_policy_number?.dirty || professional_liability_policy_number?.touched)" class="text-danger font-weight-bold">
-                  <div *ngIf="professional_liability_policy_number?.errors?.required">Professional liability policy number is required.</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="professional_liability_document">Professional Liability Policy Document</label>
-                <img class="rounded shadow" id="image_url" [(src)]="lbDocImageUrl" alt="image" style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
-                <input type="file" class="form-control" id="professional_liability_document" placeholder="Professional Liability Policy Document" formControlName="professional_liability_document"
-                  (change)="onFileSelect($event)">
-                <div class="invalid-feedback" *ngIf="professional_liability_document?.invalid && (professional_liability_document?.dirty || professional_liability_document?.touched)"
-                  class="text-danger font-weight-bold">
-                  <div *ngIf="professional_liability_document?.errors?.required">Professional liability policy document is required.</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="professional_liability_policy_expiry">Professional Liability Policy Expiry</label>
-                <input [matDatepicker]="policyExpiryPicker" (click)="policyExpiryPicker.open()" class="form-control input-lg" formControlName='professional_liability_policy_expiry'
-                  placeholder="MM/DD/YYYY" mask="09/09/0000">
-                <mat-datepicker #policyExpiryPicker></mat-datepicker>
-                <div class="invalid-feedback" *ngIf="professional_liability_policy_expiry?.invalid && (professional_liability_policy_expiry?.dirty || professional_liability_policy_expiry?.touched)" class="text-danger font-weight-bold">
-                  <div *ngIf="professional_liability_policy_expiry?.errors?.required">Please select policy expiry date.</div>
-                </div>
-              </div>
-            </div>
-          </div>
+
+
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
@@ -309,10 +248,46 @@
             </div>
         </div>
       </div>
-
       <div class="text-center">
           <button type="button" class="btn btn-sm btn-outline-primary" (click)="addNewLicense()"><i class="fa fa-plus mr-2"></i> Add New License</button>
       </div>
+
+
+      <div class="bg-dark-grey text-white p-3 mt-3">
+        <b>Other Details</b>
+      </div>
+
+      <div formArrayName="other_details">
+        <div class="mb-3 alert alert-light" *ngFor="let keypair of getKeyValuePairsControls(); let keyInd = index" [formGroupName]="keyInd">
+            <div class="row">
+                  <div class="col-sm-5">
+                        <div class="form-group">
+                          <label for="key">Key</label>
+                          <input type="text" class="form-control" id="key" placeholder="Enter Key" formControlName="key" />
+                          <div class="invalid-feedback" *ngIf="keypair.get('key')?.invalid && (keypair.get('key')?.dirty || keypair.get('key')?.touched)" class="text-danger font-weight-bold">
+                            <div *ngIf="keypair.get('key')?.errors?.required">Key is required.</div>
+                          </div>
+                        </div>
+                  </div>
+                  <div class="col-sm-5">
+                        <div class="form-group">
+                          <label for="value">Value</label>
+                          <input type="text" class="form-control" id="value" placeholder="Enter Value" formControlName="value" />
+                          <div class="invalid-feedback" *ngIf="keypair.get('value')?.invalid && (keypair.get('value')?.dirty || keypair.get('value')?.touched)" class="text-danger font-weight-bold">
+                            <div *ngIf="keypair.get('value')?.errors?.required">Value is required.</div>
+                          </div>
+                        </div>
+                  </div>
+                  <div class="col-sm-2">
+                        <button class="btn-sm btn-danger" (click)="removeKeyValuePair(keyInd)"><i class="fa fa-trash"></i></button>
+                  </div>
+            </div>
+        </div>
+      </div>
+      <div class="text-center">
+          <button type="button" class="btn btn-sm btn-outline-primary" (click)="addNewKeyValuePair()"><i class="fa fa-plus mr-2"></i> Add More Details</button>
+      </div>
+
 
       <div class="row mt-5 p-3 bg-dark-grey">
         <div class="col-sm-12 text-center">

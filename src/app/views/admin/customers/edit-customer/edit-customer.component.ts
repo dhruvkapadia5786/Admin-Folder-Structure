@@ -83,12 +83,10 @@ export class EditCustomerComponent implements OnInit {
     const url = 'api/customers/update/' + this.customerId;
     this.http.post(url,this.editPatient.value).subscribe((res: any) => {
         if (res != null) {
-          if (res.errno != null) {
-            this._toastr.showError(res.sqlMessage);
-          } else {
+
             this._router.navigate(['admin', 'patients', 'view', this.customerId, 'orders']);
             this._toastr.showSuccess('Save Successfully');
-          }
+
         }
         this._changeDetectorRef.detectChanges();
       },

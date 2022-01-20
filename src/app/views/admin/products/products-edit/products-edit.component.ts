@@ -1108,15 +1108,8 @@ handleTypeChange(attributeIndex:number,event:any){
     const req = fd;
     this.http.post(url, req).subscribe(
       (data: any) => {
-        if (data != null) {
-          if (data.errno != null) {
-            this._toastr.showError(data.sqlMessage);
-          } else {
-            this._router.navigate(['/admin/products/list'],{ replaceUrl: true });
-            this._toastr.showSuccess('Update Successfully');
-          }
-          this.changeDetectorRef.detectChanges();
-        }
+          this._router.navigate(['/admin/products/list'],{ replaceUrl: true });
+          this._toastr.showSuccess('Update Successfully');
       },
       (err:any) => {
         this._toastr.showError('Unable to update product.');

@@ -555,12 +555,10 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
     this.http.post(url, req).subscribe(
       (data: any) => {
         if (data != null) {
-          if (data.errno != null) {
-            this._toastr.showError(data.sqlMessage);
-          } else {
+
             this._router.navigate(['/admin/medicine-kits/list'],{ replaceUrl: true });
             this._toastr.showSuccess('Save Successfully');
-          }
+
           this.changeDetectorRef.detectChanges();
         }
       },

@@ -4,7 +4,7 @@ import { Toastr } from '../../../../services/toastr.service';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AdminPharmacyDetails } from '../../../../models/admin/AdminPharmacy';
-import { environment } from 'src/environments/environment'; 
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-pharmacy-edit',
@@ -13,8 +13,6 @@ import { environment } from 'src/environments/environment';
 })
 export class PharmacyEditComponent implements OnInit {
   public addPharmacyForm!: FormGroup;
-  public practiceAddressFormGroup!: FormGroup;
-  // public licenseFormGroup: FormGroup;
   public pharmacyObj!: AdminPharmacyDetails;
   public pharmacyObjClone!: AdminPharmacyDetails;
   public states!: any[];
@@ -66,8 +64,7 @@ export class PharmacyEditComponent implements OnInit {
     public cdr: ChangeDetectorRef,
     public toastr: Toastr,
     public router: Router,
-    public activeRoute: ActivatedRoute
-  ) {
+    public activeRoute: ActivatedRoute){
     this.pharmacyId = this.activeRoute.snapshot.paramMap.get('id');
     // initialize form
     this.initializeForm();
@@ -75,10 +72,11 @@ export class PharmacyEditComponent implements OnInit {
     this.getPharmacy();
   }
 
-  ngOnInit() {
+  ngOnInit(){
+
   }
 
-  initializeForm() {
+  initializeForm(){
     this.addPharmacyForm = new FormGroup({
       'pharmacy_name': new FormControl(null, [Validators.required]),
       'pharmacy_type': new FormControl(null, [Validators.required]),
@@ -86,29 +84,14 @@ export class PharmacyEditComponent implements OnInit {
       'check_payable_to_name': new FormControl(null, [Validators.required]),
       'phone_number': new FormControl(null, [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]),
       'fax_number': new FormControl(null, [Validators.required]),
-      'npi_number': new FormControl(null, [Validators.required]),
-      'dea_number': new FormControl(null, [Validators.required]),
-      'ncpdp':new FormControl(null, [Validators.required]),
-      'professional_liability_policy_number': new FormControl(null, [Validators.required]),
-      'professional_liability_document': new FormControl(null),
-      'professional_liability_policy_expiry': new FormControl(null, [Validators.required]),
       'is_active': new FormControl(true, []),
       'practice_addresses': new FormArray([]),
-      'licenses': new FormArray([])
+      'licenses': new FormArray([]),
+      'other_details': new FormArray([])
     });
-
-    this.practiceAddressFormGroup = new FormGroup({
-      'address_line_1': new FormControl(null, [Validators.required]),
-      'address_line_2': new FormControl(null, []),
-      'city': new FormControl(null, [Validators.required]),
-      'state_id': new FormControl(null, [Validators.required]),
-      'zip_code': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
-    });
-
   }
 
-  getLocalImage(path:any) {
+  getLocalImage(path:any){
     if(path!=null){
       return environment.api_url+path;
     }else{
@@ -119,14 +102,14 @@ export class PharmacyEditComponent implements OnInit {
   public getPharmacy() {
     this.http.get('api/pharmacies/view/' + this.pharmacyId).subscribe((data: any) => {
         this.pharmacyObj = data;
+        /*
         this.professionalLiabilityDocumentImg = this.pharmacyObj.professional_liability_document;
-
         this.lbDocImageUrl = this.getLocalImage(this.pharmacyObj.professional_liability_document);
+         */
         this.pharmacyObjClone = JSON.parse(JSON.stringify(this.pharmacyObj));
-
-        this.pharmacyObjClone.professional_liability_document = '';
         this.pharmacyObjClone.practice_addresses = [];
         this.pharmacyObjClone.licenses = [];
+        this.pharmacyObjClone.other_details = [];
 
         this.addPharmacyForm.patchValue({
           pharmacy_name: this.pharmacyObjClone.pharmacy_name,
@@ -135,15 +118,11 @@ export class PharmacyEditComponent implements OnInit {
           check_payable_to_name:this.pharmacyObjClone.check_payable_to_name,
           phone_number: this.pharmacyObjClone.phone_number,
           fax_number: this.pharmacyObjClone.fax_number,
-          npi_number: this.pharmacyObjClone.npi_number,
-          dea_number: this.pharmacyObjClone.dea_number,
-          ncpdp:this.pharmacyObjClone.ncpdp,
-          professional_liability_policy_number: this.pharmacyObjClone.professional_liability_policy_number,
-          professional_liability_policy_expiry: this.pharmacyObjClone.professional_liability_policy_expiry,
           is_active: this.pharmacyObjClone.is_active,
         });
         const addressControl = this.addPharmacyForm.get('practice_addresses') as FormArray;
         const licenseControl = this.addPharmacyForm.get('licenses') as FormArray;
+        const otherDetailsControl = this.addPharmacyForm.get('other_details') as FormArray;
 
         this.pharmacyObj.practice_addresses.forEach((address:any) => {
           const aControl = new FormGroup({
@@ -166,22 +145,30 @@ export class PharmacyEditComponent implements OnInit {
           });
           licenseControl.push(lControl);
         });
+        if(this.pharmacyObj.other_details){
+          this.pharmacyObj.other_details.forEach((details:any) => {
+            const lControl = new FormGroup({
+              'key': new FormControl(details.key, [Validators.required]),
+              'value': new FormControl(details.value, [Validators.required]),
+            });
+            otherDetailsControl.push(lControl);
+          });
+        }
       }, err => {
 
       });
     // this.cdr.detectChanges();
   }
   public getStates() {
-    this.http.get('api/system_states/all')
-      .subscribe((data: any) => {
+    this.http.get('api/system_states/all').subscribe((data: any) => {
         this.states = data;
       }, err => {
 
       });
     }
 
-  public getStateList(currentStateId: number) {
-    let selectedStateIds = (this.addPharmacyForm.get('licenses') as FormArray)['value'].map((e: any) => isNaN(parseInt(e.state_id)) ? '' : parseInt(e.state_id))
+  public getStateList(currentStateId: any) {
+    let selectedStateIds = (this.addPharmacyForm.get('licenses') as FormArray)['value'].map((e: any) =>e.state_id.toString())
     selectedStateIds.splice(selectedStateIds.indexOf(currentStateId), 1)
     var filtered = this.states.filter(({ _id }) => !selectedStateIds.includes(_id));
     return filtered;
@@ -194,13 +181,8 @@ export class PharmacyEditComponent implements OnInit {
   get check_payable_to_name() { return this.addPharmacyForm.get('check_payable_to_name'); }
   get phone_number() { return this.addPharmacyForm.get('phone_number'); }
   get fax_number() { return this.addPharmacyForm.get('fax_number'); }
-  get npi_number() { return this.addPharmacyForm.get('npi_number'); }
-  get ncpdp() { return this.addPharmacyForm.get('ncpdp'); }
-  get dea_number() { return this.addPharmacyForm.get('dea_number'); }
-  get professional_liability_policy_number() { return this.addPharmacyForm.get('professional_liability_policy_number'); }
-  get professional_liability_document() { return this.addPharmacyForm.get('professional_liability_document'); }
-  get professional_liability_policy_expiry() { return this.addPharmacyForm.get('professional_liability_policy_expiry'); }
   get is_active() { return this.addPharmacyForm.get('is_active'); }
+
 
   get practice_addresses() {
     return new FormGroup({
@@ -221,6 +203,27 @@ export class PharmacyEditComponent implements OnInit {
       'state_id': new FormControl('', [Validators.required]),
       'is_active': new FormControl(true, [])
     });
+  }
+
+  get keyvaluePair(): FormGroup {
+    return new FormGroup({
+      'key': new FormControl('', [Validators.required]),
+      'value': new FormControl('', [Validators.required])
+    });
+  }
+
+  getKeyValuePairsControls(){
+    return (this.addPharmacyForm.get('other_details') as FormArray)['controls'];
+  }
+
+  public addNewKeyValuePair() {
+    const addressControl: FormArray = this.addPharmacyForm.get('other_details') as FormArray;
+    addressControl.push(this.keyvaluePair);
+  }
+
+  public removeKeyValuePair(index:number) {
+    const addressControl = this.addPharmacyForm.get('other_details')as FormArray;
+    addressControl.removeAt(index);
   }
 
   getPracticeAddressesControls() {
@@ -310,33 +313,37 @@ export class PharmacyEditComponent implements OnInit {
     }
     const fd: FormData = new FormData();
     let formVal= this.addPharmacyForm.value;
-    formVal.licenses = formVal.licenses.map((item:any)=>{
-      let stFound:any = this.states.find((st:any)=>st._id == item.state_id);
-      item.state_name  =stFound.name;
-      return item;
-    });
-    formVal.practice_addresses = formVal.practice_addresses.map((item:any)=>{
-      let stFound:any = this.states.find((st:any)=>st._id == item.state_id);
-      item.state  =stFound.name;
-      return item;
-  });
+    console.log('formVal=',formVal);
+
+    if(formVal.licenses){
+      formVal.licenses = formVal.licenses.map((item:any)=>{
+        let stFound:any = this.states.find((st:any)=>st._id.toString() == item.state_id.toString());
+        item.state_name = stFound ? stFound.name:null;
+        return item;
+      });
+      console.log('formVal licenses=',formVal.licenses);
+    }
+
+    if(formVal.practice_addresses){
+      formVal.practice_addresses = formVal.practice_addresses.map((item:any)=>{
+        let stFound:any = this.states.find((st:any)=>st._id.toString() == item.state_id.toString());
+        item.state  =stFound ? stFound.name:null;
+        return item;
+      });
+      console.log('formVal practice_addresses=',formVal.practice_addresses);
+    }
 
     fd.append('pharmacy', JSON.stringify(formVal));
-    if (formVal.professional_liability_document == null){
+    /* if (formVal.professional_liability_document == null){
       fd.append('professional_liability_document', this.professionalLiabilityDocumentImg);
     } else {
       fd.append('professional_liability_document',this.selectedFile);
-    }
-    this.http.post('api/pharmacies/update/' + this.pharmacyId, fd)
-      .subscribe((data: any) => {
-        if (data != null) {
-          if (data.errno != null) {
-            this.toastr.showError(data.sqlMessage);
-          } else {
+    } */
+    this.http.post('api/pharmacies/update/' + this.pharmacyId, fd).subscribe((data: any) => {
+
             this.toastr.showSuccess('Pharmacy details updated successfully');
             this.router.navigate(['admin', 'pharmacies']);
-          }
-        }
+
       }, err => {
         this.toastr.showError('Unable to save pharmacy details. Please try again!');
     });

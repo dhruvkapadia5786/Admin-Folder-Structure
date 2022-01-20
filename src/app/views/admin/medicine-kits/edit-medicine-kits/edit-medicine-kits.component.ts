@@ -654,15 +654,10 @@ export class EditMedicineKitsComponent implements OnInit,OnDestroy {
     const req = fd;
     this.http.post(url, req).subscribe(
       (data: any) => {
-        if (data != null) {
-          if (data.errno != null) {
-            this._toastr.showError(data.sqlMessage);
-          } else {
+
             this._router.navigate(['/admin/medicine-kits/list'],{ replaceUrl: true });
             this._toastr.showSuccess('Update Successfully');
-          }
-          this.changeDetectorRef.detectChanges();
-        }
+
       },
       (err:any) => {
         this._toastr.showError('Unable to update medicine kit.');

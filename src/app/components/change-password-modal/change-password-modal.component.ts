@@ -67,13 +67,11 @@ export class ChangePasswordModalComponent implements OnInit {
     this.http.post(url, data).subscribe(
       (res: any) => {
         if (res != null) {
-          if (res.errno != null) {
-            this._toastr.showError(res.sqlMessage);
-          } else {
+
 
             this._router.navigate(['admin', 'patients', 'view', this.customerId, 'orders']);
             this._toastr.showSuccess('User Account Password updated Successfully');
-          }
+
         }
         this._changeDetectorRef.detectChanges();
 

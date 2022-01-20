@@ -43,37 +43,9 @@
         <div class="col-md-6">
             <div class="table-responsive">
                 <table class="table table-hover">
-
-                    <tr>
-                      <td class="font-weight-bold">NPI Number</td>
-                      <td class="font-weight-normal">
-                      {{pharmDetails.npi_number}}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="font-weight-bold">DEA Number</td>
-                      <td class="font-weight-normal">
-                      {{pharmDetails.dea_number}}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="font-weight-bold">NCPDP</td>
-                      <td class="font-weight-normal">
-                      {{pharmDetails.ncpdp}}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="font-weight-bold">Professional Policy Liability Number</td>
-                      <td class="font-weight-normal">
-                      {{pharmDetails.professional_liability_policy_number}}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="font-weight-bold">Professional Policy Liability Document</td>
-                      <td class="font-weight-normal">
-                        <img class="rounded shadow" id="image_url" [(src)]="pharmDetails.professional_liability_document" alt="image" style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
-                        <!-- <app-image-preview [imgPath]="pharmDetails.professional_liability_document" height="250" width="350" caption="Professional liability Document"></app-image-preview> -->
-                      </td>
+                    <tr *ngFor="let keyPair of pharmDetails.other_details">
+                      <td  class="font-weight-bold">{{keyPair.key}}</td>
+                      <td class="font-weight-normal">{{keyPair.value}}</td>
                     </tr>
                 </table>
             </div>

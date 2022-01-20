@@ -76,17 +76,8 @@ export class CreateTechComponent implements OnInit {
     }
     const url = 'api/technicians/create';
     this.http.post(url, this.addTechnician.value).subscribe((data: any) => {
-        if (data != null) {
-          if (data.errno != null) {
-            this._toastr.showError(data.sqlMessage);
-          } else {
             this._router.navigate(['/admin/technicians/list']);
             this._toastr.showSuccess('Save Successfully');
-          }
-        } else {
-          this._toastr.showError('Unable to save technician.');
-        }
-        this._changeDetectorRef.detectChanges();
       },
       (err:any) => {
         this._toastr.showError('Unable to save technician.');

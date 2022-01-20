@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 })
 export class PharmacyAddComponent implements OnInit {
   public addPharmacyForm!: FormGroup;
-  public practiceAddressFormGroup!: FormGroup;
   public states: any[]=[];
   public licenseFormGroup!: FormGroup;
   selectedFile!:File;
@@ -76,26 +75,12 @@ export class PharmacyAddComponent implements OnInit {
       'check_payable_to_name': new FormControl(null, [Validators.required]),
       'phone_number': new FormControl(null, [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]),
       'fax_number': new FormControl(null, [Validators.required]),
-      'npi_number': new FormControl(null, [Validators.required]),
-      'dea_number': new FormControl(null, [Validators.required]),
-      'ncpdp':new FormControl(null, [Validators.required]),
-      'professional_liability_policy_number': new FormControl(null, [Validators.required]),
-      'professional_liability_document': new FormControl(null, [Validators.required]),
-      'professional_liability_policy_expiry': new FormControl(null, [Validators.required]),
       'is_active': new FormControl(true, []),
       'practice_addresses': new FormArray([this.practice_addresses]),
-      'licenses': new FormArray([this.licenses])
+      'licenses': new FormArray([this.licenses]),
+      'other_details': new FormArray([])
     });
-    
-    this.practiceAddressFormGroup = new FormGroup({
-      'address_line_1': new FormControl(null, [Validators.required]),
-      'address_line_2': new FormControl(null, []),
-      'city': new FormControl(null, [Validators.required]),
-      'state_id': new FormControl(null, [Validators.required]),
-      'zip_code': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(true, []),
-      'is_default': new FormControl(true, [])
-    });
+
   }
 
   public getStates() {
@@ -122,12 +107,6 @@ export class PharmacyAddComponent implements OnInit {
   get check_payable_to_name() { return this.addPharmacyForm.get('check_payable_to_name'); }
   get phone_number() { return this.addPharmacyForm.get('phone_number'); }
   get fax_number() { return this.addPharmacyForm.get('fax_number'); }
-  get npi_number() { return this.addPharmacyForm.get('npi_number'); }
-  get ncpdp() { return this.addPharmacyForm.get('ncpdp'); }
-  get dea_number() { return this.addPharmacyForm.get('dea_number'); }
-  get professional_liability_policy_number() { return this.addPharmacyForm.get('professional_liability_policy_number'); }
-  get professional_liability_document() { return this.addPharmacyForm.get('professional_liability_document'); }
-  get professional_liability_policy_expiry() { return this.addPharmacyForm.get('professional_liability_policy_expiry'); }
   get is_active() { return this.addPharmacyForm.get('is_active'); }
 
   get practice_addresses() {
@@ -151,6 +130,13 @@ export class PharmacyAddComponent implements OnInit {
     });
   }
 
+  get keyvaluePair(): FormGroup {
+    return new FormGroup({
+      'key': new FormControl('', [Validators.required]),
+      'value': new FormControl('', [Validators.required])
+    });
+  }
+
   getPracticeAddressesControls() {
     return (this.addPharmacyForm.get('practice_addresses') as FormArray)['controls'];
   }
@@ -158,6 +144,21 @@ export class PharmacyAddComponent implements OnInit {
   getLicensesControls() {
     return (this.addPharmacyForm.get('licenses') as FormArray)['controls'];
   }
+
+  getKeyValuePairsControls(){
+    return (this.addPharmacyForm.get('other_details') as FormArray)['controls'];
+  }
+
+  public addNewKeyValuePair() {
+    const addressControl: FormArray = this.addPharmacyForm.get('other_details') as FormArray;
+    addressControl.push(this.keyvaluePair);
+  }
+
+  public removeKeyValuePair(index:number) {
+    const addressControl = this.addPharmacyForm.get('other_details')as FormArray;
+    addressControl.removeAt(index);
+  }
+
 
   /**
    * Adds new empty practice address form control to Practice Addresses Array
@@ -249,17 +250,13 @@ export class PharmacyAddComponent implements OnInit {
    });
 
     fd.append('pharmacy', JSON.stringify(formVal));
-    fd.append('professional_liability_document',this.selectedFile);
+    //fd.append('professional_liability_document',this.selectedFile);
     this.http.post('api/pharmacies/create', fd)
       .subscribe((data: any) => {
-        if (data != null) {
-          if (data.errno != null) {
-            this.toastr.showError(data.sqlMessage);
-          } else {
+
             this.toastr.showSuccess('Pharmacy added successfully');
             this.router.navigate(['admin', 'pharmacies']);
-          }
-        }
+
       }, err => {
         this.toastr.showError('Unable to save pharmacy. Please try again!');
       });

@@ -166,14 +166,10 @@ export class PharmacyUserCreateComponent implements OnInit, OnDestroy {
       operation = 'created'
     }
     this.http.post(url, this.userForm.value).subscribe((data: any) => {
-      if (data != null) {
-        if (data.errno != null) {
-          this.toastr.showError(data.sqlMessage);
-        } else {
+
           this.toastr.showSuccess(`Pharmacy User ${operation} successfully`);
           this.router.navigate(['admin', 'pharmacies', 'view', this.pharmacyId, 'user-management']);
-        }
-      }
+
     }, (err: any) => {
       this.toastr.showError('Unable to create user in pharmacy. Please try again!');
     });
@@ -181,7 +177,7 @@ export class PharmacyUserCreateComponent implements OnInit, OnDestroy {
 
   handleChangeRole(value: any) {
     let roleFound = this.userRoles.find((item: any) => item.value == value);
-    
+
     let licenseFormArray = this.userForm.get('licenses') as FormArray;
     this.clearFormArray(licenseFormArray);
     if (roleFound.key == 'PHARMACY_CASHIER') {
