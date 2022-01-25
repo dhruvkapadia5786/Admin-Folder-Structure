@@ -10,11 +10,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { LensParametersModalModule } from '../lens-parameters-modal/lens-parameters-modal.module';
 import { LensParametersModalComponent } from '../lens-parameters-modal/lens-parameters-modal.component';
 import { SelectOtcSubcategoryModalModule } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.module';
 import { SelectOtcSubcategoryModalComponent } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.component';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { BannerlinkModalModule } from '../../banner-sets/bannerlink-modal/bannerlink-modal.module';
+import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
 
 @NgModule({
   declarations: [
@@ -30,10 +32,11 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     NgxMatSelectSearchModule,
     ModalModule.forRoot(),
     SelectOtcSubcategoryModalModule,
+    BannerlinkModalModule,
     LensParametersModalModule,
     ProductsAddRoutingModule
   ],
-  entryComponents:[LensParametersModalComponent,SelectOtcSubcategoryModalComponent],
+  entryComponents:[LensParametersModalComponent,SelectOtcSubcategoryModalComponent,BannerlinkModalComponent],
   providers:[Helper]
 })
 export class ProductsAddModule { }

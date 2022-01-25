@@ -15,6 +15,8 @@ import { LensParametersModalComponent } from '../lens-parameters-modal/lens-para
 import { LensParametersModalService } from '../lens-parameters-modal/lens-parameters-modal.service';
 import { SelectOtcSubcategoryModalService } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.service';
 import { environment } from 'src/environments/environment';
+import { BannerlinkModalService } from '../../banner-sets/bannerlink-modal/bannerlink-modal.service';
+import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
 
 @Component({
   selector: 'app-products-add',
@@ -89,12 +91,16 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   categoriesSubcategoriesList:any[]=[];
   selected_otc_categories_forindex:any[]=[];
 
+  similarProductsList:any=[];
+  fbtProductsList:any[]=[];
+
   constructor(
     public http: HttpClient,
     public changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _helper:Helper,
     private _bsModalService:BsModalService,
+    private _bannerLinkModalService:BannerlinkModalService,
     private _lensParametersModalService:LensParametersModalService,
     private _selectOtcSubcategoryModalService:SelectOtcSubcategoryModalService,
     private _toastr: Toastr){
@@ -217,8 +223,8 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
           name:new FormControl(null,[Validators.required]),
           ucode:new FormControl(null,[Validators.required]),
           procurement_channel:new FormControl(null,[Validators.required]),
-          manufacturer_id:new FormControl(null,[Validators.required]),
-          brand_id:new FormControl(null,[Validators.required]),
+          manufacturer_id:new FormControl(null,[]),
+          brand_id:new FormControl(null,[]),
           product_type:new FormControl(null,[Validators.required]),
           measurement_unit:new FormControl(null,[Validators.required]),
           packform:new FormControl(null,[Validators.required]),
@@ -241,15 +247,12 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
           is_discount:new FormControl(null,[]),
           discount_amount:new FormControl(null,[]),
           discount_percent:new FormControl(null,[]),
-          categories:new FormControl([],[]),
-          sub_categories:new FormControl([],[]),
           therapies:new FormControl([],[]),
           images:new FormArray([]),
           documents:new FormArray([]),
           videos:new FormArray([]),
           attributes:new FormArray([]),
           faqs:new FormArray([]),
-
           has_diameter:new FormControl(null, []),
           has_basecurve:new FormControl(null, []),
           has_power:new FormControl(null, []),
@@ -349,8 +352,6 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   get is_discount(){return this.productForm.get('is_discount');}
   get discount_amount(){return this.productForm.get('discount_amount');}
   get discount_percent(){return this.productForm.get('discount_percent');}
-  get categories(){return this.productForm.get('categories');}
-  get sub_categories(){return this.productForm.get('sub_categories');}
   get therapies(){return this.productForm.get('therapies');}
 
 
@@ -878,6 +879,32 @@ handleTypeChange(attributeIndex:number,event:any){
 
   }
 
+  openSearchProductModal(clickedFrom:any){
+    this._bannerLinkModalService.setFormData({
+      selectedTab:'PRODUCT'
+    });
+    this.modalRef = this._bsModalService.show(BannerlinkModalComponent,{class:'modal-lg'});
+    this.modalRef.content.onEventCompleted.subscribe((data:any)=>{
+        if(clickedFrom=='similar_products'){
+            if(this.similarProductsList.filter((item:any)=>item._id.toString() == data._id.toString()).length==0){
+              this.similarProductsList.push(data);
+            }
+        }else{
+          if(this.fbtProductsList.filter((item:any)=>item._id.toString() == data._id.toString()).length==0){
+            this.fbtProductsList.push(data);
+          }
+        }
+    });
+  }
+
+  deleteSimilarProduct(product_id:any){
+    this.similarProductsList =  this.similarProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
+  }
+
+  deleteFBTProduct(product_id:any){
+    this.fbtProductsList =  this.fbtProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
+  }
+
   addProduct(formValid:boolean){
     if (this.productForm.invalid){
       this._helper.markFormGroupTouched(this.productForm);
@@ -886,6 +913,8 @@ handleTypeChange(attributeIndex:number,event:any){
     const fd: FormData = new FormData();
     let productVal = this.productForm.value;
     productVal.otc_drug_categories = this.get_selected_otc_categories_forindex(0);
+    productVal.similar_products = this.similarProductsList.map((item:any)=>item._id);
+    productVal.fbt_products = this.fbtProductsList.map((item:any)=>item._id);
 
     fd.append('product', JSON.stringify(productVal));
     if(this.selectedFiles.length>0){
@@ -905,16 +934,14 @@ handleTypeChange(attributeIndex:number,event:any){
     }
     const url = 'api/products/create';
     const req = fd;
-    this.http.post(url, req).subscribe(
-      (data: any) => {
+    this.http.post(url, req).subscribe((data: any) => {
         this._router.navigate(['/admin/products/list'],{ replaceUrl: true });
         this._toastr.showSuccess('Save Successfully');
       },
       (err:any) => {
         this._toastr.showError('Unable to save product.');
         this.changeDetectorRef.detectChanges();
-      }
-    );
+      });
   }
 
 

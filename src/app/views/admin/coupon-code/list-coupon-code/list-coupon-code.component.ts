@@ -286,7 +286,7 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
           className: 'text-center  font-weight-normal',
           render: (data: any) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDate(data, 'MM/DD/YYYY');
             } else {
               return '<span></span>';
             }
@@ -319,7 +319,7 @@ export class ListCouponCodeComponent implements OnInit, AfterViewInit {
           className: 'text-center  font-weight-normal',
           render: (data:any) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDate(data, 'MM/DD/YYYY');
             } else {
               return '<span> - </span>';
             }

@@ -289,7 +289,7 @@ export class TechViewComponent implements OnInit, AfterViewInit {
           title: 'Order Date',
           render: (data: any) => {
             if (data) {
-              return this.helper.getLocalDate(data, 'DD-MM-YYYY hh:mm A');
+              return this.helper.getFormattedDate(data, 'DD-MM-YYYY hh:mm A');
             } else {
               return '<span></span>';
             }

@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { consultationHelper } from 'src/app/services/consultationHelper.service';
 import { ChangeAddressModalComponent } from 'src/app/components/change-address-modal/change-address-modal.component';
 import { ChangeAddressModalModule } from 'src/app/components/change-address-modal/change-address-modal.module';
+import { ConsultationQuestionAnswerModule } from './consultation-question-answer/consultation-question-answer.module';
 
 @NgModule({
   declarations: [ConsultationComponent, ConsultationViewComponent],
@@ -29,6 +30,7 @@ import { ChangeAddressModalModule } from 'src/app/components/change-address-moda
     ConsultationRoutingModule,
     ImagePreviewModule,
     OrderLogsModule,
+    ConsultationQuestionAnswerModule,
     ChangeAddressModalModule
   ],
   providers:[ConsultationService,consultationHelper],

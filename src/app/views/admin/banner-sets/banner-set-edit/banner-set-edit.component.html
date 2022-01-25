@@ -1,1 +1,117 @@
-<p>banner-set-edit works!</p>
+<div class="w-100 p-3 bg-dark-grey">
+          <h4 class="text-white font-weight-bold mb-0">Edit BannerSet</h4>
+</div>
+<div class="row">
+    <div class="col-md-8 offset-md-2 my-4">
+        <form (ngSubmit)="addBannerSet(bannerSetForm.valid)" [formGroup]="bannerSetForm" autocomplete="off">
+
+              <div class="form-group">
+                <label>Select Type</label>
+                <select placeholder="Select Type" formControlName="set_type" class="form-control">
+                  <option *ngFor="let settype of setTypes" [value]="settype">
+                    {{settype}}
+                  </option>
+                </select>
+                <div class="invalid-feedback d-block" *ngIf="set_type?.invalid && (set_type?.dirty || set_type?.touched)">
+                  <label class="text-danger font-weight-bold" *ngIf="set_type?.errors?.required">Set Type is required.</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Is Active ?</label>
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" type="checkbox" id="is_active" formControlName="is_active">
+                    <label class="custom-control-label" for="is_active">
+                        Active
+                    </label>
+                  </div>
+              </div>
+
+              <div formArrayName="images">
+                  <div class="alert alert-info mt-2" *ngFor="let fi of images().controls; let fiIndex=index">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h5>Slide #{{fiIndex+1}}</h5>
+                      <div *ngIf="fiIndex > 0">
+                          <button  type="button" class="btn btn-sm btn-danger" (click)="removeFileInput(fiIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                      </div>
+                    </div>
+
+
+                    <div class="form-group" [formGroupName]="fiIndex">
+                              <div class="form-row">
+                                  <div class="col">
+                                      <app-image-preview [imgPath]="fi.get('image_src')?.value" height="150" width="150" caption="Images"></app-image-preview>
+
+                                      <label>Select Banner Image</label>
+                                      <input type="file" class="form-control" placeholder="Choose File" formControlName="image"  [accept]="'.png, .jpg, .jpeg'"  (change)="onFileChange(fiIndex,$event)" />
+                                      <div class="invalid-feedback" *ngIf="fi.get('image')?.invalid && (fi.get('image')?.dirty || fi.get('image')?.touched)" class="text-danger">
+                                          <div *ngIf="fi.get('image')?.errors?.required"> File is required.</div>
+                                      </div>
+                                  </div>
+
+                                  <div class="col">
+                                      <label>Select Landing Type</label>
+                                      <select class="form-control" placeholder="Choose Type" formControlName="landing_type"  (change)="onLandingTypeChange(fiIndex,$event)">
+                                            <option *ngFor="let lItem of landingTypes" [value]="lItem">{{lItem}}</option>
+                                      </select>
+                                      <div class="invalid-feedback" *ngIf="fi.get('landing_type')?.invalid && (fi.get('landing_type')?.dirty || fi.get('landing_type')?.touched)" class="text-danger">
+                                          <div *ngIf="fi.get('landing_type')?.errors?.required"> Landing type is required.</div>
+                                      </div>
+                                  </div>
+
+
+                              </div>
+
+                          <div class="form-row mt-2">
+                               <div class="col" *ngIf="fi.get('landing_type')?.value =='DIRECT_LINK'">
+                                      <label>Select Landing Type</label>
+                                      <input type="url" class="form-control" placeholder="Enter Link" formControlName="direct_link" />
+                                      <div class="invalid-feedback" *ngIf="fi.get('direct_link')?.invalid && (fi.get('direct_link')?.dirty || fi.get('direct_link')?.touched)" class="text-danger">
+                                          <div *ngIf="fi.get('direct_link')?.errors?.required"> Link is required.</div>
+                                      </div>
+                                </div>
+
+                                <div class="col" *ngIf="fi.get('landing_type')?.value =='PRODUCT'">
+                                      <label>Enter Product ID</label>
+                                      <input type="text" class="form-control" placeholder="Enter Product Id" formControlName="product_id" />
+                                      <div class="invalid-feedback" *ngIf="fi.get('product_id')?.invalid && (fi.get('product_id')?.dirty || fi.get('product_id')?.touched)" class="text-danger">
+                                          <div *ngIf="fi.get('product_id')?.errors?.required"> Product ID is required.</div>
+                                      </div>
+                                      <button class="btn btn-sm btn-outline-primary" type="button" (click)="openBannerLinkSearchModal(fiIndex,'PRODUCT')"><i class="fas fa-search mr-2"></i>Search</button>
+                                </div>
+
+                                <div class="col" *ngIf="fi.get('landing_type')?.value =='BRAND'">
+                                      <label>Enter Brand ID</label>
+                                      <input type="text" class="form-control" placeholder="Enter Brand Id" formControlName="brand_id" />
+                                      <div class="invalid-feedback" *ngIf="fi.get('brand_id')?.invalid && (fi.get('brand_id')?.dirty || fi.get('brand_id')?.touched)" class="text-danger">
+                                          <div *ngIf="fi.get('brand_id')?.errors?.required"> Brand ID is required.</div>
+                                      </div>
+                                      <button class="btn btn-sm btn-outline-primary" type="button" (click)="openBannerLinkSearchModal(fiIndex,'BRAND')"><i class="fas fa-search mr-2"></i>Search</button>
+
+                                </div>
+
+                                <div class="col" *ngIf="fi.get('landing_type')?.value =='OTC_CATEGORY'">
+                                      <label>Enter Otc Category ID</label>
+                                      <input type="text" class="form-control" placeholder="Enter OTC Category Id" formControlName="otc_category_id" />
+                                      <div class="invalid-feedback" *ngIf="fi.get('otc_category_id')?.invalid && (fi.get('otc_category_id')?.dirty || fi.get('otc_category_id')?.touched)" class="text-danger">
+                                          <div *ngIf="fi.get('otc_category_id')?.errors?.required"> Otc Category ID is required.</div>
+                                      </div>
+
+                                      <button class="btn btn-sm btn-outline-primary" type="button" (click)="openBannerLinkSearchModal(fiIndex,'OTC_CATEGORY')"><i class="fas fa-search mr-2"></i>Search</button>
+                                </div>
+                          </div>
+
+                      </div>
+                  </div>
+              </div>
+              <div class="text-center">
+                    <button type="button"  class="btn btn-sm btn-primary" (click)="addFileInput()"><i class="fa fa-plus mr-2"></i>Add More Slides</button>
+              </div>
+
+              <div class="text-center mt-3">
+                  <button class="btn btn-block btn-success" type="submit">Create BannerSet</button>
+              </div>
+        </form>
+    </div>
+</div>

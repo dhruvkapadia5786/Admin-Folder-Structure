@@ -10,12 +10,12 @@ import {ConsentModalService} from 'src/app/components/consent-modal/consent-moda
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { environment } from 'src/environments/environment';
 @Component({
-  selector: 'app-order-question-answer',
-  templateUrl: './order-question-answer.component.html',
-  styleUrls: ['./order-question-answer.component.scss'],
+  selector: 'app-consultation-question-answer',
+  templateUrl: './consultation-question-answer.component.html',
+  styleUrls: ['./consultation-question-answer.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class OrderQuestionAnswerComponent implements OnInit {
+export class ConsultationQuestionAnswerComponent implements OnInit {
 
   @BlockUI('questionsLoader') blockQuestionsLoader!: NgBlockUI;
   api_url = environment.api_url;
@@ -50,7 +50,7 @@ export class OrderQuestionAnswerComponent implements OnInit {
 
 	ngOnInit() {
     if (this.orderDetails){
-     this.orderId = this.orderDetails._id;
+      this.orderId = this.orderDetails._id;
      this.patient = this.orderDetails.user_id;
      this.getQuestionDetails();
     }
@@ -178,7 +178,7 @@ export class OrderQuestionAnswerComponent implements OnInit {
           consent_for:'BMI'
 				};
 			}
-      api_url = `api/orders/send_consent/${this.orderId}`;
+      api_url = `api/consultations/send_consent/${this.orderId}`;
 			this.http.post(api_url, req).subscribe((data: any) => {
           this._toastr.showSuccess('Sent consent successfully');
           if(eventName=='QUESTION'){
@@ -207,7 +207,7 @@ export class OrderQuestionAnswerComponent implements OnInit {
 				this.redChoiceAnswerIds.push(conset);
 			}
 		});
-    let url = `api/orders/send_consent/${this.orderId}`;
+    let url = `api/consultations/send_consent/${this.orderId}`;
 		const req = {
       consent_for:'QUESTION',
 			customer_id: this.patient._id,
@@ -229,11 +229,11 @@ export class OrderQuestionAnswerComponent implements OnInit {
 
 
 	getPath(fileName: string){
-		return `storage/${this.patient._id}/questionary/${fileName}`;
+		return 'storage/questionary/' + fileName;
 	}
 
 	getDocumentLink(fileName: string){
-		return this.api_url + `storage/${this.patient._id}/questionary/${fileName}`;
+		return this.api_url + 'storage/questionary/' + fileName;
 	}
 
 	isFileTypeImage(fileName: string){

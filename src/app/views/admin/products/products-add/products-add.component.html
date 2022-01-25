@@ -894,6 +894,50 @@
                     </div>
               </div>
 
+              <div class="alert alert-warning my-3">
+                  <h5 class="font-weight-bold mb-5">Similar Products
+                  <button class="float-right btn btn-sm btn-outline-primary" (click)="openSearchProductModal('similar_products')"><i class="fas fa-search"></i></button>
+                  </h5>
+                  <table class="table table-sm">
+                      <thead>
+                        <tr>
+                        <td>Name</td>
+                        <td>Price</td>
+                        <td>Action</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let similrPro of similarProductsList">
+                          <td>{{similrPro.name}}</td>
+                          <td>{{similrPro.sale_price|currency:'INR'}}</td>
+                          <td><button class="btn btn-sm btn-danger" (click)="deleteSimilarProduct(similrPro._id)"><i class="fas fa-trash-alt"></i></button></td>
+                        </tr>
+                      </tbody>
+                  </table>
+              </div>
+
+              <div class="alert alert-danger my-3">
+                  <h5 class="font-weight-bold mb-5">Frequently Bought Together Products
+                  <button class="float-right btn btn-sm btn-outline-primary" (click)="openSearchProductModal('fbt_products')"><i class="fas fa-search"></i></button>
+                  </h5>
+                  <table  class="table table-sm">
+                      <thead>
+                        <tr>
+                        <td>Name</td>
+                        <td>Price</td>
+                        <td>Action</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let fbtPro of fbtProductsList">
+                          <td>{{fbtPro.name}}</td>
+                          <td>{{fbtPro.sale_price|currency:'INR'}}</td>
+                          <td><button class="btn btn-sm btn-danger" (click)="deleteSimilarProduct(fbtPro._id)"><i class="fas fa-trash-alt"></i></button></td>
+                        </tr>
+                      </tbody>
+                  </table>
+              </div>
+
               <div class="text-center mt-3">
                   <button class="btn btn-block btn-success" type="submit">Create Product</button>
               </div>

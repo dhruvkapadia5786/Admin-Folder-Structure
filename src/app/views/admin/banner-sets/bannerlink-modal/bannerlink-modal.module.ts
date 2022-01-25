@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BannerlinkModalComponent } from './bannerlink-modal.component';
 import { FormsModule } from '@angular/forms';
-
-
+import { BannerlinkModalService } from './bannerlink-modal.service';
 
 @NgModule({
   declarations: [
@@ -13,6 +12,7 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
   ],
-  exports:[BannerlinkModalComponent]
+  exports:[BannerlinkModalComponent],
+  providers:[BannerlinkModalService]
 })
 export class BannerlinkModalModule { }

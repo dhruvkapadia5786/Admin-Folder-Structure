@@ -20,7 +20,7 @@ export class Helper {
     }
 
     getFormattedDate(date: string, format: string = 'DD-MM-YYYY') {
-        return moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format(format);
+        return date ? moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format(format):'';
     }
 
     getInINRFormat(currency: string, data: number) {
@@ -32,19 +32,6 @@ export class Helper {
         }
     }
 
-    getLocalDate(date: Date | string, format?: string) {
-        if (format) {
-            if (moment(date).isValid()) {
-                return moment.utc(date).tz("Asia/Culcutta").format(format);
-            }
-        }
-        else {
-            if (moment(date).isValid()) {
-                return moment.utc(date).tz("Asia/Culcutta");
-            }
-        }
-        return date;
-    }
 
     public getUTCtoLocalDateTime(date: any, format: string = this.IST_DATE_TIME_FORMAT) {
         if (date != null && moment(date).isValid()) {
@@ -54,27 +41,11 @@ export class Helper {
         }
     }
 
-    /* DIDN'T GIVE EXPECTED OUTPUT */
-    public getUserLocalDate(date: any) {
-        if (date != null && moment(date).isValid()) {
-            return moment(date).format(this.IST_DATE_TIME_FORMAT);
-        } else {
-            return date;
-        }
-    }
 
     /* DIDN'T GIVE EXPECTED OUTPUT */
     public getESTDateTime(date: any) {
         if (date != null && moment(date).isValid()) {
             return moment.tz(date, 'Asia/Calcutta').format(this.IST_DATE_TIME_FORMAT);
-        } else {
-            return date;
-        }
-    }
-
-    public getESTDate(date: any) {
-        if (date != null && moment(date).isValid()) {
-            return moment.tz(date, 'Asia/Calcutta').format(this.IST_DATE_FORMAT);
         } else {
             return date;
         }

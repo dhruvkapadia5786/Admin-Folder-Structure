@@ -91,7 +91,7 @@ export class ViewCouponCodeComponent implements OnInit {
         this.couponCodeDetails = couponCode;
         this._changeDetectorRef.detectChanges();
       }, err => {
-        
+
       });
   }
 
@@ -168,7 +168,7 @@ export class ViewCouponCodeComponent implements OnInit {
           className: 'text-center',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDate(data, 'MM/DD/YYYY');
             } else {
               return '<span></span>';
             }
@@ -251,7 +251,7 @@ export class ViewCouponCodeComponent implements OnInit {
           className: 'text-center',
           render: (data) => {
             if (data) {
-              return this._helper.getLocalDate(data, 'MM/DD/YYYY');
+              return this._helper.getFormattedDate(data, 'MM/DD/YYYY');
             } else {
               return '<span></span>';
             }

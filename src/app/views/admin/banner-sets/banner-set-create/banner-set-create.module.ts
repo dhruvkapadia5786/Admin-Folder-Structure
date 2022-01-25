@@ -16,7 +16,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     BannerSetCreateComponent
   ],
   imports: [
-  CommonModule,
+    CommonModule,
     FormsModule,ReactiveFormsModule,
     ModalModule.forRoot(),
     BannerlinkModalModule,

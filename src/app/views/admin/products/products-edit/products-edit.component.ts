@@ -15,6 +15,8 @@ import { LensParametersModalComponent } from '../lens-parameters-modal/lens-para
 import { LensParametersModalService } from '../lens-parameters-modal/lens-parameters-modal.service';
 import { SelectOtcSubcategoryModalService } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.service';
 import { AppConstants } from 'src/app/constants/AppConstants';
+import { BannerlinkModalService } from '../../banner-sets/bannerlink-modal/bannerlink-modal.service';
+import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
 
 @Component({
   selector: 'app-products-edit',
@@ -92,6 +94,8 @@ export class ProductsEditComponent implements OnInit {
 
   categoriesSubcategoriesList:any[]=[];
   selected_otc_categories_forindex:any[]=[];
+  similarProductsList:any=[];
+  fbtProductsList:any[]=[];
 
   constructor(
     public http: HttpClient,
@@ -100,6 +104,7 @@ export class ProductsEditComponent implements OnInit {
     private _route: ActivatedRoute,
     private _helper:Helper,
     private _bsModalService:BsModalService,
+    private _bannerLinkModalService:BannerlinkModalService,
     private _lensParametersModalService:LensParametersModalService,
     private _selectOtcSubcategoryModalService:SelectOtcSubcategoryModalService,
     private _toastr: Toastr){
@@ -225,8 +230,8 @@ export class ProductsEditComponent implements OnInit {
       name:new FormControl(null,[Validators.required]),
       ucode:new FormControl(null,[Validators.required]),
       procurement_channel:new FormControl(null,[Validators.required]),
-      manufacturer_id:new FormControl(null,[Validators.required]),
-      brand_id:new FormControl(null,[Validators.required]),
+      manufacturer_id:new FormControl(null,[]),
+      brand_id:new FormControl(null,[]),
       product_type:new FormControl(null,[Validators.required]),
       measurement_unit:new FormControl(null,[Validators.required]),
       packform:new FormControl(null,[Validators.required]),
@@ -889,6 +894,8 @@ handleTypeChange(attributeIndex:number,event:any){
     const url = 'api/products/view/' + this.productId;
     this.http.get(url).subscribe((res: any) => {
         this.productDetails = res;
+        this.similarProductsList = res.similar_products;
+        this.fbtProductsList= res.fbt_products;
 
         if(res.brand_id){
           this.filteredBrands.next([
@@ -1220,5 +1227,31 @@ handleTypeChange(attributeIndex:number,event:any){
     }else{
       return [];
     }
+  }
+
+  openSearchProductModal(clickedFrom:any){
+    this._bannerLinkModalService.setFormData({
+      selectedTab:'PRODUCT'
+    });
+    this.modalRef = this._bsModalService.show(BannerlinkModalComponent,{class:'modal-lg'});
+    this.modalRef.content.onEventCompleted.subscribe((data:any)=>{
+        if(clickedFrom=='similar_products'){
+            if(this.similarProductsList.filter((item:any)=>item._id.toString() == data._id.toString()).length==0){
+              this.similarProductsList.push(data);
+            }
+        }else{
+          if(this.fbtProductsList.filter((item:any)=>item._id.toString() == data._id.toString()).length==0){
+            this.fbtProductsList.push(data);
+          }
+        }
+    });
+  }
+
+  deleteSimilarProduct(product_id:any){
+    this.similarProductsList =  this.similarProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
+  }
+
+  deleteFBTProduct(product_id:any){
+    this.fbtProductsList =  this.fbtProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
   }
 }

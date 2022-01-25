@@ -1,0 +1,14 @@
+.btn-link {
+    text-decoration: none !important;
+    &:hover {
+        text-decoration: none !important;
+    }
+    &:active {
+        text-decoration: none !important;
+    }
+}
+
+.modal-backdrop {
+    position: unset;
+    background-color: white;
+}

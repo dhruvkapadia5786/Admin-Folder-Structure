@@ -5,7 +5,6 @@ import { Toastr } from 'src/app/services/toastr.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Helper } from 'src/app/services/helper.service';
 import { environment } from 'src/environments/environment';
-import { DataTableDirective } from 'angular-datatables';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NgBlockUI, BlockUI } from 'ng-block-ui';
 import { Subject } from 'rxjs';
@@ -27,30 +26,10 @@ export class ConsultationViewComponent implements OnInit {
   consultationDetails: any;
   patient: any;
 
-  followupSymptoms: any;
 
-  drugsTaken: any = [];
   initialSymptoms: any;
-  presentRiskFactors: any;
-  allRiskFactors: any;
-
-  diagnosisQuestions: any;
-  diagnosisFinalConditions: any;
-  diagnosisFinalConditionsFormatted: any;
-
-  diagnosisFinalBody: any;
-  questionsAndAnswers: any[] = [];
-
-  healthQueAndAnswers!: Array<any>;
-  redChoiceAnswer: any = [];
-  redChoiceAnswerIds: any = [];
-  greenChioceAnswer: any = [];
-  yellowChoiceAnswer: any = [];
 
   triageResponse: any;
-
-  patientUinqueNumber: any;
-
   selectedCondition: any;
   selectedConditionId!: string;
 
@@ -74,7 +53,6 @@ export class ConsultationViewComponent implements OnInit {
 
 
   async ngOnInit(){
-    this.loadRiskFactors();
     await this.loadConsultationDetails();
   }
 
@@ -83,10 +61,6 @@ export class ConsultationViewComponent implements OnInit {
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._router.navigate([`/admin/consultation/view/${consultationID}`])
     });
-  }
-
-  async loadRiskFactors() {
-    this.allRiskFactors = await this._consultationService.loadRiskFactors();
   }
 
   gotoPatientDetails() {
@@ -101,112 +75,11 @@ export class ConsultationViewComponent implements OnInit {
     this.loading = false;
     this.showChangeAddressBtn =true;
 
-    this._getQuestions();
-
-    if (this.consultationDetails && this.consultationDetails.consultation_type == 'NEW' && this.consultationDetails.details) {
-      this.drugsTaken = this.consultationDetails.details.drugs_taken ? JSON.parse(this.consultationDetails.details.drugs_taken) : [];
-      this.initialSymptoms = JSON.parse(this.consultationDetails.details.parse_response);
-      this.presentRiskFactors = this.consultationDetails.details.risk_factors ? JSON.parse(this.consultationDetails.details.risk_factors) : [];
-
-      if (this.presentRiskFactors && this.presentRiskFactors.length > 0 && this.allRiskFactors.length > 0) {
-        this.presentRiskFactors.map((prf: any) => {
-          let found = this.allRiskFactors.find((rskF: any) => { return rskF.id == prf.id });
-          if (found) {
-            prf.common_name = found.common_name;
-            return prf;
-          }
-        });
-      }
-
-      this.diagnosisQuestions = JSON.parse(this.consultationDetails.details.diagnosis_questions);
-      this.diagnosisFinalBody = JSON.parse(this.consultationDetails.details.diagnosis_final_body);
-      this.triageResponse = this.consultationDetails.details.triage_response ? JSON.parse(this.consultationDetails.details.triage_response) : null;
-
-      this.questionsAndAnswers = this.findAnswerFromQuestion();
-      if (this.diagnosisQuestions[this.diagnosisQuestions.length - 1] && this.diagnosisQuestions[this.diagnosisQuestions.length - 1]['should_stop']) {
-        this.diagnosisFinalConditions = this.diagnosisQuestions[this.diagnosisQuestions.length - 1]['conditions'];
-        let onlyIds = this.diagnosisFinalConditions.map((cnd: any) => cnd.id);
-        this.diagnosisFinalConditionsFormatted = await this.getMultipleConditionsDetails(onlyIds.join(','));
-      }
-    }
-
-    if (this.consultationDetails && this.consultationDetails.consultation_type == 'FOLLOWUP' && this.consultationDetails.details) {
-      this.followupSymptoms = this.consultationDetails.details.followup_input ? JSON.parse(this.consultationDetails.details.followup_input) : [];
+    if (this.consultationDetails && this.consultationDetails.interview_details){
+        this.initialSymptoms = this.consultationDetails.interview_details.parse_response;
     }
   }
 
-  async getMultipleConditionsDetails(condition_ids: any) {
-    let result: any = await this._consultationService.getMultipleConditions(condition_ids);
-    result.map((res: any) => {
-      let objFound = this.diagnosisFinalConditions.find((obj: any) => obj.id == res.id);
-      if (objFound) { res.probability = objFound.probability; return objFound; }
-    });
-    return result;
-  }
-
-  _getQuestions() {
-    const url = `api/v1/consultation/answer/${this.consultationId}`;
-    this._http.get(url).subscribe((data: any) => {
-      this.healthQueAndAnswers = data;
-      let filteredSubQuestions = this.healthQueAndAnswers.filter(q => { return q.type == 'SUB' });
-      this.healthQueAndAnswers = this.healthQueAndAnswers.filter(q => q.type == 'MAIN');
-      this.healthQueAndAnswers = JSON.parse(JSON.stringify(this.healthQueAndAnswers));
-      this.healthQueAndAnswers.map(q => {
-        q.sub_questions = filteredSubQuestions.filter(fq => fq.parent_question_id == q._id);
-        return q;
-      });
-
-      this.redChoiceAnswer = [];
-      this.yellowChoiceAnswer = [];
-      this.greenChioceAnswer = [];
-      this.healthQueAndAnswers.forEach((question: any) => {
-        if (parseInt(question.choices[0].result, 10) == 1) {
-          this.redChoiceAnswer.push(question);
-          this.redChoiceAnswerIds.push(question['user_answer_id']);
-        } else if (parseInt(question.choices[0].result, 10) == 2) {
-          this.greenChioceAnswer.push(question);
-        } else if (parseInt(question.choices[0].result, 10) == 3) {
-          this.yellowChoiceAnswer.push(question);
-        }
-      });
-      this.healthQueAndAnswers = [];
-      this.healthQueAndAnswers = this.healthQueAndAnswers.concat(this.redChoiceAnswer, this.yellowChoiceAnswer, this.greenChioceAnswer);
-    }, err => {
-
-    });
-  }
-
-
-  findAnswerFromQuestion() {
-    let questionsAndAnswers: any = [];
-    if (this.diagnosisQuestions && this.diagnosisQuestions.length > 0) {
-      this.diagnosisQuestions.forEach((dQ: any) => {
-        let QnA: any = {
-          type: dQ.question.type,
-          question: dQ.question.text,
-          answer: []
-        };
-        dQ.question.items.forEach((item: any) => {
-          let filteredChoises = this.diagnosisFinalBody.evidence.filter((ev: any) => { return item.id == ev.id });
-          filteredChoises.forEach((fc: any) => {
-            let foundChoise: any = item.choices.find((cho: any) => { return cho.id == fc.choice_id });
-            if (dQ.question.type == 'single') {
-              foundChoise.choise_text = foundChoise.label;
-            } else if (dQ.question.type == 'group_single') {
-              foundChoise.choise_text = item.name;
-            } else {
-              foundChoise.choise_text = item.name + ' - ' + foundChoise.label;
-            }
-            QnA.answer.push(foundChoise);
-          });
-        });
-        questionsAndAnswers.push(QnA);
-      });
-      return questionsAndAnswers;
-    } else {
-      return [];
-    }
-  }
 
   getFileType(extension: string) {
     if (extension == 'pdf') { return `<span class="float-right badge badge-danger p-2">PDF</span>`; }
@@ -224,7 +97,7 @@ export class ConsultationViewComponent implements OnInit {
     return (Math.round(_size * 100) / 100) + ' ' + fSExt[i];
   }
 
-  getUploadedBy(uploaded_by_id: number) {
+  getUploadedBy(uploaded_by_id: any) {
     if (uploaded_by_id == this.consultationDetails.user_id._id) { return 'By Patient' }
     else if (uploaded_by_id == this.consultationDetails.doctor_id._id) { return 'By Physician' }
     else { return ''; }
@@ -234,7 +107,7 @@ export class ConsultationViewComponent implements OnInit {
     this._router.navigate([]).then(result => { window.open(`${environment.api_url + path.substring(1)}`, '_blank'); });
   }
 
-  async removeMediaById(id: any) {
+  async removeMediaById(id: any){
     let bodyData = {
       media_id: id,
       consultation_id: this.consultationId
@@ -245,11 +118,10 @@ export class ConsultationViewComponent implements OnInit {
 
   async reloadMedia(){
     let allMedia: any = await this._consultationService.getConsultationMedia(this.consultationId);
-    this.consultationDetails.media = allMedia.media;
+    this.consultationDetails.photos = allMedia.photos;
     this.consultationDetails.documents = allMedia.documents;
     this._cdr.detectChanges();
   }
-
 
   viewERx(doesspot_patient_id: number, doesspot_prescription_id: number) {
     this._router.navigate([]).then(result => { window.open(`/admin/prescription/${doesspot_patient_id}/${doesspot_prescription_id}`, '_blank'); });
@@ -258,9 +130,7 @@ export class ConsultationViewComponent implements OnInit {
   async showConditionDetails(conditionId: string, modal: any) {
     this.selectedConditionId = conditionId;
     this.selectedCondition = await this._consultationService.getConditionById(conditionId);
-    //document.getElementById('conditionModalBtn')?.click();
   }
-
 
   async downloadReceipt() {
     let headers = new HttpHeaders();
@@ -275,7 +145,7 @@ export class ConsultationViewComponent implements OnInit {
   async downloadConsultationSummary() {
     let headers = new HttpHeaders();
     headers.set('Accept', 'application/pdf');
-    const url = `api/v1/consultation/summary/download?consultation_number=${this.consultationDetails.consultation_number_text}&consultation_id=${this.consultationId}`;
+    const url = `api/v1/consultation/download_summary/${this.consultationId}`;
     await this._http.get(url, { headers: headers, responseType: 'arraybuffer' }).toPromise().then((result) => {
       let fileName = 'consultation_summary_' + this.consultationDetails.consultation_number_text + '.pdf';
       this.writeContents(result, fileName, 'application/pdf', false);

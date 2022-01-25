@@ -14,6 +14,8 @@ import { LensParametersModalModule } from '../lens-parameters-modal/lens-paramet
 import { LensParametersModalComponent } from '../lens-parameters-modal/lens-parameters-modal.component';
 import { SelectOtcSubcategoryModalModule } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.module';
 import { SelectOtcSubcategoryModalComponent } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.component';
+import { BannerlinkModalModule } from '../../banner-sets/bannerlink-modal/bannerlink-modal.module';
+import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
@@ -31,9 +33,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     ModalModule.forRoot(),
     SelectOtcSubcategoryModalModule,
     LensParametersModalModule,
+    BannerlinkModalModule,
     ProductsEditRoutingModule
   ],
-  entryComponents:[LensParametersModalComponent,SelectOtcSubcategoryModalComponent],
+  entryComponents:[LensParametersModalComponent,SelectOtcSubcategoryModalComponent,BannerlinkModalComponent],
   providers:[Helper]
 })
 export class ProductsEditModule { }

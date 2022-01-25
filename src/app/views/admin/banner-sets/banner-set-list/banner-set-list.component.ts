@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Renderer2,AfterViewInit,OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subject } from 'rxjs';
@@ -84,7 +84,9 @@ export class BannerSetListComponent implements OnInit {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<button class="btn btn-sm btn-primary m-0" drugFormEditId=${full._id}>Edit</button>`;
+            return `
+            <button class="btn btn-sm btn-primary m-0" drugFormViewId=${full._id}>View</button>
+            <button class="btn btn-sm btn-primary m-0" drugFormEditId=${full._id}>Edit</button>`;
           },
           orderable: false
         }
@@ -108,6 +110,10 @@ export class BannerSetListComponent implements OnInit {
       if(event.target.hasAttribute('drugFormEditId')){
         this.gotoEditBannerSet(event.target.getAttribute('drugFormEditId'));
       }
+      if(event.target.hasAttribute('drugFormViewId')){
+        this.gotoViewBannerSet(event.target.getAttribute('drugFormViewId'));
+      }
+
     });
   }
 
@@ -134,4 +140,7 @@ export class BannerSetListComponent implements OnInit {
     this.router.navigate(['admin', 'bannersets', 'edit', _id]);
   }
 
+  gotoViewBannerSet(_id:any){
+    this.router.navigate(['admin', 'bannersets', 'view', _id]);
+  }
 }
