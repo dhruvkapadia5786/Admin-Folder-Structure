@@ -31,23 +31,32 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
   selectable = true;
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-
+  elementTypes=['DESCRIPTION','LIST','TABLE'];
+  routes=[
+    'Oral','Sublingual / Buccal','Rectal','Topical','Inhalation','Transdermal','Injection'
+  ];
   protected brands: any[] = [];
   public brandFilteringCtrl: FormControl = new FormControl();
   public searchingBrand = false;
   public filteredBrands: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   protected _onDestroyBrand = new Subject<void>();
 
+  public manufacturerFilteringCtrl: FormControl = new FormControl();
+  public searching = false;
+  public filteredManufacturers: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  protected _onDestroyManufacturer = new Subject<void>();
 
-   /* Similar Drugs */
+
+   /* ICD10 - Code */
   searchingDrug:boolean=false;
   SimilarDrugsCtrl = new FormControl();
   filteredSimilarDrugs: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  protected _onDestroy = new Subject<void>();
+
   filteredSimilarDrugsValues: any[] = [];
   selectedSimilarDrugs: any[] = [];
   @ViewChild('similarDrugsInput') similarDrugsInput!: ElementRef<HTMLInputElement>;
   @ViewChild('autoSimilarDrug') matAutocompleteSimilarDrug!: MatAutocomplete;
-  protected _onDestroy = new Subject<void>();
 
   selectedFiles:File[]=[];
   selectedDocuments:File[]=[];
@@ -67,7 +76,8 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
       'treatment_condition_ids': new FormControl([], [Validators.required]),
       'name': new FormControl('', [Validators.required]),
       'generic_name': new FormControl('', []),
-      'brand_id':new FormControl('', [Validators.required]),
+      'manufacturer_id':new FormControl(null,[]),
+      'brand_id':new FormControl('', []),
       'description': new FormControl('', []),
       'is_active': new FormControl(true, []),
       'is_coming_soon': new FormControl(false, []),
@@ -92,6 +102,26 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
     });
 
     this.images().push(this.newFileInput(1));
+
+    this.manufacturerFilteringCtrl.valueChanges
+    .pipe(
+      filter(search => !!search),
+      tap(() => this.searching = true),
+      takeUntil(this._onDestroyManufacturer),
+      switchMap((search:any) => {
+        return this.filterManufacturesResults(search);
+      }),
+      takeUntil(this._onDestroyManufacturer)
+    )
+    .subscribe((filteredBanks:any) => {
+      this.searching = false;
+      this.filteredManufacturers.next(filteredBanks);
+    },
+      error => {
+        // no errors in our simulated example
+        this.searching = false;
+        // handle error...
+      });
 
       this.brandFilteringCtrl.valueChanges
       .pipe(
@@ -315,28 +345,96 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
   /*-----------------------------END OF FAQ --------------------------------*/
 
 
-  /*-----------------------------ATTRIBUTES --------------------------------*/
-  addAttributeInput(){
-    this.attributes().push(this.newAttributeInput());
-  }
 
-  newAttributeInput(): FormGroup {
-    let attr_length= this.attributes().length;
-    return new FormGroup({
-      'name': new FormControl('', [Validators.required]),
-      'value': new FormControl('', [Validators.required]),
-      'sequence':new FormControl(attr_length+1, []),
-    });
-  }
+/*-----------------------------ATTRIBUTES --------------------------------*/
+addAttributeInput(){
+  this.attributes().push(this.newAttributeInput());
+}
 
-  removeAttributeInput(empIndex:number) {
-    this.attributes().removeAt(empIndex);
-  }
+newAttributeInput(): FormGroup {
+  let attr_length= this.attributes().length;
+  return new FormGroup({
+    'type': new FormControl('', [Validators.required]),
+    'key': new FormControl('', [Validators.required]),
+    'value': new FormControl(null, []),
+    'list': new FormArray([]),
+    'table': new FormArray([]),
+    'sequence':new FormControl(attr_length+1, []),
+  });
+}
 
-  attributes(): FormArray {
-      return this.addMedicineKit.get("attributes") as FormArray
-  }
-  /*-----------------------------END OF ATTRIBUTES --------------------------------*/
+newListItemInput(): FormGroup {
+  return new FormGroup({
+    'name': new FormControl('', [Validators.required]),
+  });
+}
+
+removeAttributeInput(empIndex:number) {
+  this.attributes().removeAt(empIndex);
+}
+
+attributes(): FormArray {
+    return this.addMedicineKit.get("attributes") as FormArray
+}
+
+/*-------------------LIST ------------------------*/
+addAttributeListInput(attributeIndex:number){
+  this.attributesList(attributeIndex).push(this.newListItemInput());
+}
+
+removeAttributeListInput(attributeIndex:number,itemIndex:number) {
+  this.attributesList(attributeIndex).removeAt(itemIndex);
+}
+
+attributesList(attributeIndex:number): FormArray {
+    return this.attributes().at(attributeIndex).get("list") as FormArray
+}
+
+attributesListControls(attributeIndex:number){
+  return (this.attributes().at(attributeIndex).get("list") as FormArray).controls;
+}
+
+/*-------------------TABLE -----------------------*/
+newTableItemInput(): FormGroup {
+  return new FormGroup({
+    'label': new FormControl('', [Validators.required]),
+    'value': new FormControl('', [Validators.required]),
+  });
+}
+
+addAttributeTableInput(attributeIndex:number){
+  this.attributesTable(attributeIndex).push(this.newTableItemInput());
+}
+
+removeAttributeTableInput(attributeIndex:number,itemIndex:number) {
+  this.attributesTable(attributeIndex).removeAt(itemIndex);
+}
+
+attributesTable(attributeIndex:number): FormArray {
+    return this.attributes().at(attributeIndex).get("table") as FormArray
+}
+
+attributesTableControls(attributeIndex:number){
+  return (this.attributes().at(attributeIndex).get("table") as FormArray).controls;
+}
+
+handleTypeChange(attributeIndex:number,event:any){
+    let value = event.target.value;
+    if(value=='LIST'){
+        this.addAttributeListInput(attributeIndex);
+        this.attributesTable(attributeIndex).clear();
+    }
+    else if(value=='TABLE'){
+      this.attributesList(attributeIndex).clear();
+      this.addAttributeTableInput(attributeIndex);
+    }
+    else{
+        this.attributesList(attributeIndex).clear();
+        this.attributesTable(attributeIndex).clear();
+    }
+}
+
+/*-----------------------------END OF ATTRIBUTES --------------------------------*/
 
 
 
@@ -344,6 +442,7 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
   get treatment_condition_ids() { return this.addMedicineKit.get('treatment_condition_ids'); }
 
   get generic_name() { return this.addMedicineKit.get('generic_name'); }
+  get manufacturer_id(){return this.addMedicineKit.get('manufacturer_id');}
   get brand_id() { return this.addMedicineKit.get('brand_id'); }
   get description(){return this.addMedicineKit.get('description');}
   get price() { return this.addMedicineKit.get('price'); }
@@ -371,6 +470,11 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
     this._onDestroyBrand.next();
     this._onDestroyBrand.complete();
 
+    this._onDestroyManufacturer.next();
+    this._onDestroyManufacturer.complete();
+
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 
    /*--- Similar Drug Helpers ---*/
@@ -400,6 +504,15 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
   }
   /*---End of Similar Drug Helpers ---*/
 
+  async filterManufacturesResults(token: string) {
+    return this.getAllManufacturers(token).then((data:any)=>{
+      return data;
+    });
+  }
+
+  async getAllManufacturers(searchTerm:string):Promise<any>{
+    return await this.http.get(`api/manufacturers/all`+`?search=${searchTerm}`).toPromise();
+  }
 
 
   async filterBrandsResults(token: string) {
@@ -409,7 +522,9 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
   }
 
   async getAllBrands(searchTerm:string):Promise<any>{
-    return await this.http.get(`api/brands/all`+`?search=${searchTerm}`).toPromise();
+    let manufacturer_id_control = this.addMedicineKit.get('manufacturer_id');
+    let manufacturer_id = manufacturer_id_control ? manufacturer_id_control.value : '';
+    return await this.http.get(`api/brands/all`+`?search=${searchTerm}&manufacturer_id=${manufacturer_id}`).toPromise();
   }
 
   public getStateList() {

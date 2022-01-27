@@ -51,8 +51,8 @@ export class notificationHelper {
 	}
 
   clickNotification(loggedInUser:any,notification:any,_router:any){
-    if(notification.status==1){
-        this.readNotification([notification.id]);
+    if(notification.read_at==null){
+        this.readNotification([notification._id]);
     }
 
   }

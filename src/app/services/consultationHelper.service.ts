@@ -48,6 +48,12 @@ export class consultationHelper {
       else if (status == 'RECEIVED_TOO_SOON'){
         badge= `<span class='badge badge-pill badge-warning p-2'>Too Soon</span>`;
       }
+      else if (status=='CONSENT_SENT'){
+        badge= `<span class='badge badge-pill badge-warning p-2'>Consent Sent</span>`;
+      }
+      else if (status=='ACTION_NEEDED'){
+        badge= `<span class='badge badge-pill badge-dark p-2'>Action Required</span>`;
+      }
       else if (status == 'REFUNDED') {
         badge= `<span class='badge badge-pill badge-danger p-2'>Refunded</span>`;
       } else {
@@ -75,6 +81,9 @@ export class consultationHelper {
       else if (status == 'SHIPPED'){
         badge= `<span class='badge  badge-pill badge-success  p-2'>Shipped</span>`;
       }
+      else if (status=='ACTION_NEEDED'){
+        badge= `<span class='badge badge-pill badge-dark p-2'>Action Required</span>`;
+      }
       else if (status == 'PICKEDUP_DELIVERY'){
         badge= `<span class='badge  badge-pill badge-success  p-2'>Pickedup / Delivery</span>`;
       }
@@ -98,7 +107,14 @@ export class consultationHelper {
     }
     else if (status == 'REFUNDED') {
       badge= `<span class='badge badge-pill badge-danger p-2'>Refunded</span>`;
-    }else{
+    }
+    else if (status=='CONSENT_SENT'){
+      badge= `<span class='badge badge-pill badge-warning p-2'>Consent Sent</span>`;
+    }
+    else if (status=='ACTION_NEEDED'){
+      badge= `<span class='badge badge-pill badge-dark p-2'>Action Required</span>`;
+    }
+    else{
       badge= '<span></span>';
     }
     return badge;

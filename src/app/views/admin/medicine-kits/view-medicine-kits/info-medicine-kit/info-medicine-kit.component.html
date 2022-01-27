@@ -20,8 +20,12 @@
                   <td class="font-weight-normal">{{medicineKitDetails.slug || '-'}}</td>
                 </tr>
                 <tr>
+                  <td class="font-weight-bold">Manufacturer</td>
+                  <td class="font-weight-normal">{{medicineKitDetails.manufacturer_id ? medicineKitDetails.manufacturer_id.name : '-'}}</td>
+                </tr>
+                <tr>
                   <td class="font-weight-bold">Brand</td>
-                  <td class="font-weight-normal">{{medicineKitDetails.brand_id?.name || '-'}}</td>
+                  <td class="font-weight-normal">{{medicineKitDetails.brand_id?  medicineKitDetails.brand_id.name:'' }}</td>
                 </tr>
                 <tr>
                   <td  class="font-weight-bold">Active</td>
@@ -70,7 +74,7 @@
                 <tr>
                   <td class="font-weight-bold">State</td>
                   <td class="font-weight-normal">
-                    <span class="badge badge-primary badge-pill p-2  mr-2" *ngFor="let state of medicineKitDetails.states">{{state.name}}</span>
+                    <span class="badge badge-primary badge-pill p-2  mr-2 mb-2" *ngFor="let state of medicineKitDetails.states">{{state.name}}</span>
                   </td>
                 </tr>
             </table>

@@ -30,13 +30,14 @@ export class ViewMedicineKitsComponent implements OnInit {
 
   ngOnInit() {
     this.getMedicineKitDetails();
-    this.getTreatmentConditionList();
   }
 
   getMedicineKitDetails() {
     const url = 'api/medicine_kits/view/' + this.medicineKitId;
     this._http.get(url).subscribe((res: any) => {
         this.medicineKitDetails = res;
+        this.getTreatmentConditionList();
+
     },(err:any) => {
 
     });

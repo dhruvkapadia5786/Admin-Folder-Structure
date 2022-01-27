@@ -44,6 +44,12 @@ export class orderHelper {
         else if (status == 'REJECTED'){
           badge= `<span class='badge badge-pill badge-danger p-2'>Rejected</span>`;
         }
+        else if (status=='CONSENT_SENT'){
+          badge= `<span class='badge badge-pill badge-warning p-2'>Consent Sent</span>`;
+        }
+        else if (status=='ACTION_NEEDED'){
+          badge= `<span class='badge badge-pill badge-dark p-2'>Action Required</span>`;
+        }
         else if (status == 'RECEIVED_TOO_SOON'){
           badge= `<span class='badge badge-pill badge-warning p-2'>Too Soon</span>`;
         }
@@ -64,6 +70,9 @@ export class orderHelper {
       }
       else if (status == 'REJECTED'){
         badge= `<span class='badge  badge-pill badge-danger  p-2'>Rejected</span>`;
+      }
+      else if (status=='ACTION_NEEDED'){
+        badge= `<span class='badge badge-pill badge-warning p-2'>Action Required</span>`;
       }
       else if(status=='PRESCRIBED_BY_DOCTOR'){
           badge= `<span class='badge  badge-pill badge-info p-2'>Prescribed By Doctor</span>`;
@@ -97,7 +106,14 @@ export class orderHelper {
       }
       else if (status == 'REFUNDED') {
         badge= `<span class='badge badge-pill badge-danger p-2'>Refunded</span>`;
-      }else{
+      }
+      else if (status=='CONSENT_SENT'){
+        badge= `<span class='badge badge-pill badge-warning p-2'>Consent Sent</span>`;
+      }
+      else if (status=='ACTION_NEEDED'){
+        badge= `<span class='badge badge-pill badge-dark p-2'>Action Required</span>`;
+      }
+      else{
         badge= '<span></span>';
       }
       return badge;

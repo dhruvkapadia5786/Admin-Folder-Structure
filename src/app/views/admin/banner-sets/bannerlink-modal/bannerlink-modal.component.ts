@@ -35,6 +35,9 @@ export class BannerlinkModalComponent implements OnInit {
     if(this.selectedTab=='PRODUCT'){
       this.searchLabel = 'Product';
     }
+    if(this.selectedTab=='MEDICINE_KIT'){
+      this.searchLabel = 'Medicine Kit';
+    }
   }
 
 
@@ -60,6 +63,8 @@ export class BannerlinkModalComponent implements OnInit {
       url='api/brands/all?search='+this.query;
     }else if(this.selectedTab=='PRODUCT'){
       url='api/products/search?search='+this.query;
+    }else if(this.selectedTab=='MEDICINE_KIT'){
+      url='api/medicine_kits/all?search='+this.query;
     }
 
     this.http.get(url).subscribe((data:any) => {
