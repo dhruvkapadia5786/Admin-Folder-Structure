@@ -2,10 +2,24 @@
       <h4 class="text-white font-weight-bold mb-0 text-center">Products</h4>
       <a class="btn btn-sm btn-primary" [routerLink]="'/admin/products/add'">Add <i class="ml-2 fa fa-plus" aria-hidden="true"></i></a>
   </div>
+  <div class="form-row">
+      <div class="col-md-6 col-sm-12">
+          <div class="form-group">
+            <label>Select Procurement Channel</label>
+            <mat-select placeholder="Select Procurement Channel" class="form-control"  (selectionChange)="handleChange('CHANNEL', $event.value)" [(ngModel)]="product_config.filter.CHANNEL" multiple>
+               <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'CHANNEL')"
+                [indeterminate]="product_config.filter.CHANNEL.length && notSelectedChannels"
+                [checked]="!notSelectedChannels">All</mat-checkbox>
+              <mat-option *ngFor="let channel of procurementChannels" [value]="channel">
+                {{channel}}
+              </mat-option>
+            </mat-select>
+          </div>
+      </div>
+  </div>
+
   <div class="p-2" *blockUI="'datatable'">
     <div class="table-responsive-md">
-        <div class="table-responsive-md">
             <table  hover="true" id="productsList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"></table>
-        </div>
     </div>
 </div>

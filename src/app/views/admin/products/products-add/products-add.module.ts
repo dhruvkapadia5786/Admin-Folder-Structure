@@ -17,6 +17,8 @@ import { SelectOtcSubcategoryModalModule } from '../select-otc-subcategory-modal
 import { SelectOtcSubcategoryModalComponent } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.component';
 import { BannerlinkModalModule } from '../../banner-sets/bannerlink-modal/bannerlink-modal.module';
 import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
+import { TextEditorModalModule } from '../../common-components/text-editor-modal/text-editor-modal.module';
+import { TextEditorModalComponent } from '../../common-components/text-editor-modal/text-editor-modal.component';
 
 @NgModule({
   declarations: [
@@ -34,9 +36,10 @@ import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/ban
     SelectOtcSubcategoryModalModule,
     BannerlinkModalModule,
     LensParametersModalModule,
+    TextEditorModalModule,
     ProductsAddRoutingModule
   ],
-  entryComponents:[LensParametersModalComponent,SelectOtcSubcategoryModalComponent,BannerlinkModalComponent],
+  entryComponents:[LensParametersModalComponent,SelectOtcSubcategoryModalComponent,BannerlinkModalComponent,TextEditorModalComponent],
   providers:[Helper]
 })
 export class ProductsAddModule { }

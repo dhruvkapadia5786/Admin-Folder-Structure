@@ -7,6 +7,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { TextEditorModalComponent } from '../../common-components/text-editor-modal/text-editor-modal.component';
+import { TextEditorModalService } from '../../common-components/text-editor-modal/text-editor-modal.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-edit-health-conditions',
@@ -15,6 +18,8 @@ import { environment } from 'src/environments/environment';
 export class EditHealthConditionsComponent implements OnInit {
   pdfIcon: string = '../../../../../assets/img/pdf_file_icon.png'
   videoIcon: string = '../../../../../assets/img/video-play-icon.png'
+  modalRef!: BsModalRef;
+  elementTypes=['DESCRIPTION','LIST','TABLE','HTML'];
 
   public specialityPathList: any[] = [];
   public statesList: any[] = [];
@@ -33,6 +38,8 @@ export class EditHealthConditionsComponent implements OnInit {
     private _http: HttpClient,
     private router: Router,
     private _helper: Helper,
+    private modalService: BsModalService,
+    private _textEditorModalService: TextEditorModalService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _consultationHealthtConditions: ConsultationHealthConditionsService) {
     this.healthconditionId = this.route.snapshot.paramMap.get('id');
@@ -190,14 +197,41 @@ export class EditHealthConditionsComponent implements OnInit {
         faqsControl.push(faqFormGroup);
       });
 
+
       const attributesControl = this.addHealthConditionsForm.get('attributes') as FormArray;
       obj.attributes.forEach((item:any)=>{
-        let attrFormGroup = new FormGroup({
-          'name':new FormControl(item.name, [Validators.required]),
-          'value':new FormControl(item.value, [Validators.required]),
-          'sequence':new FormControl(item.sequence)
-        });
-        attributesControl.push(attrFormGroup);
+          let listControlFormArray:any[]=[];
+          let tableControlFormArray:any[]=[];
+
+          if(item.type=='LIST'){
+            for(let listItem of item.list){
+              let listControl:any = new FormGroup({
+                'name': new FormControl(listItem.name, [Validators.required]),
+              });
+              listControlFormArray.push(listControl);
+            }
+          }
+
+          if(item.type=='TABLE'){
+            for(let tableItem of item.table){
+              let tableControl:any = new FormGroup({
+                'label': new FormControl(tableItem.label, [Validators.required]),
+                'value': new FormControl(tableItem.value, [Validators.required])
+              });
+              tableControlFormArray.push(tableControl);
+            }
+          }
+
+          let attrFormGroup = new FormGroup({
+            'type': new FormControl(item.type, [Validators.required]),
+            'key': new FormControl(item.key, [Validators.required]),
+            'value': new FormControl(item.value, []),
+            'value_html': new FormControl(item.value_html, []),
+            'list': new FormArray(listControlFormArray),
+            'table': new FormArray(tableControlFormArray),
+            'sequence':new FormControl(item.sequence, []),
+          });
+          attributesControl.push(attrFormGroup);
       });
 
       this._changeDetectorRef.detectChanges();
@@ -373,9 +407,19 @@ addAttributeInput(){
 newAttributeInput(): FormGroup {
   let attr_length= this.attributes().length;
   return new FormGroup({
-    'name': new FormControl('', [Validators.required]),
-    'value': new FormControl('', [Validators.required]),
+    'type': new FormControl('', [Validators.required]),
+    'key': new FormControl('', [Validators.required]),
+    'value': new FormControl(null, []),
+    'value_html': new FormControl(null, []),
+    'list': new FormArray([]),
+    'table': new FormArray([]),
     'sequence':new FormControl(attr_length+1, []),
+  });
+}
+
+newListItemInput(): FormGroup {
+  return new FormGroup({
+    'name': new FormControl('', [Validators.required]),
   });
 }
 
@@ -386,6 +430,88 @@ removeAttributeInput(empIndex:number) {
 attributes(): FormArray {
     return this.addHealthConditionsForm.get("attributes") as FormArray
 }
+
+/*-------------------LIST ------------------------*/
+addAttributeListInput(attributeIndex:number){
+  this.attributesList(attributeIndex).push(this.newListItemInput());
+}
+
+removeAttributeListInput(attributeIndex:number,itemIndex:number) {
+  this.attributesList(attributeIndex).removeAt(itemIndex);
+}
+
+attributesList(attributeIndex:number): FormArray {
+    return this.attributes().at(attributeIndex).get("list") as FormArray
+}
+
+attributesListControls(attributeIndex:number){
+  return (this.attributes().at(attributeIndex).get("list") as FormArray).controls;
+}
+
+/*-------------------TABLE -----------------------*/
+newTableItemInput(): FormGroup {
+  return new FormGroup({
+    'label': new FormControl('', [Validators.required]),
+    'value': new FormControl('', [Validators.required]),
+  });
+}
+
+addAttributeTableInput(attributeIndex:number){
+  this.attributesTable(attributeIndex).push(this.newTableItemInput());
+}
+
+removeAttributeTableInput(attributeIndex:number,itemIndex:number) {
+  this.attributesTable(attributeIndex).removeAt(itemIndex);
+}
+
+attributesTable(attributeIndex:number): FormArray {
+    return this.attributes().at(attributeIndex).get("table") as FormArray
+}
+
+attributesTableControls(attributeIndex:number){
+  return (this.attributes().at(attributeIndex).get("table") as FormArray).controls;
+}
+
+handleTypeChange(attributeIndex:number,event:any){
+    let value = event.target.value;
+    let htmlControl=this.attributes().at(attributeIndex).get('value_html');
+    let valueControl=this.attributes().at(attributeIndex).get('value');
+
+    if(value=='LIST'){
+        htmlControl ? htmlControl.clearValidators():'';
+        valueControl ? valueControl.clearValidators():'';
+
+        this.addAttributeListInput(attributeIndex);
+        this.attributesTable(attributeIndex).clear();
+    }
+    else if(value=='TABLE'){
+      htmlControl ? htmlControl.clearValidators():'';
+      valueControl ? valueControl.clearValidators():'';
+
+      this.attributesList(attributeIndex).clear();
+      this.addAttributeTableInput(attributeIndex);
+    }
+    else if(value=='HTML'){
+       valueControl ? valueControl.clearValidators():'';
+
+      if(htmlControl){
+        htmlControl.setValidators([Validators.required]);
+        htmlControl.updateValueAndValidity();
+      }
+      this.attributesList(attributeIndex).clear();
+      this.attributesTable(attributeIndex).clear();
+    }
+    else{
+        if(valueControl){
+          valueControl.setValidators([Validators.required]);
+          valueControl.updateValueAndValidity();
+        }
+        htmlControl ? htmlControl.clearValidators():'';
+        this.attributesList(attributeIndex).clear();
+        this.attributesTable(attributeIndex).clear();
+    }
+}
+
 /*-----------------------------END OF ATTRIBUTES --------------------------------*/
 
 
@@ -434,6 +560,18 @@ attributes(): FormArray {
 
   getUrl(url: string) {
     return environment.api_url + url
+  }
+
+
+  openHTMLEditorModal(formIndex: number){
+    this._textEditorModalService.setFormData(this.attributes().at(formIndex).value.value_html);
+    this.modalRef = this.modalService.show(TextEditorModalComponent, {class: 'modal-full-lg', backdrop : 'static', keyboard : false});
+    this.modalRef.content.onEventCompleted.subscribe((receivedHTML:any) => {
+      this.attributes().at(formIndex).patchValue({
+        value_html: receivedHTML
+      })
+      this.modalRef.hide();
+    });
   }
 
 }

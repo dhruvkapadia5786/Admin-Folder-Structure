@@ -15,6 +15,12 @@ import {environment} from 'src/environments/environment';
 })
 export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
   productsList: any[] = [];
+  procurementChannels=['MEDICINE','OTC','PRIVATE LABEL','CONTACT LENS','LENS SOLUTION'];
+  product_config:any = {
+    filter: {
+      CHANNEL: []
+    }
+  };
 
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject();
@@ -57,7 +63,28 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['admin', 'products', 'edit', productEditId]);
   }
 
-  ngOnDestroy() {
+  handleChange(event: string, value: any) {
+    if(event == 'CHANNEL'){
+      this.rerender();
+    }
+  }
+
+  public handleCheckAll(event:any, flag:any) {
+    if (flag == 'CHANNEL'){
+      if (event.checked){
+        this.product_config.filter.CHANNEL = this.procurementChannels;
+      } else {
+        this.product_config.filter.CHANNEL = [];
+      }
+    }
+    this.rerender();
+  }
+
+  get notSelectedChannels(){
+    return this.procurementChannels.filter((item) => !this.product_config.filter.CHANNEL.some((b: any) => b === item)).length;
+  }
+
+  ngOnDestroy(){
     if (this.dtTrigger) {
       this.dtTrigger.unsubscribe();
     }
@@ -72,7 +99,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  getDTOptions() {
+  getDTOptions(){
     this.blockDataTable.start();
     this.dtOptions = {
       pagingType: 'full_numbers',
@@ -85,6 +112,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       ordering: true,
       order: [[2, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
+       dataTablesParameters.filter = this.product_config.filter.CHANNEL.length > 0 ? this.product_config.filter : {}
         this._http
           .post<any>(
             'api/products/list',

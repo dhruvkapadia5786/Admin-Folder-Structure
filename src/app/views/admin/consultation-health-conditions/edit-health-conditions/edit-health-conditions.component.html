@@ -273,28 +273,106 @@
 
         <div class="alert alert-danger my-3">
               <h5 class="font-weight-bold mb-5">Descriptive Attributes</h5>
-              <div formArrayName="attributes">
-                  <div *ngFor="let attrItem of attributes().controls; let attrIndex=index">
-                    <div class="form-group mt-2" [formGroupName]="attrIndex">
-                              <div class="form-row">
-                                  <div class="col-10">
-                                        <input type="text" class="form-control" placeholder="Enter Attribute Name" formControlName="name"  />
-                                        <div class="invalid-feedback" *ngIf="attrItem.get('name')?.invalid && (attrItem.get('name')?.dirty || attrItem.get('name')?.touched)" class="text-danger">
-                                          <div *ngIf="attrItem.get('name')?.errors?.required">Attribute Name is required.</div>
-                                        </div>
-                                  </div>
-                                  <div class="col-2">
-                                        <button  type="button" class="btn btn-sm btn-danger" (click)="removeAttributeInput(attrIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                  </div>
-                                  <div class="col-12 mt-2">
-                                        <textarea type="text" class="form-control" rows="4" placeholder="Enter Attribute Value" formControlName="value"></textarea>
-                                        <div class="invalid-feedback" *ngIf="attrItem.get('value')?.invalid && (attrItem.get('value')?.dirty || attrItem.get('value')?.touched)" class="text-danger">
-                                          <div *ngIf="attrItem.get('value')?.errors?.required">Attribute Value is required.</div>
-                                        </div>
-                                  </div>
-                              </div>
-                      </div>
-                  </div>
+               <div formArrayName="attributes">
+                    <div *ngFor="let attrItem of attributes().controls; let attrIndex=index">
+                      <div class="form-group mt-2" [formGroupName]="attrIndex">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                          <input type="text" class="form-control" placeholder="Enter Attribute Name" formControlName="key"  />
+                                          <div class="invalid-feedback" *ngIf="attrItem.get('key')?.invalid && (attrItem.get('key')?.dirty || attrItem.get('key')?.touched)" class="text-danger">
+                                            <div *ngIf="attrItem.get('key')?.errors?.required">Attribute Name is required.</div>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                          <select  class="form-control" placeholder="Select Type" formControlName="type" (change)="handleTypeChange(attrIndex,$event)">
+                                                <option *ngFor="let type of elementTypes" [value]="type">{{type}}</option>
+                                          </select>
+                                          <div class="invalid-feedback" *ngIf="attrItem.get('type')?.invalid && (attrItem.get('type')?.dirty || attrItem.get('type')?.touched)" class="text-danger">
+                                            <div *ngIf="attrItem.get('type')?.errors?.required">Attribute Type is required.</div>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                          <button  type="button" class="btn btn-sm btn-danger" (click)="removeAttributeInput(attrIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                          <div *ngIf="attrItem.get('type')?.value == 'DESCRIPTION'">
+                                              <textarea type="text" class="form-control" placeholder="Enter Attribute Value" formControlName="value"></textarea>
+                                              <div class="invalid-feedback" *ngIf="attrItem.get('value')?.invalid && (attrItem.get('value')?.dirty || attrItem.get('value')?.touched)" class="text-danger">
+                                                <div *ngIf="attrItem.get('value')?.errors?.required">Attribute Value is required.</div>
+                                              </div>
+                                          </div>
+
+                                          <div *ngIf="attrItem.get('type')?.value == 'LIST'">
+                                                <div formArrayName="list">
+                                                      <div *ngFor="let listItem of attributesListControls(attrIndex); let listItemIndex=index">
+                                                          <div class="row"  [formGroupName]="listItemIndex">
+                                                              <div class="col-md-8">
+                                                                  <div class="form-group mt-2">
+                                                                        <input type="text" class="form-control" placeholder="Enter Details" formControlName="name"  />
+                                                                        <div class="invalid-feedback" *ngIf="listItem.get('name')?.invalid && (listItem.get('name')?.dirty || listItem.get('name')?.touched)" class="text-danger">
+                                                                          <div *ngIf="listItem.get('name')?.errors?.required">Name is required.</div>
+                                                                        </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="col-md-4">
+                                                                  <button  *ngIf="listItemIndex>0" type="button" class="btn btn-sm btn-danger mr-2" (click)="removeAttributeListInput(attrIndex,listItemIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                                                                  <button  type="button" class="btn btn-sm btn-primary" (click)="addAttributeListInput(attrIndex)"><i class="fa fa-plus mr-2"></i>Add</button>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                </div>
+                                          </div>
+
+                                          <div *ngIf="attrItem.get('type')?.value == 'TABLE'">
+                                                <div formArrayName="table">
+                                                      <div *ngFor="let tableItem of attributesTableControls(attrIndex); let tableItemIndex=index">
+                                                          <div class="row"  [formGroupName]="tableItemIndex">
+                                                              <div class="col-md-3">
+                                                                  <div class="form-group mt-2">
+                                                                        <input type="text" class="form-control" placeholder="Enter Label" formControlName="label"  />
+                                                                        <div class="invalid-feedback" *ngIf="tableItem.get('label')?.invalid && (tableItem.get('label')?.dirty || tableItem.get('label')?.touched)" class="text-danger">
+                                                                          <div *ngIf="tableItem.get('label')?.errors?.required">Label is required.</div>
+                                                                        </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="col-md-6">
+                                                                  <div class="form-group mt-2">
+                                                                        <input type="text" class="form-control" placeholder="Enter Value" formControlName="value"  />
+                                                                        <div class="invalid-feedback" *ngIf="tableItem.get('value')?.invalid && (tableItem.get('value')?.dirty || tableItem.get('value')?.touched)" class="text-danger">
+                                                                          <div *ngIf="tableItem.get('value')?.errors?.required">Value is required.</div>
+                                                                        </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="col-md-3">
+                                                                  <button  *ngIf="tableItemIndex>0" type="button" class="btn btn-sm btn-danger mr-2" (click)="removeAttributeTableInput(attrIndex,tableItemIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                                                                  <button  type="button" class="btn btn-sm btn-primary" (click)="addAttributeTableInput(attrIndex)"><i class="fa fa-plus mr-2"></i>Add</button>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                </div>
+                                          </div>
+
+                                          <div *ngIf="attrItem.get('type')?.value == 'HTML'">
+                                            <div class="row mt-2">
+                                              <div class="col-md-8">
+                                                  <div class="form-group">
+                                                        <textarea rows="5" type="text" class="form-control" placeholder="Write HTML Code" formControlName="value_html"></textarea>
+                                                        <div class="invalid-feedback" *ngIf="attrItem.get('value_html')?.invalid && (attrItem.get('value_html')?.dirty || attrItem.get('value_html')?.touched)" class="text-danger">
+                                                          <div *ngIf="attrItem.get('value_html')?.errors?.required">HTML Value is required.</div>
+                                                        </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-md-4">
+                                                  <button  type="button" class="btn btn-sm btn-primary" (click)="openHTMLEditorModal(attrIndex)"><i class="fa fa-pen"></i></button>
+                                              </div>
+                                            </div>
+                                          </div>
+
+
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
               </div>
               <div class="text-center">
                     <button type="button"  class="btn btn-sm btn-primary" (click)="addAttributeInput()"><i class="fa fa-plus mr-2"></i>Add More Attributes</button>

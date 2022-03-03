@@ -940,6 +940,21 @@
                                                     </div>
                                               </div>
 
+                                              <div *ngIf="attrItem.get('type')?.value == 'HTML'">
+                                                <div class="row mt-2">
+                                                  <div class="col-md-8">
+                                                      <div class="form-group">
+                                                            <textarea rows="5" type="text" class="form-control" placeholder="Write HTML Code" formControlName="value_html"></textarea>
+                                                            <div class="invalid-feedback" *ngIf="attrItem.get('value_html')?.invalid && (attrItem.get('value_html')?.dirty || attrItem.get('value_html')?.touched)" class="text-danger">
+                                                              <div *ngIf="attrItem.get('value_html')?.errors?.required">HTML Value is required.</div>
+                                                            </div>
+                                                      </div>
+                                                  </div>
+                                                  <div class="col-md-4">
+                                                      <button  type="button" class="btn btn-sm btn-primary" (click)="openHTMLEditorModal(attrIndex)"><i class="fa fa-pen"></i></button>
+                                                  </div>
+                                                </div>
+                                              </div>
 
 
                                         </div>

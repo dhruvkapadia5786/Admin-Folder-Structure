@@ -17,6 +17,8 @@ import { SelectOtcSubcategoryModalService } from '../select-otc-subcategory-moda
 import { environment } from 'src/environments/environment';
 import { BannerlinkModalService } from '../../banner-sets/bannerlink-modal/bannerlink-modal.service';
 import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
+import { TextEditorModalComponent } from '../../common-components/text-editor-modal/text-editor-modal.component';
+import { TextEditorModalService } from '../../common-components/text-editor-modal/text-editor-modal.service';
 
 @Component({
   selector: 'app-products-add',
@@ -40,7 +42,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   selectedDocuments:File[]=[];
   selectedVideos:File[]=[];
 
-  elementTypes=['DESCRIPTION','LIST','TABLE'];
+  elementTypes=['DESCRIPTION','LIST','TABLE','HTML'];
 
   protected brands: any[] = [];
   public brandFilteringCtrl: FormControl = new FormControl();
@@ -100,6 +102,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
     private _router: Router,
     private _helper:Helper,
     private _bsModalService:BsModalService,
+    private _textEditorModalService: TextEditorModalService,
     private _bannerLinkModalService:BannerlinkModalService,
     private _lensParametersModalService:LensParametersModalService,
     private _selectOtcSubcategoryModalService:SelectOtcSubcategoryModalService,
@@ -789,6 +792,7 @@ newAttributeInput(): FormGroup {
     'type': new FormControl('', [Validators.required]),
     'key': new FormControl('', [Validators.required]),
     'value': new FormControl(null, []),
+    'value_html': new FormControl(null, []),
     'list': new FormArray([]),
     'table': new FormArray([]),
     'sequence':new FormControl(attr_length+1, []),
@@ -851,19 +855,43 @@ attributesTableControls(attributeIndex:number){
 }
 
 handleTypeChange(attributeIndex:number,event:any){
-    let value = event.target.value;
-    if(value=='LIST'){
-        this.addAttributeListInput(attributeIndex);
-        this.attributesTable(attributeIndex).clear();
+  let value = event.target.value;
+  let htmlControl=this.attributes().at(attributeIndex).get('value_html');
+  let valueControl=this.attributes().at(attributeIndex).get('value');
+
+  if(value=='LIST'){
+      htmlControl ? htmlControl.clearValidators():'';
+      valueControl ? valueControl.clearValidators():'';
+
+      this.addAttributeListInput(attributeIndex);
+      this.attributesTable(attributeIndex).clear();
+  }
+  else if(value=='TABLE'){
+    htmlControl ? htmlControl.clearValidators():'';
+    valueControl ? valueControl.clearValidators():'';
+
+    this.attributesList(attributeIndex).clear();
+    this.addAttributeTableInput(attributeIndex);
+  }
+  else if(value=='HTML'){
+     valueControl ? valueControl.clearValidators():'';
+
+    if(htmlControl){
+      htmlControl.setValidators([Validators.required]);
+      htmlControl.updateValueAndValidity();
     }
-    else if(value=='TABLE'){
+    this.attributesList(attributeIndex).clear();
+    this.attributesTable(attributeIndex).clear();
+  }
+  else{
+      if(valueControl){
+        valueControl.setValidators([Validators.required]);
+        valueControl.updateValueAndValidity();
+      }
+      htmlControl ? htmlControl.clearValidators():'';
       this.attributesList(attributeIndex).clear();
-      this.addAttributeTableInput(attributeIndex);
-    }
-    else{
-        this.attributesList(attributeIndex).clear();
-        this.attributesTable(attributeIndex).clear();
-    }
+      this.attributesTable(attributeIndex).clear();
+  }
 }
 
 /*-----------------------------END OF ATTRIBUTES --------------------------------*/
@@ -1012,5 +1040,18 @@ handleTypeChange(attributeIndex:number,event:any){
 
   getUrl(url: string) {
     return environment.api_url + url
+  }
+
+
+
+  openHTMLEditorModal(formIndex: number){
+    this._textEditorModalService.setFormData(this.attributes().at(formIndex).value.value_html);
+    this.modalRef = this._bsModalService.show(TextEditorModalComponent, {class: 'modal-full-lg', backdrop : 'static', keyboard : false});
+    this.modalRef.content.onEventCompleted.subscribe((receivedHTML:any) => {
+      this.attributes().at(formIndex).patchValue({
+        value_html: receivedHTML
+      })
+      this.modalRef.hide();
+    });
   }
 }

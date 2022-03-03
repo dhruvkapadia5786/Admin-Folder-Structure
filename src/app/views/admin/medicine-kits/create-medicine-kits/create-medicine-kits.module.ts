@@ -17,6 +17,8 @@ import {NcpdpDrugFormsComponent} from '../../ncpdp-drug-forms/ncpdp-drug-forms.c
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { TextEditorModalModule } from '../../common-components/text-editor-modal/text-editor-modal.module';
+import { TextEditorModalComponent } from '../../common-components/text-editor-modal/text-editor-modal.component';
 
 @NgModule({
   declarations: [CreateMedicineKitsComponent],
@@ -34,9 +36,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatFormFieldModule,
     NgxMatSelectSearchModule,
     FormsModule,
-    NcpdpDrugFormsModule
+    NcpdpDrugFormsModule,
+    TextEditorModalModule
   ],
   providers:[Helper],
-  entryComponents:[NcpdpDrugFormsComponent]
+  entryComponents:[NcpdpDrugFormsComponent,TextEditorModalComponent]
 })
 export class CreateMedicineKitsModule { }

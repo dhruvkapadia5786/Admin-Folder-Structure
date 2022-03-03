@@ -13,6 +13,8 @@ import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NcpdpDrugFormsComponent } from '../../ncpdp-drug-forms/ncpdp-drug-forms.component';
 import { NcpdpDrugFormsService } from '../../ncpdp-drug-forms/ncpdp-drug-forms.service';
+import { TextEditorModalComponent } from '../../common-components/text-editor-modal/text-editor-modal.component';
+import { TextEditorModalService } from '../../common-components/text-editor-modal/text-editor-modal.service';
 
 @Component({
   selector: 'app-create-medicine-kits',
@@ -31,7 +33,7 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
   selectable = true;
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  elementTypes=['DESCRIPTION','LIST','TABLE'];
+  elementTypes=['DESCRIPTION','LIST','TABLE','HTML'];
   routes=[
     'Oral','Sublingual / Buccal','Rectal','Topical','Inhalation','Transdermal','Injection'
   ];
@@ -68,6 +70,7 @@ export class CreateMedicineKitsComponent implements OnInit,OnDestroy {
     public changeDetectorRef: ChangeDetectorRef,
     private modalService: BsModalService,
     private ncpdpDrugFormsService:NcpdpDrugFormsService,
+    private _textEditorModalService: TextEditorModalService,
     private _router: Router,
     private _helper:Helper,
     private _toastr: Toastr){
@@ -357,6 +360,7 @@ newAttributeInput(): FormGroup {
     'type': new FormControl('', [Validators.required]),
     'key': new FormControl('', [Validators.required]),
     'value': new FormControl(null, []),
+    'value_html': new FormControl(null, []),
     'list': new FormArray([]),
     'table': new FormArray([]),
     'sequence':new FormControl(attr_length+1, []),
@@ -420,15 +424,39 @@ attributesTableControls(attributeIndex:number){
 
 handleTypeChange(attributeIndex:number,event:any){
     let value = event.target.value;
+    let htmlControl=this.attributes().at(attributeIndex).get('value_html');
+    let valueControl=this.attributes().at(attributeIndex).get('value');
+
     if(value=='LIST'){
+        htmlControl ? htmlControl.clearValidators():'';
+        valueControl ? valueControl.clearValidators():'';
+
         this.addAttributeListInput(attributeIndex);
         this.attributesTable(attributeIndex).clear();
     }
     else if(value=='TABLE'){
+      htmlControl ? htmlControl.clearValidators():'';
+      valueControl ? valueControl.clearValidators():'';
+
       this.attributesList(attributeIndex).clear();
       this.addAttributeTableInput(attributeIndex);
     }
+    else if(value=='HTML'){
+       valueControl ? valueControl.clearValidators():'';
+
+      if(htmlControl){
+        htmlControl.setValidators([Validators.required]);
+        htmlControl.updateValueAndValidity();
+      }
+      this.attributesList(attributeIndex).clear();
+      this.attributesTable(attributeIndex).clear();
+    }
     else{
+        if(valueControl){
+          valueControl.setValidators([Validators.required]);
+          valueControl.updateValueAndValidity();
+        }
+        htmlControl ? htmlControl.clearValidators():'';
         this.attributesList(attributeIndex).clear();
         this.attributesTable(attributeIndex).clear();
     }
@@ -694,6 +722,17 @@ handleTypeChange(attributeIndex:number,event:any){
         ncpdp_unit_code:receivedEntry.ncit_code,
         doseform:receivedEntry.ncpdp_preferred_term
       });
+      this.modalRef.hide();
+    });
+  }
+
+  openHTMLEditorModal(formIndex: number){
+    this._textEditorModalService.setFormData(this.attributes().at(formIndex).value.value_html);
+    this.modalRef = this.modalService.show(TextEditorModalComponent, {class: 'modal-full-lg', backdrop : 'static', keyboard : false});
+    this.modalRef.content.onEventCompleted.subscribe((receivedHTML:any) => {
+      this.attributes().at(formIndex).patchValue({
+        value_html: receivedHTML
+      })
       this.modalRef.hide();
     });
   }

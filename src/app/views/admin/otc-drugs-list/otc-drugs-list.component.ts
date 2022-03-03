@@ -78,6 +78,10 @@ export class OtcDrugsListComponent implements OnInit {
   }
 
   goToDetailsPage(productId: any): any {
+    this.router.navigate(['admin', 'products', 'view', productId]);
+  }
+
+  goToEditDetailsPage(productId: any): any {
     this.router.navigate(['admin', 'products', 'edit', productId]);
   }
 

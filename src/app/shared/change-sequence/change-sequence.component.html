@@ -83,6 +83,9 @@
                           <li class="list-group-item text-dark font-weight-normal mb-0" *ngFor="let liItem of item.list">{{liItem.name}}</li>
                         </ul>
                    </div>
+                   <div  *ngIf="item.type == 'HTML'">
+                        <p class="text-secondary font-weight-normal mb-0" [innerHTML]="item.value_html"></p>
+                   </div>
                    <div  *ngIf="item.type == 'TABLE'">
                         <table class="table table-sm table-bordered">
                             <tbody>

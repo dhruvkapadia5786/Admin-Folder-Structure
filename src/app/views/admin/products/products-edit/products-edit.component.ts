@@ -17,6 +17,8 @@ import { SelectOtcSubcategoryModalService } from '../select-otc-subcategory-moda
 import { AppConstants } from 'src/app/constants/AppConstants';
 import { BannerlinkModalService } from '../../banner-sets/bannerlink-modal/bannerlink-modal.service';
 import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
+import { TextEditorModalComponent } from '../../common-components/text-editor-modal/text-editor-modal.component';
+import { TextEditorModalService } from '../../common-components/text-editor-modal/text-editor-modal.service';
 
 @Component({
   selector: 'app-products-edit',
@@ -45,7 +47,7 @@ export class ProductsEditComponent implements OnInit {
   selectedFiles:File[]=[];
   selectedDocuments:File[]=[];
   selectedVideos:File[]=[];
-  elementTypes=['DESCRIPTION','LIST','TABLE'];
+  elementTypes=['DESCRIPTION','LIST','TABLE','HTML'];
 
   protected brands: any[] = [];
   public brandFilteringCtrl: FormControl = new FormControl();
@@ -104,6 +106,7 @@ export class ProductsEditComponent implements OnInit {
     private _route: ActivatedRoute,
     private _helper:Helper,
     private _bsModalService:BsModalService,
+    private _textEditorModalService: TextEditorModalService,
     private _bannerLinkModalService:BannerlinkModalService,
     private _lensParametersModalService:LensParametersModalService,
     private _selectOtcSubcategoryModalService:SelectOtcSubcategoryModalService,
@@ -803,6 +806,7 @@ newAttributeInput(): FormGroup {
     'type': new FormControl('', [Validators.required]),
     'key': new FormControl('', [Validators.required]),
     'value': new FormControl(null, []),
+    'value_html': new FormControl(null, []),
     'list': new FormArray([]),
     'table': new FormArray([]),
     'sequence':new FormControl(attr_length+1, []),
@@ -1023,6 +1027,7 @@ handleTypeChange(attributeIndex:number,event:any){
             'type': new FormControl(item.type, [Validators.required]),
             'key': new FormControl(item.key, [Validators.required]),
             'value': new FormControl(item.value, []),
+            'value_html': new FormControl(item.value_html, []),
             'list': new FormArray(listControlFormArray),
             'table': new FormArray(tableControlFormArray),
             'sequence':new FormControl(item.sequence, []),
@@ -1253,5 +1258,17 @@ handleTypeChange(attributeIndex:number,event:any){
 
   deleteFBTProduct(product_id:any){
     this.fbtProductsList =  this.fbtProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
+  }
+
+
+  openHTMLEditorModal(formIndex: number){
+    this._textEditorModalService.setFormData(this.attributes().at(formIndex).value.value_html);
+    this.modalRef = this._bsModalService.show(TextEditorModalComponent, {class: 'modal-full-lg', backdrop : 'static', keyboard : false});
+    this.modalRef.content.onEventCompleted.subscribe((receivedHTML:any) => {
+      this.attributes().at(formIndex).patchValue({
+        value_html: receivedHTML
+      })
+      this.modalRef.hide();
+    });
   }
 }

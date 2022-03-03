@@ -32,7 +32,7 @@ export class ListMedicineKitsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnInit(): void {
-    $.fn.dataTable.ext.errMode = 'none';
+
   }
 
   listenerFn:any;

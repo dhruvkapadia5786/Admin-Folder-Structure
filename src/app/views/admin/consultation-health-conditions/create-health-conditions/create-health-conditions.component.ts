@@ -5,6 +5,9 @@ import { ConsultationHealthConditionsService } from '../consultation-health-cond
 import { Helper } from 'src/app/services/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { TextEditorModalComponent } from '../../common-components/text-editor-modal/text-editor-modal.component';
+import { TextEditorModalService } from '../../common-components/text-editor-modal/text-editor-modal.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 @Component({
   selector: 'app-create-health-conditions',
   templateUrl: './create-health-conditions.component.html'
@@ -12,6 +15,8 @@ import { HttpClient } from '@angular/common/http';
 export class CreateHealthConditionsComponent implements OnInit {
   public specialityPathList: any[]=[];
   public statesList: any[] = [];
+  elementTypes=['DESCRIPTION','LIST','TABLE','HTML'];
+  modalRef!: BsModalRef;
 
   selectedFiles:File[]=[];
   selectedDocuments:File[]=[];
@@ -24,9 +29,10 @@ export class CreateHealthConditionsComponent implements OnInit {
     private _http: HttpClient,
     private router: Router,
     private _helper: Helper,
+    private modalService: BsModalService,
+    private _textEditorModalService: TextEditorModalService,
     private _changeDetectorRef:ChangeDetectorRef,
     private _consultationHealthtConditions: ConsultationHealthConditionsService) {
-
     this.addHealthConditionsForm = new FormGroup({
       'name': new FormControl(null, [Validators.required]),
       'description': new FormControl(null, [Validators.required]),
@@ -248,6 +254,7 @@ faqs(): FormArray {
 /*-----------------------------END OF FAQ --------------------------------*/
 
 
+
 /*-----------------------------ATTRIBUTES --------------------------------*/
 addAttributeInput(){
   this.attributes().push(this.newAttributeInput());
@@ -256,9 +263,19 @@ addAttributeInput(){
 newAttributeInput(): FormGroup {
   let attr_length= this.attributes().length;
   return new FormGroup({
-    'name': new FormControl('', [Validators.required]),
-    'value': new FormControl('', [Validators.required]),
+    'type': new FormControl('', [Validators.required]),
+    'key': new FormControl('', [Validators.required]),
+    'value': new FormControl(null, []),
+    'value_html': new FormControl(null, []),
+    'list': new FormArray([]),
+    'table': new FormArray([]),
     'sequence':new FormControl(attr_length+1, []),
+  });
+}
+
+newListItemInput(): FormGroup {
+  return new FormGroup({
+    'name': new FormControl('', [Validators.required]),
   });
 }
 
@@ -269,8 +286,89 @@ removeAttributeInput(empIndex:number) {
 attributes(): FormArray {
     return this.addHealthConditionsForm.get("attributes") as FormArray
 }
-/*-----------------------------END OF ATTRIBUTES --------------------------------*/
 
+/*-------------------LIST ------------------------*/
+addAttributeListInput(attributeIndex:number){
+  this.attributesList(attributeIndex).push(this.newListItemInput());
+}
+
+removeAttributeListInput(attributeIndex:number,itemIndex:number) {
+  this.attributesList(attributeIndex).removeAt(itemIndex);
+}
+
+attributesList(attributeIndex:number): FormArray {
+    return this.attributes().at(attributeIndex).get("list") as FormArray
+}
+
+attributesListControls(attributeIndex:number){
+  return (this.attributes().at(attributeIndex).get("list") as FormArray).controls;
+}
+
+/*-------------------TABLE -----------------------*/
+newTableItemInput(): FormGroup {
+  return new FormGroup({
+    'label': new FormControl('', [Validators.required]),
+    'value': new FormControl('', [Validators.required]),
+  });
+}
+
+addAttributeTableInput(attributeIndex:number){
+  this.attributesTable(attributeIndex).push(this.newTableItemInput());
+}
+
+removeAttributeTableInput(attributeIndex:number,itemIndex:number) {
+  this.attributesTable(attributeIndex).removeAt(itemIndex);
+}
+
+attributesTable(attributeIndex:number): FormArray {
+    return this.attributes().at(attributeIndex).get("table") as FormArray
+}
+
+attributesTableControls(attributeIndex:number){
+  return (this.attributes().at(attributeIndex).get("table") as FormArray).controls;
+}
+
+handleTypeChange(attributeIndex:number,event:any){
+    let value = event.target.value;
+    let htmlControl=this.attributes().at(attributeIndex).get('value_html');
+    let valueControl=this.attributes().at(attributeIndex).get('value');
+
+    if(value=='LIST'){
+        htmlControl ? htmlControl.clearValidators():'';
+        valueControl ? valueControl.clearValidators():'';
+
+        this.addAttributeListInput(attributeIndex);
+        this.attributesTable(attributeIndex).clear();
+    }
+    else if(value=='TABLE'){
+      htmlControl ? htmlControl.clearValidators():'';
+      valueControl ? valueControl.clearValidators():'';
+
+      this.attributesList(attributeIndex).clear();
+      this.addAttributeTableInput(attributeIndex);
+    }
+    else if(value=='HTML'){
+       valueControl ? valueControl.clearValidators():'';
+
+      if(htmlControl){
+        htmlControl.setValidators([Validators.required]);
+        htmlControl.updateValueAndValidity();
+      }
+      this.attributesList(attributeIndex).clear();
+      this.attributesTable(attributeIndex).clear();
+    }
+    else{
+        if(valueControl){
+          valueControl.setValidators([Validators.required]);
+          valueControl.updateValueAndValidity();
+        }
+        htmlControl ? htmlControl.clearValidators():'';
+        this.attributesList(attributeIndex).clear();
+        this.attributesTable(attributeIndex).clear();
+    }
+}
+
+/*-----------------------------END OF ATTRIBUTES --------------------------------*/
 
 
   async saveHealthConditions(formValid: boolean) {
@@ -328,4 +426,17 @@ attributes(): FormArray {
 
       });
   }
+
+
+  openHTMLEditorModal(formIndex: number){
+    this._textEditorModalService.setFormData(this.attributes().at(formIndex).value.value_html);
+    this.modalRef = this.modalService.show(TextEditorModalComponent, {class: 'modal-full-lg', backdrop : 'static', keyboard : false});
+    this.modalRef.content.onEventCompleted.subscribe((receivedHTML:any) => {
+      this.attributes().at(formIndex).patchValue({
+        value_html: receivedHTML
+      })
+      this.modalRef.hide();
+    });
+  }
+
 }

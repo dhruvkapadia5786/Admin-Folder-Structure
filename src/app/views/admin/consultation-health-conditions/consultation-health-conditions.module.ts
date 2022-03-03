@@ -25,6 +25,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
+import { TextEditorModalModule } from '../common-components/text-editor-modal/text-editor-modal.module';
+import { TextEditorModalComponent } from '../common-components/text-editor-modal/text-editor-modal.component';
 
 @NgModule({
   declarations: [ConsultationHealthConditionsComponent, CreateHealthConditionsComponent, EditHealthConditionsComponent, ChangeSequenceComponent, ListHealthConditionsComponent],
@@ -44,8 +46,11 @@ import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
     DragDropModule,
     DataTablesModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ModalModule.forRoot(),
+    TextEditorModalModule
   ],
-  providers: [ConsultationHealthConditionsService, CurrencyPipe]
+  providers: [ConsultationHealthConditionsService, CurrencyPipe],
+  entryComponents:[TextEditorModalComponent]
 })
 export class ConsultationHealthConditionsModule { }

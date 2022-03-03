@@ -7,6 +7,8 @@ import { Helper } from 'src/app/services/helper.service';
 
 import { ProductsListRoutingModule } from './products-list-routing.module';
 import { ProductsListComponent } from './products-list.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -14,12 +16,14 @@ import { ProductsListComponent } from './products-list.component';
     ProductsListComponent
   ],
   imports: [
-    CommonModule,
+   CommonModule,
     FormsModule,
     DataTablesModule,
     BlockUIModule.forRoot({
       message:'Loading...'
     }),
+    MatSelectModule,
+    MatCheckboxModule,
     ProductsListRoutingModule
   ],
   providers:[Helper]
