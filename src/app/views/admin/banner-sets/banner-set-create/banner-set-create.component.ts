@@ -106,7 +106,7 @@ export class BannerSetCreateComponent implements OnInit {
           }
         }
         let formSubmitted:any = await this.addBannerSetCallApi(fd).catch((e:any)=>e);
-        if(formSubmitted && formSubmitted._id){
+        if(formSubmitted && formSubmitted.id){
           this._toastr.showSuccess('BannerSet Created');
           this._router.navigate(['admin','bannersets','list']);
         }else{
@@ -184,11 +184,11 @@ export class BannerSetCreateComponent implements OnInit {
     this.modalRef = this._bsModalService.show(BannerlinkModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe((data:any)=>{
         if(tab=='OTC_CATEGORY'){
-          this.patchValueAtIndex(index,{'otc_category_id':data._id});
+          this.patchValueAtIndex(index,{'otc_category_id':data.id});
         }else if(tab=='PRODUCT'){
-          this.patchValueAtIndex(index,{'product_id':data._id});
+          this.patchValueAtIndex(index,{'product_id':data.id});
         }else{
-          this.patchValueAtIndex(index,{'brand_id':data._id});
+          this.patchValueAtIndex(index,{'brand_id':data.id});
         }
     });
   }

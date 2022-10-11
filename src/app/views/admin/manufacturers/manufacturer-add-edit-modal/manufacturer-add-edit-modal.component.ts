@@ -43,7 +43,7 @@ export class ManufacturerAddEditModalComponent implements OnInit {
     this.modalEvent = details.event;
     if(details.event == 'EDIT'){
       this.manufacturerForm.patchValue({
-        id:details.data._id,
+        id:details.data.id,
         name:details.data.name,
         address:details.data.address,
         country:details.data.country,

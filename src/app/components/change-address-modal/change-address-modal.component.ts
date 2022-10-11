@@ -95,12 +95,12 @@ export class ChangeAddressModalComponent implements OnInit {
 
 
   getStateNameFromId(state_id:number){
-    let stateFound =  this.states.find((state:any)=>state._id == state_id);
+    let stateFound =  this.states.find((state:any)=>state.id == state_id);
     return stateFound && stateFound.name ? stateFound.name:null;
   }
 
   setStateInfo(event:any){
-    let stateFound =  this.states.find((state:any)=>state._id == event.target.value);
+    let stateFound =  this.states.find((state:any)=>state.id == event.target.value);
     this.addressForm.patchValue({
       state_name: stateFound.name,
       state_abbreviation: stateFound.abbreviation

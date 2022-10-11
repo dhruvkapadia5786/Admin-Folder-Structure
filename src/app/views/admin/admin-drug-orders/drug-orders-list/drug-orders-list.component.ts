@@ -2,7 +2,7 @@ import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Helper } from 'src/app/services/helper.service';
 import { HttpClient } from '@angular/common/http';
-import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
+import {orderHelper} from 'src/app/services/orderHelper.service';
 
 @Component({
   selector: 'app-drug-orders-list',
@@ -82,7 +82,7 @@ export class DrugOrdersListComponent implements OnInit {
     private _http: HttpClient,
     public _helper: Helper,
     private router: Router,
-    public _drugOrderHelper:drugOrderHelper,
+    public _orderHelper:orderHelper,
     private _changeDetectorRef: ChangeDetectorRef) {
 
 

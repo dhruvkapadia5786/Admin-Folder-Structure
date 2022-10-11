@@ -9,7 +9,7 @@
                             <p class="mb-1 mr-2">Completed Date :{{ orderDetails.completed_at|date:'dd-MM-yyyy hh:mm:ss a'}}</p>
                             <p>
                                 <span class="mr-2">System Status: </span>
-                                <span class="m-0" [innerHTML]="_drugOrderHelper.getSystemStausDrugOrder(orderDetails.system_status)"></span>
+                                <span class="m-0" [innerHTML]="_orderHelper.getSystemStausDrugOrder(orderDetails.system_status)"></span>
                             </p>
 
                             <div class="mt-3">
@@ -72,8 +72,6 @@
                                   <tr>
                                       <th class="border-0">Products</th>
                                       <th class="border-0 text-center">Quantity</th>
-                                      <th class="border-0 text-center">Prescription Detail</th>
-                                      <th class="border-0 text-center">Subscription</th>
                                       <th class="border-0 text-center">Drug Status</th>
                                         <th class="border-0 text-right">Tax</th>
                                         <th class="border-0 text-right">Amount</th>
@@ -88,66 +86,11 @@
                                       </td>
                                       <td class="align-middle text-center">{{drug.quantity}}</td>
                                       <td class="align-middle text-center">
-                                        <strong [innerHTML]="_drugOrderHelper.getOrderDrugCustomerOption(drug.customer_drug_option)"></strong>
-                                        <table class="table table-sm table-borderless">
-                                              <tr><th class="text-left" colspan="2">Patient Details</th></tr>
-                                              <tr><td class="text-left fixed-td">Name</td><td class="text-left">{{drug.selected_patient.first_name+' '+drug.selected_patient.last_name}} </td></tr>
-                                              <tr><td class="text-left fixed-td">Gender </td><td class="text-left">{{drug.selected_patient.gender}} </td></tr>
-                                              <tr><td class="text-left fixed-td">Date of Birth </td><td class="text-left">{{helper.getFormattedDate(drug.selected_patient.date_of_birth,'DD-MM-YYYY')}} </td></tr>
-                                              <tr><td class="text-left fixed-td">Relationship </td><td class="text-left">{{drug.selected_patient.relationship}} </td></tr>
-                                          </table>
-                                          <table  class="table table-sm table-borderless" *ngIf="drug.customer_drug_option == 'HAVE_PHYSICAL_PRESCRIPTION' || drug.customer_drug_option == 'MANUALLY_ENTER_PRESCRIPTION'">
-                                              <tr><th class="text-left" colspan="2">Doctor Details</th></tr>
-                                              <tr><td class="text-left fixed-td">Name </td><td class="text-left">{{drug.doctor_details.first_name+' '+drug.doctor_details.last_name}}</td></tr>
-                                              <tr><td class="text-left fixed-td">Address  </td><td class="text-left">{{drug.doctor_details.address_1+','}} <br/>{{drug.doctor_details.address_2?drug.doctor_details.address_2+',':''}}</td></tr>
-                                              <tr><td class="text-left fixed-td"></td><td class="text-left">{{drug.doctor_details.city_name}},{{drug.doctor_details.state_name}} - {{drug.doctor_details.postal_code}}</td></tr>
-                                              <tr><td class="text-left fixed-td">Phone<td class="text-left"> {{drug.doctor_details.telephone_number?drug.doctor_details.telephone_number:'-'}}</td></tr>
-                                              <tr><td class="text-left fixed-td">Fax <td class="text-left"> {{drug.doctor_details.fax_number?drug.doctor_details.fax_number:'-'}}</td></tr>
-                                          </table>
-                                          <div class="mt-2" *ngIf="drug.customer_drug_option == 'HAVE_PHYSICAL_PRESCRIPTION'">
-                                              <p class="font-weight-bold text-left">Prescription Photo </p>
-                                              <app-image-preview [imgPath]="drug.physicial_prescription_image" height="250" width="350"></app-image-preview>
-                                          </div>
-                                          <div class="mt-2" *ngIf="drug.customer_drug_option == 'MANUALLY_ENTER_PRESCRIPTION'">
-
-                                                  <table  class="table table-sm table-borderless" *ngIf="drug.eye_type && drug.eye_type=='Left Eye (OS)'">
-                                                      <tr><th class="text-left" colspan="2">Left Eye (OS)</th></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.left_eye_color"><td class="text-left fixed-td">COLOR </td><td>{{drug.manual_prescription_details.left_eye_color}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.left_eye_power"><td class="text-left fixed-td">POWER/SPH </td><td>{{drug.manual_prescription_details.left_eye_power}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.left_eye_basecurve"><td class="text-left fixed-td">BC </td><td>{{drug.manual_prescription_details.left_eye_basecurve}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.left_eye_diameter"><td class="text-left fixed-td">DIA </td><td>{{drug.manual_prescription_details.left_eye_diameter}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.left_eye_cylinder"><td class="text-left fixed-td">CYL </td><td>{{drug.manual_prescription_details.left_eye_cylinder}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.left_eye_axis"><td class="text-left fixed-td">AXIS </td><td>{{drug.manual_prescription_details.left_eye_axis}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.left_eye_addpower"><td class="text-left fixed-td">ADD POWER </td><td>{{drug.manual_prescription_details.left_eye_addpower}}</td></tr>
-                                                  </table>
-                                                  <table  class="table table-sm table-borderless"  *ngIf="drug.eye_type && drug.eye_type=='Right Eye (OD)'">
-                                                      <tr><th class="text-left" colspan="2">Right Eye (OD)</th></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.right_eye_color"><td class="text-left fixed-td">COLOR </td><td>{{drug.manual_prescription_details.right_eye_color}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.right_eye_power"><td class="text-left fixed-td">POWER/SPH </td><td>{{drug.manual_prescription_details.right_eye_power}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.right_eye_basecurve"><td class="text-left fixed-td">BC </td><td>{{drug.manual_prescription_details.right_eye_basecurve}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.right_eye_diameter"><td class="text-left fixed-td">DIA </td><td>{{drug.manual_prescription_details.right_eye_diameter}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.right_eye_cylinder"><td class="text-left fixed-td">CYL </td><td>{{drug.manual_prescription_details.right_eye_cylinder}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.right_eye_axis"><td class="text-left fixed-td">AXIS </td><td>{{drug.manual_prescription_details.right_eye_axis}}</td></tr>
-                                                      <tr *ngIf="drug.manual_prescription_details && drug.manual_prescription_details.right_eye_addpower"><td class="text-left fixed-td">ADD POWER </td><td>{{drug.manual_prescription_details.right_eye_addpower}}</td></tr>
-                                                  </table>
-
-                                              <div *ngIf="drug.manual_prescription_image">
-                                                <p class="font-weight-bold text-left">Prescription Photo </p>
-                                                  <app-image-preview [imgPath]="drug.manual_prescription_image" height="250" width="350"></app-image-preview>
-                                              </div>
-                                          </div>
-                                          <div class="mt-2" *ngIf="drug.customer_drug_option == 'NO_PRESCRIPTION_REQUIRED'">
-                                              No Prescription Required
-                                          </div>
-                                          <div class="mt-2" *ngIf="drug.customer_drug_option == 'PRESCRIPTION_ALREADY_SENT_TO_TELEDADDY_PHARMACY'">
-                                              Prescription Already Sent to Teledaddy Pharamcy
-                                          </div>
+                                        <strong [innerHTML]="_orderHelper.getOrderDrugCustomerOption(drug.customer_drug_option)"></strong>
                                       </td>
-                                      <td class="align-middle text-center font-weight-bold">
-                                        <p [ngClass]="{'mb-0':true,'text-success':drug.auto_schedule==1,'text-danger':drug.auto_schedule!=1}">{{drug.auto_schedule==1?'YES':'NO'}}</p>
-                                      </td>
+                                    
                                       <td class="align-middle text-center">
-                                            <strong [innerHTML]="_drugOrderHelper.getOrderDrugStatus(drug.order_drug_status)"></strong>
+                                            <strong [innerHTML]="_orderHelper.getOrderDrugStatus(drug.order_drug_status)"></strong>
 
                                             <p class="mt-1 mb-0 font-weight-normal text-success" *ngIf="drug.order_drug_status=='SHIPPED'">Shipped on : {{drug.shipped_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
                                             <p class="mt-1 mb-0 font-weight-normal text-success" *ngIf="drug.order_drug_status=='SHIPPED'">Tracking Id  : <a target="_blank" class="text-primary" [href]="drug.tracking_url">{{ drug.tracking_id }}</a></p>
@@ -159,12 +102,12 @@
                                             <p class="mb-0 font-weight-normal text-danger" *ngIf="drug.order_drug_status=='REFUND_REQUESTED' || drug.order_drug_status=='REFUND_PROCESSED'">Reason : {{drug.refund_reason}}</p>
 
                                       </td>
-                                      <td class="align-middle text-right">{{ drug.tax_amount | currency:'INR'}}</td>
+                                      <td class="align-middle text-right">{{ drug.tax_amount | currency:'EUR'}}</td>
                                       <td class="align-middle text-right">
-                                       <p class="mb-0 font-weight-bold">{{ drug.price | currency:'INR'}}</p>
+                                       <p class="mb-0 font-weight-bold">{{ drug.price | currency:'EUR'}}</p>
                                        <div *ngIf="drug.offer_applied">
-                                         <p  class="mb-0 text-muted"><s>{{ drug.drug_quantity_original_price | currency:'INR'}}</s></p>
-                                         <a  class="text-decoration-none" [routerLink]="'/admin/offers/view-offer/'+drug.offer_applied"><span class="badge badge-danger p-2 badge-pill"><i class="fa fa-tag mr-2" aria-hidden="true"></i>OFFER {{ drug.offer_amount?(drug.offer_amount| currency:'INR'): drug.offer_percentage+'%'}} DISCOUNT</span></a>
+                                         <p  class="mb-0 text-muted"><s>{{ drug.drug_quantity_original_price | currency:'EUR'}}</s></p>
+                                         <a  class="text-decoration-none" [routerLink]="'/admin/offers/view-offer/'+drug.offer_applied"><span class="badge badge-danger p-2 badge-pill"><i class="fa fa-tag mr-2" aria-hidden="true"></i>OFFER {{ drug.offer_amount?(drug.offer_amount| currency:'EUR'): drug.offer_percentage+'%'}} DISCOUNT</span></a>
                                        </div>
                                       </td>
                                   </tr>
@@ -178,27 +121,27 @@
                                     <tbody>
                                      <tr>
                                         <th class="text-900">GST</th>
-                                        <td class="font-weight-semi-bold text-right">{{(orderDetails.tax_amount||0) | currency:'INR'}}</td>
+                                        <td class="font-weight-semi-bold text-right">{{(orderDetails.tax_amount||0) | currency:'EUR'}}</td>
                                     </tr>
                                     <tr *ngIf="orderDetails.first_order_offer_discount>0">
                                         <th class="text-900 text-danger">First Order Offer Discount</th>
-                                        <td class="font-weight-semi-bold text-danger text-right">{{(orderDetails.first_order_offer_discount||0) | currency:'INR'}}</td>
+                                        <td class="font-weight-semi-bold text-danger text-right">{{(orderDetails.first_order_offer_discount||0) | currency:'EUR'}}</td>
                                     </tr>
                                     <tr>
                                         <th [ngClass]="{'text-900':true,'text-danger':orderDetails.coupon_discount>0?true:false}">Coupon Discount {{ orderDetails.coupon_details && orderDetails.coupon_details.coupon_code?'( Coupon Code Used : '+orderDetails.coupon_details.coupon_code+' )':'' }}</th>
-                                        <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.coupon_discount>0?true:false}">{{(orderDetails.coupon_discount||0) | currency:'INR'}}</td>
+                                        <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.coupon_discount>0?true:false}">{{(orderDetails.coupon_discount||0) | currency:'EUR'}}</td>
                                     </tr>
                                     <tr>
                                         <th [ngClass]="{'text-900':true,'text-danger':orderDetails.referral_discount>0?true:false}">Referral Discount {{ orderDetails.referral_code_details ? '( Referral Code Used : '+orderDetails.referral_code_details.referral_code+' )':''}}</th>
-                                        <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.referral_discount>0?true:false}">{{(orderDetails.referral_discount||0) | currency:'INR'}}</td>
+                                        <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.referral_discount>0?true:false}">{{(orderDetails.referral_discount||0) | currency:'EUR'}}</td>
                                     </tr>
                                     <tr>
                                          <th [ngClass]="{'text-900':true,'text-danger':orderDetails.shipping_charge>0?true:false}">Shipping Charges</th>
-                                         <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.shipping_charge>0?true:false}">{{(orderDetails.shipping_charge || 0) | currency:'INR' }}</td>
+                                         <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.shipping_charge>0?true:false}">{{(orderDetails.shipping_charge || 0) | currency:'EUR' }}</td>
                                     </tr>
                                     <tr class="border-top">
                                         <th class="font-weight-bold">Total</th>
-                                        <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency:'INR' }}</td>
+                                        <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency:'EUR' }}</td>
                                     </tr>
                                     </tbody>
                                     </table>
@@ -217,7 +160,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                              <p class="font-weight-bold">{{orderDetails.charged_from_paymentgateway | currency:'INR'  }}</p>
+                                              <p class="font-weight-bold">{{orderDetails.charged_from_paymentgateway | currency:'EUR'  }}</p>
                                                 <div  *ngIf="orderDetails.payment_transactions && orderDetails.payment_transactions[0]">
                                                     <div class="media">
                                                         <div class="media-body" *ngIf="orderDetails.payment_transactions[0].payment_source == 'PAYMENT_GATEWAY'">
@@ -242,8 +185,8 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="font-weight-bold">{{orderDetails.charged_from_wallet | currency:'INR' }}</td>
-                                            <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency:'INR'}}</td>
+                                            <td class="font-weight-bold">{{orderDetails.charged_from_wallet | currency:'EUR' }}</td>
+                                            <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency:'EUR'}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -259,9 +202,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="font-weight-bold">{{orderDetails.refunded_in_paymentgateway | currency:'INR' }}</td>
-                                            <td class="font-weight-bold">{{orderDetails.refunded_in_wallet | currency:'INR' }}</td>
-                                            <td class="font-weight-bold text-right">{{orderDetails.refunded_total | currency:'INR'}}</td>
+                                            <td class="font-weight-bold">{{orderDetails.refunded_in_paymentgateway | currency:'EUR' }}</td>
+                                            <td class="font-weight-bold">{{orderDetails.refunded_in_wallet | currency:'EUR' }}</td>
+                                            <td class="font-weight-bold text-right">{{orderDetails.refunded_total | currency:'EUR'}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -287,12 +230,12 @@
                                             <td>{{i+1}}</td>
                                             <td>{{transaction.transaction_type}}</td>
                                             <td>{{transaction.payment_source}}</td>
-                                            <td>{{transaction.charged_amount | currency:'INR'}}</td>
+                                            <td>{{transaction.charged_amount | currency:'EUR'}}</td>
                                             <td>
                                                <a *ngIf="transaction.payment_source=='PAYMENT_GATEWAY'" target="_blank" href="https://dashboard.razorpay.com/app/payments/{{transaction.charge_id}}">{{transaction.charge_id}}</a>
                                                <span *ngIf="transaction.payment_source=='WALLET'">{{'Wallet Transaction #'+transaction.charge_id}}</span>
                                             </td>
-                                            <td>{{transaction.refunded_amount | currency:'INR'}}</td>
+                                            <td>{{transaction.refunded_amount | currency:'EUR'}}</td>
                                             <td>
                                                <span *ngIf="transaction.refund_id && transaction.payment_source=='PAYMENT_GATEWAY'">{{transaction.refund_id}}</span>
                                                <span *ngIf="transaction.refund_id && transaction.payment_source=='WALLET'">{{'Wallet Transaction #'+transaction.refund_id}}</span>
@@ -314,10 +257,10 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><p class="m-0" [innerHTML]="_drugOrderHelper.getCustomerStausDrugOrder(orderDetails.customer_status)"></p></td>
-                                            <td><p class="m-0" [innerHTML]="_drugOrderHelper.getTechnicianStatusDrugOrder(orderDetails.technician_status)"></p></td>
+                                            <td><p class="m-0" [innerHTML]="_orderHelper.getCustomerStausDrugOrder(orderDetails.customer_status)"></p></td>
+                                            <td><p class="m-0" [innerHTML]="_orderHelper.getTechnicianStatusDrugOrder(orderDetails.technician_status)"></p></td>
                                             <td>
-                                                <p class="m-0" [innerHTML]="_drugOrderHelper.getPharmacyStatusDrugOrder(orderDetails.pharmacy_status)"></p>
+                                                <p class="m-0" [innerHTML]="_orderHelper.getPharmacyStatusDrugOrder(orderDetails.pharmacy_status)"></p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -384,7 +327,7 @@
                               <div>{{subscription.refill_count}} Original <span *ngIf="subscription.status!=='closed'">, {{subscription.refill_count-subscription.current_refill_count===0?'No ':subscription.refill_count-subscription.current_refill_count }} Refill Remaining</span></div>
                           </td>
                           <td>Every {{subscription.type==='default'?subscription.duration:subscription.custom_duration}} Days</td>
-                          <td>{{subscription.subscription_price | currency:'INR'}}</td>
+                          <td>{{subscription.subscription_price | currency:'EUR'}}</td>
                           <td>
                                 <span *ngIf="subscription.next_refill_date">{{subscription.next_refill_date | date: 'dd-MM-yyyy'}}</span>
                                 <span *ngIf="!subscription.next_refill_date"> - </span>
@@ -426,7 +369,7 @@
                         <tr  *ngFor="let subscription of orderDetails.otc_subscriptions">
                           <td>{{subscription.otc_drug_name}}</td>
                           <td>Every {{subscription.type==='default'?subscription.duration:subscription.custom_duration}} Days</td>
-                          <td>{{subscription.subscription_price_total | currency:'INR'}}</td>
+                          <td>{{subscription.subscription_price_total | currency:'EUR'}}</td>
                           <td>
                                 <span *ngIf="subscription.next_refill_date">{{subscription.next_refill_date | date: 'dd-MM-yyyy'}}</span>
                                 <span *ngIf="!subscription.next_refill_date"> - </span>
@@ -524,7 +467,7 @@
                                             <div>
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="{{'sub_'+item.id}}" (change)="handleChangeSubscription($event.target.checked,item,'RX')" [checked]="checkItemSelected(item.id,'RX')">
-                                                    <label class="custom-control-label font-weight-normal" for="{{'sub_'+item.id}}">{{item.subscription_price| currency:'INR'}}</label>
+                                                    <label class="custom-control-label font-weight-normal" for="{{'sub_'+item.id}}">{{item.subscription_price| currency:'EUR'}}</label>
                                                 </div>
                                             </div>
                                         </li>
@@ -534,7 +477,7 @@
                                             <div>
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="{{'otcsub_'+item.id}}" (change)="handleChangeSubscription($event.target.checked,item,'OTC')" [checked]="checkItemSelected(item.id,'OTC')">
-                                                    <label class="custom-control-label font-weight-normal" for="{{'otcsub_'+item.id}}">{{item.subscription_price_total| currency:'INR'}}</label>
+                                                    <label class="custom-control-label font-weight-normal" for="{{'otcsub_'+item.id}}">{{item.subscription_price_total| currency:'EUR'}}</label>
                                                 </div>
                                             </div>
                                         </li>
@@ -567,9 +510,9 @@
                                             <td>
                                                 <p class="mb-0 font-weight-normal">$0</p>
                                             </td>
-                                            <td><p class="mb-0 font-weight-normal">{{item.subscription_price| currency:'INR'}}</p></td>
+                                            <td><p class="mb-0 font-weight-normal">{{item.subscription_price| currency:'EUR'}}</p></td>
                                             <td>
-                                                <p class="mb-0 font-weight-normal">{{item.subscription_price| currency:'INR'}}</p>
+                                                <p class="mb-0 font-weight-normal">{{item.subscription_price| currency:'EUR'}}</p>
                                             </td>
                                         </tr>
                                         <tr *ngFor="let item of selectedOTCSubscriptions">
@@ -577,18 +520,18 @@
                                                 <p class="mb-0 font-weight-normal">{{ item.otc_drug_name }}</p>
                                             </td>
                                             <td>
-                                                <p class="mb-0 font-weight-normal">{{item.subscription_tax| currency:'INR'}}</p>
+                                                <p class="mb-0 font-weight-normal">{{item.subscription_tax| currency:'EUR'}}</p>
                                             </td>
-                                            <td><p class="mb-0 font-weight-normal">{{item.subscription_price| currency:'INR'}}</p></td>
+                                            <td><p class="mb-0 font-weight-normal">{{item.subscription_price| currency:'EUR'}}</p></td>
                                             <td>
-                                                <p class="mb-0 font-weight-normal">{{item.subscription_price_total| currency:'INR'}}</p>
+                                                <p class="mb-0 font-weight-normal">{{item.subscription_price_total| currency:'EUR'}}</p>
                                             </td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <td colspan="4">
-                                                <p class="mb-0 font-weight-bold text-right">Total : {{ refillOrderTotal| currency:'INR' }}</p>
+                                                <p class="mb-0 font-weight-bold text-right">Total : {{ refillOrderTotal| currency:'EUR' }}</p>
                                             </td>
                                         </tr>
                                     </tfoot>

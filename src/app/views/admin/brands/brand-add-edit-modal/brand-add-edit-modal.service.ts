@@ -18,15 +18,15 @@ export class BrandAddEditModalService {
   }
 
   async addNewBrand(bodyData: any) {
-    return await this._http.post('api/brands/create', bodyData).toPromise();
+    return await this._http.post('api/admin/brands/create', bodyData).toPromise();
   }
 
   async editBrand(id: number, bodyData: any) {
-		return await this._http.post('api/brands/update/'+id, bodyData).toPromise();
+		return await this._http.post('api/admin/brands/update/'+id, bodyData).toPromise();
   }
 
   async getAllManufacturers(searchTerm:string):Promise<any>{
-    return await this._http.get(`api/manufacturers/all`+`?search=${searchTerm}`).toPromise();
+    return await this._http.get(`api/admin/manufacturers/all`+`?search=${searchTerm}`).toPromise();
   }
 
 }

@@ -1,5 +1,5 @@
 <div class="w-100 p-3 bg-dark-grey d-flex justify-content-between align-items-center">
-    <h4 class="text-white font-weight-bold mb-0">Patients</h4>
+    <h4 class="text-white font-weight-bold mb-0">Customers</h4>
 </div>
 
 <div class="row p-2">
@@ -9,7 +9,7 @@
                 <div class="pull-right">
                     <i class="fa fa-users"></i>
                 </div>
-                <p class="mb-0">TOTAL PATIENTS</p>
+                <p class="mb-0">TOTAL CUSTOMERS</p>
                 <h4 class="mb-0">
                     <strong *ngIf="counts && counts.total">{{counts.total || '-'}}</strong>
                 </h4>
@@ -28,7 +28,7 @@
                   <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'STATE')"
                   [indeterminate]="patient_config.filter.STATE.length && notSelectedStates"
                   [checked]="!notSelectedStates">All</mat-checkbox>
-                  <mat-option color="primary" *ngFor="let st of stateList" [value]="st._id">{{st.name}}</mat-option>
+                  <mat-option color="primary" *ngFor="let st of stateList" [value]="st.id">{{st.name}}</mat-option>
                 </mat-select>
             </div>
             <div class="col-md-3">
@@ -61,6 +61,6 @@
 <ng-template #noCustomers>
     <div class="text-center text-muted">
         <h2><i class="fa fa-info-circle"></i></h2>
-        <h4>No Patients!</h4>
+        <h4>No Users!</h4>
     </div>
 </ng-template>

@@ -26,7 +26,7 @@ export class ViewFaqComponent implements OnInit {
   }
 
   getFAQDetails() {
-    const url = 'api/faqs/view/' + this.FAQId;
+    const url = 'api/admin/faqs/view/' + this.FAQId;
     this._http.get(url).subscribe((res: any) => {
         this.FAQDetails = res;
         this._changeDetectorRef.detectChanges();

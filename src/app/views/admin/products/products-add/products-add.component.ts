@@ -4,16 +4,13 @@ import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Toastr } from 'src/app/services/toastr.service';
 import { Helper } from 'src/app/services/helper.service';
-import {AppConstants} from 'src/app/constants/AppConstants';
 
 import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { tap, filter, takeUntil, switchMap} from 'rxjs/operators';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
-import { SelectOtcSubcategoryModalComponent } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.component';
-import { LensParametersModalComponent } from '../lens-parameters-modal/lens-parameters-modal.component';
-import { LensParametersModalService } from '../lens-parameters-modal/lens-parameters-modal.service';
-import { SelectOtcSubcategoryModalService } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.service';
+import { SelectSubcategoryModalComponent } from '../select-subcategory-modal/select-subcategory-modal.component';
+import { SelectSubcategoryModalService } from '../select-subcategory-modal/select-subcategory-modal.service';
 import { environment } from 'src/environments/environment';
 import { BannerlinkModalService } from '../../banner-sets/bannerlink-modal/bannerlink-modal.service';
 import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
@@ -29,13 +26,9 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
 
   modalRef!:BsModalRef;
   productForm:FormGroup;
-  procurementChannels=['MEDICINE','OTC','PRIVATE LABEL','CONTACT LENS','LENS SOLUTION'];
   productTypes = [
-    {channel:'MEDICINE',name:'MEDICINE'},
-    {channel:'OTC',name:'OTC'},
-    {channel:'CONTACT LENS',name:'LENS'},
-    {channel:'LENS SOLUTION',name:'SOLUTION'},
-    {channel:'PRIVATE LABEL',name:'PRIVATE LABEL'}
+    {value:'simple',name:'simple'},
+    {value:'variable',name:'Variable'},
   ];
 
   selectedFiles:File[]=[];
@@ -78,20 +71,12 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   is_active_control_sub!:Subscription;
   is_gst_applicable_sub!:Subscription;
 
-  indiaDrugSchedules = AppConstants.indiaDrugSchedules;
-  parameterTypes=AppConstants.parameterTypes;
-  negativePowerDefaultOptions=AppConstants.negativePowerDefaultOptions;
-  positivePowerDefaultOptions= AppConstants.positivePowerDefaultOptions;
-  cylinderDefaultOptions= AppConstants.cylinderDefaultOptions;
-  diameterDefaultOptions= AppConstants.diameterDefaultOptions;
-  basecurveDefaultOptions = AppConstants.basecurveDefaultOptions;
-  materialsDefaultOptions =AppConstants.materialsDefaultOptions;
 
   colorsList:any=[];
   lenstypeList:any[]=[];
 
   categoriesSubcategoriesList:any[]=[];
-  selected_otc_categories_forindex:any[]=[];
+  selected_categories_forindex:any[]=[];
 
   similarProductsList:any=[];
   fbtProductsList:any[]=[];
@@ -104,8 +89,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
     private _bsModalService:BsModalService,
     private _textEditorModalService: TextEditorModalService,
     private _bannerLinkModalService:BannerlinkModalService,
-    private _lensParametersModalService:LensParametersModalService,
-    private _selectOtcSubcategoryModalService:SelectOtcSubcategoryModalService,
+    private _selectOtcSubcategoryModalService:SelectSubcategoryModalService,
     private _toastr: Toastr){
 
       this.getlensColorsList();
@@ -208,7 +192,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
           this.filteredTherapies.next(filteredTherapies);
 
           for(let item of filteredTherapies){
-            if(this.searchedTherapiesResult.filter((a)=>a._id==item._id).length==0){
+            if(this.searchedTherapiesResult.filter((a)=>a.id==item.id).length==0){
               this.searchedTherapiesResult.push(item);
             }
           }
@@ -225,6 +209,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
       this.productForm = new FormGroup({
           name:new FormControl(null,[Validators.required]),
           ucode:new FormControl(null,[Validators.required]),
+          description:new FormControl(null,[]),
           procurement_channel:new FormControl(null,[Validators.required]),
           manufacturer_id:new FormControl(null,[]),
           brand_id:new FormControl(null,[]),
@@ -232,10 +217,6 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
           measurement_unit:new FormControl(null,[Validators.required]),
           packform:new FormControl(null,[Validators.required]),
           form_name:new FormControl(null,[]),
-          schedule:new FormControl(null,[]),
-          is_rx_required:new FormControl(null,[]),
-          is_refrigerated:new FormControl(null,[]),
-          is_chronic:new FormControl(null,[]),
           is_active:new FormControl(null,[]),
           is_coming_soon:new FormControl(null,[]),
           max_quantity:new FormControl(null,[Validators.required]),
@@ -255,27 +236,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
           documents:new FormArray([]),
           videos:new FormArray([]),
           attributes:new FormArray([]),
-          faqs:new FormArray([]),
-          has_diameter:new FormControl(null, []),
-          has_basecurve:new FormControl(null, []),
-          has_power:new FormControl(null, []),
-          has_cylinder:new FormControl(null, []),
-          has_axis:new FormControl(null, []),
-          has_addpower:new FormControl(null, []),
-          has_color:new FormControl(null, []),
-          has_fixed_diameter_options:new FormControl(null, []),
-          has_fixed_basecurve_options:new FormControl(null, []),
-          has_fixed_power_options:new FormControl(null, []),
-          has_fixed_cylinder_options:new FormControl(null, []),
-          has_fixed_addpower_options:new FormControl(null, []),
-          has_fixed_color_options:new FormControl(null, []),
-          diameter_parameters:new FormArray([]),
-          basecurve_parameters:new FormArray([]),
-          power_parameters:new FormArray([]),
-          cylinder_parameters:new FormArray([]),
-          addpower_parameters:new FormArray([]),
-          color_parameters:new FormArray([]),
-          lens_type_ids:new FormControl([], []),
+          faqs:new FormArray([])
       });
 
 
@@ -329,17 +290,14 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
 
   get name(){return this.productForm.get('name');}
   get ucode(){return this.productForm.get('ucode');}
+  get description(){return this.productForm.get('description');}
   get procurement_channel(){return this.productForm.get('procurement_channel');}
   get manufacturer_id(){return this.productForm.get('manufacturer_id');}
   get brand_id(){return this.productForm.get('brand_id');}
   get product_type(){return this.productForm.get('product_type');}
   get measurement_unit(){return this.productForm.get('measurement_unit');}
   get form_name(){return this.productForm.get('form_name');}
-  get schedule(){return this.productForm.get('schedule');}
   get packform(){return this.productForm.get('packform');}
-  get is_rx_required(){return this.productForm.get('is_rx_required');}
-  get is_refrigerated(){return this.productForm.get('is_refrigerated');}
-  get is_chronic(){return this.productForm.get('is_chronic');}
   get is_active(){return this.productForm.get('is_active');}
   get is_coming_soon(){return this.productForm.get('is_coming_soon');}
   get max_quantity(){return this.productForm.get('max_quantity');}
@@ -357,24 +315,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   get discount_percent(){return this.productForm.get('discount_percent');}
   get therapies(){return this.productForm.get('therapies');}
 
-
-  get has_diameter(){return this.productForm.get('has_diameter');}
-  get has_basecurve(){return this.productForm.get('has_basecurve');}
-  get has_power(){return this.productForm.get('has_power');}
-  get has_cylinder(){return this.productForm.get('has_cylinder');}
-  get has_axis(){return this.productForm.get('has_axis');}
-  get has_addpower(){return this.productForm.get('has_addpower');}
-  get has_color(){return this.productForm.get('has_color');}
-
-  get has_fixed_diameter_options(){return this.productForm.get('has_fixed_diameter_options');}
-  get has_fixed_basecurve_options(){return this.productForm.get('has_fixed_basecurve_options');}
-  get has_fixed_power_options(){return this.productForm.get('has_fixed_power_options');}
-  get has_fixed_cylinder_options(){return this.productForm.get('has_fixed_cylinder_options');}
-  get has_fixed_addpower_options(){return this.productForm.get('has_fixed_addpower_options');}
-  get has_fixed_color_options(){return this.productForm.get('has_fixed_color_options');}
-
-  get lens_type_ids(){return this.productForm.get('lens_type_ids');}
-
+ 
   setProductType(event:any){
       let productType:any=this.productTypes.find((item:any)=>item.channel == event.target.value);
       this.productForm.patchValue({
@@ -390,7 +331,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   }
 
   handleTherapySelected(event:any){
-      let selectedTherapies = this.searchedTherapiesResult.filter((a)=>event.value.indexOf(a._id)!=-1);
+      let selectedTherapies = this.searchedTherapiesResult.filter((a)=>event.value.indexOf(a.id)!=-1);
       this.filteredTherapies.next(selectedTherapies);
   }
 
@@ -401,7 +342,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   }
 
   async getAllManufacturers(searchTerm:string):Promise<any>{
-    return await this.http.get(`api/manufacturers/all`+`?search=${searchTerm}`).toPromise();
+    return await this.http.get(`api/admin/manufacturers/all`+`?search=${searchTerm}`).toPromise();
   }
 
 
@@ -444,7 +385,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
   async getAllBrands(searchTerm:string):Promise<any>{
     let manufacturer_id_control = this.productForm.get('manufacturer_id');
     let manufacturer_id = manufacturer_id_control ? manufacturer_id_control.value : '';
-    return await this.http.get(`api/brands/all`+`?search=${searchTerm}&manufacturer_id=${manufacturer_id}`).toPromise();
+    return await this.http.get(`api/admin/brands/all`+`?search=${searchTerm}&manufacturer_id=${manufacturer_id}`).toPromise();
   }
 
   public getlensTypesList(){
@@ -483,65 +424,6 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
     if(this.is_coming_soon_control_sub){this.is_coming_soon_control_sub.unsubscribe();}
   }
 
-  openParametersModal(drugIndex:number,paramName:string){
-      this._lensParametersModalService.setFormData({
-          index:drugIndex,
-          parameter:paramName,
-          colorsList:this.colorsList
-      });
-      this.modalRef = this._bsModalService.show(LensParametersModalComponent,{class:'modal-lg'});
-      this.modalRef.content.onApplySelected.subscribe((item:any)=>{
-        if(item.parameter=='CYLINDER'){
-          this.clearFormArray(this.lensCylinderParameters(item.index));
-        }
-        else if(item.parameter=='POWER'){
-            this.clearFormArray(this.lensPowerParameters(item.index));
-        }
-        else if(item.parameter=='BASE_CURVE'){
-            this.clearFormArray(this.lensBCParameters(item.index));
-        }
-        else if(item.parameter=='DIAMETER'){
-            this.clearFormArray(this.lensDiamenterParameters(item.index));
-        }
-        else if(item.parameter=='COLOR'){
-          this.clearFormArray(this.lensColorParameters(item.index));
-        }
-        else{
-        }
-        for(let i of item.options){
-          this.addParameter(item.index,item.parameter,i);
-        }
-      });
-  }
-
-  handleParameterChange(drugIndex:number,paramName:string,checked:any){
-    if(checked){
-       this.addParameter(drugIndex,paramName,null);
-    }else{
-       if(paramName=='DIAMETER'){
-         this.clearFormArray(this.lensDiamenterParameters(drugIndex));
-       }
-       else if(paramName=='BASE_CURVE'){
-         this.clearFormArray(this.lensBCParameters(drugIndex));
-       }
-       else if(paramName=='POWER'){
-         this.clearFormArray(this.lensPowerParameters(drugIndex));
-       }
-       else if(paramName=='CYLINDER'){
-         this.clearFormArray(this.lensCylinderParameters(drugIndex));
-       }
-       else if(paramName=='ADD_POWER'){
-        this.clearFormArray(this.lensAddPowerParameters(drugIndex));
-       }
-       else if(paramName=='COLOR'){
-        this.clearFormArray(this.lensColorParameters(drugIndex));
-       }
-      else{
-
-      }
-    }
- }
-
 
   clearFormArray = (formArray: FormArray) => {
     while (formArray.length !== 0) {
@@ -549,10 +431,7 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
     }
   }
 
-  lensDiamenterParameters(drugIndex:number): FormArray {
-    return this.productForm.get("diameter_parameters") as FormArray;
-  }
-
+  
   uncheckOptionsSwitch(drugIndex:number,paramKey:string,formArray:any){
     if(formArray.length ==0){
         this.productForm.patchValue({
@@ -560,95 +439,6 @@ export class ProductsAddComponent implements OnInit,OnDestroy {
         });
     }
   }
-
-  lensBCParameters(drugIndex:number): FormArray {
-    return this.productForm.get("basecurve_parameters") as FormArray;
-  }
-
-  lensPowerParameters(drugIndex:number): FormArray {
-    return this.productForm.get("power_parameters") as FormArray;
-  }
-
-  lensCylinderParameters(drugIndex:number): FormArray {
-    return this.productForm.get("cylinder_parameters") as FormArray;
-  }
-
-  lensAddPowerParameters(drugIndex:number): FormArray {
-    return this.productForm.get("addpower_parameters") as FormArray;
-  }
-
-  lensColorParameters(drugIndex:number): FormArray {
-    return this.productForm.get("color_parameters") as FormArray;
-  }
-
-  addParameter(drugIndex: number,paramName:string,val:any=null){
-    let formItem:any = new FormGroup({
-      'parameter_type':new FormControl(paramName, [Validators.required]),
-      'label':new FormControl(val, [Validators.required]),
-      'value':new FormControl(val, [Validators.required])
-    });
-    if(paramName=='DIAMETER'){
-      this.lensDiamenterParameters(drugIndex).push(formItem);
-    }
-    else if(paramName=='BASE_CURVE'){
-      this.lensBCParameters(drugIndex).push(formItem);
-    }
-    else if(paramName=='POWER'){
-      this.lensPowerParameters(drugIndex).push(formItem);
-    }
-    else if(paramName=='CYLINDER'){
-      this.lensCylinderParameters(drugIndex).push(formItem);
-    }
-    else if(paramName=='ADD_POWER'){
-      this.lensAddPowerParameters(drugIndex).push(formItem);
-    }
-    else if(paramName=='COLOR'){
-      this.lensColorParameters(drugIndex).push(formItem);
-    }
-    else{
-
-    }
-  }
-
-  removeParameter(drugIndex: number,paramName:string,index: number) {
-    let paramKey='';
-    let formArray:any;
-    if(paramName=='DIAMETER'){
-      paramKey='has_fixed_diameter_options';
-      formArray=this.lensDiamenterParameters(drugIndex);
-      formArray.removeAt(index);
-    }
-    else if(paramName=='BASE_CURVE'){
-      paramKey='has_fixed_basecurve_options';
-      formArray=this.lensBCParameters(drugIndex);
-      formArray.removeAt(index);
-    }
-    else if(paramName=='POWER'){
-      paramKey='has_fixed_power_options';
-      formArray=this.lensPowerParameters(drugIndex);
-      formArray.removeAt(index);
-    }
-    else if(paramName=='CYLINDER'){
-      paramKey='has_fixed_cylinder_options';
-      formArray=this.lensCylinderParameters(drugIndex);
-      formArray.removeAt(index);
-    }
-    else if(paramName=='ADD_POWER'){
-      paramKey='has_fixed_addpower_options';
-      formArray=this.lensAddPowerParameters(drugIndex);
-      formArray.removeAt(index);
-    }
-    else if(paramName=='COLOR'){
-      paramKey='has_fixed_color_options';
-      formArray=this.lensColorParameters(drugIndex);
-      formArray.removeAt(index);
-    }
-    else{
-
-    }
-    this.uncheckOptionsSwitch(drugIndex,paramKey,formArray);
-  }
-
 
 /*----------------------------- IMAGES ------------------------------------*/
 addFileInput(){
@@ -914,11 +704,11 @@ handleTypeChange(attributeIndex:number,event:any){
     this.modalRef = this._bsModalService.show(BannerlinkModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe((data:any)=>{
         if(clickedFrom=='similar_products'){
-            if(this.similarProductsList.filter((item:any)=>item._id.toString() == data._id.toString()).length==0){
+            if(this.similarProductsList.filter((item:any)=>item.id.toString() == data.id.toString()).length==0){
               this.similarProductsList.push(data);
             }
         }else{
-          if(this.fbtProductsList.filter((item:any)=>item._id.toString() == data._id.toString()).length==0){
+          if(this.fbtProductsList.filter((item:any)=>item.id.toString() == data.id.toString()).length==0){
             this.fbtProductsList.push(data);
           }
         }
@@ -926,11 +716,11 @@ handleTypeChange(attributeIndex:number,event:any){
   }
 
   deleteSimilarProduct(product_id:any){
-    this.similarProductsList =  this.similarProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
+    this.similarProductsList =  this.similarProductsList.filter((item:any)=>item.id.toString() != product_id.toString());
   }
 
   deleteFBTProduct(product_id:any){
-    this.fbtProductsList =  this.fbtProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
+    this.fbtProductsList =  this.fbtProductsList.filter((item:any)=>item.id.toString() != product_id.toString());
   }
 
   addProduct(formValid:boolean){
@@ -940,9 +730,9 @@ handleTypeChange(attributeIndex:number,event:any){
     }
     const fd: FormData = new FormData();
     let productVal = this.productForm.value;
-    productVal.otc_drug_categories = this.get_selected_otc_categories_forindex(0);
-    productVal.similar_products = this.similarProductsList.map((item:any)=>item._id);
-    productVal.fbt_products = this.fbtProductsList.map((item:any)=>item._id);
+    productVal.categories = this.get_selected_categories_forindex(0);
+    productVal.similar_products = this.similarProductsList.map((item:any)=>item.id);
+    productVal.fbt_products = this.fbtProductsList.map((item:any)=>item.id);
 
     fd.append('product', JSON.stringify(productVal));
     if(this.selectedFiles.length>0){
@@ -974,7 +764,7 @@ handleTypeChange(attributeIndex:number,event:any){
 
 
   public getAllCategoriesWithSubcategoriesList(){
-    this.http.get('api/otc_categories/all').subscribe((data:any) => {
+    this.http.get('api/admin/categories/all').subscribe((data:any) => {
       this.categoriesSubcategoriesList = data;
     }, err => {
 
@@ -982,57 +772,57 @@ handleTypeChange(attributeIndex:number,event:any){
   }
 
   openSelectOTCCategoryModal(drugIndex:number=0){
-    let data_for_index =  this.get_selected_otc_categories_forindex(drugIndex);
+    let data_for_index =  this.get_selected_categories_forindex(drugIndex);
     if(data_for_index.length>0){
       this.categoriesSubcategoriesList.map((item:any)=>{
-        let index = data_for_index.findIndex((si:any)=>si._id == item._id);
+        let index = data_for_index.findIndex((si:any)=>si.id == item.id);
         if(index!=-1){
           item.is_checked = true;
-          item.sub_categories.map((subcat:any)=>{
-            subcat.is_checked = data_for_index[index].sub_categories.findIndex((ssc:any)=>ssc._id == subcat._id)!=-1;
+          item.sub_categories ?  item.sub_categories.map((subcat:any)=>{
+            subcat.is_checked = data_for_index[index].sub_categories.findIndex((ssc:any)=>ssc.id == subcat.id)!=-1;
             return subcat;
-          });
+          }):[];
         }else{
           item.is_checked = false;
-          item.sub_categories.map((subcat:any)=>{
+          item.sub_categories ? item.sub_categories.map((subcat:any)=>{
             subcat.is_checked = false;
             return subcat;
-          });
+          }):[];
         }
         return item;
       });
     }else{
       this.categoriesSubcategoriesList.map((item:any)=>{
         item.is_checked = false;
-        item.sub_categories.map((subcat:any)=>{
+        item.sub_categories ? item.sub_categories.map((subcat:any)=>{
           subcat.is_checked = false;
           return subcat;
-        });
+        }):[];
         return item;
       });
     }
     this._selectOtcSubcategoryModalService.setFormData({
       categories:this.categoriesSubcategoriesList
     });
-    this.modalRef = this._bsModalService.show(SelectOtcSubcategoryModalComponent,{class:'modal-lg'});
+    this.modalRef = this._bsModalService.show(SelectSubcategoryModalComponent,{class:'modal-lg'});
     this.modalRef.content.onApplySelected.subscribe((data:any)=>{
-       let indexFound = this.selected_otc_categories_forindex.findIndex((item:any)=>item.index==drugIndex);
+       let indexFound = this.selected_categories_forindex.findIndex((item:any)=>item.index==drugIndex);
        if(indexFound==-1){
          let obj={
            index:drugIndex,
            data:data
          };
-        this.selected_otc_categories_forindex.push(obj);
+        this.selected_categories_forindex.push(obj);
        }else{
-        this.selected_otc_categories_forindex[indexFound]['data']=data;
+        this.selected_categories_forindex[indexFound]['data']=data;
        }
     });
   }
 
-  get_selected_otc_categories_forindex(drugIndex:number){
-    let index = this.selected_otc_categories_forindex.findIndex((item:any) => item.index == drugIndex);
+  get_selected_categories_forindex(drugIndex:number){
+    let index = this.selected_categories_forindex.findIndex((item:any) => item.index == drugIndex);
     if(index!=-1){
-      return this.selected_otc_categories_forindex[index].data;
+      return this.selected_categories_forindex[index].data;
     }else{
       return [];
     }

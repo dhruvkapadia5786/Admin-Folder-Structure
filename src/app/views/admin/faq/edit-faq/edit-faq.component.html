@@ -7,14 +7,14 @@
         <div class="form-group">
             <div class="form-row">
                 <div class="col-md-6">
-                    <label>Select Category</label><br>
-                    <mat-select placeholder="Select Category" class="form-control" formControlName="category" multiple>
-                        <mat-option *ngFor="let category of FAQCategory;" [value]="category.value">
-                            {{category.name}}
+                    <label>Select FAQ Group</label><br>
+                    <mat-select placeholder="Select FAQ Group" class="form-control" formControlName="group_id">
+                        <mat-option *ngFor="let group of FAQgroup;" [value]="group.id">
+                            {{group.name}}
                         </mat-option>
                     </mat-select>
-                    <div class="invalid-feedback" *ngIf="category?.invalid && (category?.dirty || category?.touched)" class="text-danger">
-                        <div *ngIf="category?.errors?.required">Category is required</div>
+                    <div class="invalid-feedback" *ngIf="group_id?.invalid && (group_id?.dirty || group_id?.touched)" class="text-danger">
+                        <div *ngIf="group_id?.errors?.required">FAQ Group is required</div>
                     </div>
                 </div>
             </div>

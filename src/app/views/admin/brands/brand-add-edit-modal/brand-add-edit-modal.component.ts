@@ -45,7 +45,6 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
       'image_url': new FormControl(null, []),
       'cover_image_url': new FormControl(null, []),
       'is_active': new FormControl(true, []),
-      'is_lens_brand': new FormControl(null, []),
       'is_featured': new FormControl(null, [])
     });
   }
@@ -56,7 +55,6 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   get image_url() { return this.brandForm.get('image_url'); }
   get cover_image_url() { return this.brandForm.get('cover_image_url'); }
   get is_active() { return this.brandForm.get('is_active'); }
-  get is_lens_brand() { return this.brandForm.get('is_lens_brand'); }
   get is_featured() { return this.brandForm.get('is_featured'); }
 
   ngOnInit(): void {
@@ -85,13 +83,12 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
     this.modalEvent = details.event;
     if(details.event == 'EDIT'){
       this.brandForm.patchValue({
-        id:details.data._id,
+        id:details.data.id,
         name:details.data.name,
         description:details.data.description,
         is_active:details.data.is_active,
-        is_lens_brand:details.data.is_lens_brand,
         is_featured:details.is_featured,
-        manufacturer_id:details.manufacturer_id ? details.manufacturer_id._id:null
+        manufacturer_id:details.manufacturer_id ? details.manufacturer_id.id:null
       });
       this.imageUrl = details.data.image_url ? environment.api_url + details.data.image_url : `../../../../../assets/img/no_preview.png`;
       this.coverImageUrl = details.data.cover_image_url ? environment.api_url + details.data.cover_image_url : `../../../../../assets/img/no_preview.png`;
@@ -118,14 +115,11 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   async saveBrand(formValid:boolean){
     if(formValid){
       const formData: FormData = new FormData();
-      formData.append('name', this.brandForm.value.name);
-      formData.append('description', this.brandForm.value.description);
+      let formVal = this.brandForm.value;
+      formVal.manufacturer_id = this.manufacturerCtrl.value;
+      formData.append('brand',JSON.stringify(formVal));
       formData.append('logo', this.selectedImageFile);
       formData.append('cover_image', this.selectedCoverImageFile);
-      formData.append('is_active', this.brandForm.value.is_active);
-      formData.append('is_lens_brand', this.brandForm.value.is_lens_brand);
-      formData.append('is_featured', this.brandForm.value.is_featured);
-      formData.append('manufacturer_id',this.manufacturerCtrl.value);
 
       if(this.modalEvent == 'ADD') {
         let create = await  this._brandAddEditModalService.addNewBrand(formData);

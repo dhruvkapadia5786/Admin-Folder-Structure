@@ -5,7 +5,7 @@ import { DrugOrdersRoutingModule } from './drug-orders-routing.module';
 import { DrugOrdersComponent } from './drug-orders.component';
 import { NgxMaskModule } from 'ngx-mask';
 import {NgxPaginationModule} from 'ngx-pagination';
-import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
+import {orderHelper} from 'src/app/services/orderHelper.service';
 
 @NgModule({
   declarations: [DrugOrdersComponent],
@@ -15,6 +15,6 @@ import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
     NgxMaskModule,
     NgxPaginationModule
   ],
-  providers:[drugOrderHelper]
+  providers:[orderHelper]
 })
 export class DrugOrdersModule { }

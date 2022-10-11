@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
+import {orderHelper} from 'src/app/services/orderHelper.service';
 
 @Component({
   selector: 'app-drug-orders',
@@ -22,7 +22,7 @@ export class DrugOrdersComponent implements OnInit {
     private _route: ActivatedRoute,
     private router:Router,
     private http: HttpClient,
-    public _drugOrderHelper:drugOrderHelper,
+    public _orderHelper:orderHelper,
     private _changeDetectorRef: ChangeDetectorRef){
 
     let activeRoute:any=this._route;

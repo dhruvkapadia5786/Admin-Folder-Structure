@@ -52,7 +52,7 @@ export class notificationHelper {
 
   clickNotification(loggedInUser:any,notification:any,_router:any){
     if(notification.read_at==null){
-        this.readNotification([notification._id]);
+        this.readNotification([notification.id]);
     }
 
   }

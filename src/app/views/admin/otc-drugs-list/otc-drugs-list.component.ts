@@ -38,7 +38,7 @@ export class OtcDrugsListComponent implements OnInit {
   }
 
   public getAllCategoriesWithSubcategoriesList(){
-    this._http.get('api/otc_categories/all').subscribe((data:any) => {
+    this._http.get('api/admin/categories/all').subscribe((data:any) => {
       this.categoriesSubcategoriesList = data;
     }, err => {
 
@@ -52,7 +52,7 @@ export class OtcDrugsListComponent implements OnInit {
 
   getAllActiveDrugsByOTCCategory(){
     this.loading=true;
-    let url=`api/otc_categories/getProducts`;
+    let url=`api/admin/categories/getProducts`;
     this._http.post(url,{
       filter:this.config.filter,
       page:this.config.currentPage,

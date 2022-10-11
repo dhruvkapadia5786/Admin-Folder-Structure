@@ -1,0 +1,48 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="w-100 d-flex flex-row justify-content-between align-items-center">
+            <p class="font-weight-bold mb-0">{{ modalEvent =='EDIT' ? 'Edit FAQ Group' : 'Add FAQ Group' }}</p>
+            <button (click)="closeModal()" type="button" class="close float-right" aria-label="Close"
+                data-dismiss="modal">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="saveManufacturer(manufacturerForm.valid)" [formGroup]="manufacturerForm" autocomplete="off">
+
+            <div class="form-group">
+                <label>Name</label><br />
+                <input type="hidden" id="id" formControlName="id" />
+                <input type="text" id="name" class="form-control" placeholder="Enter  Name"
+                    formControlName="name" />
+                <div class="invalid-feedback" *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+                    class="text-danger">
+                    <div *ngIf="name?.errors?.required">Name is required.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Heading</label>
+                <input type="text" id="heading" formControlName="heading"  class="form-control"  placeholder="Enter heading" />
+                <div class="invalid-feedback"
+                    *ngIf="heading?.invalid && (heading?.dirty || heading?.touched)" class="text-danger">
+                    <div *ngIf="heading?.errors?.required">heading is required</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Subheading</label>
+                <input type="text" id="subheading" formControlName="subheading"  class="form-control"  placeholder="Enter Subheading" />
+                <div class="invalid-feedback"
+                    *ngIf="subheading?.invalid && (subheading?.dirty || subheading?.touched)" class="text-danger">
+                    <div *ngIf="subheading?.errors?.required">Subheading is required</div>
+                </div>
+            </div>
+ 
+            <div class="form-group">
+                <button class="btn btn-success btn-block btn-sm mt-2" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

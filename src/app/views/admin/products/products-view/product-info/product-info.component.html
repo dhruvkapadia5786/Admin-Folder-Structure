@@ -128,18 +128,18 @@
     </div>
   </div>
 
-  <h6 class="bg-light text-dark p-2 mt-3" *ngIf="product.product_type=='OTC'">Linked to OTC Category</h6>
+  <h6 class="bg-light text-dark p-2 mt-3" *ngIf="product.product_type=='OTC'">Linked to Category</h6>
   <div class="row" *ngIf="product.product_type=='OTC'">
       <div class="col-md-12 col-12">
-        <table class="table w-100" *ngIf="product.otc_categories">
+        <table class="table w-100" *ngIf="product.categories">
           <thead class="thead-light">
             <tr>
-                <th>OTC Category</th>
+                <th>Category</th>
                 <th>Subcategories</th>
             </tr>
           </thead>
           <tbody>
-              <tr *ngFor="let item of product.otc_categories">
+              <tr *ngFor="let item of product.categories">
                   <td class="font-weight-normal">
                     <img *ngIf="item.image_url" [src]="getUrl(item.image_url)" style="width:80px;height:80px;" />
                     {{item.name}}
@@ -278,15 +278,15 @@
           <table class="table table-hover">
                 <tr>
                   <td class="font-weight-bold">List Price</td>
-                  <td class="font-weight-normal"> {{(product.list_price | currency:'INR') || '-' }} </td>
+                  <td class="font-weight-normal"> {{(product.list_price | currency:'EUR') || '-' }} </td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">MRP Price</td>
-                  <td class="font-weight-normal"> {{(product.mrp_price | currency:'INR') || '-' }} </td>
+                  <td class="font-weight-normal"> {{(product.mrp_price | currency:'EUR') || '-' }} </td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Sale Price</td>
-                  <td class="font-weight-normal"> {{(product.sale_price | currency:'INR') || '-' }} </td>
+                  <td class="font-weight-normal"> {{(product.sale_price | currency:'EUR') || '-' }} </td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Discount Type</td>

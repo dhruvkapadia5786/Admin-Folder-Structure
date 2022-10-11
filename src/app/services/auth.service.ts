@@ -42,11 +42,11 @@ export class AuthService {
 	}
 
 	getUserId() {
-		if (this.loggedInUser && this.loggedInUser['_id'] == 0) {
+		if (this.loggedInUser && this.loggedInUser['id'] == 0) {
       let user =localStorage.getItem('loggedInUser');
 			this.loggedInUser = user ? JSON.parse(user) : null;
 		}
-		return this.loggedInUser && this.loggedInUser._id ? this.loggedInUser._id:null;
+		return this.loggedInUser && this.loggedInUser.id ? this.loggedInUser.id:null;
 	}
 
   getAccountServiceEnabled(){

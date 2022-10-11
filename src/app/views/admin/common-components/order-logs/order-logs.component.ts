@@ -18,7 +18,7 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
     modalRef!: BsModalRef;
     orderId: any;
     parentSub: any;
-    userType: any = 'admin,technician,doctor,user,pharmacy_manager,pharmacist,pharmacy_technician,pharmacy_cashier';
+    userType: any = 'admin,user';
     orderLogs: any[] = [];
     orderType: string = '';
     constructor(
@@ -50,10 +50,6 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
       console.log(filterValue)
       if (this.orderType == 'ORDER') {
         url = `api/orders/logs/${this.orderId}?user_types=${filterValue}`;
-      } else if (this.orderType == 'CONSULTATION') {
-        url = `api/consultation/logs/${this.orderId}?user_types=${filterValue}`;
-      } else if (this.orderType == 'DRUG_ORDER') {
-        url = `api/pharmacy_orders/logs/${this.orderId}?user_types=${filterValue}`;
       }
 
       this.http.get(url)

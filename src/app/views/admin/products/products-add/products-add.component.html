@@ -8,21 +8,7 @@
                     <h5 class="font-weight-bold mb-5">Display Information</h5>
 
                     <div class="form-row">
-                           <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                              <label>Select Procurement Channel</label>
-                              <select placeholder="Select Procurement Channel" formControlName="procurement_channel" class="form-control" (change)="setProductType($event)">
-                                <option *ngFor="let channel of procurementChannels" [value]="channel">
-                                  {{channel}}
-                                </option>
-                              </select>
-                              <div class="invalid-feedback d-block" *ngIf="procurement_channel?.invalid && (procurement_channel?.dirty || procurement_channel?.touched)">
-                                <label class="text-danger font-weight-bold" *ngIf="procurement_channel?.errors?.required">Procurement Channel is required.</label>
-                              </div>
-                            </div>
-                          </div>
-
-
+                          
                           <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                               <label>Select Product Type</label>
@@ -50,7 +36,7 @@
                                           noEntriesFoundLabel="'no matching manufacturer found'"
                                           ></ngx-mat-select-search>
                                         </mat-option>
-                                        <mat-option *ngFor="let manufaturer of filteredManufacturers | async" [value]="manufaturer._id">
+                                        <mat-option *ngFor="let manufaturer of filteredManufacturers | async" [value]="manufaturer.id">
                                           {{manufaturer.name}}
                                         </mat-option>
                                       </mat-select>
@@ -74,7 +60,7 @@
                                           noEntriesFoundLabel="'no matching brand found'"
                                           ></ngx-mat-select-search>
                                         </mat-option>
-                                        <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand._id">
+                                        <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.id">
                                           {{brand.name}}
                                         </mat-option>
                                       </mat-select>
@@ -88,19 +74,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4 col-sm-12"  *ngIf="productForm.get('product_type')?.value == 'LENS'">
-                            <div class="form-group">
-                                <label>Lens Type :</label>
-
-                                <mat-select placeholder="Select Lenstype" formControlName="lens_type_ids" multiple>
-                                  <mat-option color="primary" *ngFor="let lenstype of lenstypeList" [value]="lenstype._id">{{lenstype.name}}</mat-option>
-                                </mat-select>
-
-                                <div class="invalid-feedback" *ngIf="lens_type_ids?.invalid && (lens_type_ids?.dirty || lens_type_ids?.touched)" class="text-danger font-weight-bold">
-                                  <div *ngIf="lens_type_ids?.errors?.required">Lens Type is required.</div>
-                                </div>
-                            </div>
-                        </div>
+                    
                         <div class="col-md-12 col-12">
                             <label>Name :</label>
                             <input type="text" class="form-control" placeholder="Enter Name" formControlName="name" />
@@ -110,109 +84,33 @@
                             </div>
                         </div>
                         <div class="col-md-3 col-12">
-                            <label>UCode :</label>
-                            <input type="text" class="form-control" placeholder="Enter UCode" formControlName="ucode" />
+                            <label>Product Code :</label>
+                            <input type="text" class="form-control" placeholder="Enter Product" formControlName="ucode" />
                             <div class="invalid-feedback" *ngIf="ucode?.invalid && (ucode?.dirty || ucode?.touched)"
                               class="text-danger font-weight-bold">
-                              <div *ngIf="ucode?.errors?.required">Ucode is required.</div>
+                              <div *ngIf="ucode?.errors?.required">Product is required.</div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-12">
-                            <label>Packform :</label>
-                            <mat-form-field class="w-100">
-                                      <mat-select formControlName="packform" placeholder="">
-                                        <mat-option>
-                                          <ngx-mat-select-search
-                                          [formControl]="packformFilteringCtrl"
-                                          [searching]="searchingPackform"
-                                          placeholderLabel="Find Packform..."
-                                          noEntriesFoundLabel="'no matching Packform found'"
-                                          ></ngx-mat-select-search>
-                                        </mat-option>
-                                        <mat-option *ngFor="let packform of filteredPackforms | async" [value]="packform._id">
-                                          {{packform.name}}
-                                        </mat-option>
-                                      </mat-select>
-                            </mat-form-field>
-                            <div class="invalid-feedback" *ngIf="packform?.invalid && (packform?.dirty || packform?.touched)"
-                              class="text-danger font-weight-bold">
-                              <div *ngIf="packform?.errors?.required">Packform is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-12">
-                            <label>Drug Form :</label>
-                            <mat-form-field class="w-100">
-                                      <mat-select formControlName="form_name" placeholder="">
-                                        <mat-option>
-                                          <ngx-mat-select-search
-                                          [formControl]="drugformFilteringCtrl"
-                                          [searching]="searchingDrugform"
-                                          placeholderLabel="Find Drugform..."
-                                          noEntriesFoundLabel="'no matching Drugform found'"
-                                          ></ngx-mat-select-search>
-                                        </mat-option>
-                                        <mat-option *ngFor="let drugform of filteredDrugforms | async" [value]="drugform._id">
-                                          {{drugform.name}}
-                                        </mat-option>
-                                      </mat-select>
-                            </mat-form-field>
-                            <div class="invalid-feedback" *ngIf="form_name?.invalid && (form_name?.dirty || form_name?.touched)"
-                              class="text-danger font-weight-bold">
-                              <div *ngIf="form_name?.errors?.required">Drug Form is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-12">
-                            <label>Schedule :</label>
-                             <select  class="form-control" placeholder="Select Schedule" formControlName="schedule">
-                                 <option *ngFor="let schedule of indiaDrugSchedules" [value]="schedule">{{schedule}}</option>
-                              </select>
-                            <div class="invalid-feedback" *ngIf="schedule?.invalid && (schedule?.dirty || schedule?.touched)" class="text-danger font-weight-bold">
-                              <div *ngIf="schedule?.errors?.required">Schedule is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-12">
-                            <label>Measurement Unit :</label>
-                            <input type="text" class="form-control" placeholder="Enter Measurement Unit" formControlName="measurement_unit" />
-                            <div class="invalid-feedback" *ngIf="measurement_unit?.invalid && (measurement_unit?.dirty || measurement_unit?.touched)"
-                              class="text-danger font-weight-bold">
-                              <div *ngIf="measurement_unit?.errors?.required">Measurement Unit is required.</div>
-                            </div>
-                        </div>
-
-                         <div class="col-md-12 col-12">
-                            <label>Therapies :</label>
-                            <mat-form-field class="w-100">
-                                      <mat-select formControlName="therapies" (selectionChange)="handleTherapySelected($event)" multiple>
-                                        <mat-option>
-                                          <ngx-mat-select-search
-                                          [formControl]="therapyFilteringCtrl"
-                                          [searching]="searchingTherapy"
-                                          placeholderLabel="Find Therapy..."
-                                          noEntriesFoundLabel="'no matching Therapy found'"
-                                          ></ngx-mat-select-search>
-                                        </mat-option>
-                                        <mat-option *ngFor="let therapy of filteredTherapies | async" [value]="therapy._id">
-                                          {{therapy.name}}
-                                        </mat-option>
-                                      </mat-select>
-                            </mat-form-field>
-                        </div>
+                                         
+                          <div class="col-12 mt-2">
+                                <textarea type="text" class="form-control" placeholder="Enter Description" formControlName="description" rows="4"></textarea>
+                                <div class="invalid-feedback" *ngIf="description?.invalid && (description?.dirty || description?.touched)" class="text-danger">
+                                  <div *ngIf="description?.errors?.required">Description is required.</div>
+                                </div>
+                          </div>
 
 
-                        <div class="col-md-12 col-12"  *ngIf="productForm.get('product_type')?.value == 'OTC'">
-                          <button type="button" class="float-right btn btn-primary" (click)="openSelectOTCCategoryModal()">Select OTC Category</button>
-                          <table class="table w-100" *ngIf="selected_otc_categories_forindex && get_selected_otc_categories_forindex(0)">
+                        <div class="col-md-12 col-12">
+                          <button type="button" class="float-right btn btn-primary" (click)="openSelectOTCCategoryModal()">Select Category</button>
+                          <table class="table w-100" *ngIf="selected_categories_forindex && get_selected_categories_forindex(0)">
                             <thead class="thead-light">
                               <tr>
-                                  <th>OTC Category</th>
+                                  <th>Category</th>
                                   <th>Subcategories</th>
                               </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of get_selected_otc_categories_forindex(0)">
+                                <tr *ngFor="let item of get_selected_categories_forindex(0)">
                                     <td class="font-weight-normal">
                                         <img *ngIf="item.image_url" [src]="getUrl(item.image_url)" style="width:80px;height:80px;" />
                                         {{item.name}}
@@ -224,314 +122,14 @@
                             </tbody>
                           </table>
                         </div>
-
                     </div>
-
               </div>
 
-              <div class="alert alert-info my-3"  *ngIf="productForm.get('product_type')?.value == 'LENS'">
-                  <h5 class="font-weight-bold mb-5">Lens Information</h5>
-                  <table class="table">
-                      <tr>
-                        <td>Diameter</td>
-                        <td>
-                              <label>Has Diameter ? </label>
-                              <mat-slide-toggle  color="primary" formControlName="has_diameter"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_diameter')?.value == true">
-                              <label>Has Fixed Diameter Options ? </label>
-                              <mat-slide-toggle  color="primary" formControlName="has_fixed_diameter_options" (change)="handleParameterChange(0,'DIAMETER',$event.checked)"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_fixed_diameter_options')?.value == true">
-
-                            <button class="btn btn-primary btn-sm" type="button" (click)="openParametersModal(0,'DIAMETER')">Choose From Available Options</button>
-
-                            <div formArrayName="diameter_parameters">
-                                <div class="alert-warning mb-2 p-2"
-                                  *ngFor="let parameterItem of lensDiamenterParameters(0)['controls']; let parametersIndex = index"
-                                  [formGroupName]="parametersIndex">
-
-                                  <div class="form-row">
-                                    <div class="col-md-3">
-                                      <label class="float-left">Label</label>
-                                      <input type="text" class="form-control" placeholder="Enter Label" formControlName="label" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('label')?.invalid && (parameterItem.get('label')?.dirty || parameterItem.get('label')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('label')?.errors?.required">Label is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <label class="float-left">Value</label>
-                                      <input type="text" class="form-control" placeholder="Enter value" formControlName="value" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('value')?.invalid && (parameterItem.get('value')?.dirty || parameterItem.get('value')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('value')?.errors?.required">Value is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <button class="float-right btn btn-sm btn-danger" type="button" (click)="removeParameter(0,'DIAMETER',parametersIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                      <button class="float-right btn btn-sm btn-primary" type="button" (click)="addParameter(0,'DIAMETER','')"><i class="fa fa-plus mr-2"></i>Add</button>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Base Curve</td>
-                        <td>
-                              <label>Has Base Curve ? </label>
-                              <mat-slide-toggle  color="primary" formControlName="has_basecurve"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_basecurve')?.value == true">
-                              <label>Has BC Options ? </label>
-                              <mat-slide-toggle  color="primary" formControlName="has_fixed_basecurve_options"  (change)="handleParameterChange(0,'BASE_CURVE',$event.checked)"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_fixed_basecurve_options')?.value == true">
-                            <button class="btn btn-primary btn-sm" type="button" (click)="openParametersModal(0,'BASE_CURVE')">Choose From Available Options</button>
-
-                            <div formArrayName="basecurve_parameters">
-                                <div class="alert-warning mb-2 p-2"
-                                  *ngFor="let parameterItem of lensBCParameters(0)['controls']; let parametersIndex = index"
-                                  [formGroupName]="parametersIndex">
-                                  <div class="form-row">
-                                    <div class="col-md-3">
-                                      <label class="float-left">Label</label>
-                                      <input type="text" class="form-control" placeholder="Enter Label" formControlName="label" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('label')?.invalid && (parameterItem.get('label')?.dirty || parameterItem.get('label')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('label')?.errors?.required">Label is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <label class="float-left">Value</label>
-                                      <input type="text" class="form-control" placeholder="Enter value" formControlName="value" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('value')?.invalid && (parameterItem.get('value')?.dirty || parameterItem.get('value')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('value')?.errors?.required">Value is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <button class="float-right btn btn-sm btn-danger" type="button" (click)="removeParameter(0,'BASE_CURVE',parametersIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                      <button class="float-right btn btn-sm btn-primary" type="button" (click)="addParameter(0,'BASE_CURVE','')"><i class="fa fa-plus mr-2"></i>Add</button>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Power/ Sphere</td>
-                        <td>
-                            <label>Has Power/ Sphere? </label>
-                            <mat-slide-toggle  color="primary" formControlName="has_power"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_power')?.value == true">
-                            <label>Has Power/ Sphere Options ? </label>
-                            <mat-slide-toggle  color="primary" formControlName="has_fixed_power_options"  (change)="handleParameterChange(0,'POWER',$event.checked)"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_fixed_power_options')?.value == true">
-                            <button class="btn btn-primary btn-sm" type="button" (click)="openParametersModal(0,'POWER')">Choose From Available Options</button>
-
-                            <div formArrayName="power_parameters">
-                                <div class="alert-warning mb-2 p-2"
-                                  *ngFor="let parameterItem of lensPowerParameters(0)['controls']; let parametersIndex = index"
-                                  [formGroupName]="parametersIndex">
-                                  <div class="form-row">
-                                    <div class="col-md-3">
-                                      <label class="float-left">Label</label>
-                                      <input type="text" class="form-control" placeholder="Enter Label" formControlName="label" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('label')?.invalid && (parameterItem.get('label')?.dirty || parameterItem.get('label')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('label')?.errors?.required">Label is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <label class="float-left">Value</label>
-                                      <input type="text" class="form-control" placeholder="Enter value" formControlName="value" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('value')?.invalid && (parameterItem.get('value')?.dirty || parameterItem.get('value')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('value')?.errors?.required">Value is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <button class="float-right btn btn-sm btn-danger" type="button" (click)="removeParameter(0,'POWER',parametersIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                      <button class="float-right btn btn-sm btn-primary" type="button" (click)="addParameter(0,'POWER','')"><i class="fa fa-plus mr-2"></i>Add</button>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Cylinder</td>
-                        <td>
-                            <label>Has Cylinder ? </label>
-                            <mat-slide-toggle  color="primary" formControlName="has_cylinder"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_cylinder')?.value == true">
-                            <label>Has Cylinder Options ? </label>
-                            <mat-slide-toggle  color="primary" formControlName="has_fixed_cylinder_options"  (change)="handleParameterChange(0,'CYLINDER',$event.checked)"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_fixed_cylinder_options')?.value == true">
-                            <button class="btn btn-primary btn-sm" type="button" (click)="openParametersModal(0,'CYLINDER')">Choose From Available Options</button>
-
-                            <div formArrayName="cylinder_parameters">
-                                <div class="alert-warning mb-2 p-2"
-                                  *ngFor="let parameterItem of lensCylinderParameters(0)['controls']; let parametersIndex = index"
-                                  [formGroupName]="parametersIndex">
-                                  <div class="form-row">
-                                    <div class="col-md-3">
-                                      <label class="float-left">Label</label>
-                                      <input type="text" class="form-control" placeholder="Enter Label" formControlName="label" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('label')?.invalid && (parameterItem.get('label')?.dirty || parameterItem.get('label')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('label')?.errors?.required">Label is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <label class="float-left">Value</label>
-                                      <input type="text" class="form-control" placeholder="Enter value" formControlName="value" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('value')?.invalid && (parameterItem.get('value')?.dirty || parameterItem.get('value')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('value')?.errors?.required">Value is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <button class="float-right btn btn-sm btn-danger" type="button" (click)="removeParameter(0,'CYLINDER',parametersIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                      <button class="float-right btn btn-sm btn-primary" type="button" (click)="addParameter(0,'CYLINDER','')"><i class="fa fa-plus mr-2"></i>Add</button>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Axis</td>
-                        <td>
-                            <label>Has Axis ?</label>
-                            <mat-slide-toggle  color="primary" formControlName="has_axis"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_axis')?.value == true">
-                            options 10 to 180 degree
-                        </td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>Add Power</td>
-                        <td>
-                            <label>Has AddPower ? </label>
-                            <mat-slide-toggle  color="primary" formControlName="has_addpower"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_addpower')?.value == true">
-                            <label>Has AddPower Options ? </label>
-                            <mat-slide-toggle  color="primary" formControlName="has_fixed_addpower_options"  (change)="handleParameterChange(0,'ADD_POWER',$event.checked)"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_fixed_addpower_options')?.value == true">
-
-                            <div formArrayName="addpower_parameters">
-                                <div class="alert-warning mb-2 p-2"
-                                  *ngFor="let parameterItem of lensAddPowerParameters(0)['controls']; let parametersIndex = index"
-                                  [formGroupName]="parametersIndex">
-                                  <div class="form-row">
-                                    <div class="col-md-3">
-                                      <label class="float-left">Label</label>
-                                      <input type="text" class="form-control" placeholder="Enter Label" formControlName="label" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('label')?.invalid && (parameterItem.get('label')?.dirty || parameterItem.get('label')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('label')?.errors?.required">Label is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <label class="float-left">Value</label>
-                                      <input type="text" class="form-control" placeholder="Enter value" formControlName="value" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('value')?.invalid && (parameterItem.get('value')?.dirty || parameterItem.get('value')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('value')?.errors?.required">Value is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <button class="float-right btn btn-sm btn-danger" type="button" (click)="removeParameter(0,'ADD_POWER',parametersIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                      <button class="float-right btn btn-sm btn-primary" type="button" (click)="addParameter(0,'ADD_POWER','')"><i class="fa fa-plus mr-2"></i>Add</button>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Color</td>
-                        <td>
-                            <label>Has Color ? </label>
-                            <mat-slide-toggle  color="primary" formControlName="has_color"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_color')?.value == true">
-                            <label>Has Color Options ? </label>
-                            <mat-slide-toggle  color="primary" formControlName="has_fixed_color_options"  (change)="handleParameterChange(0,'COLOR',$event.checked)"></mat-slide-toggle>
-                        </td>
-                        <td *ngIf="productForm.get('has_fixed_color_options')?.value == true">
-
-                            <button class="btn btn-primary btn-sm" type="button" (click)="openParametersModal(0,'COLOR')">Choose From Available Options</button>
-
-                            <div formArrayName="color_parameters">
-                                <div class="alert-warning mb-2 p-2"
-                                  *ngFor="let parameterItem of lensColorParameters(0)['controls']; let parametersIndex = index"
-                                  [formGroupName]="parametersIndex">
-                                  <div class="form-row">
-                                    <div class="col-md-3">
-                                      <label class="float-left">Label</label>
-                                      <input type="text" class="form-control" placeholder="Enter Label" formControlName="label" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('label')?.invalid && (parameterItem.get('label')?.dirty || parameterItem.get('label')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('label')?.errors?.required">Label is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <label class="float-left">Value</label>
-                                      <input type="text" class="form-control" placeholder="Enter value" formControlName="value" />
-                                      <div class="invalid-feedback"
-                                          *ngIf="parameterItem.get('value')?.invalid && (parameterItem.get('value')?.dirty || parameterItem.get('value')?.touched)"
-                                          class="text-danger font-weight-bold">
-                                          <div *ngIf="parameterItem.get('value')?.errors?.required">Value is required.</div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <button class="float-right btn btn-sm btn-danger" type="button" (click)="removeParameter(0,'COLOR',parametersIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                      <button class="float-right btn btn-sm btn-primary" type="button" (click)="addParameter(0,'COLOR','')"><i class="fa fa-plus mr-2"></i>Add</button>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                        </td>
-                      </tr>
-
-                  </table>
-              </div>
-
+             
               <div class="alert alert-success my-3">
                 <h5 class="font-weight-bold mb-5">Pricing</h5>
                 <div class="row">
-
-                   <div class="col-md-3 col-12">
-                    <label>List Price:</label>
-                    <input type="number" class="form-control" min="0" placeholder="Enter List Price"
-                      formControlName="list_price" />
-                    <div class="invalid-feedback" *ngIf="list_price?.invalid && (list_price?.dirty || list_price?.touched)"
-                      class="text-danger font-weight-bold">
-                      <div *ngIf="list_price?.errors?.required">List price is required.</div>
-                    </div>
-                  </div>
+ 
                   <div class="col-md-3 col-12">
                     <label>MRP Price:</label>
                     <input type="number" class="form-control" placeholder="Enter MRP Price" min="0"  formControlName="mrp_price" />
@@ -551,16 +149,7 @@
                       </div>
                     </div>
                   </div>
-
-                    <div class="col-md-3 col-12">
-                      <div class="form-group">
-                        <label>Price Per Unit</label><br />
-                        <input type="string" id="price_per_unit" class="form-control" placeholder="Enter Price Per Unit" formControlName="price_per_unit" />
-                        <div class="invalid-feedback" *ngIf="price_per_unit?.invalid && (price_per_unit?.dirty || price_per_unit?.touched)" class="text-danger font-weight-bold">
-                          <div *ngIf="price_per_unit?.errors?.required">Price Per Unit is required.</div>
-                        </div>
-                      </div>
-                     </div>
+ 
 
                 </div>
 
@@ -571,16 +160,7 @@
                         </div>
                       </div>
 
-                      <div class="col-md-3 col-12" *ngIf="productForm.get('is_discount')?.value==true">
-                        <div class="form-group">
-                          <label>Discount Percent</label><br />
-                          <input type="number" id="discount_percent" class="form-control" placeholder="Enter Discount Amount" formControlName="discount_percent" />
-                          <div class="invalid-feedback" *ngIf="discount_percent?.invalid && (discount_percent?.dirty || discount_percent?.touched)" class="text-danger font-weight-bold">
-                            <div *ngIf="discount_percent?.errors?.required">Discount percent is required.</div>
-                          </div>
-                        </div>
-                      </div>
-
+                  
                       <div class="col-md-3 col-12" *ngIf="productForm.get('is_discount')?.value==true">
                         <div class="form-group">
                           <label>Discount Amount</label><br />
@@ -629,40 +209,17 @@
 
               <div class="alert alert-warning my-3">
                     <h5 class="font-weight-bold mb-5">Flags</h5>
-
                     <div class="row">
-                          <div class="col-md-3">
-                              <div class="form-group">
-                                <mat-checkbox id="is_rx_required" formControlName="is_rx_required" color="primary">Is RX Required ?</mat-checkbox>
-                              </div>
-                          </div>
-                          <div class="col-md-3">
-                              <div class="form-group">
-                                <mat-checkbox id="is_refrigerated" formControlName="is_refrigerated" color="primary">Is Refrigerated ?</mat-checkbox>
-                              </div>
-                          </div>
-                          <div class="col-md-3">
-                              <div class="form-group">
-                                <mat-checkbox id="is_chronic" formControlName="is_chronic" color="primary">Is Chronic ?</mat-checkbox>
-                              </div>
-                          </div>
-
                           <div class="col-md-3">
                               <div class="form-group">
                                 <mat-checkbox id="is_active" formControlName="is_active" color="primary">Is Active ?</mat-checkbox>
                               </div>
-                               <div class="form-group">
-                                <mat-checkbox id="is_coming_soon" formControlName="is_coming_soon" color="primary">Is Coming soon ?</mat-checkbox>
-                              </div>
                           </div>
-
                     </div>
-
               </div>
 
               <div class="alert alert-success my-3">
                     <h5 class="font-weight-bold mb-5">Quantity</h5>
-
                     <div class="row">
                           <div class="col-md-3">
                               <div class="form-group">
@@ -673,19 +230,7 @@
                                 </div>
                               </div>
                           </div>
-
-                          <div class="col-md-3">
-                              <div class="form-group">
-                                <label>Product Volume</label><br />
-                                <input type="number" id="product_volume" class="form-control" placeholder="Enter Product Volume" formControlName="product_volume" />
-                                <div class="invalid-feedback" *ngIf="product_volume?.invalid && (product_volume?.dirty || product_volume?.touched)" class="text-danger font-weight-bold">
-                                  <div *ngIf="product_volume?.errors?.required">Product Volume is required.</div>
-                                </div>
-                              </div>
-                          </div>
-
                     </div>
-
               </div>
 
               <div class="alert alert-info my-3">
@@ -923,8 +468,8 @@
                       <tbody>
                         <tr *ngFor="let similrPro of similarProductsList">
                           <td>{{similrPro.name}}</td>
-                          <td>{{similrPro.sale_price|currency:'INR'}}</td>
-                          <td><button class="btn btn-sm btn-danger" (click)="deleteSimilarProduct(similrPro._id)"><i class="fas fa-trash-alt"></i></button></td>
+                          <td>{{similrPro.sale_price|currency:'EUR'}}</td>
+                          <td><button class="btn btn-sm btn-danger" (click)="deleteSimilarProduct(similrPro.id)"><i class="fas fa-trash-alt"></i></button></td>
                         </tr>
                       </tbody>
                   </table>
@@ -945,8 +490,8 @@
                       <tbody>
                         <tr *ngFor="let fbtPro of fbtProductsList">
                           <td>{{fbtPro.name}}</td>
-                          <td>{{fbtPro.sale_price|currency:'INR'}}</td>
-                          <td><button class="btn btn-sm btn-danger" (click)="deleteSimilarProduct(fbtPro._id)"><i class="fas fa-trash-alt"></i></button></td>
+                          <td>{{fbtPro.sale_price|currency:'EUR'}}</td>
+                          <td><button class="btn btn-sm btn-danger" (click)="deleteSimilarProduct(fbtPro.id)"><i class="fas fa-trash-alt"></i></button></td>
                         </tr>
                       </tbody>
                   </table>

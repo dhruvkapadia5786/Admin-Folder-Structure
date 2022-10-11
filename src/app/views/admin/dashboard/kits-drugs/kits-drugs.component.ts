@@ -53,7 +53,7 @@ export class KitsDrugsComponent implements OnInit, AfterViewInit {
     }else if (type == 'TREATMENT_CONDITION') {
       this.router.navigate(['admin', 'conditions', 'list'], { queryParams: { [paramName]: paramValue}});
     } else if (type == 'OTC_CATEGORIES') {
-      this.router.navigate(['admin', 'otc-categories'], { queryParams: { [paramName]: paramValue}});
+      this.router.navigate(['admin', 'categories'], { queryParams: { [paramName]: paramValue}});
     } else if (type == 'OTC') {
       this.router.navigate(['admin', 'otc-drugs'], { queryParams: { [paramName]: paramValue}});
     } else if (type == 'DRUGS_INFO') {

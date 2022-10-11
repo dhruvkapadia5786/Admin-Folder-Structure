@@ -161,7 +161,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this.cp.transform(data, 'INR');
+              return this.cp.transform(data, 'EUR');
             } else {
               return '<span>-</span>';
             }
@@ -173,7 +173,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this.cp.transform(data, 'INR');
+              return this.cp.transform(data, 'EUR');
             } else {
               return '<span>-</span>';
             }
@@ -220,9 +220,9 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-default btn-sm m-0" productID=${full._id}>View</button>
+            <button class="btn btn-default btn-sm m-0" productID=${full.id}>View</button>
             <br/>
-             <button class="btn btn-sm btn-primary m-0" productEditId=${full._id}>Edit</button>`;
+             <button class="btn btn-sm btn-primary m-0" productEditId=${full.id}>Edit</button>`;
           },
           orderable: false
         }

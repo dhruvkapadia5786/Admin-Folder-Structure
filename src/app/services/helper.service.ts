@@ -1,6 +1,5 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
 import * as moment from "moment-timezone";
-import Hashids from 'hashids';
 import { FormGroup } from '@angular/forms';
 
 @Injectable()
@@ -25,8 +24,8 @@ export class Helper {
 
     getInINRFormat(currency: string, data: number) {
         switch (currency) {
-            case 'INR':
-                return Number(data).toLocaleString('en-US', { style: 'currency', currency: 'INR' })
+            case 'EUR':
+                return Number(data).toLocaleString('en-US', { style: 'currency', currency: 'EUR' })
             default:
                 return "";
         }
@@ -51,65 +50,6 @@ export class Helper {
         }
     }
 
-
-    getBMITextBadge(bmi_text:string){
-      if(bmi_text=='severely_underweight'){
-         return `<span class="badge badge-pill badge-danger p-2">Severely Underweight</span>`
-      }
-      else if(bmi_text=='underweight'){
-        return `<span class="badge badge-pill badge-warning p-2">Underweight</span>`
-      }
-      else if(bmi_text=='normal'){
-        return `<span class="badge badge-pill badge-success p-2">Normal</span>`
-      }
-      else if(bmi_text=='overweight'){
-        return `<span class="badge badge-pill badge-danger p-2">Overweight</span>`
-      }
-      else if(bmi_text=='obese'){
-        return `<span class="badge badge-pill badge-danger p-2">Obese</span>`
-      }
-      else{
-         return '';
-      }
-  }
-
-  getBPTextBadge(result:string){
-      if(result=='LOW'){
-          return `<span class="badge badge-pill badge-danger p-2">Low</span>`
-       }
-       else if(result=='NORMAL'){
-         return `<span class="badge badge-pill badge-success p-2">Normal</span>`
-       }
-       else if(result=='PREHYPERTENSION'){
-         return `<span class="badge badge-pill badge-warning p-2">Pre Hypertension</span>`
-       }
-       else if(result=='HYPERTENSTION STAGE 1' || result=='HYPERTENSTION STAGE 2' || result=='HYPERTENSTION CRISIS'){
-         return `<span class="badge badge-pill badge-danger p-2">High</span>`
-       }
-       else{
-          return '';
-       }
-   }
-
-    getUserUniqueId(id: number, type: number = 0) {
-        const uniqueId = new Hashids('', 10, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890');
-        const userUniqueId = uniqueId.encode(id);
-        switch (type) {
-            case 1:
-                return 'DR' + userUniqueId;
-            case 2:
-                return 'PH' + userUniqueId;
-            case 3:
-                return 'PT' + userUniqueId;
-            case 4:
-                return 'TN' + userUniqueId;
-            case 5:
-                return 'AR' + userUniqueId;
-            default:
-                return userUniqueId;
-        }
-    }
-
     /**
   * Marks all controls in a form group as touched
   * @param formGroup - The form group to touch
@@ -124,14 +64,5 @@ export class Helper {
         });
     }
 
-    public getHashId(id: any) {
-        const hashid = new Hashids('', 10);
-        return hashid.encode(id);
-    }
-
-    public getDecodeHashId(id: any) {
-        const hashid = new Hashids('', 10);
-        return hashid.decode(id)[0];
-    }
-
+ 
 }

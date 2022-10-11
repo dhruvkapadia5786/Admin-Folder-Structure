@@ -124,7 +124,7 @@
                                 (click)="openEditAddressModal(address)"><i class="fa fa-edit"
                                     aria-hidden="true"></i></button>
                             <button *ngIf="address.is_default!=true" type="button" class="btn btn-sm btn-danger"
-                                (click)="deleteAddress(address._id)"><i class="fas fa-trash"
+                                (click)="deleteAddress(address.id)"><i class="fas fa-trash"
                                     aria-hidden="true"></i></button>
                         </td>
                     </tr>
@@ -165,7 +165,6 @@
             </table>
         </div>
         <hr>
-        <app-doument-list [userId]="customerId" [header]="'Patient Documents'"></app-doument-list>
     </ng-container>
     <ng-template #noCustomerDetails>
         <div class="text-center text-muted">

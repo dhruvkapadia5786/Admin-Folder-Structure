@@ -85,8 +85,8 @@ export class BannerSetListComponent implements OnInit {
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-sm btn-primary m-0" drugFormViewId=${full._id}>View</button>
-            <button class="btn btn-sm btn-primary m-0" drugFormEditId=${full._id}>Edit</button>`;
+            <button class="btn btn-sm btn-primary m-0" drugFormViewId=${full.id}>View</button>
+            <button class="btn btn-sm btn-primary m-0" drugFormEditId=${full.id}>Edit</button>`;
           },
           orderable: false
         }

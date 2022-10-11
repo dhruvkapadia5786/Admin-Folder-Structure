@@ -53,120 +53,31 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 		this.navItems = [
 			{ route: '/admin/dashboard', iconName: 'fa-tachometer-alt', displayName: 'Dashboard' },
+			{ route: '/admin/patients', iconName: 'fa-users', displayName: 'Customers' },
 			{
-				displayName: 'Doctors & Clinic',
-				iconName: 'fa-user-md',
-				children: [
-					{ route: '/admin/doctors', iconName: 'fa-user-md', displayName: 'Doctors' },
-					{ route: '/admin/clinic', iconName: 'fa-clinic-medical', displayName: 'Clinics' },
-					{ route: '/admin/account-request', iconName: 'fa-stethoscope', displayName: 'Account Request' },
-					{ route: '/admin/doctor-registration-codes', iconName: 'fa-puzzle-piece', displayName: 'Doctors Registration Codes' }
+						displayName: 'Manufacturers & Brands',
+						iconName: 'fa-id-badge',
+						children: [
+					{ route: '/admin/manufacturers', iconName: 'fa-list', displayName: 'Manufacturers' },
+					{ route: '/admin/brands', iconName: 'fa-list', displayName: 'Brands' }
 				]
 			},
-			{ route: '/admin/patients', iconName: 'fa-users', displayName: 'Patients' },
-			{
-				displayName: 'Technician & Pharmacy',
-				iconName: 'fa-id-badge',
-				children: [
-					{ route: '/admin/technicians', iconName: 'fa-id-badge', displayName: 'Technicians' },
-					{ route: '/admin/pharmacies', iconName: 'fa-ambulance', displayName: 'Pharmacies' }
-				]
-			},
-      {
-				displayName: 'Manufacturers & Brands',
-				iconName: 'fa-id-badge',
-				children: [
-            { route: '/admin/manufacturers', iconName: 'fa-list', displayName: 'Manufacturers' },
-            { route: '/admin/brands', iconName: 'fa-list', displayName: 'Brands' }
-          ]
-      },
-
-			{
-				displayName: 'DTC',
-				iconName: 'fa-shopping-cart',
-				children: [
-					{ route: '/admin/orders', iconName: 'fa-shopping-cart', displayName: 'Orders' },
-					{ route: '/admin/medicine-kits', iconName: 'fa-cubes', displayName: 'Medicine Kits' },
-					{ route: '/admin/treatment-conditions', iconName: 'fa-medkit', displayName: 'Treatment Conditions' }
-				]
-			},
-			{
-				displayName: 'Consultation',
-				iconName: 'fa-user-md',
-				children: [
-					{ route: '/admin/consultation', iconName: 'fa-user-md', displayName: 'Consultation' },
-					{ route: '/admin/consultation-health-conditions', iconName: 'fa-medkit', displayName: 'Health Conditions' }
-				]
-			},
-			{
-				displayName: 'Questions',
-				iconName: 'fa-question',
-				children: [
-					{ route: '/admin/questions/questions-list', iconName: 'fa-question', displayName: 'Questions' },
-					{ route: '/admin/questions/change-sequence', iconName: 'fa-sort', displayName: 'Questions Sequence' },
-					{ route: '/admin/questions/preview', iconName: 'fa-eye', displayName: 'Questions Preview' }
-				]
-			},
-			{
-				displayName: 'Pharmacy',
-				iconName: 'fa-mortar-pestle',
-				children: [
-					{ route: '/admin/drug-order', iconName: 'fa-shopping-cart', displayName: 'Pharmacy Orders' },
-          { route: '/admin/products', iconName: 'fa-pills', displayName: 'Products' },
-					{ route: '/admin/user-cart-list', iconName: 'fa-shopping-cart', displayName: 'User Cart' },
-          { route: '/admin/bannersets' , iconName: 'fa-images', displayName: 'BannerSets' },
-					{ route: '/admin/drugforms', iconName: 'fa-pills', displayName: 'DrugForms' },
-					{ route: '/admin/therapies', iconName: 'fa-book-medical', displayName: 'Therapies' },
-					{ route: '/admin/packforms', iconName: 'fa-medkit', displayName: 'PackForms' }
-				]
-			},
-			{
-				displayName: 'OTC',
-				iconName: 'fa-tablets',
-				children: [
-					{ route: '/admin/otc-categories', iconName: 'fa-bars', displayName: 'OTC Categories' },
-					{ route: '/admin/otc-drugs', iconName: 'fa-tablets', displayName: 'OTC Drugs' }
-				]
-			},
-      {
-				displayName: 'Contact Lenses',
-				iconName: 'fa-eye',
-				children: [
-					{ route: '/admin/contactlenses-types', iconName: 'fa-bars', displayName: 'Lens Types' },
-					{ route: '/admin/contactlenses-colors', iconName: 'fa-palette', displayName: 'Colors' },
-					{ route: '/admin/contactlenses-brands', iconName: 'fa-bars', displayName: 'Brands' },
-					{ route: '/admin/contactlenses-products', iconName: 'fa-medkit', displayName: 'Products' }
-				]
-			},
-      { route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' },
-      { route: '/admin/wallets', iconName: 'fa-rupee-sign', displayName: 'Wallets' },
-      {
-				displayName: 'Refund',
-				iconName: 'fa-sync-alt',
-				children: [
-					{ route: '/admin/orders/refund_requested', iconName: 'fa-sync-alt', displayName: 'Refund Orders' },
-					{ route: '/admin/consultation/refund_requested', iconName: 'fa-user-md', displayName: 'Refund Consultations' },
-					{ route: '/admin/drug-order/refund-requested', iconName: 'fa-sync-alt', displayName: 'Refund Pharmacy Orders' }
-				]
-			},
-      {
-				displayName: 'Coupons & Offers',
-				iconName: 'fa-tags',
-				children: [
-					{ route: '/admin/coupon-code/list-coupon-code', iconName: 'fa-receipt', displayName: 'Coupon Codes' },
-					{ route: '/admin/offers', iconName: 'fa-tags', displayName: 'Offers' },
-					{ route: '/admin/coupon-transaction', iconName: 'fa-list-alt', displayName: 'Coupon Transactions' },
-					{ route: '/admin/referral-transaction', iconName: 'fa-handshake', displayName: 'Referral Program Transactions' }
-				]
-			},
+			{ route: '/admin/order', iconName: 'fa-shopping-cart', displayName: 'Orders' },
+			{ route: '/admin/products', iconName: 'fa-pills', displayName: 'Products' },
+			{ route: '/admin/bannersets' , iconName: 'fa-images', displayName: 'BannerSets' },
+			{ route: '/admin/categories', iconName: 'fa-bars', displayName: 'Categories' },
+			{ route: '/admin/article-categories', iconName: 'fa-bars', displayName: 'Article Categories' },
+			{ route: '/admin/articles', iconName: 'fa-bars', displayName: 'Articles' },
+			{ route: '/admin/attributes', iconName: 'fa-bars', displayName: 'Attributes' },
+			{ route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' },
+			{ route: '/admin/orders/refund_requested', iconName: 'fa-sync-alt', displayName: 'Refund Orders' },
 			{
 				displayName: 'Others',
 				iconName: 'fa-info-circle',
 				children: [
-					{ route: '/admin/countries', iconName: 'fa-globe', displayName: 'Countries' },
-					{ route: '/admin/states', iconName: 'fa-globe', displayName: 'States' },
-					{ route: '/admin/comment-categories', iconName: 'fa-comments', displayName: 'Comment Categories' },
+					{ route: '/admin/policy', iconName: 'fa-file', displayName: 'Policy' },
 					{ route: '/admin/faq', iconName: 'fa-question-circle', displayName: 'FAQ' },
+					{ route: '/admin/faq-group', iconName: 'fa-question-circle', displayName: 'FAQ Group' },
 					{ route: '/admin/settings', iconName: 'fa-cog', displayName: 'Settings' }
 				]
 			}

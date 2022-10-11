@@ -55,9 +55,9 @@ export class BannerSetEditComponent implements OnInit {
         const imagesControl = this.bannerSetForm.get('images') as FormArray;
         this.bannerSetDetails.banners.forEach((banner:any) => {
 
-          let pId = banner.product_id ? banner.product_id._id:null;
-          let bId =  banner.brand_id ? banner.brand_id._id:null;
-          let cId =  banner.otc_category_id ? banner.otc_category_id._id:null;
+          let pId = banner.product_id ? banner.product_id.id:null;
+          let bId =  banner.brand_id ? banner.brand_id.id:null;
+          let cId =  banner.otc_category_id ? banner.otc_category_id.id:null;
 
           const lControl = new FormGroup({
             'image_src':new FormControl(banner.image_url,[]),
@@ -149,7 +149,7 @@ export class BannerSetEditComponent implements OnInit {
           }
         }
         let formSubmitted:any = await this.addBannerSetCallApi(fd).catch((e:any)=>e);
-        if(formSubmitted && formSubmitted._id){
+        if(formSubmitted && formSubmitted.id){
           this._toastr.showSuccess('BannerSet Updated');
           this._router.navigate(['admin','bannersets','list']);
         }else{
@@ -227,11 +227,11 @@ export class BannerSetEditComponent implements OnInit {
     this.modalRef = this._bsModalService.show(BannerlinkModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe((data:any)=>{
         if(tab=='OTC_CATEGORY'){
-          this.patchValueAtIndex(index,{'otc_category_id':data._id});
+          this.patchValueAtIndex(index,{'otc_category_id':data.id});
         }else if(tab=='PRODUCT'){
-          this.patchValueAtIndex(index,{'product_id':data._id});
+          this.patchValueAtIndex(index,{'product_id':data.id});
         }else{
-          this.patchValueAtIndex(index,{'brand_id':data._id});
+          this.patchValueAtIndex(index,{'brand_id':data.id});
         }
     });
   }

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import {TeledaddyApiEndpoints} from "src/app/constants/TeledaddyApiEndpoints";
+import {GolfedApiEndpoints} from "src/app/constants/GolfedApiEndpoints";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class LoginService {
     let options = { headers: headers };
 
     var result = await this._http
-      .post<any>(TeledaddyApiEndpoints.LOGIN, body,options)
+      .post<any>(GolfedApiEndpoints.LOGIN, body,options)
       .toPromise()
       .catch(err => {
         console.log('error=',err);
@@ -35,7 +35,7 @@ export class LoginService {
   }
 
   async getLoggedInUser(): Promise<any> {
-    var result = await this._http.get<any>(TeledaddyApiEndpoints.ME).toPromise();
+    var result = await this._http.get<any>(GolfedApiEndpoints.ME).toPromise();
     return result;
   }
 

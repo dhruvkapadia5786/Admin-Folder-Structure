@@ -45,11 +45,11 @@ export class InfoBrandComponent implements OnInit, OnDestroy {
   }
 
   async findByIdBrand(id: any) {
-    this._http.get(`api/brands/view/${id}`).toPromise().then((result: any) => {
-      if (result && result._id) {
+    this._http.get(`api/admin/brands/view/${id}`).toPromise().then((result: any) => {
+      if (result && result.id) {
         this.brandDetails = result;
-        this.getImage(result.image_url, 'LOGO');
-        this.getImage(result.cover_image_url, 'COVER');
+        this.getImage(result.image, 'LOGO');
+        this.getImage(result.cover_image, 'COVER');
         this._changeDetectorRef.detectChanges();
       }
     }).catch(err => {

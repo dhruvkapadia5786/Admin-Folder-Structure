@@ -111,7 +111,7 @@ export class SettingsComponent implements OnInit {
       this._helper.markFormGroupTouched(this.shippingChargeSettings);
       return;
     }
-    const url = 'api/system_settings/update_shipping_charge/'+this.systemSettings._id ;
+    const url = 'api/system_settings/update_shipping_charge/'+this.systemSettings.id ;
     const req = this.shippingChargeSettings.value;
     this._http.post(url, req).subscribe((data: any) => {
       this._toastr.showSuccess('Shipping Charges updated Successfully');
@@ -126,7 +126,7 @@ export class SettingsComponent implements OnInit {
       this._helper.markFormGroupTouched(this.refferalSettings);
       return ;
     }
-    const url = 'api/system_settings/update_referral_program/'+this.systemSettings._id;
+    const url = 'api/system_settings/update_referral_program/'+this.systemSettings.id;
     const req = this.refferalSettings.value;
     this._http.post(url, req).subscribe((data: any) => {
       this._toastr.showSuccess('Referral Program Settings updated Successfully');

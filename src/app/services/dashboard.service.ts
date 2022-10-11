@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import {TeledaddyApiEndpoints} from 'src/app/constants/TeledaddyApiEndpoints';
+import {GolfedApiEndpoints} from 'src/app/constants/GolfedApiEndpoints';
 
 @Injectable()
 export class DashboardService {
@@ -10,7 +10,7 @@ export class DashboardService {
   }
 
   async getDashboardDetails(): Promise<any> {
-      return await this._http.get<any>(TeledaddyApiEndpoints.ADMIN_DASHBOARD).toPromise();
+      return await this._http.get<any>(GolfedApiEndpoints.ADMIN_DASHBOARD).toPromise();
   }
 
 }

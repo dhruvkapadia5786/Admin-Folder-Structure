@@ -18,12 +18,8 @@ export class EditFaqComponent implements OnInit {
   public FAQId: any;
   public FAQForm: FormGroup;
   public FAQDetailsObj: any;
-  public FAQCategory: any[] = [
-    {name: 'Home', value: 'HOME'},
-    {name: 'Order', value: 'ORDER'},
-    {name: 'Consultation', value: 'CONSULTATION'},
-    {name: 'Drug Order', value: 'DRUG_ORDER'}
-  ];
+  public FAQgroup:any=[];
+
   public eventInfo!: string;
   public selectedNotificationEvent!: number;
   constructor(
@@ -38,17 +34,25 @@ export class EditFaqComponent implements OnInit {
     this.editor = new Editor();
     this.FAQId = this.activeRoute.snapshot.paramMap.get('id');
     this.FAQForm = new FormGroup({
-      'category': new FormControl([], [Validators.required]),
+      'group_id': new FormControl([], [Validators.required]),
       'question': new FormControl(null, [Validators.required]),
       'answer': new FormControl(null, [Validators.required]),
       'is_active': new FormControl(true)
     });
   }
 
-  ngOnInit() {
+  getFAQGroups(){
+    const url = 'api/admin/faqs/all-group';
+    this._http.get(url).subscribe((data: any) => {
+      this.FAQgroup = data;
+    },(err)=>{
+
+    });
+  }
+  ngOnInit(){
+    this.getFAQGroups();
     this.FAQDetailsObj = {
-      category: '',
-      // priority: '',
+      group_id: '',
       question: '',
       answer: '',
       is_active: true
@@ -62,24 +66,23 @@ export class EditFaqComponent implements OnInit {
     });
   }
 
-  getFAQDetails() {
-    const url = 'api/faqs/view/' + this.FAQId;
+  getFAQDetails(){
+    const url = 'api/admin/faqs/view/' + this.FAQId;
     this._http.get(url)
       .subscribe((res: any) => {
         this.FAQDetailsObj = res;
         this.FAQForm.patchValue({
-          category: this.FAQDetailsObj.categories.map((item:any)=>item.name),
-          // priority: this.FAQDetailsObj.priority,
+          group_id: this.FAQDetailsObj.group_id,
           question: this.FAQDetailsObj.question,
           answer: this.FAQDetailsObj.answer,
           is_active:  this.FAQDetailsObj.is_active
         })
         this.answerText = this.FAQDetailsObj.answer;
-        this._changeDetectorRef.detectChanges();
-      }, err => {});
+      }, err => {
+
+      });
   }
-  get category() { return this.FAQForm.get('category'); }
-  // get priority() { return this.FAQForm.get('priority'); }
+  get group_id() { return this.FAQForm.get('group_id'); }
   get question() { return this.FAQForm.get('question'); }
   get answer() { return this.FAQForm.get('answer'); }
   get is_active() { return this.FAQForm.get('is_active'); }
@@ -89,7 +92,7 @@ export class EditFaqComponent implements OnInit {
       this._helper.markFormGroupTouched(this.FAQForm);
       return;
     }
-    const url = 'api/faqs/update/' + this.FAQId;
+    const url = 'api/admin/faqs/update/' + this.FAQId;
     const req = this.FAQForm.value;
     this._http.post(url, req).subscribe((data: any) => {
       this._router.navigate(['/admin/faq/list']);

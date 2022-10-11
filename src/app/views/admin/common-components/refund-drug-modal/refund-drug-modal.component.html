@@ -18,15 +18,15 @@
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let drug of order.products">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="checkbox_{{drug._id}}"
+                        <input type="checkbox" class="custom-control-input" id="checkbox_{{drug.id}}"
                             (change)="selectDrug(drug,$event)"
                             [checked]="checkDrugSelectedForRefund(drug)"
                             [disabled]="checkDrugDisabledForRefund(drug)" />
-                        <label class="custom-control-label " for="checkbox_{{drug._id}}">
+                        <label class="custom-control-label " for="checkbox_{{drug.id}}">
                         {{drug.product_name }}
                         <span *ngIf="drug.product_type && drug.product_type=='LENS'">{{ ' - '+drug.eye_type }}</span>
-                        <span class="ml-2">- {{ drug.price | currency:'INR' }} </span>
-                        <span *ngIf="drug.tax_amount > 0" > + Tax {{ drug.tax_amount | currency:'INR' }} </span>
+                        <span class="ml-2">- {{ drug.price | currency:'EUR' }} </span>
+                        <span *ngIf="drug.tax_amount > 0" > + Tax {{ drug.tax_amount | currency:'EUR' }} </span>
                         </label>
                     </div>
                 </li>

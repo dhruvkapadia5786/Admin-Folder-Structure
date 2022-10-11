@@ -9,7 +9,7 @@
             </div>
             <p class="white-text">SALES</p>
             <h4>
-              <strong>{{(stats.total_sales | currency:'INR') }}</strong>
+              <strong>{{(stats.total_sales | currency:'EUR') }}</strong>
             </h4>
           </div>
         </div>
@@ -24,25 +24,25 @@
           <tr>
             <td class="font-weight-normal">Yesterday</td>
             <td class="text-right"><span
-                class="badge blue-grey-darken-1 badge-pill py-2 px-3">{{detstats.sales.yesterday | currency:'INR' }}</span>
+                class="badge blue-grey-darken-1 badge-pill py-2 px-3">{{detstats.sales.yesterday | currency:'EUR' }}</span>
             </td>
           </tr>
           <tr>
             <td class="font-weight-normal">Last 7 day</td>
             <td class="text-right"><span
-                class="badge blue-grey-darken-2 badge-pill py-2 px-3">{{detstats.sales.last_7days | currency:'INR' }}</span>
+                class="badge blue-grey-darken-2 badge-pill py-2 px-3">{{detstats.sales.last_7days | currency:'EUR' }}</span>
             </td>
           </tr>
           <tr>
             <td class="font-weight-normal">Last 15 day</td>
             <td class="text-right"><span
-                class="badge blue-grey-darken-3 badge-pill py-2 px-3">{{detstats.sales.last_15days | currency:'INR' }}</span>
+                class="badge blue-grey-darken-3 badge-pill py-2 px-3">{{detstats.sales.last_15days | currency:'EUR' }}</span>
             </td>
           </tr>
           <tr>
             <td class="font-weight-normal">Last 30 day</td>
             <td class="text-right"><span
-                class="badge blue-grey-darken-4 badge-pill py-2 px-3">{{detstats.sales.last_30days | currency:'INR' }}</span>
+                class="badge blue-grey-darken-4 badge-pill py-2 px-3">{{detstats.sales.last_30days | currency:'EUR' }}</span>
             </td>
           </tr>
         </table>
@@ -56,7 +56,7 @@
             <div class="pull-right">
               <i class="fa fa-3x fa-medkit" style="opacity:0.1; transform: rotate(-35deg);"></i>
             </div>
-            <p>DTC ORDERS</p>
+            <p>ORDERS</p>
             <h4>
               <strong>{{stats.total_orders }}</strong>
             </h4>
@@ -109,137 +109,8 @@
       </div>
     </div>
 
-    <div class="flex-fill mx-2">
-      <a href="javascript:void(0)" routerLink="/admin/drug-order">
-        <div class="card classic-admin-card indigo-darken-4">
-          <div class="card-body">
-            <div class="pull-right">
-              <i class="fa fa-3x fa-shopping-cart" style="opacity:0.1; transform: rotate(-35deg);"></i>
-            </div>
-            <p>PHARMACY ORDERS</p>
-            <h4>
-              <strong>{{stats.total_drug_orders }}</strong>
-            </h4>
-          </div>
-        </div>
-      </a>
-      <div *ngIf="detstats && detstats.drug_order">
-        <table class="table table-sm table-hover">
-          <tr>
-            <!-- <td class="font-weight-normal">Today</td> -->
-            <td class="font-weight-normal"><span class="badge cyan-darken badge-pill py-2 px-3">{{detstats.drug_order.today.todays_orders }}</span>
-            </td>
-            <td class="text-right"><span
-                class="badge cyan-darken badge-pill py-2 px-3">{{'$'+detstats.drug_order.today.todays_orders_sales.toFixed(2)
-                }}</span></td>
-          </tr>
-          <tr>
-            <!-- <td class="font-weight-normal">Yesterday</td> -->
-            <td class="font-weight-normal"><span class="badge cyan-darken-1 badge-pill py-2 px-3">{{detstats.drug_order.yesterday.yesterdays_orders
-                }}</span></td>
-            <td class="text-right"><span
-                class="badge cyan-darken-1 badge-pill py-2 px-3">{{'$'+detstats.drug_order.yesterday.yesterdays_orders_sales.toFixed(2)
-                }}</span></td>
-          </tr>
-          <tr>
-            <!-- <td class="font-weight-normal">Last 7 day</td> -->
-            <td class="font-weight-normal"><span
-                class="badge cyan-darken-2 badge-pill py-2 px-3">{{detstats.drug_order.last_7days.last_7days_orders
-                }}</span></td>
-            <td class="text-right"><span
-                class="badge cyan-darken-2 badge-pill py-2 px-3">{{'$'+detstats.drug_order.last_7days.last_7days_orders_sales.toFixed(2)
-                }}</span></td>
-          </tr>
-          <tr>
-            <!-- <td class="font-weight-normal">Last 15 day</td> -->
-            <td class="font-weight-normal"><span
-                class="badge cyan-darken-3 badge-pill py-2 px-3">{{detstats.drug_order.last_15days.last_15days_orders
-                }}</span></td>
-            <td class="text-right"><span
-                class="badge cyan-darken-3 badge-pill py-2 px-3">{{'$'+detstats.drug_order.last_15days.last_15days_orders_sales.toFixed(2)
-                }}</span></td>
-          </tr>
-          <tr>
-            <!-- <td class="font-weight-normal">Last 30 day</td> -->
-            <td class="font-weight-normal"><span
-                class="badge cyan-darken-4 badge-pill py-2 px-3">{{detstats.drug_order.last_30days.last_30days_orders
-                }}</span></td>
-            <td class="text-right"><span
-                class="badge cyan-darken-4 badge-pill py-2 px-3">{{'$'+detstats.drug_order.last_30days.last_30days_orders_sales.toFixed(2)
-                }}</span></td>
-          </tr>
-        </table>
-      </div>
-    </div>
 
-
-    <div class="flex-fill mx-2">
-      <a href="javascript:void(0)" routerLink="/admin/consultation/">
-        <div class="card classic-admin-card indigo-darken-4">
-          <div class="card-body">
-            <div class="pull-right">
-              <i class="fa fa-3x fa-stethoscope" style="opacity:0.1; transform: rotate(-35deg);"></i>
-            </div>
-            <p>CONSULTATIONS</p>
-            <h4>
-              <strong>{{stats.total_consultations }}</strong>
-            </h4>
-          </div>
-        </div>
-      </a>
-      <div *ngIf="detstats && detstats.consultation">
-        <table class="table table-hover table-sm">
-          <tr>
-            <!-- <td class="font-weight-normal">Today</td> -->
-            <td class="font-weight-normal">
-              <span class="badge cyan-darken badge-pill py-2 px-3">{{
-                detstats.consultation.today.todays_consultations}}</span>
-            </td>
-            <td class="text-right"><span class="badge cyan-darken badge-pill py-2 px-3">{{'$'+
-                detstats.consultation.today.todays_consultations_sales.toFixed(2) }}</span>
-            </td>
-          </tr>
-          <tr>
-            <!-- <td class="font-weight-normal">Yesterday</td> -->
-            <td class="font-weight-normal"><span class="badge cyan-darken-1 badge-pill py-2 px-3">{{
-                detstats.consultation.yesterday.yesterdays_consultations}}</span>
-            </td>
-            <td class="text-right"><span class="badge cyan-darken-1 badge-pill py-2 px-3">{{
-                '$'+detstats.consultation.yesterday.yesterdays_consultations_sales.toFixed(2) }}</span>
-            </td>
-          </tr>
-          <tr>
-            <!-- <td class="font-weight-normal">Last 7 day</td> -->
-            <td class="font-weight-normal"> <span class="badge cyan-darken-2 badge-pill py-2 px-3">{{
-                detstats.consultation.last_7days.last_7days_consultations }}</span>
-            </td>
-            <td class="text-right"> <span class="badge cyan-darken-2 badge-pill py-2 px-3">{{
-                '$'+detstats.consultation.last_7days.last_7days_consultations_sales.toFixed(2) }}</span>
-            </td>
-          </tr>
-          <tr>
-            <!-- <td class="font-weight-normal">Last 15 day</td> -->
-            <td class="font-weight-normal"> <span class="badge cyan-darken-3 badge-pill py-2 px-3">{{
-                detstats.consultation.last_15days.last_15days_consultations }}</span>
-            </td>
-            <td class="text-right"> <span class="badge cyan-darken-3 badge-pill py-2 px-3">{{
-                '$'+detstats.consultation.last_15days.last_15days_consultations_sales.toFixed(2)
-                }}</span>
-            </td>
-          </tr>
-          <tr>
-            <!-- <td class="font-weight-normal">Last 30 day</td> -->
-            <td class="font-weight-normal"> <span class="badge cyan-darken-4 badge-pill py-2 px-3">{{
-                detstats.consultation.last_30days.last_30days_consultations }}</span>
-            </td>
-            <td class="text-right"> <span class="badge cyan-darken-4 badge-pill py-2 px-3">{{
-                '$'+detstats.consultation.last_30days.last_30days_consultations_sales.toFixed(2)
-                }}</span>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
+  
   </div>
 
   <div class="row mt-3 p-3">
@@ -250,7 +121,7 @@
             <div class="pull-right">
               <i class="fa fa-3x fa-users" style="opacity:0.1; transform: rotate(-35deg);"></i>
             </div>
-            <p>PATIENTS</p>
+            <p>CUSTOMERS</p>
             <h4>
               <strong>{{stats.total_patients }}</strong>
             </h4>
@@ -350,193 +221,6 @@
     </div>
   </div>
 
-  <div class="row mt-3 p-3">
-    <div class="col-xl-3 col-md-6 mb-r">
-      <a href="javascript:void(0)" routerLink="/admin/subscriptions/list">
-        <div class="card classic-admin-card amber-darken-3">
-          <div class="card-body">
-            <div class="pull-right">
-              <i style="opacity:0.1; transform: rotate(-35deg);" class="fa fa-3x fa-refresh"></i>
-            </div>
-            <p class="text-uppercase font-weight-normal">DTC Kit Subscription</p>
-            <h4>
-              <strong>{{subscriptionCount?.orderAllCount?.total_count }}</strong>
-            </h4>
-          </div>
-        </div>
-      </a>
-      <div *ngIf="subscriptionCount && subscriptionCount.orderAllCount">
-        <table class="table table-hover table-sm">
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('ORDER','active')">
-            <td class="font-weight-normal">Active</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount?.orderAllCount?.active_count
-                }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('ORDER','completed')">
-            <td class="font-weight-normal">Completed</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{
-                subscriptionCount?.orderAllCount?.completed_count }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('ORDER','closed')">
-            <td class="font-weight-normal">Closed</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount?.orderAllCount?.closed_count
-                }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('ORDER','transferred')">
-            <td class="font-weight-normal">Transferred</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{
-                subscriptionCount?.orderAllCount?.transferred_count }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('ORDER','refunded')">
-            <td class="font-weight-normal">Refunded</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount?.orderAllCount?.refunded_count
-                }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('ORDER','prescription_expired')">
-            <td class="font-weight-normal">Rx Expired</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{
-                subscriptionCount?.orderAllCount?.prescription_expired_count }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('ORDER','cancelled')">
-            <td class="font-weight-normal">Cancelled</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{
-                subscriptionCount?.orderAllCount?.cancelled_count }}</span>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-
-    <div class="col-xl-3 col-md-6 mb-r">
-      <a href="javascript:void(0)" routerLink="/admin/subscriptions-drug-order/schedules">
-        <div class="card classic-admin-card amber-darken-3">
-          <div class="card-body">
-            <div class="pull-right">
-              <i style="opacity:0.1; transform: rotate(-35deg);" class="fa fa-3x fa-refresh"></i>
-            </div>
-            <p class="text-uppercase font-weight-normal">Drug Order Subscription</p>
-            <h4>
-              <strong>{{subscriptionCount?.drugAllCount?.total_count }}</strong>
-            </h4>
-          </div>
-        </div>
-      </a>
-      <div *ngIf="subscriptionCount && subscriptionCount.drugAllCount">
-        <table class="table table-sm table-hover">
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','active')">
-            <td class="font-weight-normal">Active</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount.drugAllCount?.active_count
-                }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','completed')">
-            <td class="font-weight-normal">Completed</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount.drugAllCount?.completed_count
-                }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','action_required')">
-            <td class="font-weight-normal">Action Required</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount.drugAllCount?.action_required_count
-                }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','closed')">
-            <td class="font-weight-normal">Closed</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount.drugAllCount?.closed_count
-                }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','transferred')">
-            <td class="font-weight-normal">Transferred</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{
-                subscriptionCount.drugAllCount?.transferred_count }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','refunded')">
-            <td class="font-weight-normal">Refunded</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount.drugAllCount?.refunded_count
-                }}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','drug_not_available')">
-            <td class="font-weight-normal">Drug Not Available</td>
-            <td class="text-right"><span class="badge badge-primary badge-pill py-2 px-3">{{
-                subscriptionCount.drugAllCount?.drug_not_available_count }}</span></td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','prescription_expired')">
-            <td class="font-weight-normal">Prescription Expired</td>
-            <td class="text-right"><span class="badge badge-primary badge-pill py-2 px-3">
-            {{  subscriptionCount.drugAllCount?.prescription_expired_count }}</span></td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('DRUG','cancelled')">
-            <td class="font-weight-normal">Cancelled</td>
-            <td class="text-right"><span class="badge badge-primary badge-pill py-2 px-3">{{
-                subscriptionCount.drugAllCount?.cancelled_count }}</span></td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-r">
-      <a href="javascript:void(0)" routerLink="/admin/subscriptions-otc-drug/schedules">
-        <div class="card classic-admin-card amber-darken-3">
-          <div class="card-body">
-            <div class="pull-right">
-              <i style="opacity:0.1; transform: rotate(-35deg);" class="fa fa-3x fa-refresh"></i>
-            </div>
-            <p class="text-uppercase font-weight-normal">OTC Drug Subscription</p>
-            <h4>
-              <strong>{{subscriptionCount?.otcAllCount?.total_count }}</strong>
-            </h4>
-          </div>
-        </div>
-      </a>
-      <div *ngIf="subscriptionCount && subscriptionCount.otcAllCount">
-        <table class="table table-sm table-hover">
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('OTC','active')">
-            <td class="font-weight-normal">Active</td>
-            <td class="text-right">
-              <span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount.otcAllCount?.active_count}}</span>
-            </td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('OTC','drug_not_available')">
-            <td class="font-weight-normal">Drug Not Available</td>
-            <td class="text-right"><span class="badge badge-primary badge-pill py-2 px-3">{{subscriptionCount.otcAllCount?.drug_not_available_count }}</span></td>
-          </tr>
-           <tr class="cursor-pointer" (click)="goToSubscriptionDetails('OTC','action_required')">
-            <td class="font-weight-normal">Action Required</td>
-            <td class="text-right"><span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount.otcAllCount?.action_required_count }}</span></td>
-          </tr>
-          <tr class="cursor-pointer" (click)="goToSubscriptionDetails('OTC','cancelled')">
-            <td class="font-weight-normal">Cancelled</td>
-            <td class="text-right"><span class="badge badge-primary badge-pill py-2 px-3">{{ subscriptionCount.otcAllCount?.cancelled_count }}</span></td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-  </div>
 
   <div class="row mt-3">
     <div class="col-xl-12 col-md-12 col-12">

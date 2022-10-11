@@ -51,7 +51,7 @@ export class ManufacturersComponent implements OnInit,AfterViewInit,OnDestroy {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/manufacturers/list',
+            'api/admin/manufacturers/list',
             dataTablesParameters,
             {}
           )
@@ -97,7 +97,7 @@ export class ManufacturersComponent implements OnInit,AfterViewInit,OnDestroy {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<button class="btn btn-sm btn-primary m-0" stateEditId=${full._id}>Edit</button>`;
+            return `<button class="btn btn-sm btn-primary m-0" stateEditId=${full.id}>Edit</button>`;
           },
           orderable: false
         }
@@ -150,7 +150,7 @@ export class ManufacturersComponent implements OnInit,AfterViewInit,OnDestroy {
   }
 
   openEditModal(id:any){
-    let data = this.manufacturersTableData.find((item:any)=>item._id == id);
+    let data = this.manufacturersTableData.find((item:any)=>item.id == id);
     this._manufacturerAddEditModalService.setData({event:'EDIT',data:data});
     this.modalRef = this.modalService.show(ManufacturerAddEditModalComponent);
     this.modalRef.content.onEventCompleted.subscribe(()=>{

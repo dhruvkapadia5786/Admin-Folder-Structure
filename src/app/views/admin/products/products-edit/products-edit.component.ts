@@ -10,11 +10,8 @@ import { tap, filter, takeUntil, switchMap} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
-import { SelectOtcSubcategoryModalComponent } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.component';
-import { LensParametersModalComponent } from '../lens-parameters-modal/lens-parameters-modal.component';
-import { LensParametersModalService } from '../lens-parameters-modal/lens-parameters-modal.service';
-import { SelectOtcSubcategoryModalService } from '../select-otc-subcategory-modal/select-otc-subcategory-modal.service';
-import { AppConstants } from 'src/app/constants/AppConstants';
+import { SelectSubcategoryModalComponent } from '../select-subcategory-modal/select-subcategory-modal.component';
+import { SelectSubcategoryModalService } from '../select-subcategory-modal/select-subcategory-modal.service';
 import { BannerlinkModalService } from '../../banner-sets/bannerlink-modal/bannerlink-modal.service';
 import { BannerlinkModalComponent } from '../../banner-sets/bannerlink-modal/bannerlink-modal.component';
 import { TextEditorModalComponent } from '../../common-components/text-editor-modal/text-editor-modal.component';
@@ -82,20 +79,11 @@ export class ProductsEditComponent implements OnInit {
   is_active_control_sub!:Subscription;
   is_gst_applicable_sub!:Subscription;
 
-  indiaDrugSchedules = AppConstants.indiaDrugSchedules;
-  parameterTypes=AppConstants.parameterTypes;
-  negativePowerDefaultOptions=AppConstants.negativePowerDefaultOptions;
-  positivePowerDefaultOptions= AppConstants.positivePowerDefaultOptions;
-  cylinderDefaultOptions= AppConstants.cylinderDefaultOptions;
-  diameterDefaultOptions= AppConstants.diameterDefaultOptions;
-  basecurveDefaultOptions = AppConstants.basecurveDefaultOptions;
-  materialsDefaultOptions =AppConstants.materialsDefaultOptions;
-
   colorsList:any=[];
   lenstypeList:any[]=[];
 
   categoriesSubcategoriesList:any[]=[];
-  selected_otc_categories_forindex:any[]=[];
+  selected_categories_forindex:any[]=[];
   similarProductsList:any=[];
   fbtProductsList:any[]=[];
 
@@ -108,8 +96,7 @@ export class ProductsEditComponent implements OnInit {
     private _bsModalService:BsModalService,
     private _textEditorModalService: TextEditorModalService,
     private _bannerLinkModalService:BannerlinkModalService,
-    private _lensParametersModalService:LensParametersModalService,
-    private _selectOtcSubcategoryModalService:SelectOtcSubcategoryModalService,
+    private _selectOtcSubcategoryModalService:SelectSubcategoryModalService,
     private _toastr: Toastr){
 
     let activatedRoute:any  = this._route;
@@ -214,7 +201,7 @@ export class ProductsEditComponent implements OnInit {
         this.filteredTherapies.next(filteredTherapies);
 
         for(let item of filteredTherapies){
-          if(this.searchedTherapiesResult.filter((a)=>a._id==item._id).length==0){
+          if(this.searchedTherapiesResult.filter((a)=>a.id==item.id).length==0){
             this.searchedTherapiesResult.push(item);
           }
         }
@@ -403,7 +390,7 @@ export class ProductsEditComponent implements OnInit {
   }
 
   handleTherapySelected(event:any){
-      let selectedTherapies = this.searchedTherapiesResult.filter((a)=>event.value.indexOf(a._id)!=-1);
+      let selectedTherapies = this.searchedTherapiesResult.filter((a)=>event.value.indexOf(a.id)!=-1);
       this.filteredTherapies.next(selectedTherapies);
   }
 
@@ -414,7 +401,7 @@ export class ProductsEditComponent implements OnInit {
   }
 
   async getAllManufacturers(searchTerm:string):Promise<any>{
-    return await this.http.get(`api/manufacturers/all`+`?search=${searchTerm}`).toPromise();
+    return await this.http.get(`api/admin/manufacturers/all`+`?search=${searchTerm}`).toPromise();
   }
 
 
@@ -457,7 +444,7 @@ export class ProductsEditComponent implements OnInit {
   async getAllBrands(searchTerm:string):Promise<any>{
     let manufacturer_id_control = this.productForm.get('manufacturer_id');
     let manufacturer_id = manufacturer_id_control ? manufacturer_id_control.value : '';
-    return await this.http.get(`api/brands/all`+`?search=${searchTerm}&manufacturer_id=${manufacturer_id}`).toPromise();
+    return await this.http.get(`api/admin/brands/all`+`?search=${searchTerm}&manufacturer_id=${manufacturer_id}`).toPromise();
   }
 
   public getlensTypesList(){
@@ -497,74 +484,11 @@ export class ProductsEditComponent implements OnInit {
     if(this.is_coming_soon_control_sub){this.is_coming_soon_control_sub.unsubscribe();}
   }
 
-  openParametersModal(drugIndex:number,paramName:string){
-    this._lensParametersModalService.setFormData({
-        index:drugIndex,
-        parameter:paramName,
-        colorsList:this.colorsList
-    });
-    this.modalRef = this._bsModalService.show(LensParametersModalComponent,{class:'modal-lg'});
-    this.modalRef.content.onApplySelected.subscribe((item:any)=>{
-      if(item.parameter=='CYLINDER'){
-        this.clearFormArray(this.lensCylinderParameters(item.index));
-      }
-      else if(item.parameter=='POWER'){
-          this.clearFormArray(this.lensPowerParameters(item.index));
-      }
-      else if(item.parameter=='BASE_CURVE'){
-          this.clearFormArray(this.lensBCParameters(item.index));
-      }
-      else if(item.parameter=='DIAMETER'){
-          this.clearFormArray(this.lensDiamenterParameters(item.index));
-      }
-      else if(item.parameter=='COLOR'){
-        this.clearFormArray(this.lensColorParameters(item.index));
-      }
-      else{
-      }
-      for(let i of item.options){
-        this.addParameter(item.index,item.parameter,i);
-      }
-    });
-}
-
-handleParameterChange(drugIndex:number,paramName:string,checked:any){
-  if(checked){
-     this.addParameter(drugIndex,paramName,null);
-  }else{
-     if(paramName=='DIAMETER'){
-       this.clearFormArray(this.lensDiamenterParameters(drugIndex));
-     }
-     else if(paramName=='BASE_CURVE'){
-       this.clearFormArray(this.lensBCParameters(drugIndex));
-     }
-     else if(paramName=='POWER'){
-       this.clearFormArray(this.lensPowerParameters(drugIndex));
-     }
-     else if(paramName=='CYLINDER'){
-       this.clearFormArray(this.lensCylinderParameters(drugIndex));
-     }
-     else if(paramName=='ADD_POWER'){
-      this.clearFormArray(this.lensAddPowerParameters(drugIndex));
-     }
-     else if(paramName=='COLOR'){
-      this.clearFormArray(this.lensColorParameters(drugIndex));
-     }
-    else{
-
-    }
-  }
-}
-
 
 clearFormArray = (formArray: FormArray) => {
   while (formArray.length !== 0) {
     formArray.removeAt(0)
   }
-}
-
-lensDiamenterParameters(drugIndex:number): FormArray {
-  return this.productForm.get("diameter_parameters") as FormArray;
 }
 
 uncheckOptionsSwitch(drugIndex:number,paramKey:string,formArray:any){
@@ -573,94 +497,6 @@ uncheckOptionsSwitch(drugIndex:number,paramKey:string,formArray:any){
         [paramKey]:false
       });
   }
-}
-
-lensBCParameters(drugIndex:number): FormArray {
-  return this.productForm.get("basecurve_parameters") as FormArray;
-}
-
-lensPowerParameters(drugIndex:number): FormArray {
-  return this.productForm.get("power_parameters") as FormArray;
-}
-
-lensCylinderParameters(drugIndex:number): FormArray {
-  return this.productForm.get("cylinder_parameters") as FormArray;
-}
-
-lensAddPowerParameters(drugIndex:number): FormArray {
-  return this.productForm.get("addpower_parameters") as FormArray;
-}
-
-lensColorParameters(drugIndex:number): FormArray {
-  return this.productForm.get("color_parameters") as FormArray;
-}
-
-addParameter(drugIndex: number,paramName:string,val:any=null){
-  let formItem:any = new FormGroup({
-    'parameter_type':new FormControl(paramName, [Validators.required]),
-    'label':new FormControl(val, [Validators.required]),
-    'value':new FormControl(val, [Validators.required])
-  });
-  if(paramName=='DIAMETER'){
-    this.lensDiamenterParameters(drugIndex).push(formItem);
-  }
-  else if(paramName=='BASE_CURVE'){
-    this.lensBCParameters(drugIndex).push(formItem);
-  }
-  else if(paramName=='POWER'){
-    this.lensPowerParameters(drugIndex).push(formItem);
-  }
-  else if(paramName=='CYLINDER'){
-    this.lensCylinderParameters(drugIndex).push(formItem);
-  }
-  else if(paramName=='ADD_POWER'){
-    this.lensAddPowerParameters(drugIndex).push(formItem);
-  }
-  else if(paramName=='COLOR'){
-    this.lensColorParameters(drugIndex).push(formItem);
-  }
-  else{
-
-  }
-}
-
-removeParameter(drugIndex: number,paramName:string,index: number) {
-  let paramKey='';
-  let formArray:any;
-  if(paramName=='DIAMETER'){
-    paramKey='has_fixed_diameter_options';
-    formArray=this.lensDiamenterParameters(drugIndex);
-    formArray.removeAt(index);
-  }
-  else if(paramName=='BASE_CURVE'){
-    paramKey='has_fixed_basecurve_options';
-    formArray=this.lensBCParameters(drugIndex);
-    formArray.removeAt(index);
-  }
-  else if(paramName=='POWER'){
-    paramKey='has_fixed_power_options';
-    formArray=this.lensPowerParameters(drugIndex);
-    formArray.removeAt(index);
-  }
-  else if(paramName=='CYLINDER'){
-    paramKey='has_fixed_cylinder_options';
-    formArray=this.lensCylinderParameters(drugIndex);
-    formArray.removeAt(index);
-  }
-  else if(paramName=='ADD_POWER'){
-    paramKey='has_fixed_addpower_options';
-    formArray=this.lensAddPowerParameters(drugIndex);
-    formArray.removeAt(index);
-  }
-  else if(paramName=='COLOR'){
-    paramKey='has_fixed_color_options';
-    formArray=this.lensColorParameters(drugIndex);
-    formArray.removeAt(index);
-  }
-  else{
-
-  }
-  this.uncheckOptionsSwitch(drugIndex,paramKey,formArray);
 }
 
 
@@ -929,11 +765,11 @@ handleTypeChange(attributeIndex:number,event:any){
           this.filteredTherapies.next(res.therapies);
         }
 
-        if(res.product_type=='OTC' && res.otc_categories){
-          this.selected_otc_categories_forindex=[
+        if(res.product_type=='OTC' && res.categories){
+          this.selected_categories_forindex=[
               {
                 index:0,
-                data:res.otc_categories
+                data:res.categories
               }
           ];
         }
@@ -943,12 +779,12 @@ handleTypeChange(attributeIndex:number,event:any){
           ucode:res.ucode,
           procurement_channel:res.procurement_channel,
           product_type:res.product_type,
-          manufacturer_id:res.manufacturer_id ? res.manufacturer_id._id:null,
-          brand_id:res.brand_id ? res.brand_id._id:null,
+          manufacturer_id:res.manufacturer_id ? res.manufacturer_id.id:null,
+          brand_id:res.brand_id ? res.brand_id.id:null,
           measurement_unit:res.measurement_unit,
-          form_name:res.form_name ? res.form_name._id:null,
+          form_name:res.form_name ? res.form_name.id:null,
           schedule:res.schedule,
-          packform:res.packform ? res.packform._id : null,
+          packform:res.packform ? res.packform.id : null,
           is_rx_required:res.is_rx_required,
           is_refrigerated:res.is_refrigerated,
           is_chronic:res.is_chronic,
@@ -968,7 +804,7 @@ handleTypeChange(attributeIndex:number,event:any){
           is_discount:res.is_discount,
           discount_amount:res.discount_amount,
           discount_percent:res.discount_percent,
-          therapies:res.therapies ? res.therapies.map((item:any)=>item._id):[],
+          therapies:res.therapies ? res.therapies.map((item:any)=>item.id):[],
 
           has_diameter: res.lens_parameters ? res.lens_parameters.has_diameter:null,
           has_basecurve: res.lens_parameters ? res.lens_parameters.has_basecurve:null,
@@ -1034,53 +870,6 @@ handleTypeChange(attributeIndex:number,event:any){
           });
           attributesControl.push(attrFormGroup);
         });
-
-        if(res.product_type=='LENS'){
-
-        }
-        if(res.lens_parameters && res.lens_parameters.cylinder_parameters.length>0){
-          this.clearFormArray(this.lensCylinderParameters(0));
-          for(let item of  res.lens_parameters.cylinder_parameters){
-             this.addParameter(0,'CYLINDER',item.value);
-          }
-        }
-
-        if(res.lens_parameters && res.lens_parameters.power_parameters.length>0){
-            this.clearFormArray(this.lensPowerParameters(0));
-            for(let item of  res.lens_parameters.power_parameters){
-            this.addParameter(0,'POWER',item.value);
-            }
-        }
-        if(res.lens_parameters && res.lens_parameters.basecurve_parameters.length>0){
-            this.clearFormArray(this.lensBCParameters(0));
-            for(let item of res.lens_parameters.basecurve_parameters){
-            this.addParameter(0,'BASE_CURVE',item.value);
-            }
-        }
-
-        if(res.lens_parameters && res.lens_parameters.diameter_parameters.length>0){
-            this.clearFormArray(this.lensDiamenterParameters(0));
-            for(let item of res.lens_parameters.diameter_parameters){
-            this.addParameter(0,'DIAMETER',item.value);
-            }
-        }
-
-        if(res.lens_parameters && res.lens_parameters.addpower_parameters.length>0){
-          this.clearFormArray(this.lensDiamenterParameters(0));
-          for(let item of res.lens_parameters.add_power_parameters){
-          this.addParameter(0,'ADD_POWER',item.value);
-          }
-        }
-
-       if(res.lens_parameters && res.lens_parameters.color_parameters.length>0){
-        this.clearFormArray(this.lensDiamenterParameters(0));
-        for(let item of res.lens_parameters.color_parameters){
-        this.addParameter(0,'COLOR',item.value);
-        }
-       }
-
-
-
       },(err:any) => {
 
       });
@@ -1098,7 +887,7 @@ handleTypeChange(attributeIndex:number,event:any){
     productVal.oldImages = this.productDetails.images;
     productVal.oldDocuments = this.productDetails.documents;
     productVal.oldVideos = this.productDetails.videos;
-    productVal.otc_drug_categories = this.get_selected_otc_categories_forindex(0);
+    productVal.categories = this.get_selected_categories_forindex(0);
     fd.append('product', JSON.stringify(productVal));
 
     if(this.selectedFiles.length>0){
@@ -1132,7 +921,7 @@ handleTypeChange(attributeIndex:number,event:any){
 
   defaultImageChange (imgId: any, event: any) {
     this.productDetails.images.map((img: any) => {
-      if(img._id == imgId) {
+      if(img.id == imgId) {
         img.is_default = event.target.checked
       } else {
         img.is_default = !event.target.checked
@@ -1143,20 +932,20 @@ handleTypeChange(attributeIndex:number,event:any){
   deleteImage(img: any){
     let defaultImagesLength: number = this.productDetails.images.filter((img: any) => img.is_default).length + this.productForm.value.images.filter((img: any) => img.is_default).length
     if (defaultImagesLength > 0) {
-      let index: number = this.productDetails.images.findIndex((data: any) => data._id === img._id);
+      let index: number = this.productDetails.images.findIndex((data: any) => data.id === img.id);
       if(index != -1) {
         this.productDetails.images.splice(index, 1);
       }
     }
   }
   deleteDocument(doc: any){
-    let index: number = this.productDetails.documents.findIndex((data: any) => data._id === doc._id);
+    let index: number = this.productDetails.documents.findIndex((data: any) => data.id === doc.id);
     if(index != -1) {
       this.productDetails.documents.splice(index, 1);
     }
   }
   deleteVideo(video: any){
-    let index: number = this.productDetails.videos.findIndex((data: any) => data._id === video._id);
+    let index: number = this.productDetails.videos.findIndex((data: any) => data.id === video.id);
     if(index != -1) {
       this.productDetails.videos.splice(index, 1);
     }
@@ -1169,7 +958,7 @@ handleTypeChange(attributeIndex:number,event:any){
 
 
   public getAllCategoriesWithSubcategoriesList(){
-    this.http.get('api/otc_categories/all').subscribe((data:any) => {
+    this.http.get('api/admin/categories/all').subscribe((data:any) => {
       this.categoriesSubcategoriesList = data;
     }, err => {
 
@@ -1177,14 +966,14 @@ handleTypeChange(attributeIndex:number,event:any){
   }
 
   openSelectOTCCategoryModal(drugIndex:number=0){
-    let data_for_index =  this.get_selected_otc_categories_forindex(drugIndex);
+    let data_for_index =  this.get_selected_categories_forindex(drugIndex);
     if(data_for_index.length>0){
       this.categoriesSubcategoriesList.map((item:any)=>{
-        let index = data_for_index.findIndex((si:any)=>si._id == item._id);
+        let index = data_for_index.findIndex((si:any)=>si.id == item.id);
         if(index!=-1){
           item.is_checked = true;
           item.sub_categories.map((subcat:any)=>{
-            subcat.is_checked = data_for_index[index].sub_categories.findIndex((ssc:any)=>ssc._id == subcat._id)!=-1;
+            subcat.is_checked = data_for_index[index].sub_categories.findIndex((ssc:any)=>ssc.id == subcat.id)!=-1;
             return subcat;
           });
         }else{
@@ -1209,26 +998,26 @@ handleTypeChange(attributeIndex:number,event:any){
     this._selectOtcSubcategoryModalService.setFormData({
       categories:this.categoriesSubcategoriesList
     });
-    this.modalRef = this._bsModalService.show(SelectOtcSubcategoryModalComponent,{class:'modal-lg'});
+    this.modalRef = this._bsModalService.show(SelectSubcategoryModalComponent,{class:'modal-lg'});
     this.modalRef.content.onApplySelected.subscribe((data:any)=>{
-       let indexFound = this.selected_otc_categories_forindex.findIndex((item:any)=>item.index==drugIndex);
+       let indexFound = this.selected_categories_forindex.findIndex((item:any)=>item.index==drugIndex);
        if(indexFound==-1){
          let obj={
            index:drugIndex,
            data:data
          };
-        this.selected_otc_categories_forindex.push(obj);
+        this.selected_categories_forindex.push(obj);
        }else{
-        this.selected_otc_categories_forindex[indexFound]['data']=data;
+        this.selected_categories_forindex[indexFound]['data']=data;
        }
-       console.log('selected_otc_categories_forindex=',this.selected_otc_categories_forindex);
+       console.log('selected_categories_forindex=',this.selected_categories_forindex);
     });
   }
 
-  get_selected_otc_categories_forindex(drugIndex:number){
-    let index = this.selected_otc_categories_forindex.findIndex((item:any) => item.index == drugIndex);
+  get_selected_categories_forindex(drugIndex:number){
+    let index = this.selected_categories_forindex.findIndex((item:any) => item.index == drugIndex);
     if(index!=-1){
-      return this.selected_otc_categories_forindex[index].data;
+      return this.selected_categories_forindex[index].data;
     }else{
       return [];
     }
@@ -1241,11 +1030,11 @@ handleTypeChange(attributeIndex:number,event:any){
     this.modalRef = this._bsModalService.show(BannerlinkModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe((data:any)=>{
         if(clickedFrom=='similar_products'){
-            if(this.similarProductsList.filter((item:any)=>item._id.toString() == data._id.toString()).length==0){
+            if(this.similarProductsList.filter((item:any)=>item.id.toString() == data.id.toString()).length==0){
               this.similarProductsList.push(data);
             }
         }else{
-          if(this.fbtProductsList.filter((item:any)=>item._id.toString() == data._id.toString()).length==0){
+          if(this.fbtProductsList.filter((item:any)=>item.id.toString() == data.id.toString()).length==0){
             this.fbtProductsList.push(data);
           }
         }
@@ -1253,11 +1042,11 @@ handleTypeChange(attributeIndex:number,event:any){
   }
 
   deleteSimilarProduct(product_id:any){
-    this.similarProductsList =  this.similarProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
+    this.similarProductsList =  this.similarProductsList.filter((item:any)=>item.id.toString() != product_id.toString());
   }
 
   deleteFBTProduct(product_id:any){
-    this.fbtProductsList =  this.fbtProductsList.filter((item:any)=>item._id.toString() != product_id.toString());
+    this.fbtProductsList =  this.fbtProductsList.filter((item:any)=>item.id.toString() != product_id.toString());
   }
 
 

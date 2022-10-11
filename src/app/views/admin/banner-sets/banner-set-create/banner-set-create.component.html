@@ -90,12 +90,11 @@
                                 </div>
 
                                 <div class="col" *ngIf="fi.get('landing_type')?.value =='OTC_CATEGORY'">
-                                      <label>Enter Otc Category ID</label>
-                                      <input type="text" class="form-control" placeholder="Enter OTC Category Id" formControlName="otc_category_id" />
+                                      <label>Enter Category ID</label>
+                                      <input type="text" class="form-control" placeholder="Enter Category Id" formControlName="otc_category_id" />
                                       <div class="invalid-feedback" *ngIf="fi.get('otc_category_id')?.invalid && (fi.get('otc_category_id')?.dirty || fi.get('otc_category_id')?.touched)" class="text-danger">
-                                          <div *ngIf="fi.get('otc_category_id')?.errors?.required"> Otc Category ID is required.</div>
+                                          <div *ngIf="fi.get('otc_category_id')?.errors?.required">Category ID is required.</div>
                                       </div>
-
                                       <button class="btn btn-sm btn-outline-primary" type="button" (click)="openBannerLinkSearchModal(fiIndex,'OTC_CATEGORY')"><i class="fas fa-search mr-2"></i>Search</button>
                                 </div>
                           </div>

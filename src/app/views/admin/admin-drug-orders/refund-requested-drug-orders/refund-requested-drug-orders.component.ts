@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Toastr } from '../../../../services/toastr.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
+import {orderHelper} from 'src/app/services/orderHelper.service';
 import { ProcessRefundModalComponent } from 'src/app/components/process-refund-modal/process-refund-modal.component';
 import { ProcessRefundModalService } from 'src/app/components/process-refund-modal/process-refund-modal.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -84,7 +84,7 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
     private router:Router,
     private _toastr: Toastr,
     private http: HttpClient,
-    public _drugOrderHelper:drugOrderHelper,
+    public _orderHelper:orderHelper,
     private _modalService:BsModalService,
     private _processRefundModalService:ProcessRefundModalService,
     private _changeDetectorRef: ChangeDetectorRef){
@@ -107,7 +107,7 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
 
     let paymentgateway_charge_refunded= null;
     if(order.charged_from_paymentgateway>0){
-      let chargeDetails:any = await this._getPaymentDetailsForOrder(order._id);
+      let chargeDetails:any = await this._getPaymentDetailsForOrder(order.id);
       order.charge_details = chargeDetails &&  chargeDetails.id ?chargeDetails.id :null;
       paymentgateway_charge_refunded = order.charge_details && order.charge_details.refund_status=='full'? true : false;
     }else{
@@ -115,7 +115,7 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
       paymentgateway_charge_refunded=null;
     }
 
-    let drug_ids= order.products.map((item:any)=>item._id);
+    let drug_ids= order.products.map((item:any)=>item.id);
     let amount_to_precess_refund_total=0;
     let amount_to_process_refund_in_paymentgateway=0;
     let amount_to_process_refund_in_wallet=0;
@@ -160,7 +160,7 @@ export class RefundRequestedDrugOrdersComponent implements OnInit {
 
 
     let refundObject={
-      order_id:order._id,
+      order_id:order.id,
       selected_drug_id:drug_ids,
       paymentgateway_charge_already_refunded:paymentgateway_charge_refunded,
       amount_to_precess_refund_total:amount_to_precess_refund_total,

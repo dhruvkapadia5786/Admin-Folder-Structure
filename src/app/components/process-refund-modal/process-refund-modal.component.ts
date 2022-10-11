@@ -81,7 +81,7 @@ export class ProcessRefundModalComponent implements OnInit {
         this.selectedOrder.result = res;
         if (res.refunded) {
           let paymentgatewayRefund= res.paymentgatewayRefund ? res.paymentgatewayRefund.id:'N/A';
-          let walletRefund= res.walletRefund ? res.walletRefund._id :'N/A';
+          let walletRefund= res.walletRefund ? res.walletRefund.id :'N/A';
           this._toastr.showSuccess(`Order Refunded Successfully. Refunded To Payment Gateway : ${paymentgatewayRefund} , Refunded To Wallet : ${walletRefund}`);
           this.onRefundProcessedCompleted.emit(true);
         } else {

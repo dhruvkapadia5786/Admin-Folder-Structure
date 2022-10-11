@@ -9,7 +9,7 @@ import { Helper } from 'src/app/services/helper.service';
 import b64toBlob from 'b64-to-blob';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {environment} from 'src/environments/environment'
-import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
+import {orderHelper} from 'src/app/services/orderHelper.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { RefundDrugModalComponent } from '../../common-components/refund-drug-modal/refund-drug-modal.component';
@@ -109,7 +109,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     private lightbox: Lightbox,
     public helper: Helper,
     public cdr: ChangeDetectorRef,
-    public _drugOrderHelper:drugOrderHelper,
+    public _orderHelper:orderHelper,
     private modalService: BsModalService,
     private _refundDrugModalService: RefundDrugModalService,
     private _changeAddressModalService:ChangeAddressModalService){
@@ -132,7 +132,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     this._changeAddressModalService.setFormData({
       type: 'EDIT_ADDRESS',
       order_id:this.orderId,
-      user_id:this.orderDetails.user_id._id,
+      user_id:this.orderDetails.user_id.id,
       contact_name:this.orderDetails.shipping_address.contact_name,
       contact_number:this.orderDetails.shipping_address.contact_number,
       address_line_1: this.orderDetails.shipping_address.address_line_1,
@@ -214,7 +214,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     const url = 'api/pharmacy_orders/cancle_subscription/' + this.orderId;
     let medicine_name=subscription.drug_name+' '+subscription.drug_dosage+' '+subscription.subscription_quantity+' '+subscription.drug_form;
     this.http.post(url, {
-      subscription_id:subscription._id,
+      subscription_id:subscription.id,
       medicine_name:medicine_name
     }).subscribe((data:any) => {
         this.toastr.showSuccess('Subscription Deactivated Successfully');
@@ -225,7 +225,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   }
 
   deactivateOTCSubscription(subscription:any){
-    const url = 'api/v1/otc-subscription/cancle_subscription/' + subscription._id;
+    const url = 'api/v1/otc-subscription/cancle_subscription/' + subscription.id;
     this.http.post(url,{}).subscribe((data:any) => {
         this.toastr.showSuccess('Subscription Deactivated Successfully');
         this.getOrderDetails();
@@ -249,7 +249,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
     this.selectedSubscription.medicine_name = medicine_name;
     this.changeSubscriptionForm.patchValue({
-      subscription_id:subscription._id,
+      subscription_id:subscription.id,
       medicine_name:medicine_name
     });
 
@@ -276,7 +276,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
       if(this.ModalEvent=='ACTIVATE'){
          if(this.ModalDrugType=='OTC'){
-          url = 'api/v1/otc-subscription/activate_subscription/' + this.selectedSubscription._id;
+          url = 'api/v1/otc-subscription/activate_subscription/' + this.selectedSubscription.id;
          }else{
           url = 'api/pharmacy_orders/activate_subscription/' + this.orderId;
          }
@@ -284,7 +284,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
          error_message='Unable to activate subscription. Please try again';
       }else{
           if(this.ModalDrugType=='OTC'){
-            url = 'api/v1/otc-subscription/change_subscription/' + this.selectedSubscription._id;
+            url = 'api/v1/otc-subscription/change_subscription/' + this.selectedSubscription.id;
           }else{
             url = 'api/pharmacy_orders/change_subscription/' + this.orderId;
           }
@@ -348,7 +348,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   }
 
   gotoPatientDetails(){
-    this.router.navigate(['admin','patients','view',this.patient._id,'orders']);
+    this.router.navigate(['admin','patients','view',this.patient.id,'orders']);
   }
 
   async getImage(path: string) {
@@ -407,7 +407,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
 
   _getActiveSubscriptionsForUser(){
-    const url = 'api/pharmacy_orders/get_active_subscriptions/'+this.orderDetails.user_id._id;
+    const url = 'api/pharmacy_orders/get_active_subscriptions/'+this.orderDetails.user_id.id;
       this.http.get(url).subscribe((data:any) => {
         this.userSubscriptions = data;
       },
@@ -416,7 +416,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   }
 
   _getActiveOTCDrugSubscriptionsForUser(){
-    const url = 'api/otc-drugs-subscriptions/active_subscriptions/'+this.orderDetails.user_id._id;
+    const url = 'api/otc-drugs-subscriptions/active_subscriptions/'+this.orderDetails.user_id.id;
       this.http.get(url).subscribe((data:any) => {
         this.userOTCSubscriptions = data;
       },
@@ -438,7 +438,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
   handleChangeSubscription(checked:boolean,subscription:any,drug_type:string){
     if(drug_type=='OTC'){
-        let indexFound= this.selectedOTCSubscriptions.findIndex((item:any)=>item._id == subscription._id);
+        let indexFound= this.selectedOTCSubscriptions.findIndex((item:any)=>item.id == subscription.id);
         if(checked){
           if(indexFound==-1){
             this.selectedOTCSubscriptions.push(subscription);
@@ -449,7 +449,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
           }
         }
     }else{
-      let indexFound= this.selectedSubscriptions.findIndex((item:any)=>item._id == subscription._id);
+      let indexFound= this.selectedSubscriptions.findIndex((item:any)=>item.id == subscription.id);
       if(checked){
          if(indexFound==-1){
           this.selectedSubscriptions.push(subscription);
@@ -467,10 +467,10 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
 
   checkItemSelected(subscription_id:number,drug_type:string){
     if(drug_type=='OTC'){
-      let indexFound= this.selectedOTCSubscriptions.findIndex((item:any)=>item._id == subscription_id);
+      let indexFound= this.selectedOTCSubscriptions.findIndex((item:any)=>item.id == subscription_id);
       return indexFound == -1 ? false:true;
     }else{
-      let indexFound= this.selectedSubscriptions.findIndex((item:any)=>item._id == subscription_id);
+      let indexFound= this.selectedSubscriptions.findIndex((item:any)=>item.id == subscription_id);
       return indexFound == -1 ? false:true;
     }
   }
@@ -492,7 +492,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
     if(this.selectedSubscriptions.length>0 || this.selectedOTCSubscriptions.length>0){
        let reqBody=[];
        let reqBodyItem:any={};
-       reqBodyItem.user_id = this.orderDetails.user_id._id;
+       reqBodyItem.user_id = this.orderDetails.user_id.id;
        reqBodyItem.subscriptions = this.selectedSubscriptions;
        reqBodyItem.otc_subscriptions = this.selectedOTCSubscriptions;
        reqBody.push(reqBodyItem);

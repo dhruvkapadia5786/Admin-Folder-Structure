@@ -10,19 +10,19 @@ export class ManufacturersService {
 	constructor(private _http: HttpClient) {}
 
   async createState(data:any):Promise<any>{
-    return await this._http.post(`api/manufacturers/add`,data).toPromise();
+    return await this._http.post(`api/admin/manufacturers/add`,data).toPromise();
   }
 
   async updateState(data:any):Promise<any>{
-    return await this._http.post(`api/manufacturers/update/${data.id}`,data).toPromise();
+    return await this._http.post(`api/admin/manufacturers/update/${data.id}`,data).toPromise();
   }
 
   async findAllStates():Promise<any>{
-    return await this._http.get(`api/manufacturers/list`).toPromise();
+    return await this._http.get(`api/admin/manufacturers/list`).toPromise();
   }
 
   async findByIdState(id:number):Promise<any>{
-    return await this._http.get(`api/manufacturers/view/${id}`).toPromise();
+    return await this._http.get(`api/admin/manufacturers/view/${id}`).toPromise();
   }
 
 

@@ -12,7 +12,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { DataTablesModule } from 'angular-datatables';
 import { ModalModule ,BsModalService} from 'ngx-bootstrap/modal';
 import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.module';
-import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
+import {orderHelper} from 'src/app/services/orderHelper.service';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { OrderLogsModule } from '../common-components/order-logs/order-logs.module';
 
@@ -46,7 +46,7 @@ import { ProcessRefundModalService } from 'src/app/components/process-refund-mod
     ChangeAddressModalModule,
     ProcessRefundModalModule
   ],
-  providers:[drugOrderHelper,BsModalService,ProcessRefundModalService],
+  providers:[orderHelper,BsModalService,ProcessRefundModalService],
   entryComponents: [RefundDrugModalComponent,ChangeAddressModalComponent,ProcessRefundModalComponent]
 })
 export class AdminDrugOrdersModule { }

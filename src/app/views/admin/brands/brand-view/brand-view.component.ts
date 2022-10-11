@@ -25,7 +25,7 @@ export class BrandViewComponent implements OnInit {
   }
 
   public getAllBrandsList() {
-    const url = 'api/brands/all';
+    const url = 'api/admin/brands/all';
     this._http.get(url)
       .subscribe((resp: any) => {
         this.brandsList = resp;

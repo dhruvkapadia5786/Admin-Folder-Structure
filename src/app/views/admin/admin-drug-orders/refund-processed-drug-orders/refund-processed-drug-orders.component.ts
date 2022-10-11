@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import {drugOrderHelper} from 'src/app/services/drugOrderHelper.service';
+import {orderHelper} from 'src/app/services/orderHelper.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -78,7 +78,7 @@ export class RefundProcessedDrugOrdersComponent implements OnInit {
     private _route: ActivatedRoute,
     private router:Router,
     private http: HttpClient,
-    public _drugOrderHelper:drugOrderHelper,
+    public _orderHelper:orderHelper,
     private _changeDetectorRef: ChangeDetectorRef){
 
 

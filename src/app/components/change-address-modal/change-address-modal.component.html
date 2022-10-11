@@ -63,7 +63,7 @@
                       <div class="form-group">
                           <label class="float-left">State / Province / Region :</label>
                           <select formControlName="state_id" class="form-control">
-                                  <option *ngFor="let state of states" [value]="state._id">{{ state.name }}</option>
+                                  <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
                           </select>
                           <div class="invalid-feedback" *ngIf="state_id?.invalid && (state_id?.dirty || state_id?.touched)" class="text-danger">
                               <div *ngIf="state_id?.errors?.required">state is required</div>

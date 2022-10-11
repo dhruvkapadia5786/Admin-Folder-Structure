@@ -2,7 +2,7 @@ import { BaseModel } from "./BaseModel";
 import Address from "./Address";
 
 export class User extends BaseModel {
-  _id!:any;
+  id!:any;
   first_name!:string;
   last_name!:string;
   email!:string;
@@ -22,21 +22,10 @@ export class User extends BaseModel {
   reset_token?:string|null;
   reset_token_expires?:any;
   paymentgateway_customer_id?:string|null;
-  customer_referral_code?:string|null;
-  add_memo_tab?:number|null;
   default_address?:Address;
   addresses:Address[]=[]
 
-  height_weight?:any;
-  blood_pressure?:any;
-
-  surgical_history?:any;
-  surgical_history_updated_at?:any;
-  social_history?:any;
-  social_history_updated_at?:any;
-  family_history?:any;
-  family_history_updated_at?:any;
-
+  
   constructor(){
     super();
   }

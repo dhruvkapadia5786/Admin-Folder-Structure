@@ -18,10 +18,10 @@ export class ManufacturerAddEditModalService {
   }
 
   async addNewManufacturer(bodyData: any):Promise<any>{
-    return await this._http.post('api/manufacturers/create', bodyData).toPromise();
+    return await this._http.post('api/admin/manufacturers/create', bodyData).toPromise();
   }
 
   async editManufacturer(id: any, bodyData: any):Promise<any>{
-		return await this._http.post('api/manufacturers/update/'+id, bodyData).toPromise();
+		return await this._http.post('api/admin/manufacturers/update/'+id, bodyData).toPromise();
   }
 }

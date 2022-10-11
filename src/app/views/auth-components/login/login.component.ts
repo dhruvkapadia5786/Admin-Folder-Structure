@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
       this.saving = true;
       let result = await this._loginService.login(this.loginForm.value.username, this.loginForm.value.password);
 			if (result && !result.error){
-				this._authService.setAuthorizationToken(result.token.access_token);
+				this._authService.setAuthorizationToken(result.access_token);
 				this._authService.changeIsLogoutClicked(false);
 				let data = await this._loginService.getLoggedInUser();
 				if (data && !data.error){

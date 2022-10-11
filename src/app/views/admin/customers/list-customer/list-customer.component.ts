@@ -151,7 +151,7 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-left  font-weight-normal',
           render: (data: any, type: any, record: any) => {
             if (data) {
-              return `<a class="text-primary font-weight-bold" href="javascript:void(0);" patientID=${record._id}>${data.charAt(0).toUpperCase() + data.slice(1) +' '+record.last_name}</a>`;
+              return `<a class="text-primary font-weight-bold" href="javascript:void(0);" patientID=${record.id}>${data.charAt(0).toUpperCase() + data.slice(1) +' '+record.last_name}</a>`;
             } else {
               return `<span></span>`;
             }
@@ -229,9 +229,9 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, record: any) {
-            return `<button class="btn btn-default btn-sm m-0" patientID=${record._id}><i class="fa fa-eye"></i></button>
+            return `<button class="btn btn-default btn-sm m-0" patientID=${record.id}><i class="fa fa-eye"></i></button>
             <br/>
-            <button class="btn btn-sm btn-primary mt-2" patientEditID=${record._id}><i class="fa fa-edit"></i></button>`;
+            <button class="btn btn-sm btn-primary mt-2" patientEditID=${record.id}><i class="fa fa-edit"></i></button>`;
           },
           orderable: false
         }

@@ -79,7 +79,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openEditModal(brandId: any){
-    let data = this.brandsList.find((item:any)=>item._id == brandId);
+    let data = this.brandsList.find((item:any)=>item.id == brandId);
     this._brandAddEditModalService.setData({event:'EDIT',data:data});
     this.modalRef = this.modalService.show(BrandAddEditModalComponent, {class: 'modal-x-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
@@ -102,7 +102,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/brands/list',
+            'api/admin/brands/list',
             dataTablesParameters,
             {}
           )
@@ -119,7 +119,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       columns: [
         {
-          data:'image_url',
+          data:'image',
           title: 'Image',
           orderable: false,
           className: 'text-left  font-weight-normal',
@@ -133,7 +133,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         {
-          data:'cover_image_url',
+          data:'cover_image',
           title: 'Cover Image',
           orderable: false,
           className: 'text-left  font-weight-normal',
@@ -157,12 +157,12 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-center  font-weight-normal'
         },
         {
-          data: 'manufacturer_id',
+          data: 'manufacturer_name',
           title: 'Manufacturer Name',
           className: 'text-left  font-weight-normal',
           render: function (data: any, type: any, full: any){
             if (data){
-              return `${full.manufacturer_id.name}`;
+              return `${full.manufacturer_name}`;
             }else{
               return '-'
             }
@@ -193,22 +193,10 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         {
-          data: 'is_lens_brand',
-          title: 'Lens Brand',
-          className: 'text-center  font-weight-normal',
-          render: (data: any) => {
-            if (data) {
-              return `<i class="fa fa-check text-success"></img>`;
-            } else {
-              return `<i class="fa fa-times text-danger"></i>`;
-            }
-          }
-        },
-        {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
-            return `<button type="button" class="btn btn-sm btn-primary mr-1"  brandViewId="${full._id}">View</button> <button type="button" class="btn btn-sm btn-primary m-0"  brandEditId="${full._id}">Edit</button>`;
+            return `<button type="button" class="btn btn-sm btn-primary mr-1"  brandViewId="${full.id}">View</button> <button type="button" class="btn btn-sm btn-primary m-0"  brandEditId="${full.id}">Edit</button>`;
           },
           orderable: false
         }

@@ -46,12 +46,12 @@ export class FaqListComponent implements OnInit, AfterViewInit,OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[5, 'desc']],
+      order: [[3, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/faqs/list',
+            'api/admin/faqs/list',
             dataTablesParameters,
             {}
           )
@@ -76,29 +76,7 @@ export class FaqListComponent implements OnInit, AfterViewInit,OnDestroy {
           title: 'Answer',
           className: 'text-center  font-weight-normal'
         },
-        {
-          data: 'categories',
-          title: 'Category',
-          className: 'text-center  font-weight-normal',
-          render: (data: any, type: any, full: any) => {
-            let items:string[]=data.map((item:any)=>item.name);
-            let badgesText='';
-            items.forEach((item:any)=>{
-                if(item=='HOME') {
-                  badgesText+=`<span class="badge badge-info mr-2">HOME</span>`
-                }else if(item=='ORDER'){
-                  badgesText+=`<span class="badge badge-success mr-2">ORDER</span>`
-                }else if(item=='CONSULTATION'){
-                  badgesText+=`<span class="badge badge-warning mr-2">CONSULTATION</span>`
-                }else if(item=='DRUG_ORDER'){
-                  badgesText+=`<span class="badge badge-primary mr-2">PHARMACY ORDER</span>`
-                }else{
-                  badgesText='';
-                }
-            })
-            return badgesText;
-          }
-        },
+        
         {
           data: 'is_active',
           title: 'Active',
@@ -128,8 +106,8 @@ export class FaqListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-sm btn-default m-0" faqViewId=${full._id}>View <i class="ml-2 fa fa-eye"></i></button>
-            <button class="btn btn-sm btn-primary m-0" faqEditId=${full._id}>Edit <i class="ml-2 fa fa-edit"></i></button>
+            <button class="btn btn-sm btn-default m-0" faqViewId=${full.id}>View <i class="ml-2 fa fa-eye"></i></button>
+            <button class="btn btn-sm btn-primary m-0" faqEditId=${full.id}>Edit <i class="ml-2 fa fa-edit"></i></button>
             `;
           },
           orderable: false

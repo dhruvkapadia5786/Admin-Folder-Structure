@@ -1,0 +1,53 @@
+<div class="w-100 p-3 bg-dark-grey d-flex justify-content-between align-items-center">
+      <h4 class="text-white font-weight-bold mb-0">Article Details</h4>
+      <a routerLink="/admin/articles/edit/{{ArticleId}}" routerLinkActive="active" class="btn btn-primary pull-right">Edit</a>
+</div>
+<div class="p-3">
+  <ng-container *ngIf="ArticleDetails; else noDetails">
+    <div class="container-fluid ArticleDetails">
+      <div class="row">
+        <div class="col-md-4">
+          <p>{{ ArticleDetails.title }}</p>
+        </div>
+        <div class="col-md-4">
+          <label>Active</label>
+          <h5>
+            <i class="fa fa-check text-success" *ngIf="ArticleDetails.is_active"></i>
+            <i class="fa fa-times text-danger" *ngIf="!ArticleDetails.is_active"></i>
+          </h5>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <h5>{{ArticleDetails.title}}</h5>
+        </div>
+        <div class="col-md-12 mt-2">
+          <div [innerHTML]="ArticleDetails.body"></div>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <label>Created On</label>
+          <h5>{{_helper.getFormattedDate(ArticleDetails.created_at, 'MM/DD/YYYY hh:mm A')}}</h5>
+        </div>
+        <div class="col-md-4">
+          <label>Updated On</label>
+          <h5>{{_helper.getFormattedDate(ArticleDetails.updated_at, 'MM/DD/YYYY hh:mm A')}}</h5>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-12">
+          <a routerLink="/admin/articles" class="btn btn-primary pull-right">Back</a>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noDetails>
+    <div class="text-center text-muted">
+      <h2><i class="fa fa-info-circle"></i></h2>
+      <h4>No Details!</h4>
+    </div>
+  </ng-template>
+</div>

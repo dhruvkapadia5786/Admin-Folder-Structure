@@ -27,7 +27,7 @@ export class BannerlinkModalComponent implements OnInit {
     let details = this._bannerlinkModalService.getFormData();
     this.selectedTab = details.selectedTab;
     if(this.selectedTab=='OTC_CATEGORY'){
-      this.searchLabel = 'Otc Category';
+      this.searchLabel = 'Category';
     }
     if(this.selectedTab=='BRAND'){
       this.searchLabel = 'Brand';
@@ -58,9 +58,9 @@ export class BannerlinkModalComponent implements OnInit {
     let url = '';
 
     if(this.selectedTab=='OTC_CATEGORY'){
-      url='api/otc_categories/all?search='+this.query;
+      url='api/admin/categories/all?search='+this.query;
     }else if(this.selectedTab=='BRAND'){
-      url='api/brands/all?search='+this.query;
+      url='api/admin/brands/all?search='+this.query;
     }else if(this.selectedTab=='PRODUCT'){
       url='api/products/search?search='+this.query;
     }else if(this.selectedTab=='MEDICINE_KIT'){

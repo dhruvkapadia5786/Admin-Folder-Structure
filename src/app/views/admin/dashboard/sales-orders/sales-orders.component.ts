@@ -353,14 +353,6 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
               name: 'Orders',
               y: res.orderSales,
               color: 'blue'
-            }, {
-              name: 'Consulataions',
-              y: res.consultationSales,
-              color: 'green'
-            }, {
-              name: 'Pharmacy Orders',
-              y: res.drugOrderSales,
-              color: 'orange'
             }],
             center: [100, 80],
             size: 100,

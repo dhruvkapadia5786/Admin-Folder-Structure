@@ -1,0 +1,55 @@
+
+<ng-container *ngIf="OTCCategoryDetails; else noOTCCategoryDetails">
+  <div class="p-2">
+        <button class="btn btn-primary float-right" type="button" (click)="openEditModal()">Edit <i class="ml-2 fa fa-pencil" aria-hidden="true"></i></button>
+
+        <table class="table">
+          <tbody>
+            <tr><td class="font-weight-normal border-top-0">Category ID</td><td class="font-weight-normal border-top-0">{{OTCCategoryDetails.id}}</td></tr>
+            <tr><td class="font-weight-normal">Name</td><td class="font-weight-normal">{{OTCCategoryDetails.name || '-'}} <span class="ml-2 badge badge-success badge-pill p-2" *ngIf="OTCCategoryDetails.is_coming_soon==1">Comming Soon</span></td></tr>
+            <tr><td class="font-weight-normal">URL</td><td class="font-weight-normal">{{ OTCCategoryDetails.slug || '-' }}</td></tr>
+            <tr><td class="font-weight-normal">Active</td><td class="font-weight-normal"><h5><i class="fa fa-check text-success" *ngIf="OTCCategoryDetails.is_active"></i><i class="fa fa-times text-danger" *ngIf="!OTCCategoryDetails.is_active"></i></h5></td></tr>
+            <tr><td class="font-weight-normal">Description</td><td class="font-weight-normal">{{OTCCategoryDetails.description}}</td></tr>
+            <tr>
+              <td class="font-weight-normal">Image</td>
+              <td class="font-weight-normal">
+                  <app-image-preview [imgPath]="OTCCategoryDetails.image" height="200" width="200" caption="Image"></app-image-preview>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+         <h6 class="bg-light text-light p-2 mt-3">
+            Attributes
+          </h6>
+          <div class="row" *ngIf="OTCCategoryDetails?.attributes && OTCCategoryDetails?.attributes.length > 0; else noAttributes">
+            <div class="col-md-12">
+              <app-change-sequence [mode]="'ATTRIBUTES'" [data]="OTCCategoryDetails.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+              </div>
+          </div>
+          <ng-template #noAttributes>
+            <div class="text-center text-muted">
+              <h2><i class="fa fa-info-circle"></i></h2>
+              <h4>No Attributes!</h4>
+            </div>
+          </ng-template>
+
+          <h6 class="bg-light text-light p-2 mt-3">FAQ</h6>
+          <div class="row" *ngIf="OTCCategoryDetails?.faqs && OTCCategoryDetails?.faqs.length > 0; else noFaqs">
+            <div class="col-md-12">
+              <app-change-sequence [mode]="'FAQS'" [data]="OTCCategoryDetails.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+            </div>
+          </div>
+          <ng-template #noFaqs>
+            <div class="text-center text-muted">
+              <h2><i class="fa fa-info-circle"></i></h2>
+              <h4>No FAQs!</h4>
+            </div>
+          </ng-template>
+
+
+  </div>
+</ng-container>
+<ng-template #noOTCCategoryDetails>
+  No Category Details
+</ng-template>

@@ -1,7 +1,0 @@
-<div class="d-flex flex-md-row flex-column justify-content-between align-items-center">
-  <div class="form-group flex-grow-1">
-    <label for="sms_to_patient">Send SMS To Patient</label>
-    <textarea class="form-control" id="sms_to_patient" rows="3" maxLength="1600" [(ngModel)]="text_msg"></textarea>
-  </div>
-  <button type="button" (click)="sendSMSToPatient()"  [ngClass]="{'btn btn-primary': true, 'disabled': sending_sms}">Send SMS</button>
-</div>

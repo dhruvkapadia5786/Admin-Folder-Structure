@@ -38,7 +38,7 @@ export class ChangeSequenceFaqComponent implements OnInit {
     if (!this.selectedCategory) {
       return;
     }
-    const url = 'api/faqs/get-all-question/' + this.selectedCategory;
+    const url = 'api/admin/faqs/get-all-question/' + this.selectedCategory;
     this.http.get(url)
       .subscribe((data: any) => {
         this.questions = data;
@@ -65,7 +65,7 @@ export class ChangeSequenceFaqComponent implements OnInit {
       this.priorityArray.push({ question_id: que.id, priority: (index + 1), category: this.selectedCategory });
     });
 
-    const url = 'api/faqs/update_priority';
+    const url = 'api/admin/faqs/update_priority';
     this.http.post(url, { questions: this.priorityArray })
       .subscribe(data => {
 
