@@ -21,15 +21,16 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
   dtTrigger: Subject<any> = new Subject();
   public counts : any;
 
-  patient_config:any = {
+  customer_config:any = {
     filter: {
-      STATE: [],
-      GENDER: '',
-      AGE: ''
+      COUNTRY:'',
+      STATE:'',
+      CITY:'',
     }
   };
-  stateList:any[] = [];
-  ageList: any[] = ['18-30', '30-40', '40-50', '50-60', '60-70', '70-80', '80+'];
+  countriesList:any[] = [];
+  statesList:any[] = [];
+  citiesList:any[] = [];
 
   constructor(
     public _http: HttpClient,
@@ -46,23 +47,22 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
       this.rerender();
     });
     this.getAllFilterList();
-    this.getAllCustomerCounts();
-  }
+   }
 
   listenerFn:any;
   ngAfterViewInit(): void {
     this.dtTrigger.next();
     this.listenerFn = this._renderer.listen('document', 'click', (event) => {
-      if (event.target.hasAttribute('patientID')) {
-        this.goToDetailsPage(event.target.getAttribute('patientID'));
+      if (event.target.hasAttribute('userID')) {
+        this.goToDetailsPage(event.target.getAttribute('userID'));
       }
-      if (event.target.hasAttribute('patientEditID')) {
-        this.goToEditPage(event.target.getAttribute('patientEditID'));
+      if (event.target.hasAttribute('userEditID')) {
+        this.goToEditPage(event.target.getAttribute('userEditID'));
       }
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(){
     if (this.dtTrigger){
       this.dtTrigger.unsubscribe();
     }
@@ -70,45 +70,47 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
     this.listenerFn();
   }
 
-
-  get notSelectedStates () {
-    return this.stateList.filter(({ id: a }) => !this.patient_config.filter.STATE.some((b: any) => b === a)).length;
-  }
-
-  getAllFilterList() {
-    // Get State List
-    this._http.get<any>('api/system_states/all').subscribe((resp) => {
-      this.stateList = resp;
+  getAllFilterList(){
+    // Get Countries List
+    this._http.get<any>('api/geo/countries').subscribe((resp) => {
+      this.countriesList = resp;
     }, err=> {});
   }
 
+  getStatesByCoutry(country_id:number){
+    // Get States List
+    this._http.get<any>('api/geo/states/'+country_id).subscribe((resp) => {
+      this.statesList = resp;
+    }, err=> {
+
+    });
+  }
+
+  getCitiesByState(state_id:number){
+    this._http.get<any>('api/geo/cities/'+state_id).subscribe((resp) => {
+      this.citiesList = resp;
+    }, err=> {
+
+    });
+  }
+
   public handleCheckAll (event:any, flag:any) {
-    if (event.checked) {
-      this.patient_config.filter.STATE = this.stateList.map(({_id}) => _id);
+    /* if (event.checked) {
+      this.customer_config.filter.STATE = this.countriesList.map(({_id}) => _id);
     } else {
-      this.patient_config.filter.STATE = [];
-    }
+      this.customer_config.filter.STATE = [];
+    } */
     $('#patientsList').DataTable().ajax.reload();
+  } 
+
+  goToDetailsPage(userID: any): any {
+    this.router.navigate(['admin', 'customers', 'view', userID, 'info']);
+  }
+  goToEditPage(userEditID: any): any {
+    this.router.navigate(['admin', 'customers', 'edit', userEditID]);
   }
 
-  getAllCustomerCounts() {
-    const url = 'api/customers/getCounts';
-    this._http.get(url)
-      .subscribe((response: any) => {
-        this.counts = response;
-      }, err => {
-
-      });
-  }
-
-  goToDetailsPage(patientID: any): any {
-    this.router.navigate(['admin', 'patients', 'view', patientID, 'info']);
-  }
-  goToEditPage(patientEditID: any): any {
-    this.router.navigate(['admin', 'patients', 'edit', patientEditID]);
-  }
-
-  getDTOptions() {
+  getDTOptions(){
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 50,
@@ -119,18 +121,18 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[9, 'desc']],
+      order: [[0, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         /* set manual filters in req body */
         dataTablesParameters.filter = {};
-        dataTablesParameters.filter.STATE = this.patient_config.filter.STATE.length > 0 ? this.patient_config.filter.STATE : undefined;
-        dataTablesParameters.filter.GENDER = this.patient_config.filter.GENDER != '' ? this.patient_config.filter.GENDER : undefined;
-        dataTablesParameters.filter.AGE = this.patient_config.filter.AGE != '' ? this.patient_config.filter.AGE : undefined;
+        dataTablesParameters.filter.STATE = this.customer_config.filter.STATE.length > 0 ? this.customer_config.filter.STATE : undefined;
+        dataTablesParameters.filter.GENDER = this.customer_config.filter.GENDER != '' ? this.customer_config.filter.GENDER : undefined;
+        dataTablesParameters.filter.AGE = this.customer_config.filter.AGE != '' ? this.customer_config.filter.AGE : undefined;
 
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/customers/list',
+            'api/admin/users/list',
             dataTablesParameters,
             {}
           )
@@ -151,7 +153,7 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-left  font-weight-normal',
           render: (data: any, type: any, record: any) => {
             if (data) {
-              return `<a class="text-primary font-weight-bold" href="javascript:void(0);" patientID=${record.id}>${data.charAt(0).toUpperCase() + data.slice(1) +' '+record.last_name}</a>`;
+              return `<a class="text-primary font-weight-bold" href="javascript:void(0);" userID=${record.id}>${data.charAt(0).toUpperCase() + data.slice(1) +' '+record.last_name}</a>`;
             } else {
               return `<span></span>`;
             }
@@ -175,31 +177,24 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           }
         },
         {
-          data: 'default_address.city',
-          title: 'City',
+          data: 'country',
+          title: 'Country',
           className: 'text-center  font-weight-normal'
-        },
+        }, 
         {
-          data: 'default_address.state',
+          data: 'state',
           title: 'State',
           className: 'text-center  font-weight-normal'
         },
         {
-          data: 'default_address.zip_code',
-          title: 'ZipCode',
+          data: 'city_name',
+          title: 'City',
           className: 'text-center  font-weight-normal'
         },
         {
-          data: 'profile_picture',
-          title: 'Profile / ID',
-          className: 'text-center  font-weight-normal',
-          render: (data: any, type: any, record: any) => {
-            if (data !== null && record.license_photo !== null) {
-              return `<i class="fa fa-check text-success"></i>`;
-            } else {
-              return `<i class="fa fa-times text-danger"></i>`;
-            }
-          }
+          data: 'zip_code',
+          title: 'ZipCode',
+          className: 'text-center  font-weight-normal'
         },
         {
           data: 'is_active',
@@ -219,7 +214,7 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center  font-weight-normal',
           render: (data: any) => {
             if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
+              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }
@@ -229,9 +224,9 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, record: any) {
-            return `<button class="btn btn-default btn-sm m-0" patientID=${record.id}><i class="fa fa-eye"></i></button>
+            return `<button class="btn btn-default btn-sm m-0" userID=${record.id}>View</button>
             <br/>
-            <button class="btn btn-sm btn-primary mt-2" patientEditID=${record.id}><i class="fa fa-edit"></i></button>`;
+            <button class="btn btn-sm btn-primary mt-2" userEditID=${record.id}>Edit</button>`;
           },
           orderable: false
         }
@@ -253,7 +248,7 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
   }
 
   clearFilter() {
-    this.patient_config = {filter: {STATE: [], GENDER: [], AGE: []}}
+    this.customer_config = {filter: {COUNTRY:'', STATE:'',CITY:''}}
     $('#patientsList').DataTable().ajax.reload();
   }
 }

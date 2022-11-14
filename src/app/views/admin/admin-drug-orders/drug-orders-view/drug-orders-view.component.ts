@@ -348,7 +348,7 @@ export class DrugOrdersViewComponent implements OnInit,OnDestroy {
   }
 
   gotoPatientDetails(){
-    this.router.navigate(['admin','patients','view',this.patient.id,'orders']);
+    this.router.navigate(['admin','customers','view',this.patient.id,'orders']);
   }
 
   async getImage(path: string) {

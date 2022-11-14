@@ -5,7 +5,6 @@ import { CategoryInfoRoutingModule } from './category-info-routing.module';
 import { CategoryInfoComponent } from './category-info.component';
 import {ImagePreviewModule} from 'src/app/shared/image-preview/image-preview.module';
 import { ChangeSequenceModule } from 'src/app/shared/change-sequence/change-sequence.module';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { CategoriesAddEditModalComponent } from '../../categories-add-edit-modal/categories-add-edit-modal.component';
 import { CategoriesAddEditModalModule } from '../../categories-add-edit-modal/categories-add-edit-modal.module';
 
@@ -16,7 +15,6 @@ import { CategoriesAddEditModalModule } from '../../categories-add-edit-modal/ca
     CategoryInfoRoutingModule,
     ImagePreviewModule,
     ChangeSequenceModule,
-    ModalModule.forRoot(),
     CategoriesAddEditModalModule
   ],
   entryComponents:[CategoriesAddEditModalComponent]

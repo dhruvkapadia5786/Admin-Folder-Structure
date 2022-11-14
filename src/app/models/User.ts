@@ -8,7 +8,6 @@ export class User extends BaseModel {
   email!:string;
   role!:string;
   cell_phone_number!:number;
-  email_phone_consent?:number|null;
   privacy_policy_terms?:number|null;
   profile_picture?:string|null;
   license_image?:string|null;

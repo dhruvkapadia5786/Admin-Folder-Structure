@@ -1,11 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { BrandViewRoutingModule } from './brand-view-routing.module';
 import { BrandViewComponent } from './brand-view.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -13,11 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
     BrandViewComponent
   ],
   imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    MatSelectModule,
+    SharedModule,
     BrandViewRoutingModule
   ]
 })

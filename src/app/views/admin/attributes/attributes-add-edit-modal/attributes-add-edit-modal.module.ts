@@ -1,23 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Helper } from 'src/app/services/helper.service';
-
 import { AttributesAddEditModalComponent } from './attributes-add-edit-modal.component';
 import { AttributesAddEditModalService } from './attributes-add-edit-modal.service';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
     AttributesAddEditModalComponent
   ],
   imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatCheckboxModule
+    SharedModule
   ],
-  providers:[AttributesAddEditModalService, Helper],
+  providers:[AttributesAddEditModalService],
   exports: [AttributesAddEditModalComponent]
 })
 export class AttributesAddEditModalModule { }

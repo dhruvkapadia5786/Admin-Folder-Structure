@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 import { ViewArticleRoutingModule } from './view-article-routing.module';
 import { ViewArticleComponent } from './view-article.component';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ViewArticleComponent],
   imports: [
-    CommonModule,
-    ViewArticleRoutingModule,
-    ReactiveFormsModule,
+    SharedModule,
+    ViewArticleRoutingModule
   ]
 })
 export class ViewArticleModule { }

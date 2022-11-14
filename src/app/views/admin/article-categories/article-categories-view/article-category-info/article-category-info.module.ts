@@ -5,7 +5,6 @@ import { ArticleCategoryInfoRoutingModule } from './article-category-info-routin
 import { ArticleCategoryInfoComponent } from './article-category-info.component';
 import {ImagePreviewModule} from 'src/app/shared/image-preview/image-preview.module';
 import { ChangeSequenceModule } from 'src/app/shared/change-sequence/change-sequence.module';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { ArticleCategoriesAddEditModalComponent } from '../../article-categories-add-edit-modal/article-categories-add-edit-modal.component';
 import { ArticleCategoriesAddEditModalModule } from '../../article-categories-add-edit-modal/article-categories-add-edit-modal.module';
 
@@ -16,7 +15,6 @@ import { ArticleCategoriesAddEditModalModule } from '../../article-categories-ad
     ArticleCategoryInfoRoutingModule,
     ImagePreviewModule,
     ChangeSequenceModule,
-    ModalModule.forRoot(),
     ArticleCategoriesAddEditModalModule
   ],
   entryComponents:[ArticleCategoriesAddEditModalComponent]

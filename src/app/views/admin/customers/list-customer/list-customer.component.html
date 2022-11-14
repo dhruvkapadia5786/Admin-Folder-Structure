@@ -1,49 +1,15 @@
 <div class="w-100 p-3 bg-dark-grey d-flex justify-content-between align-items-center">
     <h4 class="text-white font-weight-bold mb-0">Customers</h4>
 </div>
-
-<div class="row p-2">
-    <div class="col-md-4 col-sm-6 col-12 my-2">
-        <div class="card classic-admin-card light-blue lighten-1">
-            <div class="card-body">
-                <div class="pull-right">
-                    <i class="fa fa-users"></i>
-                </div>
-                <p class="mb-0">TOTAL CUSTOMERS</p>
-                <h4 class="mb-0">
-                    <strong *ngIf="counts && counts.total">{{counts.total || '-'}}</strong>
-                </h4>
-            </div>
-        </div>
-    </div>
-
-</div>
+ 
 
 <ng-container>
     <div class="card-body  bg-transparent">
         <div class="row">
             <div class="col-md-2">
-                <mat-label>States</mat-label>
-                <mat-select placeholder="Select States" (selectionChange)="handleChange('STATE', $event.value)" [(ngModel)]="patient_config.filter.STATE" multiple>
-                  <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'STATE')"
-                  [indeterminate]="patient_config.filter.STATE.length && notSelectedStates"
-                  [checked]="!notSelectedStates">All</mat-checkbox>
-                  <mat-option color="primary" *ngFor="let st of stateList" [value]="st.id">{{st.name}}</mat-option>
-                </mat-select>
-            </div>
-            <div class="col-md-3">
-                <mat-label>Gender</mat-label>
-                <mat-select placeholder="Gender" [(ngModel)]="patient_config.filter.GENDER" (selectionChange)="handleChange('GENDER', $event.value)">
-                  <mat-option value="ALL">ALL</mat-option>
-                  <mat-option value="1">Male</mat-option>
-                  <mat-option value="2">Female</mat-option>
-                </mat-select>
-            </div>
-            <div class="col-md-3">
-                <mat-label>Age</mat-label>
-                <mat-select placeholder="Age" [(ngModel)]="patient_config.filter.AGE" (selectionChange)="handleChange('AGE', $event.value)">
-                  <mat-option value="ALL">ALL</mat-option>
-                  <mat-option color="primary" *ngFor="let ag of ageList" [value]="ag">{{ag}} Year</mat-option>
+                <mat-label>Countries</mat-label>
+                <mat-select placeholder="Select Countries" (selectionChange)="handleChange('COUNTRY', $event.value)" [(ngModel)]="customer_config.filter.COUNTRY">
+                  <mat-option color="primary" *ngFor="let country of countriesList" [value]="country.id">{{country.name}}</mat-option>
                 </mat-select>
             </div>
             <div class="col-md-2">
@@ -53,7 +19,7 @@
     </div>
     <div class="p-3">
         <div class="table-responsive">
-            <table  hover="true" id="patientsList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+            <table  hover="true" id="customersList" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
             </table>
         </div>
     </div>
@@ -61,6 +27,6 @@
 <ng-template #noCustomers>
     <div class="text-center text-muted">
         <h2><i class="fa fa-info-circle"></i></h2>
-        <h4>No Users!</h4>
+        <h4>No Customers!</h4>
     </div>
 </ng-template>

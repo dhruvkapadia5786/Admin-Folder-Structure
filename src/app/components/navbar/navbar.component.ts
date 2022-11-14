@@ -53,7 +53,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 		this.navItems = [
 			{ route: '/admin/dashboard', iconName: 'fa-tachometer-alt', displayName: 'Dashboard' },
-			{ route: '/admin/patients', iconName: 'fa-users', displayName: 'Customers' },
+			{ route: '/admin/customers', iconName: 'fa-users', displayName: 'Customers' },
+			{ route: '/admin/sellers', iconName: 'fa-users', displayName: 'Sellers' },
+			{ route: '/admin/dealers', iconName: 'fa-users', displayName: 'Dealers' },
 			{
 						displayName: 'Manufacturers & Brands',
 						iconName: 'fa-id-badge',
@@ -69,7 +71,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			{ route: '/admin/article-categories', iconName: 'fa-bars', displayName: 'Article Categories' },
 			{ route: '/admin/articles', iconName: 'fa-bars', displayName: 'Articles' },
 			{ route: '/admin/attributes', iconName: 'fa-bars', displayName: 'Attributes' },
-			{ route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' },
 			{ route: '/admin/orders/refund_requested', iconName: 'fa-sync-alt', displayName: 'Refund Orders' },
 			{
 				displayName: 'Others',

@@ -36,7 +36,7 @@ export class ViewCustomerComponent implements OnInit {
   }
 
   getCustomerDetails(){
-    const url = 'api/customers/view/' + this.customerId;
+    const url = 'api/admin/users/view/' + this.customerId;
     this.http.get(url).subscribe((customer: any) => {
         this.customerDetails=customer;
         this.viewCustomerService.publishCustomerDetails(customer);

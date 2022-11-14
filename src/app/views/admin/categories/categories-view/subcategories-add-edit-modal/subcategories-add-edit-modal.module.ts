@@ -1,9 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Helper } from 'src/app/services/helper.service';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 import { SubcategoriesAddEditModalComponent } from './subcategories-add-edit-modal.component';
 import { SubcategoriesAddEditModalService } from './subcategories-add-edit-modal.service';
 
@@ -12,12 +8,9 @@ import { SubcategoriesAddEditModalService } from './subcategories-add-edit-modal
     SubcategoriesAddEditModalComponent
   ],
   imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatCheckboxModule
+    SharedModule
   ],
-  providers:[SubcategoriesAddEditModalService, Helper],
+  providers:[SubcategoriesAddEditModalService],
   exports: [SubcategoriesAddEditModalComponent]
 })
 export class SubcategoriesAddEditModalModule { }

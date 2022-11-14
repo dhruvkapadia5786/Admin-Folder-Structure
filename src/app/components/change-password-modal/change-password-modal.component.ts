@@ -69,7 +69,7 @@ export class ChangePasswordModalComponent implements OnInit {
         if (res != null) {
 
 
-            this._router.navigate(['admin', 'patients', 'view', this.customerId, 'orders']);
+            this._router.navigate(['admin', 'customers', 'view', this.customerId, 'orders']);
             this._toastr.showSuccess('User Account Password updated Successfully');
 
         }

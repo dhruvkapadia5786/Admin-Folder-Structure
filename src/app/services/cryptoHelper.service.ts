@@ -6,6 +6,13 @@ import * as CryptoJS from 'crypto-js';
 export class cryptoHelperService {
 
 
+   encrypt(txt: string): string {
+      return CryptoJS.AES.encrypt(txt, environment.encryption_key).toString();
+    }
+  
+   decrypt(txtToDecrypt: string) {
+      return CryptoJS.AES.decrypt(txtToDecrypt, environment.encryption_key).toString(CryptoJS.enc.Utf8);
+    }
 
     encryptJSON(text:any) {
       return CryptoJS.AES.encrypt(JSON.stringify(text),environment.encryption_key).toString();

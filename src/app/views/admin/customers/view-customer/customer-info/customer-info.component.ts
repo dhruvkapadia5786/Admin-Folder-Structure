@@ -65,13 +65,13 @@ export class CustomerInfoComponent implements OnInit {
       activeRoute.parent.parent.params.subscribe((params:any) => {
         this.customerId = params['id'];
         this.getCustomerDetails();
-        this._getState();
+        //this._getState();
       });
     }
   }
 
   getCustomerDetails(){
-    const url = 'api/customers/view/' + this.customerId;
+    const url = 'api/admin/users/view/' + this.customerId;
     this.http.get(url).subscribe(async (customer: any) => {
       this.customerDetails = customer;
       this.addresses = this.customerDetails.addresses;
@@ -102,7 +102,7 @@ export class CustomerInfoComponent implements OnInit {
     this.http.post(url, {user_id: this.customerId, is_active: stauts}).subscribe((result: any) => {
         this._toastr.showSuccess(result.message);
         // reload user details only
-        const url2 = 'api/customers/view/' + this.customerId;
+        const url2 = 'api/admin/users/view/' + this.customerId;
         this.http.get(url2).subscribe((customer: any) => {
           this.customerDetails = customer;
         });

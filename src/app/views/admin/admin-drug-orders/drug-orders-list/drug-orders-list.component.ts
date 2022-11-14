@@ -140,7 +140,7 @@ export class DrugOrdersListComponent implements OnInit {
   }
 
   goToPatientDetails(customeId: any): any {
-    this.router.navigate(['admin', 'patients', 'view', customeId, 'orders']);
+    this.router.navigate(['admin', 'customers', 'view', customeId, 'orders']);
   }
 
 }

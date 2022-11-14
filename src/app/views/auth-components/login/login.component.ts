@@ -4,6 +4,8 @@ import { LoginService } from './login.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
+import {cryptoHelperService} from 'src/app/services/cryptoHelper.service';
+
 
 @Component({
   selector: 'app-login',
@@ -28,7 +30,8 @@ export class LoginComponent implements OnInit {
     private _router: Router,
     private _toastr:Toastr,
     private _loginService: LoginService,
-    private _authService: AuthService
+    private _authService: AuthService,
+	private _cryptoHelperService:cryptoHelperService,
   ) { }
 
   ngOnInit() {
@@ -49,7 +52,13 @@ export class LoginComponent implements OnInit {
 
 		if (isvalid) {
       this.saving = true;
-      let result = await this._loginService.login(this.loginForm.value.username, this.loginForm.value.password);
+	  //let body = "username=" +encodeURIComponent(this.loginForm.value.username) +"&password=" + encodeURIComponent(this.loginForm.value.password) +"&grant_type=password";
+	  let encryptedBody = this._cryptoHelperService.encryptJSON({
+		username:this.loginForm.value.username,
+		password:this.loginForm.value.password,
+		grant_type:'password'
+	  });
+      let result = await this._loginService.login({reqBody:encryptedBody});
 			if (result && !result.error){
 				this._authService.setAuthorizationToken(result.access_token);
 				this._authService.changeIsLogoutClicked(false);

@@ -1,18 +1,13 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { CustomersRoutingModule } from './customers-routing.module';
 import { CustomersComponent } from './customers.component';
-import { NgxMaskModule } from 'ngx-mask';
-import { DataTablesModule } from 'angular-datatables';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [CustomersComponent],
   imports: [
-    CommonModule,
-    CustomersRoutingModule,
-    NgxMaskModule,
-    DataTablesModule
+    SharedModule,
+    CustomersRoutingModule
   ]
 })
 export class CustomersModule { }

@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 import { RefundDrugModalComponent } from './refund-drug-modal.component';
 import { RefundDrugModalService } from './refund-drug-modal.service';
 
@@ -10,8 +8,7 @@ import { RefundDrugModalService } from './refund-drug-modal.service';
     RefundDrugModalComponent
   ],
   imports: [
-    CommonModule,
-    FormsModule, ReactiveFormsModule
+    SharedModule
   ],
   providers:[RefundDrugModalService],
   exports:[RefundDrugModalComponent]

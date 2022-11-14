@@ -1,0 +1,126 @@
+<div class="p-3">
+    <ng-container *ngIf="dealerDetails; else noDealerDetails">
+         <div class="row">
+            <div class="col-lg-6 col-md-6 col-12">
+                <table class="table table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th colspan="2">Dealer Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Id</td><td>{{ dealerDetails.dealer.id }}</td></tr>
+                        <tr><td>Company Name</td><td>{{ dealerDetails.dealer.company_name }}</td></tr>
+                        <tr><td>Business type</td><td>{{ dealerDetails.dealer.business_type }}</td></tr>
+                        <tr><td>Phone number</td><td>{{ dealerDetails.dealer.phone_number }}</td></tr>
+                        <tr><td>Vat number</td><td>{{ dealerDetails.dealer.vat_number }}</td></tr>
+                        <tr><td>Fax number</td><td>{{ dealerDetails.dealer.fax_number }}</td></tr>
+                        <tr><td>Website</td><td>{{ dealerDetails.dealer.website }}</td></tr>
+                        <tr><td>Created at</td><td>{{ dealerDetails.dealer.created_at }}</td></tr>
+                        <tr><td>Updated at</td><td>{{ dealerDetails.dealer.updated_at }}</td></tr>
+                        
+                        <tr>
+                            <td>Business Legal Representative</td>
+                            <td>
+                                <p>
+                                    Name : {{ dealerDetails.dealer.first_name +' '+dealerDetails.dealer.last_name}}
+                                </p>
+                                <p>
+                                   DOB : {{ dealerDetails.dealer.date_of_birth }}
+                                </p>
+                                <p>
+                                    Nationality : {{ dealerDetails.dealer.nationality }}
+                                </p>
+                                <p>
+                                    Country of Residence : {{ dealerDetails.dealer.country_of_residence }}
+                                </p>
+                            </td>
+                    </tr>
+                      
+                    </tbody>
+                </table>
+
+
+                <table class="table table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th colspan="2">Company Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Address Line 1</td><td>{{ dealerDetails.dealer.company_address.address_line_1 }}</td></tr>
+                        <tr><td>Address Line 2</td><td>{{ dealerDetails.dealer.company_address.address_line_2 }}</td></tr>
+                        <tr><td>City</td><td>{{ dealerDetails.dealer.company_address.city_name }}</td></tr>
+                        <tr><td>State</td><td>{{ dealerDetails.dealer.company_address.state }}</td></tr>
+                        <tr><td>Country</td><td>{{ dealerDetails.dealer.company_address.country }}</td></tr>
+                        <tr><td>Zip Code</td><td>{{ dealerDetails.dealer.company_address.zip_code }}</td></tr>
+                        <tr><td>Address Type</td><td>{{ dealerDetails.dealer.company_address.type }}</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-sm" *ngIf="dealerDetails.dealer.return_address">
+                    <thead class="thead-light">
+                        <tr>
+                            <th colspan="2">Return Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Address Line 1</td><td>{{ dealerDetails.dealer.return_address.address_line_1 }}</td></tr>
+                        <tr><td>Address Line 2</td><td>{{ dealerDetails.dealer.return_address.address_line_2 }}</td></tr>
+                        <tr><td>City</td><td>{{ dealerDetails.dealer.return_address.city_name }}</td></tr>
+                        <tr><td>State</td><td>{{ dealerDetails.dealer.return_address.state }}</td></tr>
+                        <tr><td>Country</td><td>{{ dealerDetails.dealer.return_address.country }}</td></tr>
+                        <tr><td>Zip Code</td><td>{{ dealerDetails.dealer.return_address.zip_code }}</td></tr>
+                        <tr><td>Address Type</td><td>{{ dealerDetails.dealer.return_address.type }}</td></tr>
+                    </tbody>
+                </table>
+
+
+              
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+                <table class="table table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th colspan="2">Personal Info</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>First Name</td><td>{{ dealerDetails.personal_info.first_name }}</td></tr>
+                        <tr><td>Last Name </td><td>{{ dealerDetails.personal_info.last_name }}</td></tr>
+                        <tr><td>Email </td><td>{{  dealerDetails.personal_info.email}}</td></tr>
+                        <tr><td>Display name</td><td>{{ dealerDetails.personal_info.display_name }}</td></tr>
+                        <tr><td>Phone Number</td><td>{{ dealerDetails.personal_info.cell_phone_number }}</td></tr>
+                        <tr><td>Gender</td><td>{{ dealerDetails.personal_info.gender }}</td></tr>
+                        <tr><td>Role</td><td>{{ dealerDetails.personal_info.role }}</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th colspan="2">Payout Information</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Account Holder Name</td><td>{{ dealerDetails.payout_information.account_holder_name }}</td></tr>
+                        <tr><td>Account type</td><td>{{ dealerDetails.payout_information.account_type }}</td></tr>
+                        <tr><td>Routing number</td><td>{{ dealerDetails.payout_information.routing_number }}</td></tr>
+                        <tr><td>Account number</td><td>{{ dealerDetails.payout_information.account_number }}</td></tr>
+                        <tr><td>Bank name</td><td>{{ dealerDetails.payout_information.bank_name }}</td></tr>
+                        <tr><td>Bank address</td><td>{{ dealerDetails.payout_information.bank_address }}</td></tr>
+                        <tr><td>Bank iban</td><td>{{ dealerDetails.payout_information.bank_iban }}</td></tr>
+                        <tr><td>Bank swiftcode</td><td>{{ dealerDetails.payout_information.bank_swiftcode }}</td></tr>
+                    </tbody>
+                </table>
+
+            </div>
+         </div>
+    </ng-container>
+    <ng-template #noDealerDetails>
+        <div class="text-center text-muted">
+            <h2><i class="fa fa-info-circle"></i></h2>
+            <h4>No Details!</h4>
+        </div>
+    </ng-template>
+</div>

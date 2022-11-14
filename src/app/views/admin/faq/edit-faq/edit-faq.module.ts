@@ -1,23 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { NgxEditorModule } from 'ngx-editor';
 
 import { EditFaqRoutingModule } from './edit-faq-routing.module';
 import { EditFaqComponent } from './edit-faq.component';
-import { FormsModule,ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [EditFaqComponent],
   imports: [
-    CommonModule,
+    SharedModule,
     EditFaqRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    NgxEditorModule,
-    MatSelectModule,
+    NgxEditorModule
   ]
 })
 export class EditFaqModule { }

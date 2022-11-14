@@ -15,7 +15,10 @@ export class EditCustomerComponent implements OnInit {
   editPatient: FormGroup;
   customerLoaded=false;
   customerId: string;
-  public states: any;
+
+  countriesList:any[] = [];
+  statesList:any[] = [];
+  citiesList:any[] = [];
 
   constructor(
     public http: HttpClient,
@@ -32,13 +35,12 @@ export class EditCustomerComponent implements OnInit {
       'gender': new FormControl(null, [Validators.required]),
       'date_of_birth': new FormControl(null, [Validators.required]),
       'email': new FormControl(null, [Validators.required]),
-      'cell_phone_number': new FormControl(null, [Validators.required]),
-      'email_phone_consent': new FormControl(null),
+      'cell_phone_number': new FormControl(null, [Validators.required])
     });
   }
 
   ngOnInit(){
-    this._getStates();
+    this.getCountries();
     this.getCustomerDetails();
   }
 
@@ -48,10 +50,9 @@ export class EditCustomerComponent implements OnInit {
   get date_of_birth() { return this.editPatient.get('date_of_birth'); }
   get email() { return this.editPatient.get('email'); }
   get cell_phone_number() { return this.editPatient.get('cell_phone_number'); }
-  get email_phone_consent() { return this.editPatient.get('email_phone_consent'); }
 
   getCustomerDetails(){
-    const url = 'api/customers/view/' + this.customerId;
+    const url = 'api/admin/users/view/' + this.customerId;
     this.http.get(url).subscribe((customer: any) => {
 
       this.editPatient.patchValue({
@@ -61,8 +62,7 @@ export class EditCustomerComponent implements OnInit {
         gender: customer.gender,
         date_of_birth: this.setBirthDate(customer.date_of_birth),
         email:customer.email,
-        cell_phone_number: customer.cell_phone_number,
-        email_phone_consent: customer.email_phone_consent
+        cell_phone_number: customer.cell_phone_number
       });
         this.customerLoaded = true;
       }, err =>{
@@ -84,14 +84,14 @@ export class EditCustomerComponent implements OnInit {
     this.http.post(url,this.editPatient.value).subscribe((res: any) => {
         if (res != null) {
 
-            this._router.navigate(['admin', 'patients', 'view', this.customerId, 'orders']);
+            this._router.navigate(['admin', 'customers', 'view', this.customerId, 'orders']);
             this._toastr.showSuccess('Save Successfully');
 
         }
         this._changeDetectorRef.detectChanges();
       },
       err => {
-        this._toastr.showError('Unable to save patient details.');
+        this._toastr.showError('Unable to save Customer details.');
       }
     );
   }
@@ -102,14 +102,29 @@ export class EditCustomerComponent implements OnInit {
     });
   }
 
-  private async _getStates() {
-    const url = 'api/system_states/all';
-    this.http.get(url).subscribe((data: any) => {
-        this.states = data;
-      },
-      (err) => {
+  private async getCountries() {
+    this.http.get<any>('api/geo/countries').subscribe((resp) => {
+      this.countriesList = resp;
+    }, err=> {
 
-      });
+    });
+  }
+
+  async getStatesByCoutry(country_id:number){
+    // Get States List
+    this.http.get<any>('api/geo/states/'+country_id).subscribe((resp) => {
+      this.statesList = resp;
+    }, err=> {
+
+    });
+  }
+
+  async getCitiesByState(state_id:number){
+    this.http.get<any>('api/geo/cities/'+state_id).subscribe((resp) => {
+      this.citiesList = resp;
+    }, err=> {
+
+    });
   }
 
 }

@@ -10,11 +10,7 @@ const routes: Routes = [
   {
     path: 'forgot-password',
     loadChildren:()=>import('src/app/views/auth-components/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule )
-  },
-  {
-    path: 'demo-sample',
-    loadChildren:()=>import('src/app/views/auth-components/demo-sample/demo-sample.module').then(m=>m.DemoSampleModule),
-  },
+  } 
 ];
 
 @NgModule({
