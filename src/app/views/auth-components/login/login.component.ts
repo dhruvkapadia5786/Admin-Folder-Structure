@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
 		grant_type:'password'
 	  });
 
-	  let body = "reqBody="+encodeURIComponent(encryptedBody);
+	  let body = "data="+encodeURIComponent(encryptedBody);
 
       let result = await this._loginService.login(body);
 			if (result && !result.error){
