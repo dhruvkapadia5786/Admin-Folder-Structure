@@ -52,13 +52,16 @@ export class LoginComponent implements OnInit {
 
 		if (isvalid) {
       this.saving = true;
-	  //let body = "username=" +encodeURIComponent(this.loginForm.value.username) +"&password=" + encodeURIComponent(this.loginForm.value.password) +"&grant_type=password";
+	  let formVal= this.loginForm.value;
 	  let encryptedBody = this._cryptoHelperService.encryptJSON({
-		username:this.loginForm.value.username,
-		password:this.loginForm.value.password,
+		username:formVal.username,
+		password:formVal.password,
 		grant_type:'password'
 	  });
-      let result = await this._loginService.login({reqBody:encryptedBody});
+
+	  let body = "reqBody="+encodeURIComponent(encryptedBody);
+
+      let result = await this._loginService.login(body);
 			if (result && !result.error){
 				this._authService.setAuthorizationToken(result.access_token);
 				this._authService.changeIsLogoutClicked(false);
