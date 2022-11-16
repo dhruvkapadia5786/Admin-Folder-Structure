@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'bannersets', loadChildren: () => import('../../views/admin/banner-sets/banner-sets.module').then(bs => bs.BannerSetsModule) },
   { path: 'article-categories', loadChildren: () => import('../../views/admin/article-categories/article-categories.module').then(categories => categories.ArticleCategoriesModule) },
   { path: 'articles', loadChildren: () => import('../../views/admin/articles/article.module').then(article => article.ArticleModule) },
-  { path: 'attributes', loadChildren: () => import('../../views/admin/attributes/attributes.module').then(attribute => attribute.AttributesModule) }
+  { path: 'plans', loadChildren: () => import('../../views/admin/plans/plans.module').then(plans => plans.PlansModule) }
 
 ];
 

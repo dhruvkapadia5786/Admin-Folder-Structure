@@ -70,7 +70,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			{ route: '/admin/categories', iconName: 'fa-bars', displayName: 'Categories' },
 			{ route: '/admin/article-categories', iconName: 'fa-bars', displayName: 'Article Categories' },
 			{ route: '/admin/articles', iconName: 'fa-bars', displayName: 'Articles' },
-			{ route: '/admin/attributes', iconName: 'fa-bars', displayName: 'Attributes' },
+			{ route: '/admin/plans', iconName: 'fa-bars', displayName: 'Subscription Plans' },
 			{ route: '/admin/orders/refund_requested', iconName: 'fa-sync-alt', displayName: 'Refund Orders' },
 			{
 				displayName: 'Others',

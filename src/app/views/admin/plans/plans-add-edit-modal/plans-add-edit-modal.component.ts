@@ -2,17 +2,18 @@ import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@ang
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
-import { AttributesAddEditModalService } from './attributes-add-edit-modal.service';
+import { PlansAddEditModalService } from './plans-add-edit-modal.service';
 
 @Component({
-  selector: 'app-attributes-add-edit-modal',
-  templateUrl: './attributes-add-edit-modal.component.html',
-  styleUrls: ['./attributes-add-edit-modal.component.scss']
+  selector: 'app-plans-add-edit-modal',
+  templateUrl: './plans-add-edit-modal.component.html',
+  styleUrls: ['./plans-add-edit-modal.component.scss']
 })
-export class AttributesAddEditModalComponent implements OnInit {
+export class PlansAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  treatmentConditionForm: FormGroup;
+  subscriptionPlanForm: FormGroup;
+  countriesList:any[]=[];
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -22,26 +23,39 @@ export class AttributesAddEditModalComponent implements OnInit {
     private _bsModalRef:BsModalRef,
     private formBuilder: FormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
-    private _tcAddEditModalService: AttributesAddEditModalService
+    private _tcAddEditModalService: PlansAddEditModalService
   ) {
-    this.treatmentConditionForm = this.formBuilder.group({
+    this.subscriptionPlanForm = this.formBuilder.group({
       'id':new FormControl(null, []),
       'name': new FormControl(null, [Validators.required]),
+      'duration': new FormControl(null, [Validators.required]),
+      'duration_unit': new FormControl(null, [Validators.required]),
+      'charge': new FormControl(null, [Validators.required]),
+      'currency': new FormControl(null, [Validators.required]),
       'is_active': new FormControl(null, []),
     });
   }
 
-  get id() { return this.treatmentConditionForm.get('id'); }
-  get name() { return this.treatmentConditionForm.get('name'); }
-  get is_active() { return this.treatmentConditionForm.get('is_active'); }
+  get id() { return this.subscriptionPlanForm.get('id'); }
+  get name() { return this.subscriptionPlanForm.get('name'); }
+  get duration() { return this.subscriptionPlanForm.get('duration'); }
+  get duration_unit() { return this.subscriptionPlanForm.get('duration_unit'); }
+  get charge() { return this.subscriptionPlanForm.get('charge'); }
+  get currency() { return this.subscriptionPlanForm.get('currency'); }
+  get is_active() { return this.subscriptionPlanForm.get('is_active'); }
 
   ngOnInit(): void {
     let details = this._tcAddEditModalService.getData();
     this.modalEvent = details.event;
+    this.countriesList = details.countriesList;
     if(details.event == 'EDIT'){
-      this.treatmentConditionForm.patchValue({
+      this.subscriptionPlanForm.patchValue({
         id:details.data.id,
         name:details.data.name,
+        duration:details.data.duration,
+        duration_unit:details.data.duration_unit,
+        charge:details.data.charge,
+        currency:details.data.currency,        
         is_active:details.data.is_active,
       });
     }
@@ -49,17 +63,17 @@ export class AttributesAddEditModalComponent implements OnInit {
 
   async saveTreatmentCondition(formValid:boolean){
     if(formValid){
-      let categoryVal = this.treatmentConditionForm.value;  
+      let categoryVal = this.subscriptionPlanForm.value;  
       if(this.modalEvent == 'ADD'){
-        let create = await  this._tcAddEditModalService.addNewCategories(categoryVal);
+        let create = await  this._tcAddEditModalService.addNewPlan(categoryVal);
       } else if (this.modalEvent == 'EDIT'){
-        let update = await  this._tcAddEditModalService.editCategories(categoryVal.id,categoryVal);
+        let update = await  this._tcAddEditModalService.editPlan(categoryVal.id,categoryVal);
       }
       this.onEventCompleted.emit(true);
       this.closeModal();
-      this.treatmentConditionForm.reset();
+      this.subscriptionPlanForm.reset();
     } else {
-      this._helper.markFormGroupTouched(this.treatmentConditionForm);
+      this._helper.markFormGroupTouched(this.subscriptionPlanForm);
     }
   }
 
