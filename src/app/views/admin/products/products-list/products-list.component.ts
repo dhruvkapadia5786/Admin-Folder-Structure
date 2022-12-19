@@ -110,12 +110,12 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[2, 'desc']],
+      order: [[1, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
        dataTablesParameters.filter = this.product_config.filter.CHANNEL.length > 0 ? this.product_config.filter : {}
         this._http
           .post<any>(
-            'api/products/list',
+            'api/admin/products/list',
             dataTablesParameters,
             {}
           )
@@ -156,8 +156,51 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-left  font-weight-normal'
         },
         {
-          data: 'mrp_price',
-          title: 'MRP Price',
+          data: 'model',
+          title: 'Model',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'status',
+          title: 'Status',
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, full: any) => {
+            if (data) {
+              return this._helper.getProductStatus(data);
+            } else {
+              return '<span></span>';
+            }
+          }
+        },
+        {
+          data: 'created_by',
+          title: 'Created by',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'rating_count',
+          title: 'Nos. Ratings',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'average_rating',
+          title: 'Avg Rating',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'sold_count',
+          title: 'Sold Count',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'total_sales',
+          title: 'Total Sales',
+          className: 'text-left  font-weight-normal'
+        },
+
+        {
+          data: 'regular_price',
+          title: 'Regular Price',
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
@@ -192,8 +235,8 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         {
-          data: 'is_coming_soon',
-          title: 'Coming Soon',
+          data: 'is_featured',
+          title: 'Is Featured',
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
@@ -204,12 +247,42 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         {
+          data: 'shaft',
+          title: 'Shaft',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'grip_condition',
+          title: 'Grip Condition',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'article_condition',
+          title: 'Article Condition',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'handedness',
+          title: 'Handedness',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'gender',
+          title: 'Gender',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data:'experience_level',
+          title: 'Experience level',
+          className: 'text-left  font-weight-normal'
+        },
+        {
           data: 'created_at',
           title: 'Created At',
           className: 'text-center  font-weight-normal',
           render: (data: any, type: any, full: any) => {
             if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD-MM-YYYY');
+              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
             } else {
               return '<span></span>';
             }

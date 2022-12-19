@@ -5,32 +5,32 @@
         <div class="table-responsive">
           <table class="table table-hover">
                 <tr>
-                  <td class="font-weight-bold">Procurement Channel</td>
-                  <td class="font-weight-normal">{{product.procurement_channel}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Product Type</td>
-                  <td class="font-weight-normal">{{product.product_type || '-'}}</td>
-                </tr>
-                <tr>
                   <td class="font-weight-bold">Name</td>
-                  <td class="font-weight-normal">{{product.name}} <span class="ml-2 badge badge-success badge-pill p-2" *ngIf="product.is_coming_soon">Comming Soon</span></td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Ucode</td>
-                  <td class="font-weight-normal">{{product.ucode}}</td>
+                  <td class="font-weight-normal">{{product.name}}</td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Slug</td>
                   <td class="font-weight-normal">{{product.slug}}</td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Brand</td>
-                  <td class="font-weight-normal">{{product.brand_id?.name || '-'}}</td>
+                  <td class="font-weight-bold">Model</td>
+                  <td class="font-weight-normal">{{product.model}}</td>
                 </tr>
                 <tr>
+                  <td class="font-weight-bold">Status</td>
+                  <td class="font-weight-normal" [innerHtml]="_helper.getProductStatus(product.status)"></td>
+                </tr>
+                <tr *ngIf="product.category_id">
+                  <td class="font-weight-bold">Category</td>
+                  <td class="font-weight-normal">{{product.category.name || '-'}}</td>
+                </tr>
+                <tr *ngIf="product.brand_id">
+                  <td class="font-weight-bold">Brand</td>
+                  <td class="font-weight-normal">{{product.brand.name || '-'}}</td>
+                </tr>
+                <tr *ngIf="product.manufacturer_id">
                   <td class="font-weight-bold">Manufacturer</td>
-                  <td class="font-weight-normal">{{product.manufacturer_id?.name || '-'}}</td>
+                  <td class="font-weight-normal">{{product.manufacturer.name || '-'}}</td>
                 </tr>
                 <tr>
                   <td  class="font-weight-bold">Active</td>
@@ -40,39 +40,15 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Coming Soon</td>
+                  <td class="font-weight-bold">Is Featured</td>
                   <td class="font-weight-normal">
-                    <i class="fa fa-check text-success" *ngIf="product.is_coming_soon"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!product.is_coming_soon"></i>
+                    <i class="fa fa-check text-success" *ngIf="product.is_featured"></i>
+                    <i class="fa fa-times text-danger" *ngIf="!product.is_featured"></i>
                   </td>
                 </tr>
                 <tr>
-                  <td  class="font-weight-bold">Is Live</td>
-                  <td  class="font-weight-normal">
-                    <i class="fa fa-check text-success" *ngIf="product.medicine_status_flags.is_live"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!product.medicine_status_flags.is_live"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td  class="font-weight-bold">Is Banned</td>
-                  <td  class="font-weight-normal">
-                    <i class="fa fa-check text-success" *ngIf="product.medicine_status_flags.is_banned"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!product.medicine_status_flags.is_banned"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td  class="font-weight-bold">Is Discontinued</td>
-                  <td  class="font-weight-normal">
-                    <i class="fa fa-check text-success" *ngIf="product.medicine_status_flags.is_discontinued"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!product.medicine_status_flags.is_discontinued"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td  class="font-weight-bold">Is Undeliverable</td>
-                  <td  class="font-weight-normal">
-                    <i class="fa fa-check text-success" *ngIf="product.medicine_status_flags.is_undeliverable"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!product.medicine_status_flags.is_undeliverable"></i>
-                  </td>
+                  <td class="font-weight-bold">Description</td>
+                  <td class="font-weight-normal">{{ product.description }}</td>
                 </tr>
           </table>
         </div>
@@ -81,267 +57,71 @@
         <div class="table-responsive">
             <table class="table table-hover">
                 <tr>
-                  <td class="font-weight-bold">Therapies</td>
-                  <td class="font-weight-normal">
-                      <p class="badge badge-pill p-2 ml-2" *ngFor="let therapy of product.therapies">{{therapy.name}}</p>
-                  </td>
+                  <td class="font-weight-bold">Shaft</td>
+                  <td class="font-weight-normal">{{product.shaft}}</td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Schedule</td>
-                  <td class="font-weight-normal">{{product.schedule}}</td>
+                  <td class="font-weight-bold">Grip Condition</td>
+                  <td class="font-weight-normal">{{product.grip_condition}}</td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Measurement Unit</td>
-                  <td class="font-weight-normal">{{product.measurement_unit}}</td>
+                  <td class="font-weight-bold">Article condition</td>
+                  <td class="font-weight-normal">{{product.article_condition}}</td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Form name</td>
-                  <td class="font-weight-normal">{{product.form_name.name}}</td>
+                  <td class="font-weight-bold">Handedness</td>
+                  <td class="font-weight-normal">{{product.handedness}}</td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Packform</td>
-                  <td class="font-weight-normal">{{product.packform.name}}</td>
+                  <td class="font-weight-bold">Gender</td>
+                  <td class="font-weight-normal">{{product.gender}}</td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Is RX Required ?</td>
-                  <td class="font-weight-normal">
-                    <i class="fa fa-check text-success" *ngIf="product.is_rx_required"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!product.is_rx_required"></i>
-                  </td>
+                  <td class="font-weight-bold">Experience level</td>
+                  <td class="font-weight-normal">{{product.experience_level}}</td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Is Refrigerated ?</td>
-                  <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.is_refrigerated"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.is_refrigerated"></i>
-                  </td>
+                  <td class="font-weight-bold">Rating count</td>
+                  <td class="font-weight-bold">{{product.rating_count}}</td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold">Is Chronic ?</td>
-                  <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.is_chronic"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.is_chronic"></i>
-                  </td>
+                  <td class="font-weight-bold">Average rating</td>
+                  <td class="font-weight-bold">{{product.average_rating}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Sold count</td>
+                  <td class="font-weight-bold">{{product.sold_count}}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Total sales</td>
+                  <td class="font-weight-bold">{{product.total_sales}}</td>
                 </tr>
             </table>
         </div>
     </div>
   </div>
 
-  <h6 class="bg-light text-dark p-2 mt-3" *ngIf="product.product_type=='OTC'">Linked to Category</h6>
-  <div class="row" *ngIf="product.product_type=='OTC'">
-      <div class="col-md-12 col-12">
-        <table class="table w-100" *ngIf="product.categories">
-          <thead class="thead-light">
-            <tr>
-                <th>Category</th>
-                <th>Subcategories</th>
-            </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let item of product.categories">
-                  <td class="font-weight-normal">
-                    <img *ngIf="item.image_url" [src]="getUrl(item.image_url)" style="width:80px;height:80px;" />
-                    {{item.name}}
-                  </td>
-                  <td>
-                      <p *ngFor="let subitem of item.sub_categories" class="font-weight-normal">{{subitem.name}}</p>
-                  </td>
-              </tr>
-          </tbody>
-        </table>
-      </div>
-  </div>
-
-  <h6 class="bg-light text-dark p-2 mt-3" *ngIf="product.product_type=='LENS'">Lens Parameters</h6>
-  <div class="row"  *ngIf="product.product_type=='LENS'">
-      <div class="col-md-12">
-        <div class="table-responsive">
-          <table class="table table-sm table-hover">
-                <tr>
-                    <td class="font-weight-bold">Has Diameter</td>
-                    <td class="font-weight-bold">Fixed Diameters</td>
-                    <td class="font-weight-bold">Options</td>
-                </tr>
-                <tr>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_diameter"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_diameter"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_fixed_diameter_options"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_fixed_diameter_options"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <span class="badge badge-primary badge-pill p-2 mr-2 mb-2" *ngFor="let param of product.lens_parameters.diameter_parameters">{{param.label}}</span>
-                    </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Has BC</td>
-                  <td class="font-weight-bold">Fixed BC</td>
-                  <td class="font-weight-bold">Options</td>
-                </tr>
-                 <tr>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_basecurve"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_basecurve"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_fixed_basecurve_options"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_fixed_basecurve_options"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                         <span class="badge badge-primary badge-pill p-2 mr-2 mb-2" *ngFor="let param of product.lens_parameters.basecurve_parameters">{{param.label}}</span>
-                    </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Has Power</td>
-                  <td class="font-weight-bold">Fixed Power</td>
-                  <td class="font-weight-bold">Options</td>
-                </tr>
-                 <tr>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_power"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_power"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_fixed_power_options"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_fixed_power_options"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                         <span class="badge badge-primary badge-pill p-2 mr-2 mb-2" *ngFor="let param of product.lens_parameters.power_parameters">{{param.label}}</span>
-                    </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Has CYL</td>
-                  <td class="font-weight-bold">Fixed CYL</td>
-                  <td class="font-weight-bold">Options</td>
-                </tr>
-                 <tr>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_cylinder"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_cylinder"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_fixed_cylinder_options"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_fixed_cylinder_options"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <span class="badge badge-primary badge-pill p-2 mr-2 mb-2" *ngFor="let param of product.lens_parameters.cylinder_parameters">{{param.label}}</span>
-                    </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Has Add Power</td>
-                  <td class="font-weight-bold">Fixed Add Power</td>
-                  <td class="font-weight-bold">Options</td>
-                </tr>
-                 <tr>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_addpower"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_addpower"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_fixed_addpower_options"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_fixed_addpower_options"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <span class="badge badge-primary badge-pill p-2 mr-2 mb-2" *ngFor="let param of product.lens_parameters.addpower_parameters">{{param.label}}</span>
-                    </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Has Color</td>
-                  <td class="font-weight-bold">Fixed Color</td>
-                  <td class="font-weight-bold">Options</td>
-                </tr>
-                 <tr>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_color"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_color"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.has_fixed_color_options"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.has_fixed_color_options"></i>
-                    </td>
-                    <td class="font-weight-normal">
-                         <span class="badge badge-primary badge-pill p-2 mr-2 mb-2" *ngFor="let param of product.lens_parameters.color_parameters">{{param.label}}</span>
-                    </td>
-                </tr>
-          </table>
-        </div>
-      </div>
-  </div>
-
+   
+  
   <h6 class="bg-light text-dark p-2 mt-3">Pricing</h6>
   <div class="row">
     <div class="col-md-6">
         <div class="table-responsive">
           <table class="table table-hover">
                 <tr>
-                  <td class="font-weight-bold">List Price</td>
-                  <td class="font-weight-normal"> {{(product.list_price | currency:'EUR') || '-' }} </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">MRP Price</td>
-                  <td class="font-weight-normal"> {{(product.mrp_price | currency:'EUR') || '-' }} </td>
+                  <td class="font-weight-bold">Regular Price</td>
+                  <td class="font-weight-normal"> {{(product.regular_price | currency:'EUR') || '-' }} </td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Sale Price</td>
                   <td class="font-weight-normal"> {{(product.sale_price | currency:'EUR') || '-' }} </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Discount Type</td>
-                  <td class="font-weight-normal"> {{product.discount_type || '-' }} </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Discount Percent</td>
-                  <td class="font-weight-normal"> {{product.discount_percent || '-' }} </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Discount Amount</td>
-                  <td class="font-weight-normal"> {{product.discount_amount || '-' }} </td>
                 </tr>
           </table>
         </div>
     </div>
     <div class="col-md-6">
         <div class="table-responsive">
-            <table class="table table-hover">
-                <tr>
-                  <td class="font-weight-bold">Price Per Unit</td>
-                  <td class="font-weight-normal"> {{product.price_per_unit }} </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">GST Applicable ?</td>
-                  <td class="font-weight-normal">
-                        <i class="fa fa-check text-success" *ngIf="product.is_gst_applicable"></i>
-                        <i class="fa fa-times text-danger" *ngIf="!product.is_gst_applicable"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">GST %</td>
-                  <td class="font-weight-normal">
-                      {{ product.gst_tax_percentage }}
-                  </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">GST HSN Code</td>
-                  <td class="font-weight-normal">
-                      {{ product.hsn_code }}
-                  </td>
-                </tr>
-                 <tr>
-                  <td class="font-weight-bold">Max Order Quantity</td>
-                  <td class="font-weight-normal">
-                      {{ product.max_quantity }}
-                  </td>
-                </tr>
-                 <tr>
-                  <td class="font-weight-bold">Product Volume</td>
-                  <td class="font-weight-normal">
-                      {{ product.product_volume }}
-                  </td>
-                </tr>
-            </table>
+            
         </div>
     </div>
   </div>
@@ -362,7 +142,7 @@
   </ng-template>
 
   <h6 class="bg-light text-dark p-2 mt-3">FAQ</h6>
-  <div class="row" *ngIf="product?.faqs.length > 0; else noFaqs">
+  <div class="row" *ngIf="product && product.faqs; else noFaqs">
     <div class="col-md-12">
       <app-change-sequence [mode]="'FAQS'" [data]="product.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
     </div>
@@ -375,7 +155,7 @@
   </ng-template>
 
   <h6 class="bg-light text-dark p-2 mt-3">Images</h6>
-  <div class="row" *ngIf="product?.images.length > 0; else noImgs">
+  <div class="row" *ngIf="product?.images?.length > 0; else noImgs">
     <div class="col-md-12">
       <app-change-sequence [mode]="'IMAGES'" [data]="product.images" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
     </div>
@@ -388,7 +168,7 @@
   </ng-template>
 
   <h6 class="bg-light text-dark p-2 mt-3">PDF Documents</h6>
-  <div class="row" *ngIf="product?.documents.length > 0; else noDocs">
+  <div class="row" *ngIf="product?.documents?.length > 0; else noDocs">
     <div class="col-md-12">
       <app-change-sequence [mode]="'DOCUMENTS'" [data]="product.documents" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
     </div>
@@ -401,7 +181,7 @@
   </ng-template>
 
   <h6 class="bg-light text-dark p-2 mt-3">Videos</h6>
-  <div class="row" *ngIf="product?.videos.length > 0; else noVideos">
+  <div class="row" *ngIf="product?.videos?.length > 0; else noVideos">
     <div class="col-md-12">
       <app-change-sequence [mode]="'VIDEOS'" [data]="product.videos" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
     </div>

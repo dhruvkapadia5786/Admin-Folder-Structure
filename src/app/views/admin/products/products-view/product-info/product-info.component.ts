@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Toastr } from 'src/app/services/toastr.service';
 import { environment } from 'src/environments/environment';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-product-info',
@@ -23,7 +24,8 @@ export class ProductInfoComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    public _toastr: Toastr) {
+    public _helper:Helper,
+    public _toastr: Toastr){
     this.routeSubscribe = this.router.events.subscribe((event:any) => {
       if (event instanceof NavigationEnd) {
         let activatedRoute:any = this.route;
@@ -41,7 +43,7 @@ export class ProductInfoComponent implements OnInit {
   }
 
   getProductDetails(){
-    const url = 'api/products/view/' + this.productId;
+    const url = 'api/admin/products/view/' + this.productId;
     this.http.get(url).subscribe((res: any) => {
         this.product = res;
     },(err:any) => {
@@ -54,7 +56,7 @@ export class ProductInfoComponent implements OnInit {
     event.data.forEach((obj: any) => {
         dataToSend.push({ ...obj.item, sequence:obj.sequence });
     });
-    let url: string = `api/products/update_sequence/${this.productId}`;
+    let url: string = `api/admin/products/update_sequence/${this.productId}`;
     this.http.post(url, { mode: event.mode, sequences: dataToSend }).subscribe((data:any) => {
         this._toastr.showSuccess('Sequence Updated Successfully');
       }, (err:any) => {

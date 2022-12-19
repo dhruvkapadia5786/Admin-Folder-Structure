@@ -31,6 +31,30 @@ export class Helper {
         }
     }
 
+    getProductStatus(status:string){
+        if(status=='draft'){
+            return `<span class="badge badge-warning">Draft</span>`;
+        }
+        else if(status=='under_review'){
+            return `<span class="badge badge-primary">Under Review</span>`;
+        }
+        else if(status=='published'){
+            return `<span class="badge badge-success">Published</span>`;
+        }
+        else if(status=='rejected'){
+            return `<span class="badge badge-dark">Rejected</span>`;
+        }
+        else if(status=='update_required'){
+            return `<span class="badge badge-info">Update Required</span>`;
+        }
+        else if(status=='deleted'){
+            return `<span class="badge badge-danger">Deleted</span>`;
+        }
+        else {
+            return `<span class="badge badge-warning">${status}</span>`;
+        }
+    }
+
 
     public getUTCtoLocalDateTime(date: any, format: string = this.IST_DATE_TIME_FORMAT) {
         if (date != null && moment(date).isValid()) {

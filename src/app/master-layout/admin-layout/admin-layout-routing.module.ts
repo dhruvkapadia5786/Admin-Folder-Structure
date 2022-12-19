@@ -20,8 +20,8 @@ const routes: Routes = [
   { path: 'bannersets', loadChildren: () => import('../../views/admin/banner-sets/banner-sets.module').then(bs => bs.BannerSetsModule) },
   { path: 'article-categories', loadChildren: () => import('../../views/admin/article-categories/article-categories.module').then(categories => categories.ArticleCategoriesModule) },
   { path: 'articles', loadChildren: () => import('../../views/admin/articles/article.module').then(article => article.ArticleModule) },
-  { path: 'plans', loadChildren: () => import('../../views/admin/plans/plans.module').then(plans => plans.PlansModule) }
-
+  { path: 'plans', loadChildren: () => import('../../views/admin/plans/plans.module').then(plans => plans.PlansModule) },
+  { path: 'newsletter-subscribers', loadChildren: () => import('../../views/admin/newsletter-subscribers/newsletter-subscribers.module').then(newsletter => newsletter.NewsletterSubscribersModule) }
 ];
 
 @NgModule({
