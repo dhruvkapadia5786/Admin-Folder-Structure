@@ -32,14 +32,7 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
       private _orderLogDetailsModalService: OrderLogDetailsModalService
     ) {
       this.orderId = this.route.snapshot.paramMap.get('id');
-
-      if (router.url.includes('/orders/view')) {
-        this.orderType = 'ORDER'
-      } else if (router.url.includes('drug-order/view')) {
-        this.orderType = 'DRUG_ORDER'
-      } else if (router.url.includes('consultation/view')) {
-        this.orderType = 'CONSULTATION'
-      }
+      this.orderType = 'ORDER';
     }
     ngOnInit() {
       this.getOrderLogs();

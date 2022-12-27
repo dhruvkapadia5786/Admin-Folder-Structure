@@ -14,7 +14,6 @@ export class SettingsComponent implements OnInit {
 
   systemSettings:any;
   public shippingChargeSettings: FormGroup;
-  public refferalSettings: FormGroup;
 
   constructor(
     private _toastr: Toastr,
@@ -28,25 +27,10 @@ export class SettingsComponent implements OnInit {
       'shipping_charges':new FormArray([]),
     });
 
-    this.refferalSettings = new FormGroup({
-      'referral_program_is_active': new FormControl(null, []),
-      'reward_for_referrer_amount': new FormControl(null, []),
-      'reward_for_referrer_percent': new FormControl(null, []),
-      'reward_for_referee_amount': new FormControl(null, []),
-      'reward_for_referee_percent': new FormControl(null, []),
-      'max_referee_allowed': new FormControl(null, [Validators.required])
-    });
-
+   
   }
 
   get shipping_charge_active() { return this.shippingChargeSettings.get('shipping_charge_active'); };
-
-  get referral_program_is_active() { return this.refferalSettings.get('referral_program_is_active'); };
-  get reward_for_referrer_amount() { return this.refferalSettings.get('reward_for_referrer_amount'); };
-  get reward_for_referrer_percent() { return this.refferalSettings.get('reward_for_referrer_percent'); };
-  get reward_for_referee_amount() { return this.refferalSettings.get('reward_for_referee_amount'); };
-  get reward_for_referee_percent() { return this.refferalSettings.get('reward_for_referee_percent'); };
-  get max_referee_allowed() { return this.refferalSettings.get('max_referee_allowed'); };
 
   ngOnInit(){
     this.getSystemSettingsDetails();
@@ -80,15 +64,6 @@ export class SettingsComponent implements OnInit {
           shipping_charge_active:data.shipping_charge_active
         });
 
-        this.refferalSettings.patchValue({
-          referral_program_is_active:data.referral_program_info.referral_program_is_active,
-          reward_for_referrer_amount:data.referral_program_info.reward_for_referrer_amount,
-          reward_for_referrer_percent:data.referral_program_info.reward_for_referrer_percent,
-          reward_for_referee_amount:data.referral_program_info.reward_for_referee_amount,
-          reward_for_referee_percent:data.referral_program_info.reward_for_referee_percent,
-          max_referee_allowed:data.referral_program_info.max_referee_allowed,
-        });
-
         const shipping_chargesControl = this.shippingChargeSettings.get('shipping_charges') as FormArray;
         if(data.shipping_charges){
           data.shipping_charges.forEach((item:any)=>{
@@ -99,8 +74,6 @@ export class SettingsComponent implements OnInit {
             shipping_chargesControl.push(shFormGroup);
           });
         }
-
-
         this._changeDetectorRef.detectChanges();
       }, err => {
       });
@@ -119,21 +92,6 @@ export class SettingsComponent implements OnInit {
       err => {
         this._toastr.showError('Unable to update Setting');
       });
-  }
-
-  public saveRefferal() {
-    if (this.refferalSettings.invalid) {
-      this._helper.markFormGroupTouched(this.refferalSettings);
-      return ;
-    }
-    const url = 'api/system_settings/update_referral_program/'+this.systemSettings.id;
-    const req = this.refferalSettings.value;
-    this._http.post(url, req).subscribe((data: any) => {
-      this._toastr.showSuccess('Referral Program Settings updated Successfully');
-    },
-    err => {
-      this._toastr.showError('Unable to update Setting');
-    });
   }
 
   public forceLogoutAllUsers(){

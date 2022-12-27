@@ -134,6 +134,11 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-left  font-weight-normal'
         },
         {
+          data: 'plan_for',
+          title: 'Plan for',
+          className: 'text-left  font-weight-normal'
+        },
+        {
           data: 'duration',
           title: 'Duration',
           render: function (data: any, type: any, full: any) {

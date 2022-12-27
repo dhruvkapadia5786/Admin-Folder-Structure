@@ -3,12 +3,11 @@
         <div class="col-md-4">
             <label>User Filter</label>
             <mat-select [(ngModel)]="userType"  (selectionChange)="getOrderLogs($event.value)" class="form-control" placeholder="SELECT USER TYPE">
-                <mat-option value="admin,technician,doctor,user,pharmacy_manager,pharmacist,pharmacy_technician,pharmacy_cashier">ALL</mat-option>
+                <mat-option value="admin,seller,dealer,user">ALL</mat-option>
                 <mat-option value="admin">ADMIN</mat-option>
-                <mat-option value="doctor">DOCTOR</mat-option>
-                <mat-option value="technician">TECHNICIAN</mat-option>
+                <mat-option value="dealer">DEALER</mat-option>
+                <mat-option value="seller">SELLER</mat-option>
                 <mat-option value="user">CUSTOMER</mat-option>
-                <mat-option value="pharmacy_manager,pharmacist,pharmacy_technician,pharmacy_cashier">PHARMACY</mat-option>
             </mat-select>
         </div>
     </div>

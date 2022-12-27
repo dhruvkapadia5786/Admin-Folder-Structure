@@ -18,7 +18,7 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
     modalRef!: BsModalRef;
     orderId: any;
     parentSub: any;
-    userType: any = 'admin,technician,doctor,user,pharmacy_manager,pharmacist,pharmacy_technician,pharmacy_cashier';
+    userType: any = 'admin,user,seller,dealer';
     orderLogs: any[] = [];
     orderType: string = '';
     constructor(
@@ -29,33 +29,17 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
       private route: ActivatedRoute,
       private modalService: BsModalService,
       private changeDetectorRef: ChangeDetectorRef,
-      private _orderLogDetailsModalService: OrderLogDetailsModalService
-    ) {
+      private _orderLogDetailsModalService: OrderLogDetailsModalService){
       this.orderId = this.route.snapshot.paramMap.get('id');
-
-      if (router.url.includes('/orders/view')) {
-        this.orderType = 'ORDER'
-      } else if (router.url.includes('drug-order/view')) {
-        this.orderType = 'DRUG_ORDER'
-      } else if (router.url.includes('consultation/view')) {
-        this.orderType = 'CONSULTATION'
-      }
     }
+
     ngOnInit() {
       this.getOrderLogs();
     }
 
     getOrderLogs(filterValue: any = this.userType){
-      let url = '';
-       if (this.orderType == 'ORDER') {
-        url = `api/orders/logs/${this.orderId}?user_types=${filterValue}`;
-      } else if (this.orderType == 'CONSULTATION') {
-        url = `api/consultations/logs/${this.orderId}?user_types=${filterValue}`;
-      } else if (this.orderType == 'DRUG_ORDER') {
-        url = `api/pharmacy_orders/logs/${this.orderId}?user_types=${filterValue}`;
-      }
-      this.http.get(url)
-      .subscribe((data: any) => {
+      let url = `api/admin/orders/logs/${this.orderId}?user_types=${filterValue}`;
+      this.http.get(url).subscribe((data: any) => {
         this.orderLogs = data;
       }, err => {
 

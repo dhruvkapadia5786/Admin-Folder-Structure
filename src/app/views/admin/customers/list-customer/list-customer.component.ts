@@ -214,7 +214,7 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center  font-weight-normal',
           render: (data: any) => {
             if (data) {
-              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
               return '<span></span>';
             }

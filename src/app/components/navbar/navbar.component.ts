@@ -64,15 +64,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/brands', iconName: 'fa-list', displayName: 'Brands' }
 				]
 			},
-			{ route: '/admin/order', iconName: 'fa-shopping-cart', displayName: 'Orders' },
-			{ route: '/admin/products', iconName: 'fa-pills', displayName: 'Products' },
+			{ route: '/admin/orders', iconName: 'fa-shopping-cart', displayName: 'Orders' },
+			{ route: '/admin/products', iconName: 'fa-golf-ball', displayName: 'Products' },
 			{ route: '/admin/bannersets' , iconName: 'fa-images', displayName: 'BannerSets' },
 			{ route: '/admin/categories', iconName: 'fa-bars', displayName: 'Categories' },
 			{ route: '/admin/article-categories', iconName: 'fa-bars', displayName: 'Article Categories' },
-			{ route: '/admin/articles', iconName: 'fa-bars', displayName: 'Articles' },
-			{ route: '/admin/plans', iconName: 'fa-bars', displayName: 'Subscription Plans' },
+			{ route: '/admin/articles', iconName: 'fa-newspaper', displayName: 'Articles' },
+			{ route: '/admin/plans', iconName: 'fa-list-alt', displayName: 'Subscription Plans' },
 			{ route: '/admin/orders/refund_requested', iconName: 'fa-sync-alt', displayName: 'Refund Orders' },
-			{ route: '/admin/newsletter-subscribers', iconName: 'fa-users', displayName: 'Newsletter Subscribers' },
+			{ route: '/admin/newsletter-subscribers', iconName: 'fa-envelope', displayName: 'Newsletter Subscribers' },
 			{
 				displayName: 'Others',
 				iconName: 'fa-info-circle',

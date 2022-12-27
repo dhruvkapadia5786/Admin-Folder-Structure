@@ -11,6 +11,15 @@
         <form (ngSubmit)="saveTreatmentCondition(subscriptionPlanForm.valid)"
             [formGroup]="subscriptionPlanForm" autocomplete="off">
             <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>Plan For</label>
+                        <select class="form-control"  placeholder="Plan For"  formControlName="plan_for">
+                            <option value="seller">Seller</option>
+                            <option value="dealer">Dealer</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Name</label><br />
@@ -22,9 +31,20 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Description</label><br />
+                        <textarea id="description" class="form-control" placeholder="Enter description" formControlName="description" rows="2"></textarea>
+                        <div class="invalid-feedback" *ngIf="description?.invalid && (description?.dirty || description?.touched)"
+                            class="text-danger">
+                            <div *ngIf="description?.errors?.required">description is required.</div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <div class="form-group">
+                            <label>Duration</label>
                             <input type="number" id="duration" class="form-control" placeholder="Enter duration" formControlName="duration" />
                             <div class="invalid-feedback" *ngIf="duration?.invalid && (duration?.dirty || duration?.touched)"
                                 class="text-danger">
@@ -32,8 +52,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <div class="form-group">
+                            <label>Duration Unit</label>
                             <select class="form-control"  placeholder="Duration Unit"  formControlName="duration_unit">
                                 <option value="hours">Hours</option>
                                 <option value="days">Days</option>
@@ -43,8 +64,9 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <div class="form-group">
+                            <label>Charge</label>
                             <input type="number" id="charge" class="form-control" placeholder="Enter charge" formControlName="charge" />
                             <div class="invalid-feedback" *ngIf="charge?.invalid && (charge?.dirty || charge?.touched)"
                                 class="text-danger">
@@ -52,8 +74,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <div class="form-group">
+                            <label>Currency</label>
                             <select class="form-control"  placeholder="Currency"  formControlName="currency">
                                 <option *ngFor="let item of countriesList" [value]="item.currency">{{ item.currency_name +'   ('+item.currency_symbol+')'+'   '+item.currency }}</option>
                             </select>

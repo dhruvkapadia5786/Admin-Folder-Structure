@@ -28,6 +28,8 @@ export class PlansAddEditModalComponent implements OnInit {
     this.subscriptionPlanForm = this.formBuilder.group({
       'id':new FormControl(null, []),
       'name': new FormControl(null, [Validators.required]),
+      'plan_for': new FormControl(null, [Validators.required]),
+      'description': new FormControl(null, [Validators.required]),
       'duration': new FormControl(null, [Validators.required]),
       'duration_unit': new FormControl(null, [Validators.required]),
       'charge': new FormControl(null, [Validators.required]),
@@ -38,6 +40,8 @@ export class PlansAddEditModalComponent implements OnInit {
 
   get id() { return this.subscriptionPlanForm.get('id'); }
   get name() { return this.subscriptionPlanForm.get('name'); }
+  get plan_for(){return this.subscriptionPlanForm.get('plan_for');}
+  get description(){return this.subscriptionPlanForm.get('description');}
   get duration() { return this.subscriptionPlanForm.get('duration'); }
   get duration_unit() { return this.subscriptionPlanForm.get('duration_unit'); }
   get charge() { return this.subscriptionPlanForm.get('charge'); }
@@ -52,6 +56,8 @@ export class PlansAddEditModalComponent implements OnInit {
       this.subscriptionPlanForm.patchValue({
         id:details.data.id,
         name:details.data.name,
+        plan_for:details.data.plan_for,
+        description:details.data.description,
         duration:details.data.duration,
         duration_unit:details.data.duration_unit,
         charge:details.data.charge,

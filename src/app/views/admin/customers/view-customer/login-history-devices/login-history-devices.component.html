@@ -15,7 +15,7 @@
             <tbody>
                 <tr *ngFor="let loginItem of loginHistory">
                     <td>
-                        <p class="font-weight-normal mb-0">{{ _helper.getFormattedDateFromUnixTimestamp(loginItem.created_at,'DD-MM-YYYY hh:mm:ss A') }}</p>
+                        <p class="font-weight-normal mb-0">{{ _helper.getFormattedDateFromUnixTimestamp(loginItem.created_at,'DD/MM/YYYY hh:mm:ss A') }}</p>
                     </td>
                     <td>
                         <p class="font-weight-normal mb-0">{{loginItem.city}}, {{loginItem.region_name}}, {{loginItem.country}}</p>
@@ -60,7 +60,7 @@
             <tbody>
                 <tr *ngFor="let item of deviceList">
                      <td>
-                        <p class="font-weight-normal mb-0">{{ _helper.getFormattedDateFromUnixTimestamp(item.created_at,'DD-MM-YYYY hh:mm:ss A') }}</p>
+                        <p class="font-weight-normal mb-0">{{ _helper.getFormattedDateFromUnixTimestamp(item.created_at,'DD/MM/YYYY hh:mm:ss A') }}</p>
                     </td>
                     <td>{{item.device_type.charAt(0).toUpperCase() + item.device_type.slice(1)}}</td>
                     <td>{{item.device_os}}</td>

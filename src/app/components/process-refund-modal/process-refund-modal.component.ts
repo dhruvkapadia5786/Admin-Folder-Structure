@@ -66,15 +66,7 @@ export class ProcessRefundModalComponent implements OnInit {
   }
 
   refundOrder(orderId: any) {
-    let url:string ='';
-    if(this.eventType =='ORDER'){
-       url=`api/orders/refund_process/${orderId}`;
-    }
-    else if(this.eventType =='CONSULTATION'){
-      url=`api/consultations/refund_process/${orderId}`;
-    }else{
-      url= `api/pharmacy_orders/refund_process/${orderId}`;
-    }
+    let url:string =`api/orders/refund_process/${orderId}`;
     this.refund_processing=true;
     this.http.post(url,this.refundObject).subscribe((res: any) => {
         this.refund_processing=false;

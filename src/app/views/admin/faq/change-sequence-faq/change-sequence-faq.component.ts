@@ -12,10 +12,6 @@ export class ChangeSequenceFaqComponent implements OnInit {
   public categories: any[] = [
     {name: 'Home', value: 'HOME'},
     {name: 'Order', value: 'ORDER'},
-    {name: 'Consultation', value: 'CONSULTATION'},
-    {name: 'Drug Order', value: 'DRUG_ORDER'},
-    {name: 'OTC Drug', value: 'OTC'},
-    {name: 'Digital Therapy', value: 'DIGITAL_THERAPY'}
   ];
   public originalQuestions: any = [];
   public questions: any = [];

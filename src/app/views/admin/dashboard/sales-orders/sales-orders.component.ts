@@ -378,14 +378,5 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
       });
   }
 
-  goToSubscriptionDetails(type: string, status: string) {
-    if (type == 'ORDER') {
-      this.router.navigate(['admin', 'subscriptions', 'status'], { queryParams: { status: status}});
-    }  else if (type == 'DRUG') {
-      this.router.navigate(['admin', 'subscriptions-drug-order', 'list'], { queryParams: { status: status}});
-    }else if (type == 'OTC') {
-      this.router.navigate(['admin', 'subscriptions-otc-drug', 'list'], { queryParams: { status: status}});
-    }
-  }
 
 }

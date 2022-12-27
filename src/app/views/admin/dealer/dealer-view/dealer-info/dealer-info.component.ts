@@ -24,7 +24,6 @@ export class DealerInfoComponent implements OnInit,OnDestroy {
     if(activeRoute){
       this.routerSubscription = activeRoute.parent.parent.params.subscribe((params:any) => {
         this.dealerId = params['id'];
-        console.log('this.dealerId',this.dealerId)
         this.getDealerDetails();
       });
     }

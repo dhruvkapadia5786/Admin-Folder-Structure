@@ -5,10 +5,10 @@ import { FormGroup } from '@angular/forms';
 @Injectable()
 export class Helper {
 
-    public IST_DATE_TIME_FORMAT = 'DD-MM-YYYY hh:mm:ss A';
-    public IST_DATE_FORMAT = 'DD-MM-YYYY';
+    public IST_DATE_TIME_FORMAT = 'DD/MM/YYYY hh:mm:ss A';
+    public IST_DATE_FORMAT = 'DD/MM/YYYY';
 
-    calculateAge(dateOfBirth: string, format: string = "DD-MM-YYYY") {
+    calculateAge(dateOfBirth: string, format: string = "DD/MM/YYYY") {
         var curDate = moment();
         var bDate = moment(dateOfBirth, format);
         return curDate.diff(bDate, 'years');
@@ -18,7 +18,7 @@ export class Helper {
       return moment.unix(timestamp).local().format(format);
     }
 
-    getFormattedDate(date: string, format: string = 'DD-MM-YYYY') {
+    getFormattedDate(date: string, format: string = 'DD/MM/YYYY') {
         return date ? moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format(format):'';
     }
 

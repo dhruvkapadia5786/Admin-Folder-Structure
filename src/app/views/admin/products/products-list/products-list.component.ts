@@ -14,19 +14,64 @@ import {environment} from 'src/environments/environment';
   styleUrls: ['./products-list.component.scss']
 })
 export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
+  productCategoryList:any[]=[];
+  productStatusList:any[]=[
+    {
+      name:"Draft",
+      value:"draft"
+    },
+    {
+      name:"Under review",
+      value:"under_review"
+    },
+    {
+      name:"Published",
+      value:"published"
+    },
+    {
+      name:"Rejected",
+      value:"rejected"
+    },
+    {
+      name:"update required",
+      value:"update_required"
+    },
+    {
+      name:"deleted",
+      value:"deleted"
+    }
+  ];
+
+  shaftList:any[]=['Regular','Stiff','Extra Stiff','Flex','Senior'];
+  grip_conditionList:any[]=['Regular','Stiff','Extra Stiff','Flex','Senior'];
+  article_conditionList:any[]=['Regular','Stiff','Extra Stiff','Flex','Senior'];
+  handednessList:any[]=['Left','Right'];
+  genderList:any[]=['Men', 'Women', 'Junior'];
+  experience_levelList:any[]=['Beginner', 'Intermediate', 'Advanced'];
+
   productsList: any[] = [];
-  procurementChannels=['MEDICINE','OTC','PRIVATE LABEL','CONTACT LENS','LENS SOLUTION'];
   product_config:any = {
     filter: {
-      CHANNEL: []
+      CATEGORY: [],
+      USER_ID:'',
+      STATUS:[],
+      SHAFT:[],
+      GRIP_CONDITION:[],
+      ARTICAL:[],
+      HANDEDNESS:[],
+      GENDER:[],
+      EXPERIENCE:[]
     }
   };
+  showHeader:boolean=true;
 
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject();
   dtOptions: DataTables.Settings = {};
 
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
+  sellerDealerId:any;
+
   constructor(
     private route: ActivatedRoute,
     private _http: HttpClient,
@@ -34,6 +79,14 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     public _helper: Helper,
     private cp:CurrencyPipe,
     private _renderer: Renderer2){
+
+     let activeRoute:any=this.route;
+     this.sellerDealerId = activeRoute.parent.parent.snapshot.paramMap.get('id') ? activeRoute.parent.parent.snapshot.paramMap.get('id') : null;
+     if(this.sellerDealerId){
+       this.product_config.filter.USER_ID = this.sellerDealerId;
+       this.showHeader = false;
+     }
+     this.getAllCategories();
      this.getDTOptions();
   }
 
@@ -63,25 +116,126 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['admin', 'products', 'edit', productEditId]);
   }
 
+  
+  public getAllCategories(){
+    const url = 'api/admin/categories/all';
+    this._http.get(url).subscribe((data: any) => {
+       this.productCategoryList=data;
+    },
+    (err:any) => {
+
+    });
+  }
+
   handleChange(event: string, value: any) {
-    if(event == 'CHANNEL'){
-      this.rerender();
-    }
+    $('#productsList').DataTable().ajax.reload();
   }
 
   public handleCheckAll(event:any, flag:any) {
-    if (flag == 'CHANNEL'){
+    if (flag == 'CATEGORY'){
       if (event.checked){
-        this.product_config.filter.CHANNEL = this.procurementChannels;
+        this.product_config.filter.CATEGORY = this.productCategoryList.slice().map((item:any)=>item.id);
       } else {
-        this.product_config.filter.CHANNEL = [];
+        this.product_config.filter.CATEGORY = [];
+      }
+    }
+    if (flag == 'STATUS'){
+      if (event.checked){
+        this.product_config.filter.STATUS = this.productStatusList.slice().map((item:any)=>item.value);
+      } else {
+        this.product_config.filter.STATUS = [];
+      }
+    }
+    if (flag == 'SHAFT'){
+      if (event.checked){
+        this.product_config.filter.SHAFT = this.shaftList;
+      } else {
+        this.product_config.filter.SHAFT = [];
+      }
+    }
+    if (flag == 'GRIP_CONDITION'){
+      if (event.checked){
+        this.product_config.filter.GRIP_CONDITION = this.grip_conditionList;
+      } else {
+        this.product_config.filter.GRIP_CONDITION = [];
+      }
+    }
+    if (flag == 'ARTICAL'){
+      if (event.checked){
+        this.product_config.filter.ARTICAL = this.article_conditionList;
+      } else {
+        this.product_config.filter.ARTICAL = [];
+      }
+    }
+    if (flag == 'HANDEDNESS'){
+      if (event.checked){
+        this.product_config.filter.HANDEDNESS = this.handednessList;
+      } else {
+        this.product_config.filter.HANDEDNESS = [];
+      }
+    }
+    if (flag == 'GENDER'){
+      if (event.checked){
+        this.product_config.filter.GENDER = this.genderList;
+      } else {
+        this.product_config.filter.GENDER = [];
+      }
+    }
+    if (flag == 'EXPERIENCE'){
+      if (event.checked){
+        this.product_config.filter.EXPERIENCE = this.experience_levelList;
+      } else {
+        this.product_config.filter.EXPERIENCE = [];
       }
     }
     this.rerender();
   }
 
-  get notSelectedChannels(){
-    return this.procurementChannels.filter((item) => !this.product_config.filter.CHANNEL.some((b: any) => b === item)).length;
+  get notSelectedStutus () {
+    return this.productStatusList.filter((item:any) => !this.product_config.filter.STATUS.some((b: any) => b === item.value)).length
+  }
+
+  get notSelectedCategory(){
+    return this.productCategoryList.filter((item:any) => !this.product_config.filter.CATEGORY.some((b: any) => b === item)).length;
+  }
+  get notSelectedShaft () {
+    return this.shaftList.filter((item:any) => !this.product_config.filter.SHAFT.some((b: any) => b === item)).length
+  }
+
+  get notSelectedGripCond () {
+    return this.grip_conditionList.filter((item:any) => !this.product_config.filter.GRIP_CONDITION.some((b: any) => b === item)).length
+  }
+
+  get notSelectedArticleCond () {
+    return this.article_conditionList.filter((item:any) => !this.product_config.filter.ARTICAL.some((b: any) => b === item)).length
+  }
+
+  get notSelectedHandedness () {
+    return this.handednessList.filter((item:any) => !this.product_config.filter.HANDEDNESS.some((b: any) => b === item)).length
+  }
+
+  get notSelectedGender () {
+    return this.genderList.filter((item:any) => !this.product_config.filter.GENDER.some((b: any) => b === item)).length
+  }
+
+  get notSelectedExperience () {
+    return this.experience_levelList.filter((item:any) => !this.product_config.filter.EXPERIENCE.some((b: any) => b === item)).length
+  }
+
+
+  clearFilter() {
+    this.product_config = {filter: {
+      CATEGORY:[],
+      USER_ID:'',
+      STATUS:[], 
+      SHAFT:[],
+      GRIP_CONDITION:[],
+      ARTICAL:[],
+      HANDEDNESS:[],
+      GENDER:[],
+      EXPERIENCE:[]
+    }}
+    $('#productsList').DataTable().ajax.reload();
   }
 
   ngOnDestroy(){
@@ -112,7 +266,17 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       ordering: true,
       order: [[1, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
-       dataTablesParameters.filter = this.product_config.filter.CHANNEL.length > 0 ? this.product_config.filter : {}
+       dataTablesParameters.filter = {}
+       dataTablesParameters.filter.CATEGORY =  this.product_config.filter.CATEGORY;
+       dataTablesParameters.filter.USER_ID =  this.product_config.filter.USER_ID  ?  this.product_config.filter.USER_ID: undefined;
+       dataTablesParameters.filter.STATUS =  this.product_config.filter.STATUS;
+      dataTablesParameters.filter.SHAFT=  this.product_config.filter.SHAFT;
+      dataTablesParameters.filter.GRIP_CONDITION=  this.product_config.filter.GRIP_CONDITION;
+      dataTablesParameters.filter.ARTICAL=  this.product_config.filter.ARTICAL;
+      dataTablesParameters.filter.HANDEDNESS=  this.product_config.filter.HANDEDNESS;
+      dataTablesParameters.filter.GENDER=  this.product_config.filter.GENDER;
+      dataTablesParameters.filter.EXPERIENCE=  this.product_config.filter.EXPERIENCE;
+
         this._http
           .post<any>(
             'api/admin/products/list',
@@ -202,9 +366,9 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'regular_price',
           title: 'Regular Price',
           className: 'text-center  font-weight-normal',
-          render: (data) => {
+          render: (data: any, type: any, full: any) => {
             if (data) {
-              return this.cp.transform(data, 'EUR');
+              return this.cp.transform(data,full.currency);
             } else {
               return '<span>-</span>';
             }
@@ -214,9 +378,9 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'sale_price',
           title: 'Sale Price',
           className: 'text-center  font-weight-normal',
-          render: (data) => {
+          render: (data: any, type: any, full: any) => {
             if (data) {
-              return this.cp.transform(data, 'EUR');
+              return this.cp.transform(data,full.currency);
             } else {
               return '<span>-</span>';
             }
@@ -282,7 +446,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-center  font-weight-normal',
           render: (data: any, type: any, full: any) => {
             if (data) {
-              return this._helper.getFormattedDate(data, 'DD-MM-YYYY');
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
               return '<span></span>';
             }

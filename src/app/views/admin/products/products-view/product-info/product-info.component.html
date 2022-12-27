@@ -1,5 +1,15 @@
 <ng-container *ngIf="product; else noProduct">
+  
+  
+  <div class="row">
+    <button *ngIf="product.status == 'draft'" type="button" (click)="updateStatus('published')" class="btn btn-success mr-2"><i class="fas fa-check-circle mr-2"></i>Publish</button>
+    <button *ngIf="product.status == 'draft'" type="button" (click)="updateStatus('rejected')" class="btn btn-danger mr-2"><i class="fas fa-times mr-2"></i>Reject</button>
+    <button *ngIf="product.status == 'under_review'" type="button" (click)="updateStatus('deleted')" class="btn btn-dark mr-2"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
+    <button *ngIf="product.status == 'draft'" type="button" (click)="updateStatus('update_required')" class="btn btn-warning"><i class="fas fa-info-circle mr-2"></i>Update required</button>
+  </div>
+
   <h6 class="bg-light text-dark p-2 mt-3">Display Information</h6>
+  
   <div class="row">
     <div class="col-md-6">
         <div class="table-responsive">
@@ -110,11 +120,11 @@
           <table class="table table-hover">
                 <tr>
                   <td class="font-weight-bold">Regular Price</td>
-                  <td class="font-weight-normal"> {{(product.regular_price | currency:'EUR') || '-' }} </td>
+                  <td class="font-weight-normal"> {{(product.regular_price | currency:product.currency) || '-' }} </td>
                 </tr>
                 <tr>
                   <td class="font-weight-bold">Sale Price</td>
-                  <td class="font-weight-normal"> {{(product.sale_price | currency:'EUR') || '-' }} </td>
+                  <td class="font-weight-normal"> {{(product.sale_price | currency:product.currency) || '-' }} </td>
                 </tr>
           </table>
         </div>
