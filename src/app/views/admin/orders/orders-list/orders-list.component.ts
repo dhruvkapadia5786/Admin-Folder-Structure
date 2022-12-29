@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import {orderHelper} from 'src/app/services/orderHelper.service';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-orders-list',
@@ -12,7 +13,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./orders-list.component.scss']
 })
 export class OrdersListComponent implements OnInit {
-
+  @BlockUI('datatable') blockDataTable!: NgBlockUI;
   userId:any;
   routerUrl:any;
   api_url:string = environment.api_url;
@@ -94,23 +95,23 @@ export class OrdersListComponent implements OnInit {
     let activeRoute:any = this.route;
     this.userId = activeRoute.parent.snapshot.paramMap.get('id');
     this.routerUrl = this.router.url;
-    console.log(' this.routerUrl=', this.routerUrl);
    
     if(activeRoute){
       this.routerSubscription = activeRoute.parent.parent.params.subscribe((params:any) => {
           this.userId = params['id'];
-          console.log('this.userId',this.userId)
           if(this.routerUrl.includes('dealers')){
             this.orders_api_url = this.routerUrl.includes('orders') ? `api/admin/dealers/list-dealer-orders/${this.userId}`:`api/admin/orders/list?user_id=${this.userId}&`;
           }else if(this.routerUrl.includes('sellers')){
             this.orders_api_url = this.routerUrl.includes('orders') ? `api/admin/sellers/list-seller-orders/${this.userId}`:`api/admin/orders/list?user_id=${this.userId}&`;
-          }else {
-             this.orders_api_url = 'api/admin/orders/list?';
           }
-        
+          else if(this.routerUrl.includes('customers')){
+            this.orders_api_url = `api/admin/orders/list?user_id=${this.userId}&`;
+          }
+          else {
+            this.orders_api_url = 'api/admin/orders/list?';
+          }
       });
     }
-
   
     this.orders_config = {
 			itemsPerPage:this.orders_limit,
@@ -148,8 +149,10 @@ export class OrdersListComponent implements OnInit {
  }
 
   getOrderData(page:number=1,limit:number=10,sortBy:string='created_at',sortOrder:any=-1,search:string='',status:string){
+    this.blockDataTable.start();
     this._http.post<any>(this.orders_api_url+`page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}&status=${status}`,{}).subscribe((resp) => {
-        this.orders_collection.data = resp.data;
+      this.blockDataTable.stop();
+      this.orders_collection.data = resp.data;
         this.orders_collection.count= resp.total;
         this.orders_config.itemsPerPage =  resp.perPage;
         this.orders_config.totalItems = resp.total;
@@ -158,9 +161,9 @@ export class OrdersListComponent implements OnInit {
         window.scrollTo({
           top: 0,
             behavior: 'smooth'
-        })
+        });
     },err=>{
-
+      this.blockDataTable.stop();
     });
   }
 

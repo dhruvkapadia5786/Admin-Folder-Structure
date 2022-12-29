@@ -19,12 +19,12 @@ export class RefundDrugModalComponent implements OnInit {
     private _refundDrugModalService: RefundDrugModalService
   ) {
     this.refundOrderForm = new FormGroup({
-      'selected_drug_ids':new FormControl([], [Validators.required]),
+      'selected_product_ids':new FormControl([], [Validators.required]),
       'refund_reason':new FormControl(null, [Validators.required]),
     });
   }
 
-  get selected_drug_ids(){return this.refundOrderForm.get('selected_drug_ids');}
+  get selected_product_ids(){return this.refundOrderForm.get('selected_product_ids');}
   get refund_reason(){return this.refundOrderForm.get('refund_reason');}
 
   ngOnInit(): void {
@@ -46,19 +46,19 @@ export class RefundDrugModalComponent implements OnInit {
   }
 
   checkDrugDisabledForRefund(drug:any){
-    return (drug.order_drug_status == 'REFUND_REQUESTED'  || drug.order_drug_status == 'REFUND_PROCESSED')?true:false;
+    return (drug.refund_requested_on!=null || drug.refund_processed_on != null)?true:false;
   }
 
   checkDrugSelectedForRefund(drug:any){
-    let oldValue= this.refundOrderForm.value.selected_drug_ids || [];
+    let oldValue= this.refundOrderForm.value.selected_product_ids || [];
     return  oldValue.indexOf(drug.id)!=-1?true:false;
   }
 
   checkSelectAllOptionForEvent(event_name:string) {
-    let formValue= this.refundOrderForm.value.selected_drug_ids || [];
+    let formValue= this.refundOrderForm.value.selected_product_ids || [];
     let checked =  this.all_drugs_for_refund_length>0 && formValue.length==this.all_drugs_for_refund_length;
     var refund_reason=this.refundOrderForm.get('refund_reason');
-    if(this.refundOrderForm.value.selected_drug_ids.length>0){
+    if(this.refundOrderForm.value.selected_product_ids.length>0){
       if(refund_reason)refund_reason.enable();
     }else{
       if(refund_reason)refund_reason.disable();
@@ -69,33 +69,33 @@ export class RefundDrugModalComponent implements OnInit {
   handleSelectAllDrugs(event_name:string,event:any) {
     let checked =  event.target.checked;
     if(checked){
-      this.refundOrderForm.patchValue({selected_drug_ids:[]});
-      let oldValue= this.refundOrderForm.value.selected_drug_ids;
+      this.refundOrderForm.patchValue({selected_product_ids:[]});
+      let oldValue= this.refundOrderForm.value.selected_product_ids;
       for(let drug of this.order.products){
           let is_disabled= this.checkDrugDisabledForRefund(drug);
           if(!is_disabled){
             oldValue.push(drug.id);
-            this.refundOrderForm.patchValue({selected_drug_ids:oldValue});
+            this.refundOrderForm.patchValue({selected_product_ids:oldValue});
           }
       }
     }else{
-      this.refundOrderForm.patchValue({selected_drug_ids:[]});
+      this.refundOrderForm.patchValue({selected_product_ids:[]});
     }
   }
 
   selectDrug(drug:any,event:any){
-    let oldValue= this.refundOrderForm.value.selected_drug_ids || [];
+    let oldValue= this.refundOrderForm.value.selected_product_ids || [];
 
      if(event.target.checked){
       if(oldValue && oldValue.indexOf(drug.id)==-1){
         oldValue.push(drug.id);
-        this.refundOrderForm.patchValue({selected_drug_ids:oldValue});
+        this.refundOrderForm.patchValue({selected_product_ids:oldValue});
       }
      }else{
        if(oldValue && oldValue.indexOf(drug.id)!=-1){
-        let indexFound = this.refundOrderForm.value.selected_drug_ids.indexOf(drug.id);
+        let indexFound = this.refundOrderForm.value.selected_product_ids.indexOf(drug.id);
          oldValue.splice(indexFound, 1);
-         this.refundOrderForm.patchValue({selected_drug_ids:oldValue});
+         this.refundOrderForm.patchValue({selected_product_ids:oldValue});
        }
      }
      this.checkSelectAllOptionForEvent('REFUND');

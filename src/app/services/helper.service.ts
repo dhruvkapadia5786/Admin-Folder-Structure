@@ -26,8 +26,14 @@ export class Helper {
         switch (currency) {
             case 'EUR':
                 return Number(data).toLocaleString('en-US', { style: 'currency', currency: 'EUR' })
+            case 'INR':
+                return Number(data).toLocaleString('en-US', { style: 'currency', currency: 'INR' })
+            case 'USD':
+                return Number(data).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+            case 'GBP':
+                return Number(data).toLocaleString('en-US', { style: 'currency', currency: 'GBP' })       
             default:
-                return "";
+                return Number(data).toLocaleString('en-US', { style: 'currency', currency: currency })       
         }
     }
 

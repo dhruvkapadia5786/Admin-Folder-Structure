@@ -9,6 +9,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { PlansAddEditModalComponent } from '../plans-add-edit-modal/plans-add-edit-modal.component';
 import {  PlansAddEditModalService } from '../plans-add-edit-modal/plans-add-edit-modal.service';
 import { Router } from '@angular/router';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-plans-list',
@@ -30,6 +31,7 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
     private _renderer:Renderer2,
     private _http: HttpClient,
     private modalService: BsModalService,
+    private _helper:Helper,
     private _hcAddEditModalService:  PlansAddEditModalService
   ) {
      this.getCountries();
@@ -98,6 +100,7 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getDTOptions() {
+    let that = this;
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -149,7 +152,7 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'charge',
           title: 'Price',
           render: function (data: any, type: any, full: any) {
-            return `${full.charge} ${full.currency}`
+            return that._helper.getInINRFormat(full.currency,full.charge)
           }
         },
         {

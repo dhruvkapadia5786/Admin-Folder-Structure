@@ -31,7 +31,7 @@ export class LoginHistoryDevicesComponent implements OnInit {
   }
 
   getCustomerDevices() {
-    const url = 'api/auth/device_history/' + this.customerId;
+    const url = 'api/admin/users/device_history/' + this.customerId;
     this.http.get(url).subscribe((devices: any) => {
       this.deviceList = devices
     }, (error: any) => {
@@ -40,7 +40,7 @@ export class LoginHistoryDevicesComponent implements OnInit {
   }
 
   getCustomerLoginHistory(){
-    const url = 'api/auth/login_history/' + this.customerId;
+    const url = 'api/admin/users/login_history/' + this.customerId;
     this.http.get(url).subscribe((history: any) => {
       this.loginHistory = history
     }, (error: any) => {

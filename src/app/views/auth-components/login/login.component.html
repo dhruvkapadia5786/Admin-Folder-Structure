@@ -3,22 +3,27 @@
     <div class="row justify-content-center">
           <div class="col-lg-5 col-md-7">
 
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="error">
-                    Oh Snap! We have encountered some problem at our end. Please try again in some time
-                  </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="error">
+                Oh Snap! We have encountered some problem at our end. Please try again in some time
+              </div>
 
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="isNotValidCredentials">
-                      Email and password you entered did not match our records. Please double-check and try again
-                  </div>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="isNotValidCredentials">
+                  Email and password you entered did not match our records. Please double-check and try again
+              </div>
 
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="isNotActive">
-                      Your account has been disabled by system admin. Please contact support@golfed.com for further details
-                  </div>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="noAccount">
+                    No such account exist . Please try with other email address .
+              </div>
+
+              <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="isNotActive">
+                  Your account has been disabled by system admin. Please contact support@teledaddy.com for further details
+              </div>
+
 
 
               <div class="card shadow border-0 mt-5">
                     <div class="card-header bg-dark-blue text-center">
-                        <h4 class="text-white">Admin Portal</h4>
+                        <h4 class="text-white">Golfed Admin Portal</h4>
                     </div>
                     <div class="card-body px-lg-5">
                         <div class="text-center text-muted mb-4">

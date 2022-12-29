@@ -9,7 +9,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'info', pathMatch: 'full' },
       { path: 'info', loadChildren:()=>import('./customer-info/customer-info.module').then(IC=>IC.CustomerInfoModule) },
-      { path: 'login-history', loadChildren:()=>import('./login-history-devices/login-history-devices.module').then(loginHistory=>loginHistory.LoginHistoryDevicesModule) }
+      { path: 'login-history', loadChildren:()=>import('./login-history-devices/login-history-devices.module').then(loginHistory=>loginHistory.LoginHistoryDevicesModule) },
+      { path: 'orders', loadChildren:()=>import('../../orders/orders-list/orders-list.module').then(VD=>VD.OrdersListModule) }
     ]
   }
 ];
