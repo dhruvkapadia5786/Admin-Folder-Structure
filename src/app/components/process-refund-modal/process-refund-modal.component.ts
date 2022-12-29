@@ -18,15 +18,13 @@ export class ProcessRefundModalComponent implements OnInit {
   full_refund_in_wallet:boolean=false;
   refundObject:any={
     order_id:null,
-    selected_drug_id:[],
-    refund_kit:null,
-    paymentgateway_charge_already_refunded:null,
+    selected_product_id:[],
+    stripe_charge_already_refunded:null,
     amount_to_precess_refund_total:0,
-    amount_to_process_refund_in_paymentgateway:0,
+    amount_to_process_refund_in_stripe:0,
     amount_to_process_refund_in_wallet:0,
     amount_to_process_refund_in_discount:0,
-    amount_to_process_refund_in_shipping_charge:0,
-    amount_to_process_refund_in_packing_charge:0
+    amount_to_process_refund_in_shipping_charge:0
   };
   defaultCalculatedRefundObject:any;
 
@@ -53,28 +51,28 @@ export class ProcessRefundModalComponent implements OnInit {
   }
 
   recalculateRefund(event:any){
-    let default_paymentgateway_amount = this.defaultCalculatedRefundObject.amount_to_process_refund_in_paymentgateway;
+    let default_stripe_amount = this.defaultCalculatedRefundObject.amount_to_process_refund_in_stripe;
     let default_wallet_amount = this.defaultCalculatedRefundObject.amount_to_process_refund_in_wallet;
      if(event.checked){
-      this.refundObject.amount_to_process_refund_in_paymentgateway = 0;
-      this.refundObject.amount_to_process_refund_in_wallet = default_wallet_amount+ default_paymentgateway_amount;
+      this.refundObject.amount_to_process_refund_in_stripe = 0;
+      this.refundObject.amount_to_process_refund_in_wallet = default_wallet_amount+ default_stripe_amount;
     }else{
-      this.refundObject.amount_to_process_refund_in_paymentgateway = default_paymentgateway_amount;
+      this.refundObject.amount_to_process_refund_in_stripe = default_stripe_amount;
       this.refundObject.amount_to_process_refund_in_wallet = default_wallet_amount;
     }
     this._changeDetectorRef.detectChanges();
   }
 
   refundOrder(orderId: any) {
-    let url:string =`api/orders/refund_process/${orderId}`;
+    let url:string =`api/admin/orders/refund_process/${orderId}`;
     this.refund_processing=true;
     this.http.post(url,this.refundObject).subscribe((res: any) => {
         this.refund_processing=false;
         this.selectedOrder.result = res;
         if (res.refunded) {
-          let paymentgatewayRefund= res.paymentgatewayRefund ? res.paymentgatewayRefund.id:'N/A';
+          let stripeRefund= res.stripeRefund ? res.stripeRefund.id:'N/A';
           let walletRefund= res.walletRefund ? res.walletRefund.id :'N/A';
-          this._toastr.showSuccess(`Order Refunded Successfully. Refunded To Payment Gateway : ${paymentgatewayRefund} , Refunded To Wallet : ${walletRefund}`);
+          this._toastr.showSuccess(`Order Refunded Successfully. Refunded To Payment Gateway : ${stripeRefund} , Refunded To Wallet : ${walletRefund}`);
           this.onRefundProcessedCompleted.emit(true);
         } else {
           this._toastr.showWarning('Unable to refund order. Please Check Payment Method!');

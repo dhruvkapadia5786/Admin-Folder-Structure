@@ -2,7 +2,7 @@
     <ng-container *ngIf="customerDetails; else noCustomerDetails">
         <div class="row">
             <div class="col-md-3">
-                <label>PaymentGateway Customer</label>
+                <label>Stripe Customer</label>
                 <h5>{{customerDetails.stripe_user_id ? customerDetails.stripe_user_id:'Not Found'}}</h5>
                 <a *ngIf="customerDetails.stripe_user_id" class="btn btn-info" target="_blank"
                     [href]="'https://dashboard.stripe.com/customers/'+customerDetails.stripe_user_id">View Details</a>

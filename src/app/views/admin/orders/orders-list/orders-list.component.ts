@@ -38,49 +38,49 @@ export class OrdersListComponent implements OnInit {
     {
       id:3,
       sort_by:'order_number',
-      sort_order:-1,
+      sort_order:'DESC',
       title:'Sort By Order No descending'
     },
     {
       id:4,
       sort_by:'order_number',
-      sort_order:1,
+      sort_order:'ASC',
       title:'Sort By Order No ascending'
     },
     {
       id:5,
       sort_by:'total_amount',
-      sort_order:-1,
+      sort_order:'DESC',
       title:'Sort By Total descending'
     },
     {
       id:6,
       sort_by:'total_amount',
-      sort_order:1,
+      sort_order:'ASC',
       title:'Sort By Total ascending'
     },
     {
       id:7,
       sort_by:'order_created_datetime',
-      sort_order:-1,
+      sort_order:'DESC',
       title:'Sort By OrderDate descending'
     },
     {
       id:8,
       sort_by:'order_created_datetime',
-      sort_order:1,
+      sort_order:'ASC',
       title:'Sort By OrderDate ascending'
     },
     {
       id:9,
       sort_by:'order_completed_datetime',
-      sort_order:-1,
+      sort_order:'DESC',
       title:'Sort By OrderCompleted Date descending'
     },
     {
       id:10,
       sort_by:'order_completed_datetime',
-      sort_order:1,
+      sort_order:'ASC',
       title:'Sort By  OrderCompleted Date ascending'
     }
   ]
@@ -171,7 +171,7 @@ export class OrdersListComponent implements OnInit {
     this.router.navigate(['admin', 'orders', 'view', orderId]);
   }
 
-  goToPatientDetails(customeId: any): any {
+  goToUserDetails(customeId: any): any {
     this.router.navigate(['admin', 'customers', 'view', customeId, 'orders']);
   }
 

@@ -20,7 +20,7 @@ export class User extends BaseModel {
   age?:number;
   reset_token?:string|null;
   reset_token_expires?:any;
-  paymentgateway_customer_id?:string|null;
+  stripe_user_id?:string|null;
   default_address?:Address;
   addresses:Address[]=[]
 

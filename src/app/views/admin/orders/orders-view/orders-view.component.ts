@@ -120,7 +120,7 @@ export class OrdersViewComponent implements OnInit,OnDestroy {
       });
   }
 
-  gotoPatientDetails(){
+  goToUserDetails(){
     this.router.navigate(['admin','customers','view',this.orderDetails.user.id,'orders']);
   }
 

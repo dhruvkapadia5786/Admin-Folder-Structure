@@ -9,7 +9,7 @@
     </div>
     <div class="modal-body">
             <div class="alert alert-danger font-weight-bold" *ngIf="selectedOrder.charge_details && selectedOrder.charge_details.status=='refunded'">
-                This PaymentGateway Charge <a target="_blank" href="https://dashboard.razorpay.com/app/payments/{{selectedOrder.charge_details.id}}">{{ selectedOrder.charge_details.id }}</a> is Already Refunded , processing refund will just update order status
+                This Stripe Charge <a target="_blank" href="https://dashboard.stripe.com/{{selectedOrder.charge_details.id}}">{{ selectedOrder.charge_details.id }}</a> is Already Refunded , processing refund will just update order status
             </div>
             <h5>Order Summary</h5>
             <table class="table table-sm">
@@ -17,22 +17,20 @@
                 <tr>
                   <th>Order Subtotal</th>
                   <th>Shipping Charge</th>
-                  <th>Packing Charge</th>
                   <th>Discount</th>
                   <th>Total</th>
-                  <th>PaymentGateway</th>
+                  <th>Stripe</th>
                   <th>Wallet</th>
                 </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{{(selectedOrder.subtotal_amount?selectedOrder.subtotal_amount:0) |currency:'EUR'}}</td>
-                    <td>{{(selectedOrder.shipping_charge?selectedOrder.shipping_charge:0) |currency:'EUR'}}</td>
-                    <td>{{(selectedOrder.packing_charge?selectedOrder.packing_charge:0) |currency:'EUR'}}</td>
-                    <td>{{(selectedOrder.coupon_discount+selectedOrder.referral_discount)|currency:'EUR'}}</td>
-                    <td  class="alert-success">{{selectedOrder.total_amount|currency:'EUR'}}</td>
-                    <td  class="alert-success">{{selectedOrder.charged_from_paymentgateway|currency:'EUR'}}</td>
-                    <td  class="alert-success">{{selectedOrder.charged_from_wallet|currency:'EUR'}}</td>
+                    <td>{{(selectedOrder.subtotal_amount?selectedOrder.subtotal_amount:0) |currency:selectedOrder.currency}}</td>
+                    <td>{{(selectedOrder.shipping_charge?selectedOrder.shipping_charge:0) |currency:selectedOrder.currency}}</td>
+                    <td>{{(selectedOrder.coupon_discount+selectedOrder.referral_discount)|currency:selectedOrder.currency}}</td>
+                    <td  class="alert-success">{{selectedOrder.total_amount|currency:selectedOrder.currency}}</td>
+                    <td  class="alert-success">{{selectedOrder.charged_from_stripe|currency:selectedOrder.currency}}</td>
+                    <td  class="alert-success">{{selectedOrder.charged_from_wallet|currency:selectedOrder.currency}}</td>
                   </tr>
                 </tbody>
             </table>
@@ -43,21 +41,19 @@
                 <thead class="thead-light">
                 <tr>
                   <th>Refunded Shipping Charge</th>
-                  <th>Refunded Packing Charge</th>
                   <th>Refunded Discount</th>
                   <th>Refunded Total</th>
-                  <th>Refunded in PaymentGateway</th>
-                  <th>Refunded in Wallet</th>
+                  <th>Refunded in Stripe</th>
+                  <!--<th>Refunded in Wallet</th>-->
                 </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{{(selectedOrder.refunded_shipping_charge ? selectedOrder.refunded_shipping_charge:0 )|currency:'EUR'}}</td>
-                    <td>{{(selectedOrder.refunded_packing_charge ? selectedOrder.refunded_packing_charge:0 )|currency:'EUR'}}</td>
-                    <td>{{(selectedOrder.refunded_discount ? selectedOrder.refunded_discount:0 )|currency:'EUR'}}</td>
-                    <td>{{(selectedOrder.refunded_total ? selectedOrder.refunded_total:0 )|currency:'EUR'}}</td>
-                    <td>{{(selectedOrder.refunded_in_paymentgateway ? selectedOrder.refunded_in_paymentgateway:0 )|currency:'EUR'}}</td>
-                    <td>{{(selectedOrder.refunded_in_wallet  ? selectedOrder.refunded_in_wallet:0 )|currency:'EUR'}}</td>
+                    <td>{{(selectedOrder.refunded_shipping_charge ? selectedOrder.refunded_shipping_charge:0 )|currency:selectedOrder.currency}}</td>
+                    <td>{{(selectedOrder.refunded_discount ? selectedOrder.refunded_discount:0 )|currency:selectedOrder.currency}}</td>
+                    <td>{{(selectedOrder.refunded_total ? selectedOrder.refunded_total:0 )|currency:selectedOrder.currency}}</td>
+                    <td>{{(selectedOrder.refunded_in_stripe ? selectedOrder.refunded_in_stripe:0 )|currency:selectedOrder.currency}}</td>
+                    <!--<td>{{(selectedOrder.refunded_in_wallet  ? selectedOrder.refunded_in_wallet:0 )|currency:selectedOrder.currency}}</td>-->
                   </tr>
                 </tbody>
             </table>
@@ -67,37 +63,35 @@
                 <thead class="thead-light">
                 <tr>
                   <th>Refund Shipping Charge</th>
-                  <th>Refund Packing Charge</th>
                   <th>Refund Discount</th>
                   <th>Refund Total</th>
-                  <th>Refund To PaymentGateway</th>
-                  <th>Refund To Wallet</th>
+                  <th>Refund To Stripe</th>
+                  <!--<th>Refund To Wallet</th>-->
                 </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_shipping_charge|currency:'EUR'}}</td>
-                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_packing_charge|currency:'EUR'}}</td>
-                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_discount|currency:'EUR'}}</td>
-                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_precess_refund_total|currency:'EUR'}}</td>
-                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_paymentgateway|currency:'EUR'}}</td>
-                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_wallet|currency:'EUR'}}</td>
+                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_shipping_charge|currency:selectedOrder.currency}}</td>
+                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_discount|currency:selectedOrder.currency}}</td>
+                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_precess_refund_total|currency:selectedOrder.currency}}</td>
+                    <td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_stripe|currency:selectedOrder.currency}}</td>
+                    <!--<td class="alert-primary font-weight-bold">{{refundObject.amount_to_process_refund_in_wallet|currency:selectedOrder.currency}}</td>-->
                   </tr>
                 </tbody>
             </table>
-            <div class="form-group">
+            <!--<div class="form-group">
                     <mat-checkbox color="primary"
                     [(ngModel)]="full_refund_in_wallet"
                     (change)="recalculateRefund($event)"
                     [disabled]="selectedOrder.charge_details && selectedOrder.charge_details.refund_status=='full' ?true:false"
                     >Process all amount to be refunded in Wallet ?</mat-checkbox>
-            </div>
+            </div>-->
             <div class="text-center" *ngIf="refund_processing">
                 Processing ...
             </div>
             <div class="alert alert-success font-weight-bold" role="alert" *ngIf="selectedOrder.result && selectedOrder.result.refunded">
                Order Refunded Successfully.
-               <p class="mb-0">Refunded To PaymentGateway : {{ selectedOrder.result.paymentgatewayRefund ? selectedOrder.result.paymentgatewayRefund.id:'N/A' }} </p>
+               <p class="mb-0">Refunded To Stripe : {{ selectedOrder.result.stripeRefund ? selectedOrder.result.stripeRefund.id:'N/A' }} </p>
                <p> Refunded To Wallet : {{ selectedOrder.result.walletRefund ? selectedOrder.result.walletRefund.id :'N/A' }} </p>
             </div>
             <div class="alert alert-danger" role="alert" *ngIf="selectedOrder.result && !selectedOrder.result.refunded">

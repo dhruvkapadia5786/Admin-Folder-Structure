@@ -16,19 +16,19 @@
                         </p>
 
                         <h5 class="mb-3">Buyer Details</h5>
-                        <h6 class="mb-2 text-primary cursor-pointer" (click)="gotoPatientDetails()">
+                        <h6 class="mb-2 text-primary cursor-pointer" (click)="goToUserDetails()">
                             {{orderDetails.user.first_name}} {{orderDetails.user.last_name}}</h6>
                         <p class="mb-0"><strong>Email: </strong>{{orderDetails.user.email}}</p>
                         <p class="mb-0"><strong>Phone: </strong>{{orderDetails.user.cell_phone_number }}</p>
 
 
                         <div class="mt-3">
-                            <button type="button" class="btn btn-sm btn-block btn-success mb-2"
+                            <!--<button type="button" class="btn btn-sm btn-block btn-success mb-2"
                                 (click)="downloadReceipt('billing_statement')"><i
                                     class="mr-2 fas fa-download"></i>Billing Statement</button>
                             <button type="button" *ngIf="anyDrugRefunded" class="btn btn-sm btn-block btn-primary mb-2"
                                 (click)="downloadReceipt('refund_receipt')"><i class="mr-2 fas fa-download"></i>Refund
-                                Receipt</button>
+                                Receipt</button>-->
                             <button type="button" class="btn btn-sm btn-block btn-danger mb-2"
                                 (click)="openRefundModal()"
                                 *ngIf="!(orderDetails.system_status == 'REFUND_PROCESSED' || orderDetails.system_status == 'REFUND_REQUESTED')"><i

@@ -61,7 +61,7 @@
                                             <span [innerHtml]="_orderHelper.getSystemStatus(order.system_status)"></span>
                                         </p>
                                     </div>
-                                    <div class="magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start" (click)="goToPatientDetails(order.user_id)"><p class="mb-0"><small class="mb-0 cursor-pointer">CUSTOMER NAME</small></p><p class="cursor-pointer font-weight-bold mb-0">{{order.customer_name}}</p></div>
+                                    <div class="magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start" (click)="goToUserDetails(order.user_id)"><p class="mb-0"><small class="mb-0 cursor-pointer">CUSTOMER NAME</small></p><p class="cursor-pointer font-weight-bold mb-0">{{order.customer_name}}</p></div>
                                     <div class="text-left mb-lg-0 md-md-0 mb-sm-2 mb-2">
                                         <p class="mb-0"><small class="mb-0">BILL TO</small></p>
                                         <p class="font-weight-bold mb-0">{{order.contact_name}}</p>
