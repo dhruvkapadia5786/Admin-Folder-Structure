@@ -1,15 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-seller-info',
   templateUrl: './seller-info.component.html',
   styleUrls: ['./seller-info.component.scss']
 })
-export class SellerInfoComponent implements OnInit {
+export class SellerInfoComponent implements OnInit,OnDestroy {
 
-  
+  @BlockUI('seller') blockSellerUI!: NgBlockUI;
+ 
   sellerId:any;
   sellerDetails:any;
   routerSubscription:any;
@@ -31,18 +33,22 @@ export class SellerInfoComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(){
+    if(this.routerSubscription){
+      this.routerSubscription.unsubscribe();
+     }
+    if(this.blockSellerUI){this.blockSellerUI.unsubscribe();}
+  }
+
   getDealerDetails(){
+    this.blockSellerUI.start();
     const url = 'api/admin/sellers/view/' + this.sellerId;
     this.http.get(url).subscribe(async (data: any) => {
+      this.blockSellerUI.stop();
       this.sellerDetails = data;
     }, (err:any) => {
-
+      this.blockSellerUI.stop();
     });
   }
 
-  ngOnDestroy(){
-     if(this.routerSubscription){
-      this.routerSubscription.unsubscribe();
-     }
-  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Toastr } from '../../../../services/toastr.service';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './refund-requested-orders.component.html',
   styleUrls: ['./refund-requested-orders.component.scss']
 })
-export class RefundRequestedOrdersComponent implements OnInit {
+export class RefundRequestedOrdersComponent implements OnInit,OnDestroy {
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
   api_url:string = environment.api_url;
 
@@ -104,6 +104,10 @@ export class RefundRequestedOrdersComponent implements OnInit {
 
   ngOnInit(){
     this.getRefundRequestedOrders(this.orders_config.currentPage,this.orders_config.itemsPerPage,this.orders_sort_by,this.orders_sort_order,this.orders_search);
+  }
+
+  ngOnDestroy(){
+    if(this.blockDataTable){this.blockDataTable.unsubscribe();}
   }
 
 
@@ -207,7 +211,9 @@ export class RefundRequestedOrdersComponent implements OnInit {
  }
 
  getRefundRequestedOrders(page:number,limit:number,sortBy:string='last_refund_requested_on',sortOrder:any=-1,search:string=''){
-   this.http.post<any>(`api/admin/orders/list?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}&status=REFUND_REQUESTED`,{}).subscribe((resp) => {
+  this.blockDataTable.start(); 
+  this.http.post<any>(`api/admin/orders/list?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}&status=REFUND_REQUESTED`,{}).subscribe((resp) => {
+      this.blockDataTable.stop(); 
        this.orders_collection.data = resp.data;
        this.orders_collection.count= resp.total;
        this.orders_config.itemsPerPage =  resp.perPage;
@@ -215,7 +221,7 @@ export class RefundRequestedOrdersComponent implements OnInit {
        this.orders_config.currentPage  =  resp.currentPage;
        this.order_hasMorePages = resp.hasMorePages;
    },err=>{
-
+    this.blockDataTable.stop(); 
    });
  }
 

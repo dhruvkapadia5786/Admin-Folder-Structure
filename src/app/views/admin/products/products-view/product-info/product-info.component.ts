@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Toastr } from 'src/app/services/toastr.service';
 import { environment } from 'src/environments/environment';
 import { Helper } from 'src/app/services/helper.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-product-info',
@@ -11,6 +12,7 @@ import { Helper } from 'src/app/services/helper.service';
   styleUrls: ['./product-info.component.scss']
 })
 export class ProductInfoComponent implements OnInit {
+  @BlockUI('product') blockProductUI!: NgBlockUI;
   environmentUrl: any = environment
   productId: any;
   product: any;
@@ -43,11 +45,13 @@ export class ProductInfoComponent implements OnInit {
   }
 
   getProductDetails(){
+    this.blockProductUI.start();
     const url = 'api/admin/products/view/' + this.productId;
     this.http.get(url).subscribe((res: any) => {
+        this.blockProductUI.stop();
         this.product = res;
     },(err:any) => {
-
+        this.blockProductUI.stop();
     });
   }
 

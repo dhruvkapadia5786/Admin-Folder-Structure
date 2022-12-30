@@ -24,7 +24,7 @@
             <tbody>
                 <tr *ngFor="let log of orderLogs; let idx = index">
                     <td class="font-weight-normal">{{log.event}}</td>
-                    <td class="font-weight-normal">{{log.user_id.first_name+' '+log.user_id.last_name}}</td>
+                    <td class="font-weight-normal">{{log.first_name+' '+log.last_name}}</td>
                     <td class="font-weight-normal">
                         {{log.data}}
                         <button *ngIf="log.request_input && log.response_output" (click)="showLogDetailsModal(log)" class="btn btn-primary btn-sm float-right">Details</button>

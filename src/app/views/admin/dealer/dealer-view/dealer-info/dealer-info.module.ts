@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { DealerInfoRoutingModule } from './dealer-info-routing.module';
 import { DealerInfoComponent } from './dealer-info.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -10,7 +11,7 @@ import { DealerInfoComponent } from './dealer-info.component';
     DealerInfoComponent
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     DealerInfoRoutingModule
   ]
 })

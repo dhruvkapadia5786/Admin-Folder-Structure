@@ -1,4 +1,4 @@
-<div class="p-3">
+<div class="p-3" *blockUI="'customer'">
     <ng-container *ngIf="customerDetails; else noCustomerDetails">
         <div class="row">
             <div class="col-md-3">
@@ -43,11 +43,17 @@
                         <tr><td>Display name</td><td>{{ customerDetails.display_name }}</td></tr>
                         <tr><td>Phone Number</td><td>{{  customerDetails.cell_phone_number | mask: '(000) 000-0000' || '-' }}</td></tr>
                         <tr><td>Gender</td><td>{{ customerDetails.gender }}</td></tr>
-                        <tr><td>Date Of Birth</td><td>{{customerDetails.date_of_birth || '-' }}</td></tr>
+                        <tr><td>Date Of Birth</td><td>{{customerDetails.date_of_birth | date:'dd-MM-yyyy'}}</td></tr>
                         <tr><td>Role</td><td>{{ customerDetails.role }}</td></tr>
-                        <tr><td>Registration Date</td><td>{{helper.getFormattedDate(customerDetails.created_at)}}</td></tr>
-                        <tr><td>Last Login At</td><td>{{helper.getFormattedDate(customerDetails.last_login)}}</td></tr>
-                        
+                        <tr><td>Registration Date</td><td>{{ customerDetails.created_at | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
+                        <tr><td>Last Login At</td><td>{{ customerDetails.last_login | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
+                        <tr><td>Language</td><td>{{ customerDetails.preferred_language }}</td></tr>
+                        <tr><td>Currency</td><td>{{ customerDetails.preferred_currency }}</td></tr>
+                        <tr><td>Platform</td><td>{{ customerDetails.platform }}</td></tr>
+                        <tr *ngIf="customerDetails.app_version"><td>App Version</td><td>{{ customerDetails.app_version }}</td></tr>
+                        <tr><td>Email Verified</td><td><p *ngIf="customerDetails.is_verified" class="badge badge-pill badge-success">Verified</p></td></tr>
+                        <tr *ngIf="customerDetails.is_verified"><td>Email Verified at</td><td>{{ customerDetails.email_verified_at | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
+
                     </tbody>
                 </table>    
             </div>
@@ -120,30 +126,19 @@
             <table class="table table-sm">
                 <thead class="thead-light">
                     <tr>
-                        <th class="font-weight-bold">Full Face Image
+                        <th class="font-weight-bold">Profile Image
                             <div class="float-right">
                                 <button class="btn btn-sm btn-outline-dark m-0"
                                     (click)="openImageCropperModal('PROFILE')" type="button">Edit</button>
                             </div>
-                        </th>
-                        <th class="font-weight-bold">License Image
-                            <div class="float-right">
-                                <button class="btn btn-sm btn-outline-dark m-0"
-                                    (click)="openImageCropperModal('LICENSE')" type="button">Edit</button>
-                            </div>
-                        </th>
+                        </th> 
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>
-                            <app-image-preview [imgPath]="customerDetails.profile_picture" height="250" width="350"
-                                caption="Full Face Image"></app-image-preview>
-                        </td>
-                        <td>
-                            <app-image-preview [imgPath]="customerDetails.license_image" height="250" width="350"
-                                caption="License Image"></app-image-preview>
-                        </td>
+                            <app-image-preview [imgPath]="customerDetails.profile_picture" height="250" width="350" caption="Profile Image"></app-image-preview>
+                        </td> 
                     </tr>
                 </tbody>
             </table>

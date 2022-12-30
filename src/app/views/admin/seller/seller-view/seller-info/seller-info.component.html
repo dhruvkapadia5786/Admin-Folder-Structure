@@ -1,4 +1,4 @@
-<div class="p-3">
+<div class="p-3"   *blockUI="'seller'">
     <ng-container *ngIf="sellerDetails; else noSellerDetails">
         <div class="row">
           
@@ -17,6 +17,21 @@
                        <tr><td>Phone Number</td><td>{{ sellerDetails.personal_info.cell_phone_number }}</td></tr>
                        <tr><td>Gender</td><td>{{ sellerDetails.personal_info.gender }}</td></tr>
                        <tr><td>Role</td><td>{{ sellerDetails.personal_info.role }}</td></tr>
+                       <tr><td>Language</td><td>{{ sellerDetails.personal_info.preferred_language }}</td></tr>
+                       <tr><td>Currency</td><td>{{ sellerDetails.personal_info.preferred_currency }}</td></tr>
+                       <tr><td>Platform</td><td>{{ sellerDetails.personal_info.platform }}</td></tr>
+                       <tr *ngIf="sellerDetails.personal_info.app_version"><td>App Version</td><td>{{ sellerDetails.personal_info.app_version }}</td></tr>
+                       <tr><td>Email Verified</td><td><p *ngIf="sellerDetails.personal_info.is_verified" class="badge badge-pill badge-success">Verified</p></td></tr>
+                       <tr *ngIf="sellerDetails.personal_info.is_verified"><td>Email Verified at</td><td>{{ sellerDetails.personal_info.email_verified_at | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
+
+                       <tr>
+                        <td>Stripe Customer</td>
+                        <td>
+                            <h5>{{sellerDetails.personal_info.stripe_user_id ? sellerDetails.personal_info.stripe_user_id:'Not Found'}}</h5>
+                            <a *ngIf="sellerDetails.personal_info.stripe_user_id" class="btn btn-sm btn-info" target="_blank" [href]="'https://dashboard.stripe.com/customers/'+sellerDetails.personal_info.stripe_user_id">View Details</a>
+                        </td>
+                        </tr>
+
                    </tbody>
                </table>
 

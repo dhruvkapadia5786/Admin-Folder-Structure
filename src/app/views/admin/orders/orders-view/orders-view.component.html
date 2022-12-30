@@ -1,23 +1,19 @@
-<mat-tab-group>
+<mat-tab-group   *blockUI="'order'">
     <mat-tab label="Info">
         <div class="container-fluid details">
             <ng-container *ngIf="orderDetails; else noOrderDetails">
                 <div class="row">
                     <div class="col-md-4">
                         <h5 class="mb-3">Order : #{{orderDetails.order_number}}</h5>
-                        <p class="mb-1 mr-2">Created Date :{{ orderDetails.order_place_datetime |date:'dd-MM-yyyy
-                            hh:mm:ss a'}}</p>
-                        <p class="mb-1 mr-2">Completed Date :{{ orderDetails.order_completed_datetime|date:'dd-MM-yyyy
-                            hh:mm:ss a'}}</p>
+                        <p class="mb-1 mr-2">Created Date :{{ orderDetails.order_place_datetime |date:'dd-MM-yyyy hh:mm:ss a'}}</p>
+                        <p class="mb-1 mr-2">Completed Date :{{ orderDetails.order_completed_datetime|date:'dd-MM-yyyy hh:mm:ss a'}}</p>
                         <p>
                             <span class="mr-2">System Status: </span>
-                            <span class="m-0"
-                                [innerHTML]="_orderHelper.getSystemStatus(orderDetails.system_status)"></span>
+                            <span class="m-0" [innerHTML]="_orderHelper.getSystemStatus(orderDetails.system_status)"></span>
                         </p>
 
                         <h5 class="mb-3">Buyer Details</h5>
-                        <h6 class="mb-2 text-primary cursor-pointer" (click)="goToUserDetails()">
-                            {{orderDetails.user.first_name}} {{orderDetails.user.last_name}}</h6>
+                        <h6 class="mb-2 text-primary cursor-pointer" (click)="goToUserDetails()">{{orderDetails.user.first_name}} {{orderDetails.user.last_name}}</h6>
                         <p class="mb-0"><strong>Email: </strong>{{orderDetails.user.email}}</p>
                         <p class="mb-0"><strong>Phone: </strong>{{orderDetails.user.cell_phone_number }}</p>
 
@@ -29,10 +25,7 @@
                             <button type="button" *ngIf="anyDrugRefunded" class="btn btn-sm btn-block btn-primary mb-2"
                                 (click)="downloadReceipt('refund_receipt')"><i class="mr-2 fas fa-download"></i>Refund
                                 Receipt</button>-->
-                            <button type="button" class="btn btn-sm btn-block btn-danger mb-2"
-                                (click)="openRefundModal()"
-                                *ngIf="!(orderDetails.system_status == 'REFUND_PROCESSED' || orderDetails.system_status == 'REFUND_REQUESTED')"><i
-                                    class="fas fa-sync-alt mr-2"></i>Refund Request</button>
+                            <button type="button" class="btn btn-sm btn-block btn-danger mb-2" (click)="openRefundModal()" *ngIf="!(orderDetails.system_status == 'REFUND_PROCESSED' || orderDetails.system_status == 'REFUND_REQUESTED')"><i class="fas fa-sync-alt mr-2"></i>Refund Request</button>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -383,7 +376,6 @@
 </mat-tab-group>
 <div class="form-group mt-1">
     <div class="text-center">
-        <a routerLink="/admin/orders/list" routerLinkActive="active" class="btn btn-primary"><i
-                class="fa fa-arrow-left mr-2" aria-hidden="true"></i>Back To Orders</a>
+        <a routerLink="/admin/orders/list" routerLinkActive="active" class="btn btn-primary"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>Back To Orders</a>
     </div>
 </div>

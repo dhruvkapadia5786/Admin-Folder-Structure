@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-dealer-info',
@@ -9,6 +10,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class DealerInfoComponent implements OnInit,OnDestroy {
 
+
+  @BlockUI('dealer') blockDealerUI!: NgBlockUI;
+ 
   dealerId:any;
   dealerDetails:any;
   routerSubscription:any;
@@ -30,11 +34,13 @@ export class DealerInfoComponent implements OnInit,OnDestroy {
   }
 
   getDealerDetails(){
+    this.blockDealerUI.start();
     const url = 'api/admin/dealers/view/' + this.dealerId;
     this.http.get(url).subscribe(async (data: any) => {
+      this.blockDealerUI.stop();
       this.dealerDetails = data;
     }, err => {
-
+      this.blockDealerUI.stop();
     });
   }
 
@@ -43,5 +49,6 @@ export class DealerInfoComponent implements OnInit,OnDestroy {
      if(this.routerSubscription){
       this.routerSubscription.unsubscribe();
      }
+     if(this.blockDealerUI){this.blockDealerUI.unsubscribe();}
   }
 }

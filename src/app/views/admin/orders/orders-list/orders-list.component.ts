@@ -100,9 +100,12 @@ export class OrdersListComponent implements OnInit {
       this.routerSubscription = activeRoute.parent.parent.params.subscribe((params:any) => {
           this.userId = params['id'];
           if(this.routerUrl.includes('dealers')){
-            this.orders_api_url = this.routerUrl.includes('orders') ? `api/admin/dealers/list-dealer-orders/${this.userId}`:`api/admin/orders/list?user_id=${this.userId}&`;
+            this.orders_api_url = this.routerUrl.includes('orders') ? `api/admin/dealers/list-dealer-orders/${this.userId}?`:`api/admin/orders/list?user_id=${this.userId}&`;
           }else if(this.routerUrl.includes('sellers')){
-            this.orders_api_url = this.routerUrl.includes('orders') ? `api/admin/sellers/list-seller-orders/${this.userId}`:`api/admin/orders/list?user_id=${this.userId}&`;
+            this.orders_api_url = this.routerUrl.includes('orders') ? `api/admin/sellers/list-seller-orders/${this.userId}?`:`api/admin/orders/list?user_id=${this.userId}&`;
+          }
+          else if(this.routerUrl.includes('products')){
+            this.orders_api_url = `api/admin/orders/list?product_id=${this.userId}&`;
           }
           else if(this.routerUrl.includes('customers')){
             this.orders_api_url = `api/admin/orders/list?user_id=${this.userId}&`;
@@ -127,6 +130,7 @@ export class OrdersListComponent implements OnInit {
 
  ngOnDestroy(){
    if(this.routerSubscription){this.routerSubscription.unsubscribe();}
+  if(this.blockDataTable){this.blockDataTable.unsubscribe();}
  }
 
  handleChange(eventName:string,event:any){

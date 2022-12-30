@@ -11,12 +11,6 @@ declare interface RouteInfo {
 }
 
 export const ROUTES: RouteInfo[] = [
-  { path: '/pharmacist/dashboard', title: 'Dashboard',  icon: 'fas fa-home', class: '' },
-  { path: '/pharmacist/rx', title: 'Rx - Prescription',  icon:'fas fa-file-prescription', class: '' },
-  { path: '/pharmacist/patient', title: 'Patient File',  icon:'fas fa-user-plus', class: '' },
-  { path: '/pharmacist/prescriber', title: 'Prescriber',  icon:'fas fa-user-md', class: '' },
-  { path: '/pharmacist/drug', title: 'Drug File',  icon:'fas fa-pills', class: '' },
-  { path: '/pharmacist/insurance-plan', title: 'Insurance Plan File',  icon:'fas fa-clinic-medical', class: '' }
 ];
 
 

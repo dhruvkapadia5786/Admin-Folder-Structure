@@ -1,4 +1,4 @@
-<div class="p-3">
+<div class="p-3"   *blockUI="'dealer'">
     <ng-container *ngIf="dealerDetails; else noDealerDetails">
          <div class="row">
             <div class="col-lg-6 col-md-6 col-12">
@@ -16,8 +16,8 @@
                         <tr><td>Vat number</td><td>{{ dealerDetails.dealer.vat_number }}</td></tr>
                         <tr><td>Fax number</td><td>{{ dealerDetails.dealer.fax_number }}</td></tr>
                         <tr><td>Website</td><td>{{ dealerDetails.dealer.website }}</td></tr>
-                        <tr><td>Created at</td><td>{{ dealerDetails.dealer.created_at }}</td></tr>
-                        <tr><td>Updated at</td><td>{{ dealerDetails.dealer.updated_at }}</td></tr>
+                        <tr><td>Created at</td><td>{{ dealerDetails.dealer.created_at | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
+                        <tr><td>Updated at</td><td>{{ dealerDetails.dealer.updated_at  | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
                         
                         <tr>
                             <td>Business Legal Representative</td>
@@ -93,6 +93,26 @@
                         <tr><td>Phone Number</td><td>{{ dealerDetails.personal_info.cell_phone_number }}</td></tr>
                         <tr><td>Gender</td><td>{{ dealerDetails.personal_info.gender }}</td></tr>
                         <tr><td>Role</td><td>{{ dealerDetails.personal_info.role }}</td></tr>
+                        <tr><td>Language</td><td>{{ dealerDetails.personal_info.preferred_language }}</td></tr>
+                        <tr><td>Currency</td><td>{{ dealerDetails.personal_info.preferred_currency }}</td></tr>
+                        <tr><td>Platform</td><td>{{ dealerDetails.personal_info.platform }}</td></tr>
+                        <tr *ngIf="dealerDetails.personal_info.app_version"><td>App Version</td><td>{{ dealerDetails.personal_info.app_version }}</td></tr>
+                        <tr><td>Email Verified</td><td><p *ngIf="dealerDetails.personal_info.is_verified" class="badge badge-pill badge-success">Verified</p></td></tr>
+                        <tr *ngIf="dealerDetails.personal_info.is_verified"><td>Email Verified at</td><td>{{ dealerDetails.personal_info.email_verified_at | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
+
+                        <tr><td>Subscription Activated On</td><td>{{ dealerDetails.personal_info.subscription_activated_on  | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
+                        <tr><td>Subscription Expire On</td><td>{{ dealerDetails.personal_info.subscription_expire_on  | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
+                        <tr><td>Subscription Status</td><td><p>{{ dealerDetails.personal_info.subscription_status }}</p></td></tr>
+                        <tr><td>Account Type</td><td><p [ngClass]="{'badge badge-pill':true,'badge-success':dealerDetails.personal_info.account_type=='premium','badge-primary':dealerDetails.personal_info.account_type=='free'}">{{ dealerDetails.personal_info.account_type }}</p></td></tr>
+                    
+                        <tr>
+                            <td>Stripe Customer</td>
+                            <td>
+                                <h5>{{dealerDetails.personal_info.stripe_user_id ? dealerDetails.personal_info.stripe_user_id:'Not Found'}}</h5>
+                                <a *ngIf="dealerDetails.personal_info.stripe_user_id" class="btn btn-sm btn-info" target="_blank" [href]="'https://dashboard.stripe.com/customers/'+dealerDetails.personal_info.stripe_user_id">View Details</a>
+                            </td>
+                        </tr>
+
                     </tbody>
                 </table>
 

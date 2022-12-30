@@ -9,6 +9,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'info', pathMatch: 'full' },
       { path: 'info', loadChildren:()=>import('./product-info/product-info.module').then(productInfo=>productInfo.ProductInfoModule) },
+      { path: 'orders', loadChildren:()=>import('../../orders/orders-list/orders-list.module').then(VD=>VD.OrdersListModule) }
     ]
   },
 ];

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Helper } from 'src/app/services/helper.service';
@@ -15,14 +15,16 @@ import { ChangeAddressModalService } from 'src/app/components/change-address-mod
 
 import { ChangePasswordModalComponent } from 'src/app/components/change-password-modal/change-password-modal.component';
 import { ChangePasswordModalService } from 'src/app/components/change-password-modal/change-password-modal.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-customer-info',
   templateUrl: './customer-info.component.html',
   styleUrls: ['./customer-info.component.scss']
 })
-export class CustomerInfoComponent implements OnInit {
-  modalRef!: BsModalRef;
+export class CustomerInfoComponent implements OnInit,OnDestroy {
+  @BlockUI('customer') blockCustomerUI!: NgBlockUI;
+   modalRef!: BsModalRef;
   public customerDetails: any;
   public customerId: any;
   addresses: any[] = [];
@@ -70,13 +72,19 @@ export class CustomerInfoComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+      if(this.blockCustomerUI){this.blockCustomerUI.unsubscribe();}
+  }
+
   getCustomerDetails(){
+    this.blockCustomerUI.start();
     const url = 'api/admin/users/view/' + this.customerId;
     this.http.get(url).subscribe(async (customer: any) => {
+      this.blockCustomerUI.stop();
       this.customerDetails = customer;
       this.addresses = this.customerDetails.addresses;
     }, err => {
-
+      this.blockCustomerUI.stop();
     });
   }
 
@@ -102,10 +110,7 @@ export class CustomerInfoComponent implements OnInit {
     this.http.post(url, {user_id: this.customerId, is_active: stauts}).subscribe((result: any) => {
         this._toastr.showSuccess(result.message);
         // reload user details only
-        const url2 = 'api/admin/users/view/' + this.customerId;
-        this.http.get(url2).subscribe((customer: any) => {
-          this.customerDetails = customer;
-        });
+         this.getCustomerDetails();
       }, err => {
         this._toastr.showError('Error Updating Account Status');
       });
@@ -145,11 +150,7 @@ export class CustomerInfoComponent implements OnInit {
         this._customImageCropperService.setFormData({ event_name: eventName, base64image: loadedImage, file_name: file_name });
         this.modalRef = this.modalService.show(CustomImageCropperComponent, { class: 'modal-lg' });
         this.modalRef.content.onImageSaved.subscribe((file: any) => {
-          if (eventName == 'PROFILE') {
-            this.uploadFullFaceImage(file)
-          } else {
-            this.uploadLicenseImage(file)
-          }
+          this.uploadFullFaceImage(file)
         });
       }
     }).catch((err: any) => {
@@ -178,22 +179,6 @@ export class CustomerInfoComponent implements OnInit {
     });
   }
 
-  uploadLicenseImage(file: any){
-      this.submitted = true;
-      const formData: FormData = new FormData();
-      this.licenseImage = file;
-      const url = `api/customers/update_license_photo/${this.customerId}`;
-      formData.append('license',this.licenseImage,this.licenseImage.name);
-      this.http.post(url, formData).subscribe((data: any) => {
-        this.licenseEntered = true;
-        this.submitted = false;
-        this.getCustomerDetails();
-      },
-      (error:any) =>{
-        this._toastr.showError('License upload failed');
-        this.submitted = false;
-      });
-  }
 
   openAddAddressModal(){
     this._changeAddressModalService.setFormData({

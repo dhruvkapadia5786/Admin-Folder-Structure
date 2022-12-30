@@ -302,13 +302,13 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       columns: [
         {
-          data:'image_url',
+          data:'image',
           title: 'Image',
           orderable: false,
           className: 'text-left  font-weight-normal',
-          render: (data: any) => {
+          render: (data: any, type: any, full: any) => {
             if (data) {
-              return `<img src='${environment.api_url + data}' height="100" width="100" />`;
+              return `<a href="javascript:void(0);" productID=${full.id}><img src='${environment.api_url + data}' height="100" width="100" /></>`;
             } else {
               return ``;
             }
@@ -317,11 +317,28 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           data: 'name',
           title: 'Product Name',
-          className: 'text-left  font-weight-normal'
+          className: 'text-left  font-weight-normal',
+          render: (data: any, type: any, full: any) => {
+            if (data) {
+              return `<a href="javascript:void(0);" productID=${full.id}>${data}</a>`
+            } else {
+              return '<span></span>';
+            }
+          }
         },
         {
           data: 'model',
           title: 'Model',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'category_name',
+          title: 'Category',
+          className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'brand_name',
+          title: 'Brand',
           className: 'text-left  font-weight-normal'
         },
         {

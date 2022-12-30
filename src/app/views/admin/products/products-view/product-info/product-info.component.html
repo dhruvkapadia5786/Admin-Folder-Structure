@@ -1,208 +1,184 @@
-<ng-container *ngIf="product; else noProduct">
-  
-  
-  <div class="row">
-    <button *ngIf="product.status == 'draft'" type="button" (click)="updateStatus('published')" class="btn btn-success mr-2"><i class="fas fa-check-circle mr-2"></i>Publish</button>
-    <button *ngIf="product.status == 'draft'" type="button" (click)="updateStatus('rejected')" class="btn btn-danger mr-2"><i class="fas fa-times mr-2"></i>Reject</button>
-    <button *ngIf="product.status == 'under_review'" type="button" (click)="updateStatus('deleted')" class="btn btn-dark mr-2"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
-    <button *ngIf="product.status == 'draft'" type="button" (click)="updateStatus('update_required')" class="btn btn-warning"><i class="fas fa-info-circle mr-2"></i>Update required</button>
-  </div>
-
-  <h6 class="bg-light text-dark p-2 mt-3">Display Information</h6>
-  
-  <div class="row">
-    <div class="col-md-6">
-        <div class="table-responsive">
-          <table class="table table-hover">
-                <tr>
-                  <td class="font-weight-bold">Name</td>
-                  <td class="font-weight-normal">{{product.name}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Slug</td>
-                  <td class="font-weight-normal">{{product.slug}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Model</td>
-                  <td class="font-weight-normal">{{product.model}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Status</td>
-                  <td class="font-weight-normal" [innerHtml]="_helper.getProductStatus(product.status)"></td>
-                </tr>
-                <tr *ngIf="product.category_id">
-                  <td class="font-weight-bold">Category</td>
-                  <td class="font-weight-normal">{{product.category.name || '-'}}</td>
-                </tr>
-                <tr *ngIf="product.brand_id">
-                  <td class="font-weight-bold">Brand</td>
-                  <td class="font-weight-normal">{{product.brand.name || '-'}}</td>
-                </tr>
-                <tr *ngIf="product.manufacturer_id">
-                  <td class="font-weight-bold">Manufacturer</td>
-                  <td class="font-weight-normal">{{product.manufacturer.name || '-'}}</td>
-                </tr>
-                <tr>
-                  <td  class="font-weight-bold">Active</td>
-                  <td  class="font-weight-normal">
-                    <i class="fa fa-check text-success" *ngIf="product.is_active"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!product.is_active"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Is Featured</td>
-                  <td class="font-weight-normal">
-                    <i class="fa fa-check text-success" *ngIf="product.is_featured"></i>
-                    <i class="fa fa-times text-danger" *ngIf="!product.is_featured"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Description</td>
-                  <td class="font-weight-normal">{{ product.description }}</td>
-                </tr>
-          </table>
-        </div>
+<div  *blockUI="'product'">
+  <ng-container  *ngIf="product; else noProduct">
+    <div class="row">
+      <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('published')" class="btn btn-success mr-2"><i class="fas fa-check-circle mr-2"></i>Publish</button>
+      <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('rejected')" class="btn btn-danger mr-2"><i class="fas fa-times mr-2"></i>Reject</button>
+      <button type="button" (click)="updateStatus('deleted')" class="btn btn-dark mr-2"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
+      <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('update_required')" class="btn btn-warning"><i class="fas fa-info-circle mr-2"></i>Update required</button>
     </div>
-    <div class="col-md-6">
-        <div class="table-responsive">
+  
+    <h6 class="bg-light text-dark p-2 mt-3">Display Information</h6>
+    
+    <div class="row">
+      <div class="col-md-6">
+          <div class="table-responsive">
             <table class="table table-hover">
-                <tr>
-                  <td class="font-weight-bold">Shaft</td>
-                  <td class="font-weight-normal">{{product.shaft}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Grip Condition</td>
-                  <td class="font-weight-normal">{{product.grip_condition}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Article condition</td>
-                  <td class="font-weight-normal">{{product.article_condition}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Handedness</td>
-                  <td class="font-weight-normal">{{product.handedness}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Gender</td>
-                  <td class="font-weight-normal">{{product.gender}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Experience level</td>
-                  <td class="font-weight-normal">{{product.experience_level}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Rating count</td>
-                  <td class="font-weight-bold">{{product.rating_count}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Average rating</td>
-                  <td class="font-weight-bold">{{product.average_rating}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Sold count</td>
-                  <td class="font-weight-bold">{{product.sold_count}}</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Total sales</td>
-                  <td class="font-weight-bold">{{product.total_sales}}</td>
-                </tr>
+                  <tr>
+                    <td class="font-weight-bold">Name</td>
+                    <td class="font-weight-normal">{{product.name}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Slug</td>
+                    <td class="font-weight-normal">{{product.slug}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Model</td>
+                    <td class="font-weight-normal">{{product.model}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Status</td>
+                    <td class="font-weight-normal" [innerHtml]="_helper.getProductStatus(product.status)"></td>
+                  </tr>
+                  <tr *ngIf="product.category">
+                    <td class="font-weight-bold">Category</td>
+                    <td class="font-weight-normal">{{product.category.name || '-'}}</td>
+                  </tr>
+                  <tr *ngIf="product.brand">
+                    <td class="font-weight-bold">Brand</td>
+                    <td class="font-weight-normal">{{product.brand.name || '-'}}</td>
+                  </tr>
+                  <tr *ngIf="product.manufacturer">
+                    <td class="font-weight-bold">Manufacturer</td>
+                    <td class="font-weight-normal">{{product.manufacturer.name || '-'}}</td>
+                  </tr>
+                  <tr>
+                    <td  class="font-weight-bold">Active</td>
+                    <td  class="font-weight-normal">
+                      <i class="fa fa-check text-success" *ngIf="product.is_active"></i>
+                      <i class="fa fa-times text-danger" *ngIf="!product.is_active"></i>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Is Featured</td>
+                    <td class="font-weight-normal">
+                      <i class="fa fa-check text-success" *ngIf="product.is_featured"></i>
+                      <i class="fa fa-times text-danger" *ngIf="!product.is_featured"></i>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Description</td>
+                    <td class="font-weight-normal">{{ product.description }}</td>
+                  </tr>
             </table>
-        </div>
-    </div>
-  </div>
-
-   
-  
-  <h6 class="bg-light text-dark p-2 mt-3">Pricing</h6>
-  <div class="row">
-    <div class="col-md-6">
-        <div class="table-responsive">
-          <table class="table table-hover">
-                <tr>
-                  <td class="font-weight-bold">Regular Price</td>
-                  <td class="font-weight-normal"> {{(product.regular_price | currency:product.currency) || '-' }} </td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Sale Price</td>
-                  <td class="font-weight-normal"> {{(product.sale_price | currency:product.currency) || '-' }} </td>
-                </tr>
-          </table>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="table-responsive">
-            
-        </div>
-    </div>
-  </div>
-
-  <h6 class="bg-light text-dark p-2 mt-3">
-    Attributes
-  </h6>
-  <div class="row" *ngIf="product?.attributes.length > 0; else noAttributes">
-    <div class="col-md-12">
-      <app-change-sequence [mode]="'ATTRIBUTES'" [data]="product.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+          </div>
       </div>
-  </div>
-  <ng-template #noAttributes>
-    <div class="text-center text-muted">
-      <h2><i class="fa fa-info-circle"></i></h2>
-      <h4>No Attributes!</h4>
+      <div class="col-md-6">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <tr>
+                    <td class="font-weight-bold">Shaft</td>
+                    <td class="font-weight-normal">{{product.shaft}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Grip Condition</td>
+                    <td class="font-weight-normal">{{product.grip_condition}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Article condition</td>
+                    <td class="font-weight-normal">{{product.article_condition}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Handedness</td>
+                    <td class="font-weight-normal">{{product.handedness}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Gender</td>
+                    <td class="font-weight-normal">{{product.gender}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Experience level</td>
+                    <td class="font-weight-normal">{{product.experience_level}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Rating count</td>
+                    <td class="font-weight-bold">{{product.rating_count}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Average rating</td>
+                    <td class="font-weight-bold">{{product.average_rating}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Sold count</td>
+                    <td class="font-weight-bold">{{product.sold_count}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Total sales</td>
+                    <td class="font-weight-bold">{{product.total_sales}}</td>
+                  </tr>
+              </table>
+          </div>
+      </div>
     </div>
-  </ng-template>
-
-  <h6 class="bg-light text-dark p-2 mt-3">FAQ</h6>
-  <div class="row" *ngIf="product && product.faqs; else noFaqs">
-    <div class="col-md-12">
-      <app-change-sequence [mode]="'FAQS'" [data]="product.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+  
+     
+    
+    <h6 class="bg-light text-dark p-2 mt-3">Pricing</h6>
+    <div class="row">
+      <div class="col-md-6">
+          <div class="table-responsive">
+            <table class="table table-hover">
+                  <tr>
+                    <td class="font-weight-bold">Regular Price</td>
+                    <td class="font-weight-normal"> {{(product.regular_price | currency:product.currency) || '-' }} </td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Sale Price</td>
+                    <td class="font-weight-normal"> {{(product.sale_price | currency:product.currency) || '-' }} </td>
+                  </tr>
+            </table>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="table-responsive">
+              
+          </div>
+      </div>
     </div>
-  </div>
-  <ng-template #noFaqs>
-    <div class="text-center text-muted">
-      <h2><i class="fa fa-info-circle"></i></h2>
-      <h4>No FAQs!</h4>
+  
+    <h6 class="bg-light text-dark p-2 mt-3">
+      Attributes
+    </h6>
+    <div class="row" *ngIf="product?.attributes.length > 0; else noAttributes">
+      <div class="col-md-12">
+        <app-change-sequence [mode]="'ATTRIBUTES'" [data]="product.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+        </div>
     </div>
-  </ng-template>
-
-  <h6 class="bg-light text-dark p-2 mt-3">Images</h6>
-  <div class="row" *ngIf="product?.images?.length > 0; else noImgs">
-    <div class="col-md-12">
-      <app-change-sequence [mode]="'IMAGES'" [data]="product.images" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+    <ng-template #noAttributes>
+      <div class="text-center text-muted">
+        <h2><i class="fa fa-info-circle"></i></h2>
+        <h4>No Attributes!</h4>
+      </div>
+    </ng-template>
+  
+    <h6 class="bg-light text-dark p-2 mt-3">FAQ</h6>
+    <div class="row" *ngIf="product && product.faqs; else noFaqs">
+      <div class="col-md-12">
+        <app-change-sequence [mode]="'FAQS'" [data]="product.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+      </div>
     </div>
-  </div>
-  <ng-template #noImgs>
-    <div class="text-center text-muted">
-      <h2><i class="fa fa-info-circle"></i></h2>
-      <h4>No Images!</h4>
+    <ng-template #noFaqs>
+      <div class="text-center text-muted">
+        <h2><i class="fa fa-info-circle"></i></h2>
+        <h4>No FAQs!</h4>
+      </div>
+    </ng-template>
+  
+    <h6 class="bg-light text-dark p-2 mt-3">Images</h6>
+    <div class="row" *ngIf="product?.media?.length > 0; else noImgs">
+      <div class="col-md-12">
+        <app-change-sequence [mode]="'IMAGES'" [data]="product.media" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
+      </div>
     </div>
-  </ng-template>
-
-  <h6 class="bg-light text-dark p-2 mt-3">PDF Documents</h6>
-  <div class="row" *ngIf="product?.documents?.length > 0; else noDocs">
-    <div class="col-md-12">
-      <app-change-sequence [mode]="'DOCUMENTS'" [data]="product.documents" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
-    </div>
-  </div>
-  <ng-template #noDocs>
-    <div class="text-center text-muted">
-      <h2><i class="fa fa-info-circle"></i></h2>
-      <h4>No Documents!</h4>
-    </div>
-  </ng-template>
-
-  <h6 class="bg-light text-dark p-2 mt-3">Videos</h6>
-  <div class="row" *ngIf="product?.videos?.length > 0; else noVideos">
-    <div class="col-md-12">
-      <app-change-sequence [mode]="'VIDEOS'" [data]="product.videos" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
-    </div>
-  </div>
-  <ng-template #noVideos>
-    <div class="text-center text-muted">
-      <h2><i class="fa fa-info-circle"></i></h2>
-      <h4>No Videos!</h4>
-    </div>
-  </ng-template>
-</ng-container>
-<ng-template #noProduct>
-  No Product Details
-</ng-template>
+    <ng-template #noImgs>
+      <div class="text-center text-muted">
+        <h2><i class="fa fa-info-circle"></i></h2>
+        <h4>No Images!</h4>
+      </div>
+    </ng-template>
+  
+    
+  </ng-container>
+  <ng-template #noProduct>
+    No Product Details
+  </ng-template>  
+</div>

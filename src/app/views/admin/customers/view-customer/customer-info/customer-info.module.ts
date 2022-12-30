@@ -16,6 +16,7 @@ import { ChangeAddressModalComponent } from 'src/app/components/change-address-m
 
 import { ChangePasswordModalModule } from 'src/app/components/change-password-modal/change-password-modal.module';
 import { ChangePasswordModalComponent } from 'src/app/components/change-password-modal/change-password-modal.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import { ChangePasswordModalComponent } from 'src/app/components/change-password
     CustomerInfoComponent
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     ImagePreviewModule,
     ModalModule.forRoot(),
     NgxMaskModule.forChild(),

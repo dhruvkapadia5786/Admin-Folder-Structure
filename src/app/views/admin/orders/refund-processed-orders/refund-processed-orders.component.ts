@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import {orderHelper} from 'src/app/services/orderHelper.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
   templateUrl: './refund-processed-orders.component.html',
   styleUrls: ['./refund-processed-orders.component.scss']
 })
-export class RefundProcessedOrdersComponent implements OnInit {
+export class RefundProcessedOrdersComponent implements OnInit,OnDestroy {
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
   api_url:string = environment.api_url;
   orders_config:any;
@@ -97,7 +97,10 @@ export class RefundProcessedOrdersComponent implements OnInit {
      this.getOrderData(this.orders_config.currentPage,this.orders_config.itemsPerPage,this.orders_sort_by,this.orders_sort_order,this.orders_search);
   }
 
-
+  ngOnDestroy(){
+    if(this.blockDataTable){this.blockDataTable.unsubscribe();}
+  }
+  
   handleChange(eventName:string,event:any){
     let value = event.target.value;
 
