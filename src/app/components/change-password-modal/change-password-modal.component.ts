@@ -76,7 +76,7 @@ export class ChangePasswordModalComponent implements OnInit {
         this._changeDetectorRef.detectChanges();
 
       },
-      err => {
+      (err:any) => {
         this._toastr.showError('Unable to update User Account Password');
         this._changeDetectorRef.detectChanges();
       }

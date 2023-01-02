@@ -20,7 +20,8 @@ const routes: Routes = [
   { path: 'article-categories', loadChildren: () => import('../../views/admin/article-categories/article-categories.module').then(categories => categories.ArticleCategoriesModule) },
   { path: 'articles', loadChildren: () => import('../../views/admin/articles/article.module').then(article => article.ArticleModule) },
   { path: 'plans', loadChildren: () => import('../../views/admin/plans/plans.module').then(plans => plans.PlansModule) },
-  { path: 'newsletter-subscribers', loadChildren: () => import('../../views/admin/newsletter-subscribers/newsletter-subscribers.module').then(newsletter => newsletter.NewsletterSubscribersModule) }
+  { path: 'newsletter-subscribers', loadChildren: () => import('../../views/admin/newsletter-subscribers/newsletter-subscribers.module').then(newsletter => newsletter.NewsletterSubscribersModule) },
+  { path: 'reports', loadChildren: () => import('../../views/admin/reports/reports.module').then(reports => reports.ReportsModule) }
 ];
 
 @NgModule({

@@ -48,7 +48,7 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
       this.http.get(url)
       .subscribe((data: any) => {
         this.orderLogs = data;
-      }, err => {
+      }, (err:any) => {
 
       });
     }

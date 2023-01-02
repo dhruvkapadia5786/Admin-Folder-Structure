@@ -138,7 +138,7 @@
     <h6 class="bg-light text-dark p-2 mt-3">
       Attributes
     </h6>
-    <div class="row" *ngIf="product?.attributes.length > 0; else noAttributes">
+    <div class="row" *ngIf="product.attributes; else noAttributes">
       <div class="col-md-12">
         <app-change-sequence [mode]="'ATTRIBUTES'" [data]="product.attributes" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
         </div>
@@ -164,7 +164,7 @@
     </ng-template>
   
     <h6 class="bg-light text-dark p-2 mt-3">Images</h6>
-    <div class="row" *ngIf="product?.media?.length > 0; else noImgs">
+    <div class="row" *ngIf="product && product.product.media; else noImgs">
       <div class="col-md-12">
         <app-change-sequence [mode]="'IMAGES'" [data]="product.media" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
       </div>

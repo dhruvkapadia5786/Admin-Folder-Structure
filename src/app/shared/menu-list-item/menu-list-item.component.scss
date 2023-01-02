@@ -14,15 +14,15 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
     width: 100%;
     .mat-list-item.active {
         // background-color: mat-color($app-primary, 50);
-        background-color: #007bff;
-        border-color: #007bff;
+        background-color: #00897b;
+        border-color: #00897b;
         color: #fff;
     }
     &:hover,
     &:focus {
         >.mat-list-item:not(.expanded) {
             border-radius: 5px;
-            background-color: #b8daff; //mat-color($app-primary, 100) !important;
+            background-color: #b2dfdb; //mat-color($app-primary, 100) !important;
         }
     }
 }

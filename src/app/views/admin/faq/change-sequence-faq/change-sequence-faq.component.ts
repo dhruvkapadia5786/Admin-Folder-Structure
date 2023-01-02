@@ -40,7 +40,7 @@ export class ChangeSequenceFaqComponent implements OnInit {
         this.questions = data;
         this.originalQuestions =  this.questions;
         this.cdr.detectChanges();
-      }, err => {
+      }, (err:any) => {
 
       });
   }
@@ -69,7 +69,7 @@ export class ChangeSequenceFaqComponent implements OnInit {
         this.priorityArray = [];
         this.questions = [];
         this.isPriorityUpdated = false;
-      }, err => {
+      }, (err:any) => {
 
         this._toastr.error('Unable to update sequence. Please try again');
       });

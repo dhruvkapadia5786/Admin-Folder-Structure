@@ -82,7 +82,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/faq-group', iconName: 'fa-question-circle', displayName: 'FAQ Group' },
 					{ route: '/admin/settings', iconName: 'fa-cog', displayName: 'Settings' }
 				]
-			}
+			},
+			{ route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' }
 		]
 	}
 
@@ -117,7 +118,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	}
 
 	getNotifications() {
-		const url = 'api/v1/notifications/latest';
+		const url = 'api/notifications/latest';
 		this.http.get(url).subscribe((data: any) => {
 			this.notifications = data;
 			this.getNotificationsCount();

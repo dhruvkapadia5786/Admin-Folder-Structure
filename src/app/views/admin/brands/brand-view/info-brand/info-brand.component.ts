@@ -52,7 +52,7 @@ export class InfoBrandComponent implements OnInit, OnDestroy {
         this.getImage(result.cover_image, 'COVER');
         this._changeDetectorRef.detectChanges();
       }
-    }).catch(err => {
+    }).catch((err:any) => {
       this.imageUrl = '../../../../../../assets/img/no_preview.png';
       this.coverImageUrl = '../../../../../../assets/img/no_preview.png';
     })
@@ -69,7 +69,7 @@ export class InfoBrandComponent implements OnInit, OnDestroy {
           this.coverImageUrl = this.sanitizer.bypassSecurityTrustUrl(fr.result + '');
         }
       }
-      }).catch(err => {
+      }).catch((err:any) => {
         if (type == 'LOGO') {
           this.imageUrl = '../../../../../../assets/img/no_preview.png';
         } else if (type == 'COVER') {

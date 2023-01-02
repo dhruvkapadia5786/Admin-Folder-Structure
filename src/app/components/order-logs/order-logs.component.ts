@@ -41,7 +41,7 @@ import { OrderLogDetailsModalService } from '../order-log-details-modal/order-su
       let url = `api/admin/orders/logs/${this.orderId}?user_types=${filterValue}`;
       this.http.get(url).subscribe((data: any) => {
         this.orderLogs = data;
-      }, err => {
+      }, (err:any) => {
 
       });
     }

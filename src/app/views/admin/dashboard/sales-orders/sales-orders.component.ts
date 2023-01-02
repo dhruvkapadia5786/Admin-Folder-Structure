@@ -12,8 +12,7 @@ import { Router } from '@angular/router';
 })
 export class SalesOrdersComponent implements OnInit, AfterViewInit {
 
-  public stats: any = {};
-  public subscriptionCount: any = {};
+  public counts: any = {};
   public detstats: any;
   public AgeData: any[] = [];
   public UserOsData: any[] = [];
@@ -23,7 +22,6 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
   chart:any;
   Highcharts: typeof Highcharts = Highcharts;
   chartConstructor: string = 'chart';
-  chartOptions: Highcharts.Options = {};
   chartOptionsline: Highcharts.Options = {};
   chartOptionsUserOs: Highcharts.Options = {};
   chartOptionsUserBrowser: Highcharts.Options = {};
@@ -55,9 +53,7 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
     const self = this,
       chart = this.chart;
 
-    if (whichChart == 'AgePie') {
-      self.chartOptions = chartOptions;
-    } else if (whichChart == 'OsPie') {
+      if (whichChart == 'OsPie') {
       self.chartOptionsUserOs = chartOptions;
     } else if (whichChart == 'BrowserPie') {
       self.chartOptionsUserBrowser = chartOptions;
@@ -255,42 +251,22 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
   }
 
   getDashbordStats() {
-    const url = 'api/v1/admin/reports/counts';
-    this.http.get(url)
-      .subscribe((res: any) => {
-        this.stats = res;
-      }, err => {
+    const url = 'api/admin/reports/counts';
+    this.http.get(url).subscribe((res: any) => {
+        this.counts = res;
+        console.log('counts=',res);
+      }, (err:any) => {
 
-      });
-
-    const subscriptionCountUrl = `api/v1/admin/reports/subscription-count`
-    this.http.get(subscriptionCountUrl)
-      .subscribe((res: any) => {
-
-        this.subscriptionCount = res;
-      }, err => {
-
-      });
+      })
   }
 
   getDashborddetStats() {
-    const url = 'api/v1/admin/reports/statistics';
+    const url = 'api/admin/reports/statistics';
     this.http.get(url)
       .subscribe((res: any) => {
+        console.log('detstats=',res);
         this.detstats = res;
-        Object.keys(res.age_group).forEach(key => {
-          this.AgeData.push({
-            name: key.replace('_', '-'),
-            y: res.age_group[key]
-          });
-        });
-        let options = this.getMyChart('Age Wise Patients Group', [{
-          name: 'Patient',
-          colorByPoint: true,
-          data: this.AgeData
-        }]);
-        this.loadChartData(options, 'AgePie');
-
+        
         res.user_device_details.group_by_os.filter((obj:any) => {
           this.UserOsData.push({
             name: obj.os,
@@ -333,13 +309,13 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
         }]);
 
         this.loadChartData(userDeviceTypeChartOptions, 'DeviceTypePie');
-      }, err => {
+      }, (err:any) => {
 
       });
   }
 
   getDashborddetStatsline() {
-    const url = 'api/v1/admin/reports/getMixChartData?reportType=MIX_CHART&timeUnit=LAST_30_DAYS';
+    const url = 'api/admin/reports/getMixChartData?reportType=MIX_CHART&timeUnit=LAST_30_DAYS';
     this.http.get(url)
       .subscribe((res: any) => {
 
@@ -353,6 +329,16 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
               name: 'Orders',
               y: res.orderSales,
               color: 'blue'
+            },
+            {
+              name: 'Top Listing Subscription',
+              y: res.topListingSales,
+              color: 'green'
+            },
+            {
+              name: 'Dealer Account Subscription',
+              y: res.dealerAccountSales,
+              color: 'orange'
             }],
             center: [100, 80],
             size: 100,
@@ -373,7 +359,7 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
           }
         }
         this.loadChartData(myChart, 'line');
-      }, err => {
+      }, (err:any) => {
 
       });
   }

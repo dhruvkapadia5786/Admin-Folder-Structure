@@ -39,7 +39,7 @@ export class DealerInfoComponent implements OnInit,OnDestroy {
     this.http.get(url).subscribe(async (data: any) => {
       this.blockDealerUI.stop();
       this.dealerDetails = data;
-    }, err => {
+    }, (err:any) => {
       this.blockDealerUI.stop();
     });
   }

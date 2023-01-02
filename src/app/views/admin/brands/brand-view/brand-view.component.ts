@@ -30,7 +30,7 @@ export class BrandViewComponent implements OnInit {
       .subscribe((resp: any) => {
         this.brandsList = resp;
         this._cdr.detectChanges();
-      }, err => {
+      }, (err:any) => {
         
       });
   }

@@ -450,7 +450,7 @@ export class ProductsEditComponent implements OnInit {
   public getlensTypesList(){
     this.http.get('api/contact_lens/all_types').subscribe((data:any) => {
       this.lenstypeList = data;
-    }, err => {
+    }, (err:any) => {
 
     });
   }
@@ -458,7 +458,7 @@ export class ProductsEditComponent implements OnInit {
   public getlensColorsList(){
     this.http.get('api/contact_lens/all_colors').subscribe((data:any) => {
       this.colorsList = data;
-    }, err => {
+    }, (err:any) => {
 
     });
   }
@@ -960,7 +960,7 @@ handleTypeChange(attributeIndex:number,event:any){
   public getAllCategoriesWithSubcategoriesList(){
     this.http.get('api/admin/categories/all').subscribe((data:any) => {
       this.categoriesSubcategoriesList = data;
-    }, err => {
+    }, (err:any) => {
 
     });
   }

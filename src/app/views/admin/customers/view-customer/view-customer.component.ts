@@ -40,7 +40,7 @@ export class ViewCustomerComponent implements OnInit {
     this.http.get(url).subscribe((customer: any) => {
         this.customerDetails=customer;
         this.viewCustomerService.publishCustomerDetails(customer);
-      }, err => {});
+      }, (err:any) => {});
   }
 
   openUploadDocumentModal() {
@@ -67,7 +67,7 @@ export class ViewCustomerComponent implements OnInit {
       .subscribe((resp: any) => {
         this._toastr.showSuccess(`Total ${uploadedFiles.selectedFiles.length} Documents Uploaded Successfully!`)
         this.getCustomerDetails();
-      }, err => {
+      }, (err:any) => {
         this._toastr.showError(`Documents Upload Failed!`)
       });
   }

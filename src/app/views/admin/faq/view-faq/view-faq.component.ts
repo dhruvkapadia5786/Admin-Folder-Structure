@@ -30,7 +30,7 @@ export class ViewFaqComponent implements OnInit {
     this._http.get(url).subscribe((res: any) => {
         this.FAQDetails = res;
         this._changeDetectorRef.detectChanges();
-      }, err => {
+      }, (err:any) => {
 
       });
   }

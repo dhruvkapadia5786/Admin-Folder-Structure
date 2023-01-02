@@ -59,7 +59,7 @@ export class BannerSetViewComponent implements OnInit {
     this._http.post('api/bannersets/update_sequence/'+this.bannersetId,{sequences:sequenceArray}).subscribe((data: any) => {
       this.getBannerSetDetails();
       this._toastr.showSuccess('Banners Sequence Updated');
-    }, err => {
+    }, (err:any) => {
 
     });
 
@@ -71,7 +71,7 @@ export class BannerSetViewComponent implements OnInit {
         this.bannerSetDetails = data;
         this.data = data.banners;
         this.originalData = this.data.slice(0);
-      }, err => {
+      }, (err:any) => {
       });
   }
 

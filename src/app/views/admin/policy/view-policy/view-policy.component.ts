@@ -29,7 +29,7 @@ export class ViewPolicyComponent implements OnInit {
     const url = 'api/admin/policy/view/' + this.PolicyId;
     this._http.get(url).subscribe((res: any) => {
         this.PolicyDetails = res;
-      }, err => {
+      }, (err:any) => {
 
       });
   }

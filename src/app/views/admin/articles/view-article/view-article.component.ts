@@ -29,7 +29,7 @@ export class ViewArticleComponent implements OnInit {
     const url = 'api/admin/articles/view/' + this.ArticleId;
     this._http.get(url).subscribe((res: any) => {
         this.ArticleDetails = res;
-      }, err => {
+      }, (err:any) => {
 
       });
   }

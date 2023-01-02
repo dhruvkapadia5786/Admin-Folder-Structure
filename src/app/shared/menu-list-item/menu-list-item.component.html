@@ -7,7 +7,7 @@
     <i class="float-right fa fa-chevron-down" [@indicatorRotate]="expanded ? 'expanded': 'collapsed'"></i>
   </span>
 </a>
-<div *ngIf="expanded" [ngClass]="{'alert-primary':expanded}">
+<div *ngIf="expanded" [ngClass]="{'alert-success':expanded}">
   <app-menu-list-item *ngFor="let child of item.children" [item]="child" [depth]="depth+1">
   </app-menu-list-item>
 </div>

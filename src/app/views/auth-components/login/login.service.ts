@@ -22,7 +22,7 @@ export class LoginService {
     var result = await this._http
       .post<any>(GolfedApiEndpoints.LOGIN,body,options)
       .toPromise()
-      .catch(err => {
+      .catch((err:any) => {
         console.log('error=',err);
         return err.error;
       });

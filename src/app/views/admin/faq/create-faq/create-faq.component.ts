@@ -72,7 +72,7 @@ export class CreateFaqComponent implements OnInit {
         this._router.navigate(['/admin/faq']);
         this._toastr.showSuccess('Save Successfully!');
       },
-      err => {
+      (err:any) => {
         this._toastr.showError('Unable to save FAQ!');
       });
   }

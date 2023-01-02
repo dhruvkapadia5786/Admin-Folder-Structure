@@ -66,7 +66,7 @@ export class CreatePolicyComponent implements OnInit {
           is_active:  res.is_active
         })
         this.answerText = res.policy_text;
-      }, err => {
+      }, (err:any) => {
 
       });
   }
@@ -83,7 +83,7 @@ export class CreatePolicyComponent implements OnInit {
         this._router.navigate(['/admin/policy']);
         this._toastr.showSuccess('Save Successfully!');
     },
-    err => {
+    (err:any) => {
         this._toastr.showError('Unable to save Policy !');
     });
   }

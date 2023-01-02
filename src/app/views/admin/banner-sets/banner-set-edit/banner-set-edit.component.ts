@@ -72,7 +72,7 @@ export class BannerSetEditComponent implements OnInit {
           imagesControl.push(lControl);
         });
         this._changeDetectorRef.detectChanges();
-      }, err => {
+      }, (err:any) => {
 
       });
   }

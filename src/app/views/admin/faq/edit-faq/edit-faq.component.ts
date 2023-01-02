@@ -78,7 +78,7 @@ export class EditFaqComponent implements OnInit {
           is_active:  this.FAQDetailsObj.is_active
         })
         this.answerText = this.FAQDetailsObj.answer;
-      }, err => {
+      }, (err:any) => {
 
       });
   }
@@ -98,7 +98,7 @@ export class EditFaqComponent implements OnInit {
       this._router.navigate(['/admin/faq/list']);
       this._toastr.showSuccess('Save Successfully!');
       this._changeDetectorRef.detectChanges();
-    }, err => {
+    }, (err:any) => {
       this._toastr.showError('Unable To Update FAQ!');
       this._changeDetectorRef.detectChanges();
     });

@@ -84,7 +84,7 @@ export class ChangePasswordWithOtpComponent implements OnInit {
           this._toaster.showError('Please try again after some time.');
           break;
       }
-    }, err => {
+    }, (err:any) => {
       switch (err.error['status']) {
         case 'INVALID_REQUEST':
           this._toaster.showError('Unable to send OTP, Please try again after some time.');
@@ -125,7 +125,7 @@ export class ChangePasswordWithOtpComponent implements OnInit {
           this._toaster.showError('Unable to save changes');
           break;
       }
-    }, err => {
+    }, (err:any) => {
       if (err.error['status'] == 'OTP_EXPIRED') {
         this._toaster.showError('OTP is expired, Please try again.');
       } else if (err.error['status'] == 'INVALID_REQUEST') {

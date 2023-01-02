@@ -83,7 +83,7 @@ export class CustomerInfoComponent implements OnInit,OnDestroy {
       this.blockCustomerUI.stop();
       this.customerDetails = customer;
       this.addresses = this.customerDetails.addresses;
-    }, err => {
+    }, (err:any) => {
       this.blockCustomerUI.stop();
     });
   }
@@ -111,7 +111,7 @@ export class CustomerInfoComponent implements OnInit,OnDestroy {
         this._toastr.showSuccess(result.message);
         // reload user details only
          this.getCustomerDetails();
-      }, err => {
+      }, (err:any) => {
         this._toastr.showError('Error Updating Account Status');
       });
   }
@@ -217,7 +217,7 @@ export class CustomerInfoComponent implements OnInit,OnDestroy {
     this.http.post(url, formData).subscribe((resp: any) => {
         this._toastr.showSuccess('Address updated successfully!')
         this.getMyAddresses()
-    }, err => {
+    }, (err:any) => {
 
     });
   }
@@ -227,7 +227,7 @@ export class CustomerInfoComponent implements OnInit,OnDestroy {
       this.http.post(url, formData).subscribe((resp: any) => {
         this._toastr.showSuccess('Address updated successfully!')
         this.getMyAddresses()
-      }, err => {
+      }, (err:any) => {
 
       });
   }

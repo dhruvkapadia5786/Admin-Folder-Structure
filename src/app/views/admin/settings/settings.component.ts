@@ -75,7 +75,7 @@ export class SettingsComponent implements OnInit {
           });
         }
         this._changeDetectorRef.detectChanges();
-      }, err => {
+      }, (err:any) => {
       });
   }
 
@@ -89,7 +89,7 @@ export class SettingsComponent implements OnInit {
     this._http.post(url, req).subscribe((data: any) => {
       this._toastr.showSuccess('Shipping Charges updated Successfully');
     },
-      err => {
+      (err:any) => {
         this._toastr.showError('Unable to update Setting');
       });
   }
@@ -99,7 +99,7 @@ export class SettingsComponent implements OnInit {
     this._http.get(url).subscribe((data: any) => {
       this._toastr.showSuccess('All users logged out Successfully');
     },
-    err => {
+    (err:any) => {
       this._toastr.showError('Error occured');
     });
   }

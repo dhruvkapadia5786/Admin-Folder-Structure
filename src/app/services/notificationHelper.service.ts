@@ -38,11 +38,11 @@ export class notificationHelper {
   }
 
   async readNotification(notificationIds:number[]) {
-      return await this._http.post(`api/v1/notifications/markAsRead`,{ids:notificationIds}).toPromise();
+      return await this._http.post(`api/notifications/markAsRead`,{ids:notificationIds}).toPromise();
   }
 
   async readAllNotification(){
-      return await this._http.post(`api/v1/notifications/markAllAsRead`,{}).toPromise();
+      return await this._http.post(`api/notifications/markAllAsRead`,{}).toPromise();
   }
 
 

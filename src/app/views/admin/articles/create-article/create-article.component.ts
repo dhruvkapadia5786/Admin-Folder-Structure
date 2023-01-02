@@ -75,7 +75,7 @@ export class CreateArticleComponent implements OnInit {
           is_active:  res.is_active
         })
         this.answerText = res.body;
-      }, err => {
+      }, (err:any) => {
 
       });
   }
@@ -104,7 +104,7 @@ export class CreateArticleComponent implements OnInit {
         this._router.navigate(['/admin/articles']);
         this._toastr.showSuccess('Save Successfully!');
     },
-    err => {
+    (err:any) => {
         this._toastr.showError('Unable to save article !');
     });
   }

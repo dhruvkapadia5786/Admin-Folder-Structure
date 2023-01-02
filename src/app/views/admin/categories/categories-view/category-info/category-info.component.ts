@@ -39,7 +39,7 @@ export class CategoryInfoComponent implements OnInit {
     this.http.get(url).subscribe((res: any) => {
          this.OTCCategoryDetails = res;
         this._changeDetectorRef.detectChanges();
-      }, err => {
+      }, (err:any) => {
 
       });
   }
@@ -62,7 +62,7 @@ export class CategoryInfoComponent implements OnInit {
       .subscribe(data => {
         this.getOTCCategoryDetails();
         this._toastr.showSuccess('Sequence Updated Successfully');
-      }, err => {
+      }, (err:any) => {
         this._toastr.showError('Unable to update sequence. Please try again');
       });
   }

@@ -65,7 +65,7 @@ export class EditCustomerComponent implements OnInit {
         cell_phone_number: customer.cell_phone_number
       });
         this.customerLoaded = true;
-      }, err =>{
+      }, (err:any) =>{
         this.customerLoaded = false;
       });
   }
@@ -90,7 +90,7 @@ export class EditCustomerComponent implements OnInit {
         }
         this._changeDetectorRef.detectChanges();
       },
-      err => {
+      (err:any) => {
         this._toastr.showError('Unable to save Customer details.');
       }
     );
