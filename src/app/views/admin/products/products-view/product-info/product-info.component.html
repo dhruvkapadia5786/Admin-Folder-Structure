@@ -3,7 +3,7 @@
     <div class="row">
       <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('published')" class="btn btn-success mr-2"><i class="fas fa-check-circle mr-2"></i>Publish</button>
       <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('rejected')" class="btn btn-danger mr-2"><i class="fas fa-times mr-2"></i>Reject</button>
-      <button type="button" (click)="updateStatus('deleted')" class="btn btn-dark mr-2"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
+      <button *ngIf="product.status != 'deleted'"  type="button" (click)="updateStatus('deleted')" class="btn btn-dark mr-2"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
       <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('update_required')" class="btn btn-warning"><i class="fas fa-info-circle mr-2"></i>Update required</button>
     </div>
   
@@ -29,17 +29,17 @@
                     <td class="font-weight-bold">Status</td>
                     <td class="font-weight-normal" [innerHtml]="_helper.getProductStatus(product.status)"></td>
                   </tr>
-                  <tr *ngIf="product.category">
+                  <tr *ngIf="product && product.category">
                     <td class="font-weight-bold">Category</td>
-                    <td class="font-weight-normal">{{product.category.name || '-'}}</td>
+                    <td class="font-weight-normal">{{product.category.name }}</td>
                   </tr>
-                  <tr *ngIf="product.brand">
+                  <tr *ngIf="product && product.brand">
                     <td class="font-weight-bold">Brand</td>
-                    <td class="font-weight-normal">{{product.brand.name || '-'}}</td>
+                    <td class="font-weight-normal">{{product.brand.name }}</td>
                   </tr>
-                  <tr *ngIf="product.manufacturer">
+                  <tr *ngIf="product && product.manufacturer">
                     <td class="font-weight-bold">Manufacturer</td>
-                    <td class="font-weight-normal">{{product.manufacturer.name || '-'}}</td>
+                    <td class="font-weight-normal">{{product.manufacturer.name  }}</td>
                   </tr>
                   <tr>
                     <td  class="font-weight-bold">Active</td>
@@ -164,7 +164,7 @@
     </ng-template>
   
     <h6 class="bg-light text-dark p-2 mt-3">Images</h6>
-    <div class="row" *ngIf="product && product.product.media; else noImgs">
+    <div class="row" *ngIf="product && product.media; else noImgs">
       <div class="col-md-12">
         <app-change-sequence [mode]="'IMAGES'" [data]="product.media" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
       </div>
@@ -179,6 +179,11 @@
     
   </ng-container>
   <ng-template #noProduct>
-    No Product Details
+    <div class="card p-2">
+      <div class="text-center text-muted">
+          <h2><i class="fa fa-golf-ball" aria-hidden="true"></i></h2>
+          <h4 class="font-weight-normal">No Product </h4>
+      </div>
+    </div>
   </ng-template>  
 </div>

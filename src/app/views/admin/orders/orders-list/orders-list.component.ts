@@ -29,7 +29,7 @@ export class OrdersListComponent implements OnInit {
   orders_status='ALL';
   orders_status_options=['ALL','ASSIGNED_TO_SELLER_DEALER','PAYMENT_REQUIRED_BY_BUYER','PROCESSING','SHIPPED','DELIVERED','REFUND_REQUESTED','REFUND_PROCESSED','REJECTED'];
 
-  orders_sort_by:string='created_at';
+  orders_sort_by:string='order_place_datetime';
   orders_sort_order:any=-1;
   orders_search:string='';
 
@@ -61,27 +61,15 @@ export class OrdersListComponent implements OnInit {
     },
     {
       id:7,
-      sort_by:'order_created_datetime',
+      sort_by:'order_place_datetime',
       sort_order:'DESC',
       title:'Sort By OrderDate descending'
     },
     {
       id:8,
-      sort_by:'order_created_datetime',
+      sort_by:'order_place_datetime',
       sort_order:'ASC',
       title:'Sort By OrderDate ascending'
-    },
-    {
-      id:9,
-      sort_by:'order_completed_datetime',
-      sort_order:'DESC',
-      title:'Sort By OrderCompleted Date descending'
-    },
-    {
-      id:10,
-      sort_by:'order_completed_datetime',
-      sort_order:'ASC',
-      title:'Sort By  OrderCompleted Date ascending'
     }
   ]
   routerSubscription!:Subscription;
