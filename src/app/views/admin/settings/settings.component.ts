@@ -12,8 +12,8 @@ import { Helper } from 'src/app/services/helper.service';
 })
 export class SettingsComponent implements OnInit {
 
-  systemSettings:any;
-  public shippingChargeSettings: FormGroup;
+  systemSettingsDetails: any;
+  public systemSettings!: FormGroup;
 
   constructor(
     private _toastr: Toastr,
@@ -22,86 +22,93 @@ export class SettingsComponent implements OnInit {
     public activeRoute: ActivatedRoute,
     public _helper: Helper
   ) {
-    this.shippingChargeSettings = new FormGroup({
-      'shipping_charge_active': new FormControl(null, []),
-      'shipping_charges':new FormArray([]),
+    this.systemSettings = new FormGroup({
+      'entries': new FormArray([])
     });
-
-   
   }
 
-  get shipping_charge_active() { return this.shippingChargeSettings.get('shipping_charge_active'); };
-
-  ngOnInit(){
+  ngOnInit() {
     this.getSystemSettingsDetails();
   }
 
-  newShippingCharge(): FormGroup {
+  newEntry(): FormGroup {
     return new FormGroup({
-      'name': new FormControl('', [Validators.required]),
-      'price': new FormControl('', [Validators.required])
+      'id': new FormControl(null, []),
+      'title': new FormControl('', [Validators.required]),
+      'value': new FormControl('', [Validators.required]),
+      'deletable': new FormControl(1, []),
     });
   }
 
-  addShippingCharge() {
-    this.shipping_charges().push(this.newShippingCharge());
+  addEntry() {
+    this.entries().push(this.newEntry());
   }
 
-  removeShippingCharge(empIndex:number) {
-    this.shipping_charges().removeAt(empIndex);
+  removeEntry(empIndex: number) {
+    let val = this.entries().at(empIndex).value;
+
+    const url = 'api/admin/system_settings/delete/' + val.id;
+    this._http.post(url, {}).subscribe((data: any) => {
+      this.entries().removeAt(empIndex);
+      this.getSystemSettingsDetails();
+    });
   }
 
-  shipping_charges(): FormArray {
-      return this.shippingChargeSettings.get("shipping_charges") as FormArray
+  entries(): FormArray {
+    return this.systemSettings.get("entries") as FormArray
   }
 
-  getSystemSettingsDetails(){
-    const url = 'api/system_settings/view' ;
-    this._http.get(url).subscribe((data:any) => {
-        this.systemSettings = data;
 
-        this.shippingChargeSettings.patchValue({
-          shipping_charge_active:data.shipping_charge_active
-        });
 
-        const shipping_chargesControl = this.shippingChargeSettings.get('shipping_charges') as FormArray;
-        if(data.shipping_charges){
-          data.shipping_charges.forEach((item:any)=>{
-            let shFormGroup = new FormGroup({
-              'name':new FormControl(item.name, [Validators.required]),
-              'price':new FormControl(item.price, [Validators.required])
-            });
-            shipping_chargesControl.push(shFormGroup);
-          });
-        }
-        this._changeDetectorRef.detectChanges();
-      }, (err:any) => {
-      });
-  }
 
-  public saveCharge() {
-    if (this.shippingChargeSettings.invalid) {
-      this._helper.markFormGroupTouched(this.shippingChargeSettings);
-      return;
+  clearFormArray = (formArray: FormArray) => {
+    while (formArray.length !== 0) {
+      formArray.removeAt(0)
     }
-    const url = 'api/system_settings/update_shipping_charge/'+this.systemSettings.id ;
-    const req = this.shippingChargeSettings.value;
-    this._http.post(url, req).subscribe((data: any) => {
-      this._toastr.showSuccess('Shipping Charges updated Successfully');
+  }
+
+  getSystemSettingsDetails() {
+    const url = 'api/admin/system_settings/all';
+    this._http.get(url).subscribe((data: any) => {
+      this.systemSettingsDetails = data;
+      this.clearFormArray(this.entries());
+      const entryControl = this.systemSettings.get('entries') as FormArray;
+      data.forEach((item: any) => {
+        let shFormGroup = new FormGroup({
+          'id': new FormControl(item.id, []),
+          'title': new FormControl({ value: item.title, disabled: item.title_editable == 1 ? false : true }, [Validators.required]),
+          'value': new FormControl({ value: item.value, disabled: item.value_editable == 1 ? false : true }, [Validators.required]),
+          'deletable': new FormControl(item.deletable, []),
+        });
+        entryControl.push(shFormGroup);
+      });
+
+      this._changeDetectorRef.detectChanges();
+    }, (err: any) => {
+
+    });
+  }
+
+  public saveSettings(index: number, operation: string) {
+    let val  = this.systemSettings.getRawValue().entries[index];
+    const url = operation == 'update' ? 'api/admin/system_settings/update/' + val.id : 'api/admin/system_settings/create';
+    this._http.post(url, val).subscribe((data: any) => {
+      this._toastr.showSuccess('Save Successfully');
+      this.getSystemSettingsDetails();
     },
-      (err:any) => {
-        this._toastr.showError('Unable to update Setting');
+      (err: any) => {
+        this._toastr.showError('Unable to save Setting');
       });
   }
 
-  public forceLogoutAllUsers(){
+  public forceLogoutAllUsers() {
     const url = 'api/users/forceLogoutAll';
     this._http.get(url).subscribe((data: any) => {
       this._toastr.showSuccess('All users logged out Successfully');
     },
-    (err:any) => {
-      this._toastr.showError('Error occured');
-    });
+      (err: any) => {
+        this._toastr.showError('Error occured');
+      });
   }
 
 

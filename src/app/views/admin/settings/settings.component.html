@@ -3,54 +3,53 @@
 </div>
 <div class="container-fluid py-3">
       <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-12">
                   <div class="card">
-                  <div class="card-header"><h5>Manage Shipping Charge</h5></div>
+                  <div class="card-header"><h5>Manage System Settings</h5></div>
                   <div class="card-body">
-                        <form (ngSubmit)="saveCharge()" [formGroup]="shippingChargeSettings">
+                        <form  [formGroup]="systemSettings">
 
-                                <label>Active</label><br/>
-                                <mat-slide-toggle class="example-margin" color="primary" checked="checked" id="shipping_charge_active" formControlName="shipping_charge_active">
-                                </mat-slide-toggle>
-
-                               <div formArrayName="shipping_charges">
-                                    <div *ngFor="let fi of shipping_charges().controls; let fiIndex=index">
+                               <div formArrayName="entries">
+                                    <div *ngFor="let fi of entries().controls; let fiIndex=index">
                                     <div class="form-group" [formGroupName]="fiIndex">
                                           <div class="form-row">
 
-                                          <div class="col-8">
+                                          <div class="col-6">
+                                                <input type="hidden" formControlName="id"  />
                                                 <div class="form-group">
-                                                <input type="text" class="mt-2 form-control" placeholder="Enter Charge Name" formControlName="name"  />
-                                                <div class="invalid-feedback" *ngIf="fi.get('name')?.invalid && (fi.get('name')?.dirty || fi.get('name')?.touched)" class="text-danger">
-                                                      <div *ngIf="fi.get('name')?.errors?.required">Delivery Charge Name is required</div>
+                                                <label>Title</label>
+                                                <input type="text" class="form-control" placeholder="Enter Title" formControlName="title"  />
+                                                <div class="invalid-feedback" *ngIf="fi.get('title')?.invalid && (fi.get('title')?.dirty || fi.get('title')?.touched)" class="text-danger">
+                                                      <div *ngIf="fi.get('title')?.errors?.required">Title is required</div>
                                                 </div>
                                                 </div>
                                           </div>
                                           <div class="col-3">
-                                                  <div class="input-group mb-3">
-                                                      <div class="input-group-prepend">
-                                                            <span class="input-group-text">₹</span>
-                                                      </div>
-                                                      <input type="number" id="price" formControlName="price" class="form-control" />
-                                                      <div class="invalid-feedback" *ngIf="fi.get('price')?.invalid && (fi.get('price')?.dirty || fi.get('price')?.touched)" class="text-danger">
-                                                            <div *ngIf="fi.get('price')?.errors?.required">Delivery price is required</div>
+                                                  <div class="form-group">
+                                                      <label>Value</label>
+                                                      <input type="text" id="value" formControlName="value" class="form-control" />
+                                                      <div class="invalid-feedback" *ngIf="fi.get('value')?.invalid && (fi.get('value')?.dirty || fi.get('value')?.touched)" class="text-danger">
+                                                            <div *ngIf="fi.get('value')?.errors?.required">Value is required</div>
                                                       </div>
                                                   </div>
                                           </div>
 
-                                          <div class="col-1">
-                                                <button  type="button" class="btn btn-sm btn-danger" (click)="removeShippingCharge(fiIndex)"><i class="fa fa-trash"></i></button>
+                                          <div class="col-3">
+                                                <label>Action</label><br/>
+                                                <button  *ngIf="fi.get('deletable')?.value==1" type="button" class="btn btn-sm btn-danger mr-2" (click)="removeEntry(fiIndex)"><i class="fa fa-trash mr-2"></i>Delete</button>
+                                                <button  *ngIf="fi.get('id')?.value!=null" type="button" class="btn btn-sm btn-success mr-2" (click)="saveSettings(fiIndex,'update')"><i class="fa fa-check-circle mr-2"></i>Save</button>
+                                                <button  *ngIf="fi.get('id')?.value==null" type="button" class="btn btn-sm btn-warning" (click)="saveSettings(fiIndex,'create')"><i class="fa fa-check-circle mr-2"></i>Create</button>
                                           </div>
                                           </div>
                                     </div>
                                     </div>
                               </div>
                               <div class="text-center">
-                                    <button type="button"  class="btn btn-sm btn-primary" (click)="addShippingCharge()"><i class="fa fa-plus mr-2"></i>Add More</button>
+                                    <button type="button"  class="btn btn-sm btn-primary" (click)="addEntry()"><i class="fa fa-plus mr-2"></i>Add More</button>
                               </div>
 
 
-                              <button class="btn btn-block btn-primary btn-sm mt-3" type="submit">Update</button>
+                             
                         </form>
                   </div>
                   </div>
