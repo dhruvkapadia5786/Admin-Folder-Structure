@@ -78,6 +78,9 @@ export class orderHelper {
       if (status == 'ASSIGNED_TO_SELLER_DEALER'){
         badge= `<span class='badge  badge-pill badge-primary p-2'>Assigned To Seller / Dealer</span>`;
       }
+      else if(status == 'PAYMENT_COMPLETED_BY_BUYER'){
+        badge= `<span class='badge badge-pill badge-success p-2'>Payment Done By Buyer</span>`;
+      }
       else if (status == 'REJECTED'){
         badge= `<span class='badge  badge-pill badge-danger  p-2'>Rejected</span>`;
       } else if (status == 'PAYMENT_REQUIRED_BY_BUYER') {

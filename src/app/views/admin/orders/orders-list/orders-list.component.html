@@ -55,6 +55,9 @@
                                     <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER NO.</small></p><p class="font-weight-bold mb-0">#{{order.order_number}}</p></div>
                                     <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">ORDER DATE</small></p><p class="font-weight-bold mb-0">{{ order.order_place_datetime |date:'dd/MM/yyyy'}}</p></div>
                                     <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">TOTAL</small></p><p class="font-weight-bold mb-0">{{order.total_amount | currency:order.currency}}</p></div>
+                                    <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">PLATFORM COMMISION</small></p><p class="font-weight-bold mb-0">{{order.platform_commission | currency:order.currency}}</p></div>
+                                    <div class="mini-magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start"><p class="mb-0"><small class="mb-0">SELLER EARNING</small></p><p class="font-weight-bold mb-0">{{order.seller_dealer_earning | currency:order.currency}}</p></div>
+                                    
                                     <div class="magic-width-box text-center mb-lg-0 md-md-0 mb-sm-2 mb-2  d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start">
                                         <p class="mb-0"><small class="mb-0">ORDER STATUS</small></p>
                                         <p class="mb-0">
@@ -62,12 +65,6 @@
                                         </p>
                                     </div>
                                     <div class="magic-width-box text-left mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start" (click)="goToUserDetails(order.user_id)"><p class="mb-0"><small class="mb-0 cursor-pointer">CUSTOMER NAME</small></p><p class="cursor-pointer font-weight-bold mb-0">{{order.customer_name}}</p></div>
-                                    <div class="text-left mb-lg-0 md-md-0 mb-sm-2 mb-2">
-                                        <p class="mb-0"><small class="mb-0">BILL TO</small></p>
-                                        <p class="font-weight-bold mb-0">{{order.contact_name}}</p>
-                                        <p class="font-weight-bold mb-0">{{order.contact_number}}</p>
-                                        <p *ngIf="order.address_line_1" class="font-weight-bold mb-0">{{order.address_line_1}}{{order.address_line_2 ? (' , '+order.address_line_2) : '' }}{{' , '+order.city_name+' , '+order.state+' , '+order.zip_code+' , '+order.country}}</p>
-                                    </div>
                                 </div>
                                 <div>
                                     <button type="button" class="float-right btn btn-sm btn-outline-primary" (click)="goToDetailsPage(order.id)">View</button>
@@ -80,6 +77,7 @@
                                     <tr>
                                         <th class="border-0 text-left">PRODUCTS</th>
                                         <th class="border-0 text-left">QUANTITY</th>
+                                        <th class="border-0 text-left">BILLING ADDRESS</th>
                                         <th class="border-0 text-right">PRICE</th>
                                     </tr>
                                 </thead>
@@ -96,6 +94,9 @@
                                         </div>
                                        </td>
                                         <td class="align-middle text-left font-weight-bold">{{order.quantity}}</td>
+                                        <td>
+                                           <p *ngIf="order.address_line_1" class="font-weight-bold mb-0">{{order.address_line_1}}{{order.address_line_2 ? (' , '+order.address_line_2) : '' }}{{' , '+order.city_name+' , '+order.state+' , '+order.zip_code+' , '+order.country}}</p>
+                                        </td>
                                         <td class="align-middle text-right font-weight-bold">{{ order.price | currency:order.currency}}</td>
                                     </tr>
                                 </tbody>

@@ -14,6 +14,15 @@
             </mat-select>
         </div>
         <div class="col-md-2">
+          <mat-label>Subscription Plan</mat-label>
+          <mat-select placeholder="Select Subscription Plan" (selectionChange)="handleChange('SUBSCRIPTION_PLAN', $event.value)" [(ngModel)]="product_config.filter.SUBSCRIPTION_PLAN" multiple>
+            <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'SUBSCRIPTION_PLAN')"
+            [indeterminate]="product_config.filter.SUBSCRIPTION_PLAN.length && notSelectedSubscriptionPlan"
+            [checked]="!notSelectedSubscriptionPlan">All</mat-checkbox>
+            <mat-option color="primary" *ngFor="let plan of productSubscriptionPlanList" [value]="plan.id">{{plan.name}}</mat-option>
+          </mat-select>
+      </div>
+        <div class="col-md-2">
           <mat-label>Status</mat-label>
           <mat-select placeholder="Select Status" (selectionChange)="handleChange('STATUS', $event.value)" [(ngModel)]="product_config.filter.STATUS" multiple>
             <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'STATUS')"

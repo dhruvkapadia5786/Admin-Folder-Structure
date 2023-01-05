@@ -27,7 +27,7 @@ export class OrdersListComponent implements OnInit {
   orders_limit_options=[5,10,20,30,50];
 
   orders_status='ALL';
-  orders_status_options=['ALL','ASSIGNED_TO_SELLER_DEALER','PAYMENT_REQUIRED_BY_BUYER','PROCESSING','SHIPPED','DELIVERED','REFUND_REQUESTED','REFUND_PROCESSED','REJECTED'];
+  orders_status_options=['ALL','ASSIGNED_TO_SELLER_DEALER','PAYMENT_REQUIRED_BY_BUYER','PAYMENT_COMPLETED_BY_BUYER','PROCESSING','SHIPPED','DELIVERED','REFUND_REQUESTED','REFUND_PROCESSED','REJECTED'];
 
   orders_sort_by:string='order_place_datetime';
   orders_sort_order:any=-1;

@@ -56,6 +56,12 @@ export class Helper {
         else if(status=='deleted'){
             return `<span class="badge badge-danger">Deleted</span>`;
         }
+        else if(status=='sold_out'){
+            return `<span class="badge badge-dark">Sold Out</span>`;
+        }
+        else if(status=='out_of_stock'){
+            return `<span class="badge badge-danger">Out of stock</span>`;
+        }
         else {
             return `<span class="badge badge-warning">${status}</span>`;
         }

@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Helper } from 'src/app/services/helper.service';
 import { CurrencyPipe  } from '@angular/common';
 import {environment} from 'src/environments/environment';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-products-list',
@@ -15,6 +16,7 @@ import {environment} from 'src/environments/environment';
 })
 export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
   productCategoryList:any[]=[];
+  productSubscriptionPlanList:any[]=[];
   productStatusList:any[]=[
     {
       name:"Draft",
@@ -53,6 +55,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
   product_config:any = {
     filter: {
       CATEGORY: [],
+      SUBSCRIPTION_PLAN:[],
       USER_ID:'',
       STATUS:[],
       SHAFT:[],
@@ -87,6 +90,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
        this.showHeader = false;
      }
      this.getAllCategories();
+     this.getAllSubscriptionPlans();
      this.getDTOptions();
   }
 
@@ -127,6 +131,16 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  public getAllSubscriptionPlans(){
+    const url = 'api/admin/subscription_plans/all?role=seller';
+    this._http.get(url).subscribe((data: any) => {
+       this.productSubscriptionPlanList=data;
+    },
+    (err:any) => {
+
+    });
+  }
+
   handleChange(event: string, value: any) {
     $('#productsList').DataTable().ajax.reload();
   }
@@ -137,6 +151,13 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.product_config.filter.CATEGORY = this.productCategoryList.slice().map((item:any)=>item.id);
       } else {
         this.product_config.filter.CATEGORY = [];
+      }
+    }
+    if (flag == 'SUBSCRIPTION_PLAN'){
+      if (event.checked){
+        this.product_config.filter.SUBSCRIPTION_PLAN = this.productSubscriptionPlanList.slice().map((item:any)=>item.id);
+      } else {
+        this.product_config.filter.SUBSCRIPTION_PLAN = [];
       }
     }
     if (flag == 'STATUS'){
@@ -198,6 +219,11 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
   get notSelectedCategory(){
     return this.productCategoryList.filter((item:any) => !this.product_config.filter.CATEGORY.some((b: any) => b === item)).length;
   }
+
+  get notSelectedSubscriptionPlan(){
+    return this.productSubscriptionPlanList.filter((item:any) => !this.product_config.filter.SUBSCRIPTION_PLAN.some((b: any) => b === item)).length;
+  }
+  
   get notSelectedShaft () {
     return this.shaftList.filter((item:any) => !this.product_config.filter.SHAFT.some((b: any) => b === item)).length
   }
@@ -226,6 +252,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
   clearFilter() {
     this.product_config = {filter: {
       CATEGORY:[],
+      SUBSCRIPTION_PLAN:[],
       USER_ID:'',
       STATUS:[], 
       SHAFT:[],
@@ -268,6 +295,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       ajax: (dataTablesParameters: any, callback) => {
        dataTablesParameters.filter = {}
        dataTablesParameters.filter.CATEGORY =  this.product_config.filter.CATEGORY;
+       dataTablesParameters.filter.SUBSCRIPTION_PLAN = this.product_config.filter.SUBSCRIPTION_PLAN;
        dataTablesParameters.filter.USER_ID =  this.product_config.filter.USER_ID  ?  this.product_config.filter.USER_ID: undefined;
        dataTablesParameters.filter.STATUS =  this.product_config.filter.STATUS;
       dataTablesParameters.filter.SHAFT=  this.product_config.filter.SHAFT;
@@ -336,6 +364,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Category',
           className: 'text-left  font-weight-normal'
         },
+
         {
           data: 'brand_name',
           title: 'Brand',
@@ -349,6 +378,39 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getProductStatus(data);
             } else {
+              return '<span></span>';
+            }
+          }
+        },
+        {
+          data: 'has_subscription',
+          title: 'Has Subscription',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return `<i class="fa fa-check text-success"></i>`;
+            } else {
+              return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data: 'subscription_plan_name',
+          title: 'Subscription Plan',
+          className: 'text-center  font-weight-normal'
+        },
+        {
+          data: 'subscription_status',
+          title: 'Subscription Status',
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, full: any) => {
+            if (data=='active') {
+              return '<span class="badge badge-success">Active</span>'
+            }
+            else if (data=='inactive') {
+              return '<span class="badge badge-dark">Inactive</span>'
+            }
+            else {
               return '<span></span>';
             }
           }
@@ -463,7 +525,31 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-center  font-weight-normal',
           render: (data: any, type: any, full: any) => {
             if (data) {
-              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
+            } else {
+              return '<span></span>';
+            }
+          }
+        },
+        {
+          data: 'subscription_activation_date',
+          title: 'Subscription Activate Date',
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, full: any) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
+            } else {
+              return '<span></span>';
+            }
+          }
+        },
+        {
+          data: 'subscription_expiry_date',
+          title: 'Subscription Expiry Date',
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, full: any) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
             } else {
               return '<span></span>';
             }
