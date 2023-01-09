@@ -30,7 +30,7 @@ export class OrdersListComponent implements OnInit {
   orders_status_options=['ALL','ASSIGNED_TO_SELLER_DEALER','PAYMENT_REQUIRED_BY_BUYER','PAYMENT_COMPLETED_BY_BUYER','PROCESSING','SHIPPED','DELIVERED','REFUND_REQUESTED','REFUND_PROCESSED','REJECTED'];
 
   orders_sort_by:string='order_place_datetime';
-  orders_sort_order:any=-1;
+  orders_sort_order:any='DESC';
   orders_search:string='';
 
   orders_sort_selected_option=1;

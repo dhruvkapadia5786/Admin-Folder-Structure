@@ -116,6 +116,12 @@ export class OrdersViewComponent implements OnInit, OnDestroy {
     this.router.navigate(['admin', 'customers', 'view', this.orderDetails.user.id, 'orders']);
   }
 
+  goToDetails(role:string) {
+    let goto= role=='seller'?'sellers':'dealers'; 
+    this.router.navigate(['admin', goto, 'view', this.orderDetails.seller_dealer_address.user_id, 'info']);
+  }
+
+
   async getImage(path: string) {
     await this.http.post('api/document/preview', { path: path }, { responseType: 'blob' }).toPromise().then((result) => {
       const fr = new FileReader();
