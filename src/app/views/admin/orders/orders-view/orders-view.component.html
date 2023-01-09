@@ -82,7 +82,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Id</td><td>{{orderDetails.seller_dealer_address.id}}</td></tr>
+                                <tr><td>Id</td><td>{{orderDetails.seller_dealer_address.user_id}}</td></tr>
                                 <tr>
                                     <td>Name</td>
                                     <td>
@@ -390,6 +390,7 @@
                                         <th>Payment Source</th>
                                         <th>Amount Charged</th>
                                         <th>Charge Id</th>
+                                        <th>Card Details</th>
                                         <th>Amount Refund</th>
                                         <th>Refund Id</th>
                                         <th>Datetime</th>
@@ -408,6 +409,13 @@
                                             <span *ngIf="transaction.payment_source=='WALLET'">{{'Wallet Transaction
                                                 #'+transaction.charge_id}}</span>
                                         </td>
+                                        <td>
+                                            <div *ngIf="transaction.details">
+                                               <b>Card - {{ transaction.details.card.brand | titlecase }}</b>
+                                               <p class="mb-0">Ending With {{ transaction.details.card.last4 }}</p>
+                                               <p class="mb-0">Expires {{ transaction.details.card.exp_month+' / '+transaction.details.card.exp_year }}</p>
+                                            </div>
+                                         </td>    
                                         <td>{{transaction.refunded_amount | currency:orderDetails.currency}}</td>
                                         <td>
                                             <span
