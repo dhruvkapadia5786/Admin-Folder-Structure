@@ -7,37 +7,37 @@
             <div class="float-right">
               <i class="fa fa-3x fa-money" style="opacity:0.1; transform: rotate(-35deg);"></i>
             </div>
-            <p class="white-text">SALES</p>
+            <p class="white-text">PLATFORM EARNINGS</p>
             <h4>
-              <strong>{{(counts.total_sales | currency:'EUR') }}</strong>
+              <strong>{{(counts.total_earnings | currency:'EUR') }}</strong>
             </h4>
           </div>
         </div>
       </a>
-      <div *ngIf="detstats && detstats.sales">
+      <div *ngIf="detstats && detstats.earnings">
         <table class="table table-sm table-hover">
           <tr>
             <td class="font-weight-normal">Today</td>
-            <td class="text-right"><span class="">{{detstats.sales.total.today | currency:'EUR' }}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.total.today | currency:'EUR' }}</span></td>
           </tr>
           <tr>
             <td class="font-weight-normal">Yesterday</td>
-            <td class="text-right"><span class="">{{detstats.sales.total.yesterday | currency:'EUR' }}</span>
+            <td class="text-right"><span class="">{{detstats.earnings.total.yesterday | currency:'EUR' }}</span>
             </td>
           </tr>
           <tr>
             <td class="font-weight-normal">Last 7 day</td>
-            <td class="text-right"><span class="">{{detstats.sales.total.last_7days | currency:'EUR' }}</span>
+            <td class="text-right"><span class="">{{detstats.earnings.total.last_7days | currency:'EUR' }}</span>
             </td>
           </tr>
           <tr>
             <td class="font-weight-normal">Last 15 day</td>
-            <td class="text-right"><span class="">{{detstats.sales.total.last_15days | currency:'EUR' }}</span>
+            <td class="text-right"><span class="">{{detstats.earnings.total.last_15days | currency:'EUR' }}</span>
             </td>
           </tr>
           <tr>
             <td class="font-weight-normal">Last 30 day</td>
-            <td class="text-right"><span class="">{{detstats.sales.total.last_30days | currency:'EUR' }}</span>
+            <td class="text-right"><span class="">{{detstats.earnings.total.last_30days | currency:'EUR' }}</span>
             </td>
           </tr>
         </table>
@@ -51,47 +51,47 @@
             <div class="float-right">
               <i class="fa fa-3x fa-shopping-cart" style="opacity:0.1; transform: rotate(-35deg);"></i>
             </div>
-            <p>ORDERS</p>
+            <p>ORDERS COMMISIONS</p>
             <h4>
-              <strong>{{counts.total_order_sales |currency:'EUR'}}</strong>
+              <strong>{{counts.total_order_commision |currency:'EUR'}}</strong>
             </h4>
           </div>
         </div>
       </a>
-      <div *ngIf="detstats && detstats.sales  && detstats.sales.order_stats">
+      <div *ngIf="detstats && detstats.earnings  && detstats.earnings.order_stats">
         <table class="table table-hover table-sm">
           <tr>
             <!-- <td class="font-weight-normal">Today</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.order_stats.today.count }}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.order_stats.today.total.toFixed(2) | currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.order_stats.today.count }}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.order_stats.today.total.toFixed(2) | currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Yesterday</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.order_stats.yesterday.count}}</span>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.order_stats.yesterday.count}}</span>
             </td>
-            <td class="text-right"><span class="">{{detstats.sales.order_stats.yesterday.total.toFixed(2) | currency:'EUR'}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.order_stats.yesterday.total.toFixed(2) | currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 7 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.order_stats.last_7days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.order_stats.last_7days.total.toFixed(2) | currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.order_stats.last_7days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.order_stats.last_7days.total.toFixed(2) | currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 15 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.order_stats.last_15days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.order_stats.last_15days.total.toFixed(2) | currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.order_stats.last_15days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.order_stats.last_15days.total.toFixed(2) | currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 30 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.order_stats.last_30days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.order_stats.last_30days.total.toFixed(2) | currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.order_stats.last_30days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.order_stats.last_30days.total.toFixed(2) | currency:'EUR'}}</span></td>
           </tr>
         </table>
       </div>
     </div>
 
     <div class="flex-fill mx-2">
-      <a class="text-decoration-none" href="javascript:void(0)" routerLink="/admin/orders/">
+      <a class="text-decoration-none" href="javascript:void(0)" routerLink="/admin/dealer-subscriptions">
         <div class="card classic-admin-card indigo-darken-4">
           <div class="card-body">
             <div class="float-right">
@@ -104,40 +104,40 @@
           </div>
         </div>
       </a>
-      <div *ngIf="detstats && detstats.sales && detstats.sales.dealer_account_subscription_stats">
+      <div *ngIf="detstats && detstats.earnings && detstats.earnings.dealer_account_subscription_stats">
         <table class="table table-hover table-sm">
           <tr>
             <!-- <td class="font-weight-normal">Today</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.dealer_account_subscription_stats.today.count }}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.dealer_account_subscription_stats.today.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.dealer_account_subscription_stats.today.count }}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.dealer_account_subscription_stats.today.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Yesterday</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.dealer_account_subscription_stats.yesterday.count}}</span>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.dealer_account_subscription_stats.yesterday.count}}</span>
             </td>
-            <td class="text-right"><span class="">{{detstats.sales.dealer_account_subscription_stats.yesterday.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.dealer_account_subscription_stats.yesterday.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 7 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.dealer_account_subscription_stats.last_7days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.dealer_account_subscription_stats.last_7days.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.dealer_account_subscription_stats.last_7days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.dealer_account_subscription_stats.last_7days.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 15 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.dealer_account_subscription_stats.last_15days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.dealer_account_subscription_stats.last_15days.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.dealer_account_subscription_stats.last_15days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.dealer_account_subscription_stats.last_15days.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 30 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.dealer_account_subscription_stats.last_30days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.dealer_account_subscription_stats.last_30days.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.dealer_account_subscription_stats.last_30days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.dealer_account_subscription_stats.last_30days.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
         </table>
       </div>
     </div>
 
     <div class="flex-fill mx-2">
-      <a class="text-decoration-none" href="javascript:void(0)" routerLink="/admin/orders/">
+      <a class="text-decoration-none" href="javascript:void(0)" routerLink="/admin/top-listing-subscriptions">
         <div class="card classic-admin-card indigo-darken-4">
           <div class="card-body">
             <div class="float-right">
@@ -150,33 +150,33 @@
           </div>
         </div>
       </a>
-      <div *ngIf="detstats && detstats.sales && detstats.sales.product_toplisting_stats">
+      <div *ngIf="detstats && detstats.earnings && detstats.earnings.product_toplisting_stats">
         <table class="table table-hover table-sm">
           <tr>
             <!-- <td class="font-weight-normal">Today</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.product_toplisting_stats.today.count }}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.product_toplisting_stats.today.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.product_toplisting_stats.today.count }}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.product_toplisting_stats.today.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Yesterday</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.product_toplisting_stats.yesterday.count}}</span>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.product_toplisting_stats.yesterday.count}}</span>
             </td>
-            <td class="text-right"><span class="">{{detstats.sales.product_toplisting_stats.yesterday.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.product_toplisting_stats.yesterday.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 7 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.product_toplisting_stats.last_7days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.product_toplisting_stats.last_7days.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.product_toplisting_stats.last_7days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.product_toplisting_stats.last_7days.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 15 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.product_toplisting_stats.last_15days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.product_toplisting_stats.last_15days.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.product_toplisting_stats.last_15days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.product_toplisting_stats.last_15days.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
           <tr>
             <!-- <td class="font-weight-normal">Last 30 day</td> -->
-            <td class="font-weight-normal"><span class="">{{detstats.sales.product_toplisting_stats.last_30days.count}}</span></td>
-            <td class="text-right"><span class="">{{detstats.sales.product_toplisting_stats.last_30days.total.toFixed(2)|currency:'EUR'}}</span></td>
+            <td class="font-weight-normal"><span class="">{{detstats.earnings.product_toplisting_stats.last_30days.count}}</span></td>
+            <td class="text-right"><span class="">{{detstats.earnings.product_toplisting_stats.last_30days.total.toFixed(2)|currency:'EUR'}}</span></td>
           </tr>
         </table>
       </div>

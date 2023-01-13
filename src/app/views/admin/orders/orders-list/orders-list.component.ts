@@ -33,7 +33,7 @@ export class OrdersListComponent implements OnInit {
   orders_sort_order:any='DESC';
   orders_search:string='';
 
-  orders_sort_selected_option=1;
+  orders_sort_selected_option=7;
   orders_sort_options=[
     {
       id:3,
@@ -132,6 +132,9 @@ export class OrdersListComponent implements OnInit {
      this.orders_config.itemsPerPage=this.orders_limit;
      this.orders_config.currentPage  =1;
    }
+   if(eventName=='SEARCH'){
+    this.orders_config.currentPage  =1;
+  }
    this.getOrderData(this.orders_config.currentPage,this.orders_config.itemsPerPage,this.orders_sort_by,this.orders_sort_order,this.orders_search,this.orders_status);
  }
 

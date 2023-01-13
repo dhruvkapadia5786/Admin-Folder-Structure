@@ -17,8 +17,8 @@ export class BannerSetCreateComponent implements OnInit {
 
   bannerSetForm!: FormGroup;
   selectedFiles:File[]=[];
-  setTypes=['HOME','MEDICINE','HEALTH_CARE_PRODUCTS'];
-  landingTypes=['PRODUCT','OTC_CATEGORY','BRAND','DIRECT_LINK'];
+  setTypes=['HOME'];
+  landingTypes=['PRODUCT','CATEGORY','BRAND','DIRECT_LINK'];
 
   modalRef!:BsModalRef
 

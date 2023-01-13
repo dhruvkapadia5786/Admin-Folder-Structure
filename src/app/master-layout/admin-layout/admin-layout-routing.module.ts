@@ -16,6 +16,8 @@ const routes: Routes = [
   { path: 'policy', loadChildren: () => import('../../views/admin/policy/policy.module').then(policy => policy.PolicyModule) },
   { path: 'settings', loadChildren: () => import('../../views/admin/settings/settings.module').then(settings => settings.SettingsModule) },
   { path: 'orders', loadChildren: () => import('../../views/admin/orders/orders.module').then(order => order.OrdersModule) },
+  { path: 'top-listing-subscriptions', loadChildren: () => import('../../views/admin/top-listing-subscription-payment-history/top-listing-subscription-payment-history.module').then(top => top.TopListingSubscriptionPaymentHistoryModule) },
+  { path: 'dealer-subscriptions', loadChildren: () => import('../../views/admin/dealer-subscription-payment-history/dealer-subscription-payment-history.module').then(dealer => dealer.DealerSubscriptionPaymentHistoryModule)},
   { path: 'bannersets', loadChildren: () => import('../../views/admin/banner-sets/banner-sets.module').then(bs => bs.BannerSetsModule) },
   { path: 'article-categories', loadChildren: () => import('../../views/admin/article-categories/article-categories.module').then(categories => categories.ArticleCategoriesModule) },
   { path: 'articles', loadChildren: () => import('../../views/admin/articles/article.module').then(article => article.ArticleModule) },

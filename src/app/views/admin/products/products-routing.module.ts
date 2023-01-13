@@ -9,8 +9,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', loadChildren:()=>import('./products-list/products-list.module').then(product => product.ProductsListModule) },
-      { path: 'view/:id', loadChildren:()=>import('./products-view/products-view.module').then(product => product.ProductsViewModule) },
-      { path: 'edit/:id', loadChildren:()=>import('./products-edit/products-edit.module').then(product => product.ProductsEditModule) }
+      { path: 'view/:id', loadChildren:()=>import('./products-view/products-view.module').then(product => product.ProductsViewModule) }
     ]
   }
 ];

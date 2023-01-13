@@ -5,34 +5,24 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Helper } from 'src/app/services/helper.service';
+
 @Component({
-  selector: 'app-subscription-payment-history',
-  templateUrl: './subscription-payment-history.component.html',
-  styleUrls: ['./subscription-payment-history.component.scss']
+  selector: 'app-dealer-subscription-payment-history',
+  templateUrl: './dealer-subscription-payment-history.component.html',
+  styleUrls: ['./dealer-subscription-payment-history.component.scss']
 })
-export class SubscriptionPaymentHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DealerSubscriptionPaymentHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   dtOptions!: DataTables.Settings;
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
   dtTrigger: Subject<any> = new Subject();
-  dealerId: any;
-  routerSubscription: any;
-
   constructor(
     private route: ActivatedRoute,
     private _http: HttpClient,
     public _helper: Helper,
     private router: Router,
-    private _renderer: Renderer2) {
-
-    let activeRoute: any = this.route;
-    if (activeRoute) {
-      this.routerSubscription = activeRoute.parent.parent.params.subscribe((params: any) => {
-        this.dealerId = params['id'];
-        this.getData();
-      });
-    }
-
+    private _renderer: Renderer2){
+      this.getData();
   }
 
   ngOnInit() {
@@ -54,9 +44,8 @@ export class SubscriptionPaymentHistoryComponent implements OnInit, AfterViewIni
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[3, 'desc']],
+      order: [[4, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
-        dataTablesParameters.user_id = this.dealerId;
         this.blockDataTable.start();
         this._http
           .post<any>(
@@ -64,7 +53,7 @@ export class SubscriptionPaymentHistoryComponent implements OnInit, AfterViewIni
             dataTablesParameters,
             {}
           )
-          .subscribe((resp) => {
+          .subscribe((resp:any) => {
             this.blockDataTable.stop();
             callback({
               recordsTotal: resp.recordsTotal,
@@ -80,6 +69,18 @@ export class SubscriptionPaymentHistoryComponent implements OnInit, AfterViewIni
           });
       },
       columns: [
+        {
+          data: 'dealer_name',
+          title: 'Dealer Name',
+          className: 'text-left  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<a class="text-primary font-weight-bold" href="javascript:void(0);" dealerID=${record.dealer_id}>${data}</a>`;
+            } else {
+              return `<span></span>`;
+            }
+          }
+        },
         {
           data: 'name',
           title: 'Plan Name',
@@ -144,6 +145,9 @@ export class SubscriptionPaymentHistoryComponent implements OnInit, AfterViewIni
   ngAfterViewInit(): void {
     this.dtTrigger.next();
     this.listenerFn = this._renderer.listen('document', 'click', (event: any) => {
+      if (event.target.hasAttribute('dealerID')){
+        this.goToDealerDetailsPage(event.target.getAttribute('dealerID'));
+      }
       if (event.target.hasAttribute('receiptId')) {
         this.goToViewPage(event.target.getAttribute('receiptId'));
       }
@@ -158,6 +162,7 @@ export class SubscriptionPaymentHistoryComponent implements OnInit, AfterViewIni
     if (this.dtTrigger) {
       this.dtTrigger.unsubscribe();
     }
+    this.listenerFn();
     if (this.blockDataTable) { this.blockDataTable.unsubscribe(); }
   }
 
@@ -168,5 +173,10 @@ export class SubscriptionPaymentHistoryComponent implements OnInit, AfterViewIni
   gotoStripeCharge(charge_id: any) {
     window.open('https://dashboard.stripe.com/payments/' + charge_id, '_blank');
   }
+
+  goToDealerDetailsPage(dealerID: any): any {
+    this.router.navigate(['admin', 'dealers', 'view', dealerID, 'info']);
+  }
+  
 
 }

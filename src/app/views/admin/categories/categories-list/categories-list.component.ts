@@ -138,22 +138,6 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
           className: 'text-left  font-weight-normal'
         },
         {
-          data: 'sub_categories',
-          title: 'Sub Categories',
-          className: 'text-center  font-weight-normal',
-          render: (data: any) => {
-            if(data){
-              let liItem='';
-              for(let item of data){
-                liItem+=`<li>${item.name}</li>`
-              }
-              return `<ul>${liItem}</ul>`;
-            }else{
-              return '';
-            }
-          }
-        },
-        {
           data: 'is_active',
           title: 'Active',
           className: 'text-center  font-weight-normal',

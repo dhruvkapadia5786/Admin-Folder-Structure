@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Helper } from 'src/app/services/helper.service';
 import { CurrencyPipe  } from '@angular/common';
 import {environment} from 'src/environments/environment';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-products-list',
@@ -35,12 +34,20 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       value:"rejected"
     },
     {
-      name:"update required",
+      name:"Update Required",
       value:"update_required"
     },
     {
-      name:"deleted",
+      name:"Deleted",
       value:"deleted"
+    },
+    {
+      name:"Sold out",
+      value:"sold_out"
+    },
+    {
+      name:"Out of Stock",
+      value:"out_of_stock"
     }
   ];
 
@@ -561,8 +568,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           render: function (data: any, type: any, full: any) {
             return `
             <button class="btn btn-default btn-sm m-0" productID=${full.id}>View</button>
-            <br/>
-             <button class="btn btn-sm btn-primary m-0" productEditId=${full.id}>Edit</button>`;
+            `;
           },
           orderable: false
         }
