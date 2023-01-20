@@ -75,6 +75,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			{ route: '/admin/plans', iconName: 'fa-list-alt', displayName: 'Subscription Plans' },
 			{ route: '/admin/orders/refund_requested', iconName: 'fa-sync-alt', displayName: 'Refund Orders' },
 			{ route: '/admin/newsletter-subscribers', iconName: 'fa-envelope', displayName: 'Newsletter Subscribers' },
+			{ route: '/admin/newsletter-templates', iconName: 'fa-envelope', displayName: 'Newsletter Templates' },
 			{
 				displayName: 'Others',
 				iconName: 'fa-info-circle',
