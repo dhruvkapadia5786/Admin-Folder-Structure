@@ -44,6 +44,16 @@ export class DealerInfoComponent implements OnInit,OnDestroy {
     });
   }
 
+  markAsAccount(){
+    this.blockDealerUI.start();
+    const url = 'api/admin/users/mark_account_verified/' + this.dealerId;
+    this.http.post(url,{}).subscribe(async (data: any) => {
+      this.blockDealerUI.stop();
+      this.getDealerDetails();
+    }, (err:any) => {
+      this.blockDealerUI.stop();
+    });
+  }
 
   ngOnDestroy(){
      if(this.routerSubscription){

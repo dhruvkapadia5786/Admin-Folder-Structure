@@ -1,7 +1,7 @@
 <div  *blockUI="'product'">
   <ng-container  *ngIf="product; else noProduct">
     <div class="row">
-      <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('published')" class="btn btn-success mr-2"><i class="fas fa-check-circle mr-2"></i>Publish</button>
+      <button *ngIf="(product.status == 'under_review' || product.status == 'draft') && product.is_verified==1 && product.account_verified_by_admin==1" type="button" (click)="updateStatus('published')" class="btn btn-success mr-2"><i class="fas fa-check-circle mr-2"></i>Publish</button>
       <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('rejected')" class="btn btn-danger mr-2"><i class="fas fa-times mr-2"></i>Reject</button>
       <button *ngIf="product.status != 'deleted'"  type="button" (click)="updateStatus('deleted')" class="btn btn-dark mr-2"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
       <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('update_required')" class="btn btn-warning"><i class="fas fa-info-circle mr-2"></i>Update required</button>
@@ -154,11 +154,18 @@
                          <td>Role</td>
                          <td>{{ product.seller_dealer.role | titlecase }}</td>
                       </tr>
+                      <tr><td>Email Verified</td><td><p *ngIf="product.seller_dealer.is_verified" class="badge badge-pill badge-success">Verified</p></td></tr>
+                      <tr>
+                        <td>Account Verified</td>
+                        <td>
+                            <p [ngClass]="{'badge badge-pill':true,'badge-success':product.seller_dealer.account_verified_by_admin==1,'badge-dark':product.seller_dealer.account_verified_by_admin!=1}">{{ product.seller_dealer.account_verified_by_admin==1?'Verified':'Not Verified'}}</p>
+                        </td>
+                      </tr>
                       <tr>
                          <td>View Details</td>
                          <td>
-                            <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='dealer'" routerLink="'admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
-                            <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='seller'" routerLink="'admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>                         
+                            <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='dealer'" routerLink="'/admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
+                            <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='seller'" routerLink="'/admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>                         
                          </td>
                       </tr>
                   </tbody>

@@ -28,7 +28,7 @@ export class SellerInfoComponent implements OnInit,OnDestroy {
       this.routerSubscription = activeRoute.parent.parent.params.subscribe((params:any) => {
         this.sellerId = params['id'];
         console.log('this.sellerId',this.sellerId)
-        this.getDealerDetails();
+        this.getSellerDetails();
       });
     }
   }
@@ -40,12 +40,23 @@ export class SellerInfoComponent implements OnInit,OnDestroy {
     if(this.blockSellerUI){this.blockSellerUI.unsubscribe();}
   }
 
-  getDealerDetails(){
+  getSellerDetails(){
     this.blockSellerUI.start();
     const url = 'api/admin/sellers/view/' + this.sellerId;
     this.http.get(url).subscribe(async (data: any) => {
       this.blockSellerUI.stop();
       this.sellerDetails = data;
+    }, (err:any) => {
+      this.blockSellerUI.stop();
+    });
+  }
+
+  markAsAccount(){
+    this.blockSellerUI.start();
+    const url = 'api/admin/users/mark_account_verified/' + this.sellerId;
+    this.http.get(url).subscribe(async (data: any) => {
+      this.blockSellerUI.stop();
+      this.getSellerDetails();
     }, (err:any) => {
       this.blockSellerUI.stop();
     });
