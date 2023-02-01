@@ -9,10 +9,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 import { CustomImageCropperComponent } from 'src/app/components/custom-image-cropper/custom-image-cropper.component';
 import { CustomImageCropperService } from 'src/app/components/custom-image-cropper/custom-image-cropper.service';
-
-import { ChangeAddressModalComponent } from 'src/app/components/change-address-modal/change-address-modal.component';
-import { ChangeAddressModalService } from 'src/app/components/change-address-modal/change-address-modal.service';
-
+ 
 import { ChangePasswordModalComponent } from 'src/app/components/change-password-modal/change-password-modal.component';
 import { ChangePasswordModalService } from 'src/app/components/change-password-modal/change-password-modal.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -56,8 +53,7 @@ export class CustomerInfoComponent implements OnInit,OnDestroy {
     private sanitizer: DomSanitizer,
     private modalService: BsModalService,
     private _customImageCropperService: CustomImageCropperService,
-    private _changeAddressModalService: ChangeAddressModalService,
-    private _changePasswordModalService: ChangePasswordModalService){
+     private _changePasswordModalService: ChangePasswordModalService){
 
     }
 
@@ -178,60 +174,7 @@ export class CustomerInfoComponent implements OnInit,OnDestroy {
       this.submitted = false;
     });
   }
-
-
-  openAddAddressModal(){
-    this._changeAddressModalService.setFormData({
-      type: 'ADD_ADDRESS',
-      user_id: this.customerId,
-      addressModalTitle: 'Add New Address'
-    });
-    this.modalRef = this.modalService.show(ChangeAddressModalComponent, { class: 'modal-lg' });
-    this.modalRef.content.onEventCompleted.subscribe((resp: any) => {
-      this.addNewAddress(resp);
-    });
-  }
-
-  openEditAddressModal(address: any) {
-    this._changeAddressModalService.setFormData({
-      type: 'EDIT_ADDRESS',
-      addressModalTitle: 'Edit Address',
-      user_id: this.customerId,
-      address_id: address.id,
-      address_line_1: address.address_line_1,
-      address_line_2: address.address_line_2 ? address.address_line_2 : '',
-      city: address.city,
-      state_name: address.state,
-      state_id: address.state_id,
-      zip_code: address.zip_code,
-      is_default: address.is_default
-    });
-    this.modalRef = this.modalService.show(ChangeAddressModalComponent, { class: 'modal-lg' });
-    this.modalRef.content.onEventCompleted.subscribe((resp: any) => {
-      this.updateAddress(resp);
-    });
-  }
-
-  updateAddress(formData: any){
-    const url = 'api/customers/update_address/' + this.customerId;
-    this.http.post(url, formData).subscribe((resp: any) => {
-        this._toastr.showSuccess('Address updated successfully!')
-        this.getMyAddresses()
-    }, (err:any) => {
-
-    });
-  }
-
-  addNewAddress(formData: any){
-      const url = 'api/customers/add_address/' + this.customerId;
-      this.http.post(url, formData).subscribe((resp: any) => {
-        this._toastr.showSuccess('Address updated successfully!')
-        this.getMyAddresses()
-      }, (err:any) => {
-
-      });
-  }
-
+ 
   openChangePasswordModal(){
     this._changePasswordModalService.setFormData({user_id: this.customerId});
     this.modalRef = this.modalService.show(ChangePasswordModalComponent, { class: 'modal-lg' });

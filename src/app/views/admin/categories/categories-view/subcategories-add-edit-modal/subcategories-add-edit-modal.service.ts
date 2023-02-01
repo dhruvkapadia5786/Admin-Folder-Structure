@@ -18,10 +18,10 @@ export class SubcategoriesAddEditModalService {
   }
 
   async addNewSubcategories(bodyData: any):Promise<any>{
-    return await this._http.post('api/subcategories/create', bodyData).toPromise();
+    return await this._http.post('api/admin/subcategories/create', bodyData).toPromise();
   }
 
   async editSubcategories(id: number, bodyData: any):Promise<any>{
-		return await this._http.post('api/subcategories/update/'+id, bodyData).toPromise();
+		return await this._http.post('api/admin/subcategories/update/'+id, bodyData).toPromise();
   }
 }

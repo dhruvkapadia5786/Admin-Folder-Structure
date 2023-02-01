@@ -15,7 +15,7 @@ import { ArticleCategoriesAddEditModalComponent } from '../../article-categories
 export class ArticleCategoryInfoComponent implements OnInit {
 
   categoryId: any;
-  OTCCategoryDetails:any;
+  CategoryDetails:any;
   modalRef!: BsModalRef;
   constructor(
     public http: HttpClient,
@@ -31,13 +31,13 @@ export class ArticleCategoryInfoComponent implements OnInit {
   }
 
   ngOnInit(){
-    this.getOTCCategoryDetails();
+    this.getCategoryDetails();
   }
 
-  getOTCCategoryDetails(){
+  getCategoryDetails(){
     const url = 'api/admin/article_categories/view/' + this.categoryId;
     this.http.get(url).subscribe((res: any) => {
-         this.OTCCategoryDetails = res;
+         this.CategoryDetails = res;
         this._changeDetectorRef.detectChanges();
       }, (err:any) => {
 
@@ -45,10 +45,10 @@ export class ArticleCategoryInfoComponent implements OnInit {
   }
 
   openEditModal(){
-    this._hcAddEditModalService.setData({event:'EDIT',data:this.OTCCategoryDetails});
+    this._hcAddEditModalService.setData({event:'EDIT',data:this.CategoryDetails});
     this.modalRef = this.modalService.show(ArticleCategoriesAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
-      this.getOTCCategoryDetails();
+      this.getCategoryDetails();
     });
   }
 
@@ -60,7 +60,7 @@ export class ArticleCategoryInfoComponent implements OnInit {
     let url: string = `api/admin/article_categories/update_sequence/${this.categoryId}`;
     this.http.post(url, { mode: event.mode, sequences: dataToSend })
       .subscribe(data => {
-        this.getOTCCategoryDetails();
+        this.getCategoryDetails();
         this._toastr.showSuccess('Sequence Updated Successfully');
       }, (err:any) => {
         this._toastr.showError('Unable to update sequence. Please try again');

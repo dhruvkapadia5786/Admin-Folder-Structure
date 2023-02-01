@@ -15,6 +15,12 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            <label>Linked With Categories</label>
+            <p *ngIf="brandDetails.categories.length==0">Not Linked with any categories</p>
+            <span *ngFor="let category of brandDetails.categories" class="ml-2 badge badge-primary badge-pill p-2">{{ category.name }}</span>
+        </div>
+
+        <div class="col-md-12">
             <label>Description</label>
             <h5>{{brandDetails.description}}</h5>
         </div>

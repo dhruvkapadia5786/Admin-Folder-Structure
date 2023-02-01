@@ -31,9 +31,7 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       'name': new FormControl(null, [Validators.required]),
       'is_active': new FormControl(null, []),
       'description': new FormControl(null, []),
-      'image_url': new FormControl(null, []),
-      'faqs':new FormArray([]),
-      'attributes':new FormArray([])
+      'image_url': new FormControl(null, [])
     });
   }
 
@@ -61,79 +59,11 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
         description:details.data.description
       });
       this.imageUrl = details.data.image_url ? environment.api_url + details.data.image_url : `../../../../../assets/img/no_preview.png`;
-      const faqsControl = this.SubcategoryForm.get('faqs') as FormArray;
-      if(details.data.faqs){
-        details.data.faqs.forEach((item:any)=>{
-          let faqFormGroup = new FormGroup({
-            'question':new FormControl(item.question, [Validators.required]),
-            'answer':new FormControl(item.answer, [Validators.required]),
-            'sequence':new FormControl(item.sequence)
-          });
-          faqsControl.push(faqFormGroup);
-        });
-      }
-      const attributesControl = this.SubcategoryForm.get('attributes') as FormArray;
-      if(details.data.attributes){
-        details.data.attributes.forEach((item:any)=>{
-          let attrFormGroup = new FormGroup({
-            'name':new FormControl(item.name, [Validators.required]),
-            'value':new FormControl(item.value, [Validators.required]),
-            'sequence':new FormControl(item.sequence)
-          });
-          attributesControl.push(attrFormGroup);
-        });
-      }
     }
   }
 
 
-  /*-----------------------------FAQ --------------------------------*/
-  addFAQInput(){
-    this.faqs().push(this.newFAQInput());
-  }
-
-  newFAQInput(): FormGroup {
-    let length= this.faqs().length;
-    return new FormGroup({
-      'question': new FormControl('', [Validators.required]),
-      'answer': new FormControl('', [Validators.required]),
-      'sequence':new FormControl(length+1, []),
-    });
-  }
-
-  removeFAQInput(empIndex:number) {
-    this.faqs().removeAt(empIndex);
-  }
-
-  faqs(): FormArray {
-      return this.SubcategoryForm.get("faqs") as FormArray
-  }
-  /*-----------------------------END OF FAQ --------------------------------*/
-
-
-  /*-----------------------------ATTRIBUTES --------------------------------*/
-  addAttributeInput(){
-    this.attributes().push(this.newAttributeInput());
-  }
-
-  newAttributeInput(): FormGroup {
-    let attr_length= this.attributes().length;
-    return new FormGroup({
-      'name': new FormControl('', [Validators.required]),
-      'value': new FormControl('', [Validators.required]),
-      'sequence':new FormControl(attr_length+1, []),
-    });
-  }
-
-  removeAttributeInput(empIndex:number) {
-    this.attributes().removeAt(empIndex);
-  }
-
-  attributes(): FormArray {
-      return this.SubcategoryForm.get("attributes") as FormArray
-  }
-  /*-----------------------------END OF ATTRIBUTES --------------------------------*/
-
+ 
 
   async saveOTCSubcategory(formValid:boolean){
     if(formValid){
@@ -155,12 +85,10 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
     }
   }
 
-
   onFileChange(event:any, type: string) {
     const reader = new FileReader();
     if(event.target.files && event.target.files.length) {
       const [file] = event.target.files;
-
       reader.readAsDataURL(file);
       reader.onload = () => {
         if (type == 'IMAGE') {

@@ -11,9 +11,6 @@ import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.m
 import { CustomImageCropperModule } from 'src/app/components/custom-image-cropper/custom-image-cropper.module';
 import { CustomImageCropperComponent } from 'src/app/components/custom-image-cropper/custom-image-cropper.component';
 
-import { ChangeAddressModalModule } from 'src/app/components/change-address-modal/change-address-modal.module';
-import { ChangeAddressModalComponent } from 'src/app/components/change-address-modal/change-address-modal.component';
-
 import { ChangePasswordModalModule } from 'src/app/components/change-password-modal/change-password-modal.module';
 import { ChangePasswordModalComponent } from 'src/app/components/change-password-modal/change-password-modal.component';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -30,9 +27,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     NgxMaskModule.forChild(),
     CustomImageCropperModule,
     ChangePasswordModalModule,
-    ChangeAddressModalModule,
     CustomerInfoRoutingModule
   ],
-  entryComponents: [CustomImageCropperComponent, ChangeAddressModalComponent, ChangePasswordModalComponent]
+  entryComponents: [CustomImageCropperComponent, ChangePasswordModalComponent]
 })
 export class CustomerInfoModule { }

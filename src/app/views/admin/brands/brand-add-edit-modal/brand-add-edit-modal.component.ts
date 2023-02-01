@@ -7,6 +7,7 @@ import { Helper } from 'src/app/services/helper.service';
 
 import { ReplaySubject, Subject } from 'rxjs';
 import {tap, filter, takeUntil, switchMap} from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-brand-add-edit-modal',
   templateUrl: './brand-add-edit-modal.component.html',
@@ -22,6 +23,7 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
 
   coverImageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedCoverImageFile: any
+  categoriesDetails: any[] = [];
 
 
   protected manufacturers: any[] = [];
@@ -32,6 +34,7 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   protected _onDestroy = new Subject<void>();
 
   constructor(
+    private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
     private formBuilder: FormBuilder,
@@ -45,7 +48,8 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
       'image_url': new FormControl(null, []),
       'cover_image_url': new FormControl(null, []),
       'is_active': new FormControl(true, []),
-      'is_featured': new FormControl(null, [])
+      'is_featured': new FormControl(null, []),
+      'categories': new FormControl([], []),
     });
   }
 
@@ -56,9 +60,10 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   get cover_image_url() { return this.brandForm.get('cover_image_url'); }
   get is_active() { return this.brandForm.get('is_active'); }
   get is_featured() { return this.brandForm.get('is_featured'); }
+  get categories() { return this.brandForm.get('categories'); }
 
   ngOnInit(): void {
-
+    this.getCategories();
     this.manufacturerFilteringCtrl.valueChanges
       .pipe(
         filter(search => !!search),
@@ -87,8 +92,9 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
         name:details.data.name,
         description:details.data.description,
         is_active:details.data.is_active,
-        is_featured:details.is_featured,
-        manufacturer_id:details.manufacturer_id ? details.manufacturer_id.id:null
+        is_featured:details.data.is_featured,
+        manufacturer_id:details.data.manufacturer_id ? details.data.manufacturer_id.id:null,
+        categories:details.data.categories ? details.data.categories.map((item:any)=>item.id):[]
       });
       this.imageUrl = details.data.image_url ? environment.api_url + details.data.image_url : `../../../../../assets/img/no_preview.png`;
       this.coverImageUrl = details.data.cover_image_url ? environment.api_url + details.data.cover_image_url : `../../../../../assets/img/no_preview.png`;
@@ -110,6 +116,15 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
+  }
+
+  getCategories(){
+    const url = 'api/admin/categories/all';
+    this._http.get(url).subscribe((res: any) => {
+        this.categoriesDetails = res;
+      },(err) => {
+        this.categoriesDetails =[];
+      });
   }
 
   async saveBrand(formValid:boolean){

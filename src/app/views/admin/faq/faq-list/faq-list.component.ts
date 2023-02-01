@@ -95,7 +95,7 @@ export class FaqListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center  font-weight-normal',
           render: (data) => {
             if (data) {
-              return this._helper.getFormattedDateFromUnixTimestamp(data, 'DD/MM/YYYY');
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
               return '<span></span>';
             }

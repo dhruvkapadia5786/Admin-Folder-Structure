@@ -75,8 +75,7 @@
                             <th>ZipCode</th>
                             <th>Default</th>
                             <th>Action
-                                <button class="float-right btn btn-sm btn-outline-primary m-0" type="button"
-                                    (click)="openAddAddressModal()">Add New</button>
+                                
                             </th>
                         </tr>
                     </thead>
@@ -109,12 +108,7 @@
                                 <i class="fa fa-times text-danger" *ngIf="!address.is_default"></i>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-primary mr-2"
-                                    (click)="openEditAddressModal(address)"><i class="fa fa-edit"
-                                        aria-hidden="true"></i></button>
-                                <button *ngIf="address.is_default!=true" type="button" class="btn btn-sm btn-danger"
-                                    (click)="deleteAddress(address.id)"><i class="fas fa-trash"
-                                        aria-hidden="true"></i></button>
+                                
                             </td>
                         </tr>
                     </tbody>

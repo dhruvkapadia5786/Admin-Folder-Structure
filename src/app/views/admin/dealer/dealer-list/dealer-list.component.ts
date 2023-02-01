@@ -129,6 +129,18 @@ export class DealerListComponent implements OnInit, AfterViewInit,OnDestroy {
           }
         },
         {
+          data: 'first_name',
+          title: 'Name',
+          className: 'text-left  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<a class="text-primary font-weight-bold" href="javascript:void(0);" dealerID=${record.id}>${data.charAt(0).toUpperCase() + data.slice(1) +' '+record.last_name}</a>`;
+            } else {
+              return `<span></span>`;
+            }
+          }
+        },
+        {
           data:'business_type',
           title: 'Business type',
           className: 'text-left  font-weight-normal'
@@ -168,11 +180,6 @@ export class DealerListComponent implements OnInit, AfterViewInit,OnDestroy {
         {
           data:'vat_number',
           title: 'Vat number',
-          className: 'text-left  font-weight-normal'
-        },
-        {
-          data:'fax_number',
-          title: 'FAX number',
           className: 'text-left  font-weight-normal'
         },
         {

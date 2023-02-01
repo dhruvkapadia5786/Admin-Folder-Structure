@@ -1,7 +1,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <div class="w-100 d-flex flex-row justify-content-between align-items-center">
-            <p class="font-weight-bold mb-0">{{ modalEvent =='EDIT' ? 'Edit OTC Subcategory' : 'Add OTC Subcategory' }}</p>
+            <p class="font-weight-bold mb-0">{{ modalEvent =='EDIT' ? 'Edit Subcategory' : 'Add Subcategory' }}</p>
             <button (click)="closeModal()" type="button"  class="close float-right" aria-label="Close" data-dismiss="modal">
                 <span aria-hidden="true">x</span>
             </button>
@@ -15,9 +15,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label>OTC Sub Category Name</label><br />
+                        <label>Sub Category Name</label><br />
                         <input type="hidden" id="id" formControlName="id" />
-                        <input type="text" id="name" class="form-control" placeholder="Enter OTC Subcategory Name" formControlName="name" />
+                        <input type="text" id="name" class="form-control" placeholder="Enter Subcategory Name" formControlName="name" />
                         <div class="invalid-feedback" *ngIf="name?.invalid && (name?.dirty || name?.touched)"
                             class="text-danger">
                             <div *ngIf="name?.errors?.required">Name is required.</div>
@@ -62,67 +62,7 @@
             </div>
 
 
-            <div class="alert alert-dark my-3">
-                  <h5 class="font-weight-bold mb-5">FAQs</h5>
-                  <div formArrayName="faqs">
-                      <div *ngFor="let faqItem of faqs().controls; let faqIndex=index">
-                        <div class="form-group mt-2" [formGroupName]="faqIndex">
-                                  <div class="form-row">
-                                      <div class="col-10">
-                                            <input type="text" class="form-control" placeholder="Enter FAQ Question" formControlName="question"  />
-                                            <div class="invalid-feedback" *ngIf="faqItem.get('question')?.invalid && (faqItem.get('question')?.dirty || faqItem.get('question')?.touched)" class="text-danger">
-                                              <div *ngIf="faqItem.get('question')?.errors?.required">FAQ Question is required.</div>
-                                            </div>
-                                      </div>
-                                      <div class="col-2">
-                                            <button  type="button" class="btn btn-sm btn-danger" (click)="removeFAQInput(faqIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                      </div>
-                                      <div class="col-12 mt-2">
-                                            <textarea type="text" class="form-control" placeholder="Enter FAQ Answer" formControlName="answer"></textarea>
-                                            <div class="invalid-feedback" *ngIf="faqItem.get('answer')?.invalid && (faqItem.get('answer')?.dirty || faqItem.get('answer')?.touched)" class="text-danger">
-                                              <div *ngIf="faqItem.get('answer')?.errors?.required">FAQ Answer is required.</div>
-                                            </div>
-                                      </div>
-                                  </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="text-center">
-                        <button type="button"  class="btn btn-sm btn-primary" (click)="addFAQInput()"><i class="fa fa-plus mr-2"></i>Add More FAQ</button>
-                  </div>
-            </div>
-
-            <div class="alert alert-success my-3">
-                  <h5 class="font-weight-bold mb-5">Descriptive Attributes</h5>
-                  <div formArrayName="attributes">
-                      <div *ngFor="let attrItem of attributes().controls; let attrIndex=index">
-                        <div class="form-group mt-2" [formGroupName]="attrIndex">
-                                  <div class="form-row">
-                                      <div class="col-10">
-                                            <input type="text" class="form-control" placeholder="Enter Attribute Name" formControlName="name"  />
-                                            <div class="invalid-feedback" *ngIf="attrItem.get('name')?.invalid && (attrItem.get('name')?.dirty || attrItem.get('name')?.touched)" class="text-danger">
-                                              <div *ngIf="attrItem.get('name')?.errors?.required">Attribute Name is required.</div>
-                                            </div>
-                                      </div>
-                                      <div class="col-2">
-                                            <button  type="button" class="btn btn-sm btn-danger" (click)="removeAttributeInput(attrIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
-                                      </div>
-                                      <div class="col-12 mt-2">
-                                            <textarea type="text" class="form-control" placeholder="Enter Attribute Value" formControlName="value"></textarea>
-                                            <div class="invalid-feedback" *ngIf="attrItem.get('value')?.invalid && (attrItem.get('value')?.dirty || attrItem.get('value')?.touched)" class="text-danger">
-                                              <div *ngIf="attrItem.get('value')?.errors?.required">Attribute Value is required.</div>
-                                            </div>
-                                      </div>
-                                  </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="text-center">
-                        <button type="button"  class="btn btn-sm btn-primary" (click)="addAttributeInput()"><i class="fa fa-plus mr-2"></i>Add More Attributes</button>
-                  </div>
-            </div>
-
-
+            
             <div class="form-group">
                 <button class="btn btn-success btn-block btn-sm mt-2" type="submit">Save</button>
             </div>

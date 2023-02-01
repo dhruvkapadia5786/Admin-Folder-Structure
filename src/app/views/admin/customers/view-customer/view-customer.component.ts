@@ -4,8 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal'
 
 import { ViewCustomerService } from './view-customer.service';
-import { UploadMediaModalComponent } from 'src/app/components/upload-media-modal/upload-media-modal.component';
-import { UploadMediaModalService } from 'src/app/components/upload-media-modal/upload-media-modal.service';
 import { Toastr } from 'src/app/services/toastr.service';
 
 @Component({
@@ -22,8 +20,7 @@ export class ViewCustomerComponent implements OnInit {
     private route: ActivatedRoute,
     private _toastr: Toastr,
     private modalService: BsModalService,
-    public viewCustomerService:ViewCustomerService,
-    private _uploadModalService:UploadMediaModalService
+    public viewCustomerService:ViewCustomerService
   ){
     viewCustomerService.customerDetailsSubscribed$.subscribe(customer => {
         viewCustomerService.publishCustomerDetails(this.customerDetails);
@@ -43,15 +40,7 @@ export class ViewCustomerComponent implements OnInit {
       }, (err:any) => {});
   }
 
-  openUploadDocumentModal() {
-    this._uploadModalService.setFormData('Patient Document');
-    this.modalRef = this.modalService.show(UploadMediaModalComponent, { class: 'modal-lg' });
-    this.modalRef.content.onEventCompleted.subscribe((uploadedFiles: any) => {
-      /* CALL METHOD TO MAKE API CALL TO SAVE DOCUMENTS */
-      this.uploadDocuments(uploadedFiles);
-    });
-  }
-
+  
   uploadDocuments(uploadedFiles: any) {
     const fd: FormData = new FormData();
     let formData = {

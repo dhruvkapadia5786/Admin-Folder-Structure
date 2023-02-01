@@ -29,8 +29,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
     private _renderer:Renderer2,
     private _http: HttpClient,
     private modalService: BsModalService,
-    private _brandAddEditModalService: BrandAddEditModalService
-  ) {
+    private _brandAddEditModalService: BrandAddEditModalService) {
      this.getDTOptions();
   }
 
@@ -79,11 +78,14 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openEditModal(brandId: any){
-    let data = this.brandsList.find((item:any)=>item.id == brandId);
-    this._brandAddEditModalService.setData({event:'EDIT',data:data});
-    this.modalRef = this.modalService.show(BrandAddEditModalComponent, {class: 'modal-x-lg'});
-    this.modalRef.content.onEventCompleted.subscribe(()=>{
-      this.rerender();
+
+    this._http.get(`api/admin/brands/view/${brandId}`).toPromise().then((result: any) => {
+      let data = result;
+      this._brandAddEditModalService.setData({event:'EDIT',data:data});
+      this.modalRef = this.modalService.show(BrandAddEditModalComponent, {class: 'modal-x-lg'});
+      this.modalRef.content.onEventCompleted.subscribe(()=>{
+        this.rerender();
+      });
     });
   }
 

@@ -54,7 +54,7 @@ export class SellerInfoComponent implements OnInit,OnDestroy {
   markAsAccount(){
     this.blockSellerUI.start();
     const url = 'api/admin/users/mark_account_verified/' + this.sellerId;
-    this.http.get(url).subscribe(async (data: any) => {
+    this.http.post(url,{}).subscribe(async (data: any) => {
       this.blockSellerUI.stop();
       this.getSellerDetails();
     }, (err:any) => {

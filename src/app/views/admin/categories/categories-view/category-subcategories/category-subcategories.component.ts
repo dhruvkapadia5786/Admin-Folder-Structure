@@ -89,7 +89,7 @@ export class CategorySubcategoriesComponent implements OnInit,AfterViewInit,OnDe
         this.blockDataTable.start();
         this._http
           .post<any>(
-            'api/subcategories/list/'+this.categoryId,
+            'api/admin/subcategories/list/'+this.categoryId,
             dataTablesParameters,
             {})
           .subscribe((resp) => {
@@ -119,7 +119,7 @@ export class CategorySubcategoriesComponent implements OnInit,AfterViewInit,OnDe
         },
         {
           data: 'name',
-          title: 'OTC SubCategory Name',
+          title: 'SubCategory Name',
           className: 'text-center  font-weight-normal'
         },
         {

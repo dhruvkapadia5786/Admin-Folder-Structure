@@ -1,7 +1,17 @@
 <div  *blockUI="'product'">
   <ng-container  *ngIf="product; else noProduct">
+
+    <div class="alert alert-warning" *ngIf="product.seller_dealer.is_verified!=1 || product.seller_dealer.account_verified_by_admin!=1">
+      
+      <span *ngIf="product.seller_dealer.is_verified!=1">User email address is not verified yet .</span> 
+      <span *ngIf="product.seller_dealer.account_verified_by_admin!=1">Please Verify User account to publish this product! </span>
+
+      <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='dealer'" [routerLink]="'/admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
+      <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='seller'" [routerLink]="'/admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>   
+      <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='user'" [routerLink]="'/admin/customers/view/'+product.seller_dealer.id+'/info'">View</a>   
+    </div>
     <div class="row">
-      <button *ngIf="(product.status == 'under_review' || product.status == 'draft') && product.is_verified==1 && product.account_verified_by_admin==1" type="button" (click)="updateStatus('published')" class="btn btn-success mr-2"><i class="fas fa-check-circle mr-2"></i>Publish</button>
+      <button *ngIf="(product.status == 'under_review' || product.status == 'draft') && product.seller_dealer.is_verified==1 && product.seller_dealer.account_verified_by_admin==1" type="button" (click)="updateStatus('published')" class="btn btn-success mr-2"><i class="fas fa-check-circle mr-2"></i>Publish</button>
       <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('rejected')" class="btn btn-danger mr-2"><i class="fas fa-times mr-2"></i>Reject</button>
       <button *ngIf="product.status != 'deleted'"  type="button" (click)="updateStatus('deleted')" class="btn btn-dark mr-2"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
       <button *ngIf="product.status == 'under_review' || product.status == 'draft'" type="button" (click)="updateStatus('update_required')" class="btn btn-warning"><i class="fas fa-info-circle mr-2"></i>Update required</button>
@@ -164,8 +174,10 @@
                       <tr>
                          <td>View Details</td>
                          <td>
-                            <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='dealer'" routerLink="'/admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
-                            <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='seller'" routerLink="'/admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>                         
+                          <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='dealer'" [routerLink]="'/admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
+                          <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='seller'" [routerLink]="'/admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>   
+                          <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='user'" [routerLink]="'/admin/customers/view/'+product.seller_dealer.id+'/info'">View</a>   
+                                                  
                          </td>
                       </tr>
                   </tbody>

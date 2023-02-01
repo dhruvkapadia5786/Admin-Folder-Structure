@@ -29,6 +29,18 @@
                     </mat-form-field>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <mat-select formControlName="categories" placeholder="Categories" multiple>
+                            <mat-option *ngFor="let cat of categoriesDetails" [value]="cat.id">
+                                {{cat.name}}
+                            </mat-option>
+                        </mat-select>
+                   </div>           
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-5">
                     <div class="form-group">
