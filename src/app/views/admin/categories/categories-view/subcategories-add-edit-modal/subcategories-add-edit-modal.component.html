@@ -61,7 +61,42 @@
                 </div>
             </div>
 
-
+            <div class="alert alert-dark my-3">
+                <h5 class="font-weight-bold mb-5">Attributes</h5>
+                <div formArrayName="attributes">
+                    <div *ngFor="let attributeItem of attributes().controls; let attributeIndex=index">
+                      <div class="form-group mt-2" [formGroupName]="attributeIndex">
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <mat-select formControlName="attribute_id" placeholder="Attribute" (selectionChange)="attrChange(attributeIndex,$event)">
+                                                <mat-option *ngFor="let attr of attributesData" [value]="attr.id">
+                                                    {{attr.name}}
+                                                </mat-option>
+                                            </mat-select>
+                                       </div>       
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <mat-select formControlName="values" placeholder="Value" multiple>
+                                                <mat-option *ngFor="let value of getValuesFromAttribute('value',attributeItem.get('attribute_id')?.value)" [value]="value.id">
+                                                    {{value.name}}
+                                                </mat-option>
+                                            </mat-select>
+                                       </div>   
+                                    </div>
+                                    <div class="col-2">
+                                          <button  type="button" class="btn btn-sm btn-danger" (click)="removeAttributeInput(attributeIndex)"><i class="fa fa-trash mr-2"></i>Remove</button>
+                                    </div>
+                                   
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                      <button type="button"  class="btn btn-sm btn-primary" (click)="addAttributeInput()"><i class="fa fa-plus mr-2"></i>Add More Attribute</button>
+                </div>
+            </div>
             
             <div class="form-group">
                 <button class="btn btn-success btn-block btn-sm mt-2" type="submit">Save</button>

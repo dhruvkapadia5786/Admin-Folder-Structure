@@ -4,6 +4,7 @@ import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { CategoriesAddEditModalService } from './categories-add-edit-modal.service';
 import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-categories-add-edit-modal',
@@ -17,21 +18,25 @@ export class CategoriesAddEditModalComponent implements OnInit {
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
+  categoryDetails:any;
+  attributesData:any[]=[];
+
 
   constructor(
+    private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
     private formBuilder: FormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
-    private _tcAddEditModalService: CategoriesAddEditModalService
-  ) {
+    private _tcAddEditModalService: CategoriesAddEditModalService){
+    this.getAllAttributesData();
+
     this.treatmentConditionForm = this.formBuilder.group({
       'id':new FormControl(null, []),
       'name': new FormControl(null, [Validators.required]),
       'is_active': new FormControl(null, []),
       'description': new FormControl(null, []),
       'image_url': new FormControl(null, []),
-      'faqs':new FormArray([]),
       'attributes':new FormArray([])
     });
   }
@@ -46,86 +51,72 @@ export class CategoriesAddEditModalComponent implements OnInit {
     let details = this._tcAddEditModalService.getData();
     this.modalEvent = details.event;
     if(details.event == 'EDIT'){
-      this.treatmentConditionForm.patchValue({
-        id:details.data.id,
-        name:details.data.name,
-        is_active:details.data.is_active,
-        description:details.data.description
-      });
-      this.imageUrl = details.data.image_url ? environment.api_url + details.data.image_url : `../../../../../assets/img/no_preview.png`;
-      const faqsControl = this.treatmentConditionForm.get('faqs') as FormArray;
-      if(details.data.faqs){
-        details.data.faqs.forEach((item:any)=>{
-          let faqFormGroup = new FormGroup({
-            'question':new FormControl(item.question, [Validators.required]),
-            'answer':new FormControl(item.answer, [Validators.required]),
-            'sequence':new FormControl(item.sequence)
-          });
-          faqsControl.push(faqFormGroup);
-        });
-      }
-      const attributesControl = this.treatmentConditionForm.get('attributes') as FormArray;
-      if(details.data.attributes){
-        details.data.attributes.forEach((item:any)=>{
-          let attrFormGroup = new FormGroup({
-            'name':new FormControl(item.name, [Validators.required]),
-            'value':new FormControl(item.value, [Validators.required]),
-            'sequence':new FormControl(item.sequence)
-          });
-          attributesControl.push(attrFormGroup);
-        });
-      }
+      this.getCategoryDetails(details.data.id);
     }
   }
 
-
-  /*-----------------------------FAQ --------------------------------*/
-  addFAQInput(){
-    this.faqs().push(this.newFAQInput());
-  }
-
-  newFAQInput(): FormGroup {
-    let length= this.faqs().length;
-    return new FormGroup({
-      'question': new FormControl('', [Validators.required]),
-      'answer': new FormControl('', [Validators.required]),
-      'sequence':new FormControl(length+1, []),
+  getCategoryDetails(id:number){
+    const url = 'api/admin/categories/view/'+id;
+    this._http.get(url).subscribe((res: any) => {
+      this.categoryDetails = res;
+      this.patchFormValue();
+    },(err) => {
+      this.categoryDetails = null;
     });
   }
 
-  removeFAQInput(empIndex:number) {
-    this.faqs().removeAt(empIndex);
-  }
-
-  faqs(): FormArray {
-      return this.treatmentConditionForm.get("faqs") as FormArray
-  }
-  /*-----------------------------END OF FAQ --------------------------------*/
-
-
-  /*-----------------------------ATTRIBUTES --------------------------------*/
-  addAttributeInput(){
-    this.attributes().push(this.newAttributeInput());
-  }
-
-  newAttributeInput(): FormGroup {
-    let attr_length= this.attributes().length;
-    return new FormGroup({
-      'name': new FormControl('', [Validators.required]),
-      'value': new FormControl('', [Validators.required]),
-      'sequence':new FormControl(attr_length+1, []),
+  patchFormValue(){
+    this.treatmentConditionForm.patchValue({
+      id:this.categoryDetails.id,
+      category_id:this.categoryDetails.category_id,
+      name:this.categoryDetails.name,
+      is_active:this.categoryDetails.is_active,
+      description:this.categoryDetails.description
     });
+    this.imageUrl = this.categoryDetails.image_url ? environment.api_url + this.categoryDetails.image_url : `../../../../../assets/img/no_preview.png`;
+    const attributesControl = this.treatmentConditionForm.get('attributes') as FormArray;
+    if(this.categoryDetails.attributes){
+      this.categoryDetails.attributes.forEach((item:any)=>{
+        let attributeFormGroup = new FormGroup({
+          'attribute_id':new FormControl(item.attribute_id, [Validators.required]),
+          'values':new FormControl(item.values_ids, [Validators.required]),
+        });
+        attributesControl.push(attributeFormGroup);
+      });
+    }
   }
 
-  removeAttributeInput(empIndex:number) {
-    this.attributes().removeAt(empIndex);
+  getAllAttributesData(){
+    const url = 'api/admin/attributes/all';
+    this._http.get(url).subscribe((res: any) => {
+        this.attributesData = res;
+      },(err) => {
+        this.attributesData =[];
+      });
   }
 
-  attributes(): FormArray {
-      return this.treatmentConditionForm.get("attributes") as FormArray
+  attrChange(index:number,event:any){
+    this.attributes().at(index).patchValue({
+      attribute_id:event.value
+    });
+    let valuesss= this.getValuesFromAttribute('value',event.value);
   }
-  /*-----------------------------END OF ATTRIBUTES --------------------------------*/
 
+  getValuesFromAttribute(key:string,value:number){
+      let attrId = value;
+      let values =[];
+      if(attrId){
+        let objFound = this.attributesData.find((item:any)=>item.id==attrId);
+        if(objFound && objFound.id){
+          values= objFound.values;
+        }else{
+          values= [];
+        }
+      }else{
+        values = [];
+      }
+      return values;
+  }
 
   async saveTreatmentCondition(formValid:boolean){
     if(formValid){
@@ -148,12 +139,10 @@ export class CategoriesAddEditModalComponent implements OnInit {
     }
   }
 
-
   onFileChange(event:any, type: string) {
     const reader = new FileReader();
     if(event.target.files && event.target.files.length) {
       const [file] = event.target.files;
-
       reader.readAsDataURL(file);
       reader.onload = () => {
         if (type == 'IMAGE') {
@@ -164,6 +153,28 @@ export class CategoriesAddEditModalComponent implements OnInit {
       }
     }
   }
+
+  /*-----------------------------ATTRIBUTES --------------------------------*/
+  addAttributeInput(){
+    this.attributes().push(this.newAttributeInput());
+    this.treatmentConditionForm.updateValueAndValidity();
+  }
+
+  newAttributeInput(): FormGroup{
+    return new FormGroup({
+      'attribute_id': new FormControl('', [Validators.required]),
+      'values': new FormControl([], [Validators.required]),
+    });
+  }
+
+  removeAttributeInput(empIndex:number){
+    this.attributes().removeAt(empIndex);
+  }
+
+  attributes(): FormArray {
+      return this.treatmentConditionForm.get("attributes") as FormArray
+  }
+  /*-----------------------------END OF ATTRIBUTES --------------------------------*/
 
   closeModal(){
     this._bsModalRef.hide();

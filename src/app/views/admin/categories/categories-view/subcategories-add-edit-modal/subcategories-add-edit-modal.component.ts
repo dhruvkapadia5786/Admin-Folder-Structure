@@ -4,6 +4,7 @@ import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { SubcategoriesAddEditModalService } from './subcategories-add-edit-modal.service';
 import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-subcategories-add-edit-modal',
@@ -17,8 +18,11 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
+  attributesData:any[]=[];
+  subcategoryDetails:any;
 
   constructor(
+    private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
     private formBuilder: FormBuilder,
@@ -31,7 +35,8 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       'name': new FormControl(null, [Validators.required]),
       'is_active': new FormControl(null, []),
       'description': new FormControl(null, []),
-      'image_url': new FormControl(null, [])
+      'image_url': new FormControl(null, []),
+      'attributes':new FormArray([],[])
     });
   }
 
@@ -43,6 +48,7 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
   get image_url() { return this.SubcategoryForm.get('image_url'); }
 
   ngOnInit(): void {
+    this.getAllAttributesData();
     let details = this._tcAddEditModalService.getData();
     this.modalEvent = details.event;
     if(details.event == 'ADD'){
@@ -51,32 +57,20 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       });
     }
     if(details.event == 'EDIT'){
-      this.SubcategoryForm.patchValue({
-        id:details.data.id,
-        category_id:details.data.category_id,
-        name:details.data.name,
-        is_active:details.data.is_active,
-        description:details.data.description
-      });
-      this.imageUrl = details.data.image_url ? environment.api_url + details.data.image_url : `../../../../../assets/img/no_preview.png`;
+      this.getSubcategoryDetails(details.data.id);
     }
   }
-
-
- 
 
   async saveOTCSubcategory(formValid:boolean){
     if(formValid){
       const formData: FormData = new FormData();
       formData.append('subcategory', JSON.stringify(this.SubcategoryForm.value));
       formData.append('image_url', this.selectedImageFile);
-
-      if(this.modalEvent == 'ADD') {
+      if(this.modalEvent == 'ADD'){
         let create = await  this._tcAddEditModalService.addNewSubcategories(formData);
-      } else if (this.modalEvent == 'EDIT') {
+      } else if (this.modalEvent == 'EDIT'){
         let update = await  this._tcAddEditModalService.editSubcategories(this.SubcategoryForm.value.id,formData);
       }
-
       this.onEventCompleted.emit(true);
       this.closeModal();
       this.SubcategoryForm.reset();
@@ -85,13 +79,13 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
     }
   }
 
-  onFileChange(event:any, type: string) {
+  onFileChange(event:any, type: string){
     const reader = new FileReader();
     if(event.target.files && event.target.files.length) {
       const [file] = event.target.files;
       reader.readAsDataURL(file);
       reader.onload = () => {
-        if (type == 'IMAGE') {
+        if (type == 'IMAGE'){
           this.imageUrl = reader.result;
           this.selectedImageFile = file;
         }
@@ -99,6 +93,92 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       }
     }
   }
+
+
+  getAllAttributesData(){
+    const url = 'api/admin/attributes/all';
+    this._http.get(url).subscribe((res: any) => {
+        this.attributesData = res;
+      },(err) => {
+        this.attributesData =[];
+      });
+  }
+
+  getSubcategoryDetails(id:number){
+    const url = 'api/admin/subcategories/view/'+id;
+    this._http.get(url).subscribe((res: any) => {
+      this.subcategoryDetails = res;
+      this.patchFormValue();
+    },(err) => {
+      this.subcategoryDetails = null;
+    });
+  }
+
+  patchFormValue(){
+    this.SubcategoryForm.patchValue({
+      id:this.subcategoryDetails.id,
+      category_id:this.subcategoryDetails.category_id,
+      name:this.subcategoryDetails.name,
+      is_active:this.subcategoryDetails.is_active,
+      description:this.subcategoryDetails.description
+    });
+    this.imageUrl = this.subcategoryDetails.image_url ? environment.api_url + this.subcategoryDetails.image_url : `../../../../../assets/img/no_preview.png`;
+    const attributesControl = this.SubcategoryForm.get('attributes') as FormArray;
+    if(this.subcategoryDetails.attributes){
+      this.subcategoryDetails.attributes.forEach((item:any)=>{
+        let attributeFormGroup = new FormGroup({
+          'attribute_id':new FormControl(item.attribute_id, [Validators.required]),
+          'values':new FormControl(item.values_ids, [Validators.required]),
+        });
+        attributesControl.push(attributeFormGroup);
+      });
+    }
+  }
+
+  attrChange(index:number,event:any){
+      this.attributes().at(index).patchValue({
+        attribute_id:event.value
+      });
+      let valuesss= this.getValuesFromAttribute('value',event.value);
+  }
+
+  getValuesFromAttribute(key:string,value:number){
+      let attrId = value;
+      let values =[];
+      if(attrId){
+        let objFound = this.attributesData.find((item:any)=>item.id==attrId);
+        if(objFound && objFound.id){
+          values= objFound.values;
+        }else{
+          values= [];
+        }
+      }else{
+        values = [];
+      }
+      return values;
+  }
+
+  /*-----------------------------ATTRIBUTES --------------------------------*/
+  addAttributeInput(){
+    this.attributes().push(this.newAttributeInput());
+    this.SubcategoryForm.updateValueAndValidity();
+  }
+
+  newAttributeInput(): FormGroup{
+    return new FormGroup({
+      'attribute_id': new FormControl('', [Validators.required]),
+      'values': new FormControl([], [Validators.required]),
+    });
+  }
+
+  removeAttributeInput(empIndex:number){
+    this.attributes().removeAt(empIndex);
+  }
+
+  attributes(): FormArray {
+      return this.SubcategoryForm.get("attributes") as FormArray
+  }
+  /*-----------------------------END OF ATTRIBUTES --------------------------------*/
 
   closeModal(){
     this._bsModalRef.hide();

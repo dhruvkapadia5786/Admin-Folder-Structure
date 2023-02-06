@@ -2,7 +2,6 @@
 <ng-container *ngIf="CategoryDetails; else noCategoryDetails">
   <div class="p-2">
         <button class="btn btn-primary float-right" type="button" (click)="openEditModal()">Edit <i class="ml-2 fa fa-pencil" aria-hidden="true"></i></button>
-
         <table class="table">
           <tbody>
             <tr><td class="font-weight-normal border-top-0">Category ID</td><td class="font-weight-normal border-top-0">{{CategoryDetails.id}}</td></tr>
@@ -19,8 +18,21 @@
           </tbody>
         </table>
 
-
-
+        <table class="table table-sm">
+           <thead class="bg-light">
+              <tr>
+                <th colspan="2">Attributes</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let attr of CategoryDetails.attributes">
+                  <td>{{ attr.attribute_name }}</td>
+                  <td>
+                      <span *ngFor="let val of attr.values" class="badge badge-pill badge-primary p-2 mr-2">{{ val.attribute_value_name }}</span>
+                  </td>
+              </tr>
+           </tbody>
+        </table>
   </div>
 </ng-container>
 <ng-template #noCategoryDetails>
