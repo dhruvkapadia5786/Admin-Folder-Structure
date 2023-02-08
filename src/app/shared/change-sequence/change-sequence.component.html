@@ -98,9 +98,11 @@
             </ng-container>
             <ng-template #noType>
                 <p class="text-dark font-weight-normal mb-0">{{item.name}}</p>
-                <p class="text-secondary font-weight-normal mb-0">{{item.value}}</p>
+                <!--<p class="text-secondary font-weight-normal mb-0">{{item.value}}</p>-->
+                <p class="mb-0">
+                  <span *ngFor="let val of item.values" class="badge badge-pill badge-primary p-2 mr-2">{{ val.name }}</span>
+                </p>
             </ng-template>
-
           </div>
           <div class="col-sm-2 text-center">
             <p class="font-weight-bold mb-0">{{item.sequence}}</p>

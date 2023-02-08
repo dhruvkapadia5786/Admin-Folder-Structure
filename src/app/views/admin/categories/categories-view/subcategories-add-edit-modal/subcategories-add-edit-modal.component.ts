@@ -122,7 +122,7 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       is_active:this.subcategoryDetails.is_active,
       description:this.subcategoryDetails.description
     });
-    this.imageUrl = this.subcategoryDetails.image_url ? environment.api_url + this.subcategoryDetails.image_url : `../../../../../assets/img/no_preview.png`;
+    this.imageUrl = this.subcategoryDetails.image ? environment.api_url + this.subcategoryDetails.image : `../../../../../assets/img/no_preview.png`;
     const attributesControl = this.SubcategoryForm.get('attributes') as FormArray;
     if(this.subcategoryDetails.attributes){
       this.subcategoryDetails.attributes.forEach((item:any)=>{

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ProductsListRoutingModule } from './products-list-routing.module';
 import { ProductsListComponent } from './products-list.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ProductsFilterModalModule } from '../products-filter-modal/products-filter-modal.module';
 
 
 @NgModule({
@@ -10,6 +11,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   ],
   imports: [
     SharedModule,
+    ProductsFilterModalModule,
     ProductsListRoutingModule
   ]
 })

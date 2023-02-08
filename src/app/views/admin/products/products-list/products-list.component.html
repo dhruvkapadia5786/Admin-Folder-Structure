@@ -33,64 +33,12 @@
       </div>
       
         <div class="col-md-2">
-            <button type="button" (click)="clearFilter()" class="btn btn-danger">Clear</button>
+          <button type="button" (click)="openMoreFiltersModal()" class="btn btn-primary">More Filters</button>
+          <button type="button" (click)="clearFilter()" class="btn btn-danger">Clear</button>
         </div>
     </div>
     <div class="row mt-2">
-      <div class="col-md-2">
-        <mat-label>Shaft</mat-label>
-        <mat-select placeholder="Select Shaft" (selectionChange)="handleChange('SHAFT', $event.value)" [(ngModel)]="product_config.filter.SHAFT" multiple>
-          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'SHAFT')"
-        [indeterminate]="product_config.filter.SHAFT.length && notSelectedShaft"
-        [checked]="!notSelectedShaft">All</mat-checkbox>
-          <mat-option color="primary" *ngFor="let item of shaftList" [value]="item">{{item}}</mat-option>
-        </mat-select>
-      </div>
-      <div class="col-md-2">
-        <mat-label>GripCond.</mat-label>
-        <mat-select placeholder="Select GripCond" (selectionChange)="handleChange('GRIP_CONDITION', $event.value)" [(ngModel)]="product_config.filter.GRIP_CONDITION" multiple>
-          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'GRIP_CONDITION')"
-          [indeterminate]="product_config.filter.GRIP_CONDITION.length && notSelectedGripCond"
-          [checked]="!notSelectedGripCond">All</mat-checkbox>
-          <mat-option color="primary" *ngFor="let gp of grip_conditionList" [value]="gp">{{gp}}</mat-option>
-        </mat-select>
-      </div>
-      <div class="col-md-2">
-        <mat-label>Article Cond.</mat-label>
-        <mat-select placeholder="Select Article cond." (selectionChange)="handleChange('ARTICAL', $event.value)" [(ngModel)]="product_config.filter.ARTICAL" multiple>
-          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'ARTICAL')"
-          [indeterminate]="product_config.filter.ARTICAL.length && notSelectedArticleCond"
-          [checked]="!notSelectedArticleCond">All</mat-checkbox>
-          <mat-option color="primary" *ngFor="let art of article_conditionList" [value]="art">{{art}}</mat-option>
-        </mat-select>
-      </div>
-      <div class="col-md-2">
-        <mat-label>Handedness</mat-label>
-        <mat-select placeholder="Select Handedness" (selectionChange)="handleChange('HANDEDNESS', $event.value)" [(ngModel)]="product_config.filter.HANDEDNESS" multiple>
-          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'HANDEDNESS')"
-          [indeterminate]="product_config.filter.HANDEDNESS.length && notSelectedHandedness"
-          [checked]="!notSelectedHandedness">All</mat-checkbox>
-          <mat-option color="primary" *ngFor="let hnd of handednessList" [value]="hnd">{{hnd}}</mat-option>
-        </mat-select>
-      </div>
-      <div class="col-md-2">
-        <mat-label>Gender</mat-label>
-        <mat-select placeholder="Select Gender" (selectionChange)="handleChange('GENDER', $event.value)" [(ngModel)]="product_config.filter.GENDER" multiple>
-          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'GENDER')"
-          [indeterminate]="product_config.filter.GENDER.length && notSelectedGender"
-          [checked]="!notSelectedGender">All</mat-checkbox>
-          <mat-option color="primary" *ngFor="let gnd of genderList" [value]="gnd">{{gnd}}</mat-option>
-        </mat-select>
-      </div>
-      <div class="col-md-2">
-        <mat-label>Experience</mat-label>
-        <mat-select placeholder="Select Experience" (selectionChange)="handleChange('EXPERIENCE', $event.value)" [(ngModel)]="product_config.filter.EXPERIENCE" multiple>
-          <mat-checkbox class="mat-option ckb1" (click)="$event.stopPropagation()" color="primary" (change)="handleCheckAll($event, 'EXPERIENCE')"
-          [indeterminate]="product_config.filter.EXPERIENCE.length && notSelectedExperience"
-          [checked]="!notSelectedExperience">All</mat-checkbox>
-          <mat-option color="primary" *ngFor="let exp of experience_levelList" [value]="exp">{{exp}}</mat-option>
-        </mat-select>
-      </div>
+
     </div>
   <div class="p-2" *blockUI="'datatable'">
     <div class="table-responsive">

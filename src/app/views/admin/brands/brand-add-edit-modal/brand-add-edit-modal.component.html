@@ -83,21 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="float-left">Cover Image</label><br>
-                        <div class="float-left w-100">
-                            <img class="rounded shadow" id="blah" [(src)]="coverImageUrl" alt="your cover image"
-                                style="max-height: 250px; max-width: 250px; margin-bottom: 10px;" />
-                        </div>
-                        <input type="file" id="cover-image" (change)="onFileChange($event, 'COVER')" class="form-control"
-                            placeholder="Enter Image" formControlimage="cover_image_url" />
-                        <div class="invalid-feedback" *ngIf="cover_image_url?.invalid && (cover_image_url?.dirty || cover_image_url?.touched)"
-                            class="text-danger">
-                            <div *ngIf="cover_image_url?.errors?.required">Cover Image is required.</div>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <div class="col-md-3">
                     <div class="form-group">

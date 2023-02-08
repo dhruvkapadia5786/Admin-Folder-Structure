@@ -73,7 +73,7 @@ export class CategoriesAddEditModalComponent implements OnInit {
       is_active:this.categoryDetails.is_active,
       description:this.categoryDetails.description
     });
-    this.imageUrl = this.categoryDetails.image_url ? environment.api_url + this.categoryDetails.image_url : `../../../../../assets/img/no_preview.png`;
+    this.imageUrl = this.categoryDetails.image ? environment.api_url + this.categoryDetails.image : `../../../../../assets/img/no_preview.png`;
     const attributesControl = this.treatmentConditionForm.get('attributes') as FormArray;
     if(this.categoryDetails.attributes){
       this.categoryDetails.attributes.forEach((item:any)=>{

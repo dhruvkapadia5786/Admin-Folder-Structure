@@ -16,7 +16,6 @@ export class InfoBrandComponent implements OnInit, OnDestroy {
   };
   brandId: any;
   imageUrl: any = '../../../../../../../assets/img/no_preview.png'
-  coverImageUrl: any = '../../../../../../assets/img/no_preview.png'
 
   routeSubscribe: any;
   constructor(
@@ -49,12 +48,10 @@ export class InfoBrandComponent implements OnInit, OnDestroy {
       if (result && result.id) {
         this.brandDetails = result;
         this.getImage(result.image, 'LOGO');
-        this.getImage(result.cover_image, 'COVER');
         this._changeDetectorRef.detectChanges();
       }
     }).catch((err:any) => {
       this.imageUrl = '../../../../../../assets/img/no_preview.png';
-      this.coverImageUrl = '../../../../../../assets/img/no_preview.png';
     })
   }
 
@@ -65,15 +62,11 @@ export class InfoBrandComponent implements OnInit, OnDestroy {
       fr.onloadend = () => {
         if (type == 'LOGO') {
           this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(fr.result + '');
-        } else if (type == 'COVER') {
-          this.coverImageUrl = this.sanitizer.bypassSecurityTrustUrl(fr.result + '');
         }
       }
       }).catch((err:any) => {
         if (type == 'LOGO') {
           this.imageUrl = '../../../../../../assets/img/no_preview.png';
-        } else if (type == 'COVER') {
-          this.coverImageUrl = '../../../../../../assets/img/no_preview.png';
         }
       })
     return this.imageUrl

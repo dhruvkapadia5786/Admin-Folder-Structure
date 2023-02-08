@@ -21,7 +21,6 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
 
-  coverImageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedCoverImageFile: any
   categoriesDetails: any[] = [];
 
@@ -46,7 +45,6 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
       'name': new FormControl(null, [Validators.required]),
       'description': new FormControl(null, []),
       'image_url': new FormControl(null, []),
-      'cover_image_url': new FormControl(null, []),
       'is_active': new FormControl(true, []),
       'is_featured': new FormControl(null, []),
       'categories': new FormControl([], []),
@@ -57,7 +55,6 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   get name() { return this.brandForm.get('name'); }
   get description() { return this.brandForm.get('description'); }
   get image_url() { return this.brandForm.get('image_url'); }
-  get cover_image_url() { return this.brandForm.get('cover_image_url'); }
   get is_active() { return this.brandForm.get('is_active'); }
   get is_featured() { return this.brandForm.get('is_featured'); }
   get categories() { return this.brandForm.get('categories'); }
@@ -96,8 +93,7 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
         manufacturer_id:details.data.manufacturer_id ? details.data.manufacturer_id.id:null,
         categories:details.data.categories ? details.data.categories.map((item:any)=>item.id):[]
       });
-      this.imageUrl = details.data.image_url ? environment.api_url + details.data.image_url : `../../../../../assets/img/no_preview.png`;
-      this.coverImageUrl = details.data.cover_image_url ? environment.api_url + details.data.cover_image_url : `../../../../../assets/img/no_preview.png`;
+      this.imageUrl = details.data.image ? environment.api_url + details.data.image : `../../../../../assets/img/no_preview.png`;
       if(details.data.manufacturer_id){
         this.filteredManufacturers.next([details.data.manufacturer_id]);
       }
@@ -134,7 +130,6 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
       formVal.manufacturer_id = this.manufacturerCtrl.value;
       formData.append('brand',JSON.stringify(formVal));
       formData.append('logo', this.selectedImageFile);
-      formData.append('cover_image', this.selectedCoverImageFile);
 
       if(this.modalEvent == 'ADD') {
         let create = await  this._brandAddEditModalService.addNewBrand(formData);
@@ -159,10 +154,7 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
         if (type == 'IMAGE') {
           this.imageUrl = reader.result;
           this.selectedImageFile = file;
-        } else if (type == 'COVER') {
-          this.coverImageUrl = reader.result;
-          this.selectedCoverImageFile = file;
-        }
+        } 
         this._changeDetectorRef.markForCheck();
       }
     }

@@ -2,10 +2,8 @@
   <ng-container  *ngIf="product; else noProduct">
 
     <div class="alert alert-warning" *ngIf="product.seller_dealer.is_verified!=1 || product.seller_dealer.account_verified_by_admin!=1">
-      
       <span *ngIf="product.seller_dealer.is_verified!=1">User email address is not verified yet .</span> 
       <span *ngIf="product.seller_dealer.account_verified_by_admin!=1">Please Verify User account to publish this product! </span>
-
       <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='dealer'" [routerLink]="'/admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
       <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='seller'" [routerLink]="'/admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>   
       <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='user'" [routerLink]="'/admin/customers/view/'+product.seller_dealer.id+'/info'">View</a>   
@@ -75,30 +73,6 @@
       <div class="col-md-6">
           <div class="table-responsive">
               <table class="table table-hover">
-                  <tr>
-                    <td class="font-weight-bold">Shaft</td>
-                    <td class="font-weight-normal">{{product.shaft}}</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold">Grip Condition</td>
-                    <td class="font-weight-normal">{{product.grip_condition}}</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold">Article condition</td>
-                    <td class="font-weight-normal">{{product.article_condition}}</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold">Handedness</td>
-                    <td class="font-weight-normal">{{product.handedness}}</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold">Gender</td>
-                    <td class="font-weight-normal">{{product.gender}}</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold">Experience level</td>
-                    <td class="font-weight-normal">{{product.experience_level}}</td>
-                  </tr>
                   <tr>
                     <td class="font-weight-bold">Rating count</td>
                     <td class="font-weight-bold">{{product.rating_count}}</td>
@@ -176,8 +150,7 @@
                          <td>
                           <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='dealer'" [routerLink]="'/admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
                           <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='seller'" [routerLink]="'/admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>   
-                          <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='user'" [routerLink]="'/admin/customers/view/'+product.seller_dealer.id+'/info'">View</a>   
-                                                  
+                          <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='user'" [routerLink]="'/admin/customers/view/'+product.seller_dealer.id+'/info'">View</a>                                                   
                          </td>
                       </tr>
                   </tbody>
@@ -281,7 +254,7 @@
       </div>
     </ng-template>
   
-    <h6 class="bg-light text-dark p-2 mt-3">FAQ</h6>
+    <!--<h6 class="bg-light text-dark p-2 mt-3">FAQ</h6>
     <div class="row" *ngIf="product && product.faqs; else noFaqs">
       <div class="col-md-12">
         <app-change-sequence [mode]="'FAQS'" [data]="product.faqs" (onSequenceChange)="updateSequence($event)"></app-change-sequence>
@@ -292,7 +265,7 @@
         <h2><i class="fa fa-info-circle"></i></h2>
         <h4>No FAQs!</h4>
       </div>
-    </ng-template>
+    </ng-template>-->
   
     <h6 class="bg-light text-dark p-2 mt-3">Images</h6>
     <div class="row" *ngIf="product && product.media; else noImgs">
@@ -313,7 +286,7 @@
     <div class="card p-2">
       <div class="text-center text-muted">
           <h2><i class="fa fa-golf-ball" aria-hidden="true"></i></h2>
-          <h4 class="font-weight-normal">No Product </h4>
+          <h4 class="font-weight-normal">Product Not Found</h4>
       </div>
     </div>
   </ng-template>  
