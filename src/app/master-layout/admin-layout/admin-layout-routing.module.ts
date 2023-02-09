@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'manufacturers', loadChildren: () => import('../../views/admin/manufacturers/manufacturers.module').then(manufacturers => manufacturers.ManufacturersModule) },
   { path: 'brands', loadChildren: () => import('../../views/admin/brands/brands.module').then(brand => brand.BrandsModule) },
   { path: 'categories', loadChildren: () => import('../../views/admin/categories/categories.module').then(categories => categories.CategoriesModule) },
+  { path: 'attributes', loadChildren: () => import('../../views/admin/attributes/attributes.module').then(attributes => attributes.AttributesModule) },
   { path: 'products', loadChildren: () => import('../../views/admin/products/products.module').then(product => product.ProductsModule) },
   { path: 'faq', loadChildren: () => import('../../views/admin/faq/faq.module').then(faq => faq.FaqModule) },
   { path: 'faq-group', loadChildren: () => import('../../views/admin/faq-group/faq-group.module').then(faq => faq.FAQGroupModule) },

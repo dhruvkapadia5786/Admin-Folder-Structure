@@ -70,9 +70,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			{ route: '/admin/dealer-subscriptions',  iconName: 'fa-users', displayName: 'Dealers Account Subscriptions'},
 			{ route: '/admin/bannersets' , iconName: 'fa-images', displayName: 'BannerSets' },
 			{ route: '/admin/categories', iconName: 'fa-bars', displayName: 'Categories' },
-			{ route: '/admin/article-categories', iconName: 'fa-bars', displayName: 'Article Categories' },
-			{ route: '/admin/articles', iconName: 'fa-newspaper', displayName: 'Articles' },
 			{ route: '/admin/plans', iconName: 'fa-list-alt', displayName: 'Subscription Plans' },
+			{ route: '/admin/attributes', iconName: 'fa-bars', displayName: 'Attributes' },
 			{ route: '/admin/orders/refund_requested', iconName: 'fa-sync-alt', displayName: 'Refund Orders' },
 			{ route: '/admin/newsletter-subscribers', iconName: 'fa-envelope', displayName: 'Newsletter Subscribers' },
 			{ route: '/admin/newsletter-templates', iconName: 'fa-envelope', displayName: 'Newsletter Templates' },
@@ -83,7 +82,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/policy', iconName: 'fa-file', displayName: 'Policy' },
 					{ route: '/admin/faq', iconName: 'fa-question-circle', displayName: 'FAQ' },
 					{ route: '/admin/faq-group', iconName: 'fa-question-circle', displayName: 'FAQ Group' },
-					{ route: '/admin/settings', iconName: 'fa-cog', displayName: 'Settings' }
+					{ route: '/admin/settings', iconName: 'fa-cog', displayName: 'Settings' },
+					{ route: '/admin/article-categories', iconName: 'fa-bars', displayName: 'Article Categories' },
+					{ route: '/admin/articles', iconName: 'fa-newspaper', displayName: 'Articles' },
 				]
 			},
 			{ route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' }
