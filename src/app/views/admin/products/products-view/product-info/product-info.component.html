@@ -4,7 +4,7 @@
     <div class="alert alert-warning" *ngIf="product.seller_dealer.is_verified!=1 || product.seller_dealer.account_verified_by_admin!=1">
       <span *ngIf="product.seller_dealer.is_verified!=1">User email address is not verified yet .</span> 
       <span *ngIf="product.seller_dealer.account_verified_by_admin!=1">Please Verify User account to publish this product! </span>
-      <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='dealer'" [routerLink]="'/admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
+      <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='dealer'" [routerLink]="'/admin/dealers/view/'+product.seller_dealer.dealer_id+'/info'">View</a>
       <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='seller'" [routerLink]="'/admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>   
       <a class="ml-2 btn btn-warning btn-sm" *ngIf="product.seller_dealer.role=='user'" [routerLink]="'/admin/customers/view/'+product.seller_dealer.id+'/info'">View</a>   
     </div>
@@ -148,7 +148,7 @@
                       <tr>
                          <td>View Details</td>
                          <td>
-                          <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='dealer'" [routerLink]="'/admin/dealers/view/'+product.seller_dealer.id+'/info'">View</a>
+                          <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='dealer'" [routerLink]="'/admin/dealers/view/'+product.seller_dealer.dealer_id+'/info'">View</a>
                           <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='seller'" [routerLink]="'/admin/sellers/view/'+product.seller_dealer.id+'/info'">View</a>   
                           <a class="btn btn-primary btn-sm" *ngIf="product.seller_dealer.role=='user'" [routerLink]="'/admin/customers/view/'+product.seller_dealer.id+'/info'">View</a>                                                   
                          </td>

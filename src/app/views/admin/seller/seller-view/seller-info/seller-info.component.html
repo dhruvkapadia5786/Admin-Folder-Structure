@@ -35,7 +35,7 @@
                             <td>Account Verified</td>
                             <td>
                                 <p [ngClass]="{'badge badge-pill':true,'badge-success':sellerDetails.personal_info.account_verified_by_admin==1,'badge-dark':sellerDetails.personal_info.account_verified_by_admin!=1}">{{ sellerDetails.personal_info.account_verified_by_admin==1?'Verified':'Not Verified'}}</p>
-                                <button type="button" (click)="markAsAccount()" class="btn btn-outline-success btn-block">Mark As Verified</button>
+                                <button *ngIf="sellerDetails.personal_info.account_verification_by_admin_status!='approved'" type="button" (click)="openVerifyModal()" class="btn btn-outline-success btn-block">Verify Now</button>
                             </td>
                         </tr>
 

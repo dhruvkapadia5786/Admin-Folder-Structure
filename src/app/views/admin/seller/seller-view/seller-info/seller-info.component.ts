@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { AccountVerifyModalComponent } from 'src/app/components/account-verify-modal/account-verify-modal.component';
 
 @Component({
   selector: 'app-seller-info',
@@ -9,6 +11,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
   styleUrls: ['./seller-info.component.scss']
 })
 export class SellerInfoComponent implements OnInit,OnDestroy {
+  modalRef!: BsModalRef;
 
   @BlockUI('seller') blockSellerUI!: NgBlockUI;
  
@@ -20,6 +23,7 @@ export class SellerInfoComponent implements OnInit,OnDestroy {
     public http: HttpClient,
     private route: ActivatedRoute,
     private _router: Router,
+    private modalService: BsModalService,
     private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(){
@@ -51,10 +55,17 @@ export class SellerInfoComponent implements OnInit,OnDestroy {
     });
   }
 
-  markAsAccount(){
+  openVerifyModal(){
+    this.modalRef = this.modalService.show(AccountVerifyModalComponent,{class:'modal-sm'});
+    this.modalRef.content.onFormSubmitted.subscribe((val:any)=>{
+          this.markAsAccount(val);
+    });
+  }
+
+  markAsAccount(val:any){
     this.blockSellerUI.start();
     const url = 'api/admin/users/mark_account_verified/' + this.sellerId;
-    this.http.post(url,{}).subscribe(async (data: any) => {
+    this.http.post(url,val).subscribe(async (data: any) => {
       this.blockSellerUI.stop();
       this.getSellerDetails();
     }, (err:any) => {
