@@ -57,7 +57,7 @@ export class DealerInfoComponent implements OnInit,OnDestroy {
   
   markAsAccount(val:any){
     this.blockDealerUI.start();
-    const url = 'api/admin/users/mark_account_verified/' + this.dealerId;
+    const url = 'api/admin/users/mark_account_verified/' + this.dealerDetails.personal_info.id;
     this.http.post(url,val).subscribe(async (data: any) => {
       this.blockDealerUI.stop();
       this.getDealerDetails();
