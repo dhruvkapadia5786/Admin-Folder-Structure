@@ -64,6 +64,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/brands', iconName: 'fa-list', displayName: 'Brands' }
 				]
 			},
+			{ route: '/admin/sponsor', iconName: 'fa-list', displayName: 'Sponsors' },
 			{ route: '/admin/orders', iconName: 'fa-shopping-cart', displayName: 'Orders' },
 			{ route: '/admin/products', iconName: 'fa-golf-ball', displayName: 'Products' },
 			{ route: '/admin/top-listing-subscriptions', iconName: 'fa-golf-ball', displayName: 'Top Listing Subscriptions' },

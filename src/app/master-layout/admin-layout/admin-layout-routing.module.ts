@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'sellers', loadChildren: () => import('../../views/admin/seller/seller.module').then(seller => seller.SellerModule) },
   { path: 'manufacturers', loadChildren: () => import('../../views/admin/manufacturers/manufacturers.module').then(manufacturers => manufacturers.ManufacturersModule) },
   { path: 'brands', loadChildren: () => import('../../views/admin/brands/brands.module').then(brand => brand.BrandsModule) },
+  { path: 'sponsor', loadChildren: () => import('../../views/admin/sponsor/sponsor.module').then(sponsor => sponsor.SponsorModule) },
   { path: 'categories', loadChildren: () => import('../../views/admin/categories/categories.module').then(categories => categories.CategoriesModule) },
   { path: 'attributes', loadChildren: () => import('../../views/admin/attributes/attributes.module').then(attributes => attributes.AttributesModule) },
   { path: 'products', loadChildren: () => import('../../views/admin/products/products.module').then(product => product.ProductsModule) },
