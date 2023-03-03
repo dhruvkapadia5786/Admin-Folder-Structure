@@ -155,20 +155,6 @@ export class OrdersViewComponent implements OnInit, OnDestroy {
     if(this.blockOrderUI){this.blockOrderUI.unsubscribe();}
   }
 
-  openShippingLabelToPrint(label_url: any) {
-    if (label_url) {
-      const b64Data = label_url.split(',')[1];
-      const contentType = 'application/pdf';
-      const blob = b64toBlob(b64Data, contentType);
-      const url = URL.createObjectURL(blob);
-      let pdfWindow: any = window.open('', '_blank');
-      pdfWindow.document.write(`<iframe id="shippingLabel" src="${url}" height="100%" width="100%"></iframe>`);
-      pdfWindow.document.close();
-      setTimeout(() => {
-        pdfWindow.frames['shippingLabel'].contentWindow.print();
-      }, 1000);
-    }
-  }
 
   /*---------------------------------------------------------------------------- */
   /*------------------------ DOWNLOAD BILLING STATEMENT FUNCTIONS  ------------------------  */

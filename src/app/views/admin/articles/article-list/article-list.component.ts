@@ -47,7 +47,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[3, 'desc']],
+      order: [[4, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         this.blockDataTable.start();
         this._http
@@ -85,6 +85,22 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
           data: 'title',
           title: 'Title',
           className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'status',
+          title: 'Status',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data=='draft'){
+              return `<span class="badge badge-primary">Draft</span>`;
+            } 
+            else if (data=='published'){
+              return `<span class="badge badge-success">Published</span>`;
+            } 
+            else {
+              return `<span class="badge badge-info">Under Review</span>`;
+            }
+          }
         },
         {
           data: 'is_active',

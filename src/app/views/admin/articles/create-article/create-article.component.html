@@ -1,18 +1,31 @@
 <div class="w-100 p-3 bg-dark-blue">
-    <h4 class="text-white font-weight-bold mb-0">Add Article</h4>
+    <h4 class="text-white font-weight-bold mb-0">
+        {{ articleId?'Edit':'Add' }} 
+        Article / Blog / Magazine
+    </h4>
 </div>
 
 <div class="p-3">
     <form (ngSubmit)="saveArticle()" [formGroup]="articleForm">
         
         <div class="form-group">
-             <div class="col-md-12">
+            <div class="form-row">
+             <div class="col-md-6">
                 <mat-select formControlName="categories" placeholder="Categories" multiple>
                     <mat-option *ngFor="let cat of categoriesDetails" [value]="cat.id">
                       {{cat.name}}
                     </mat-option>
                   </mat-select>
              </div>
+
+             <div class="col-md-6">
+                <mat-select formControlName="status" placeholder="Status">
+                    <mat-option value="draft">Draft</mat-option>
+                    <mat-option value="published">Published</mat-option>
+                    <mat-option value="under_review">Under Review</mat-option>                  
+                </mat-select>
+             </div>
+            </div>
         </div>
 
         <div class="form-group">

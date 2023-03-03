@@ -56,7 +56,7 @@ export class orderHelper {
       else if (status == 'CANCLLED'){
         badge= `<span class='badge  badge-pill badge-warning  p-2'>Canclled</span>`;
       }
-      else if(status == 'SHIPPED'){
+      else if(status == 'SHIPPING'){
         badge= `<span class='badge badge-pill badge-success p-2'>Shipped</span>`;
       }
       else if(status == 'DELIVERED'){

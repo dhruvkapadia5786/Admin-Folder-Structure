@@ -13,6 +13,7 @@ import { environment } from '../../../environments/environment';
 export class ImagePreviewComponent implements OnInit, OnChanges {
 
   @Input() imgPath!: string;
+  @Input() isBase64?:number=0;
   @Input() height?: string;
   @Input() width?: string;
   @Input() caption?: string;
@@ -53,7 +54,8 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
 
   getImage(imageName:string){
     if (imageName){
-      this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(environment.api_url + imageName);
+      this.imageUrl = this.isBase64==1 ? imageName:this.sanitizer.bypassSecurityTrustUrl(environment.api_url + imageName);
+      console.log('this.imageUrl=',this.imageUrl);
       this._albums = [];
       this._albums.push({
         src: this.imageUrl,

@@ -41,6 +41,7 @@ export class CreateArticleComponent implements OnInit {
       'categories': new UntypedFormControl([], []),
       'title': new UntypedFormControl(null, [Validators.required]),
       'body': new UntypedFormControl(null, [Validators.required]),
+      'status':new UntypedFormControl(null, [Validators.required]),
       'is_active': new UntypedFormControl(true),
       'tags':new UntypedFormArray([])
     });
@@ -55,6 +56,7 @@ export class CreateArticleComponent implements OnInit {
 
   get title() { return this.articleForm.get('title'); }
   get body() { return this.articleForm.get('body'); }
+  get status() { return this.articleForm.get('status'); }
   get is_active() { return this.articleForm.get('is_active'); }
   get image_url() { return this.articleForm.get('image_url'); }
   get categories() { return this.articleForm.get('categories'); }
@@ -71,6 +73,7 @@ export class CreateArticleComponent implements OnInit {
         this.articleForm.patchValue({
           title: res.title,
           body: res.body,
+          status:res.status,
           categories:res.categories ? res.categories.map((item:any)=>item.id):[],
           is_active:  res.is_active
         })
@@ -95,8 +98,14 @@ export class CreateArticleComponent implements OnInit {
       return;
     }
 
+    let formVal = this.articleForm.value;
+    var oParser = new DOMParser();
+    var oDOM = oParser.parseFromString(formVal.body, "text/html");
+    formVal.plainbody = oDOM.body.innerText;
+
+
     const formData: FormData = new FormData();
-    formData.append('article', JSON.stringify(this.articleForm.value));
+    formData.append('article', JSON.stringify(formVal));
     formData.append('image_url', this.selectedImageFile);
 
     const url = this.articleId ? 'api/admin/articles/update/'+this.articleId:'api/admin/articles/create';

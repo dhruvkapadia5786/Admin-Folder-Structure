@@ -12,25 +12,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-table.dataTable thead .sorting {
-    background-image: url("./assets/datatable/sort_both.png");
-}
-
-table.dataTable thead .sorting_asc {
-    background-image: url("./assets/datatable/sort_asc.png") !important;
-}
-
-table.dataTable thead .sorting_desc {
-    background-image: url("./assets/datatable/sort_desc.png") !important;
-}
-
-table.dataTable thead .sorting_asc_disabled {
-    background-image: url("./assets/datatable/sort_asc_disabled.png");
-}
-
-table.dataTable thead .sorting_desc_disabled {
-    background-image: url("./assets/datatable/sort_desc_disabled.png");
-}
 
 .modal-md {
     max-width: 768px;

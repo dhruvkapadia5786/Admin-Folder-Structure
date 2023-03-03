@@ -152,8 +152,6 @@
                                                 </p>
                                                 <p class="mb-2">{{orderDetails.billing_address.country+' - '+
                                                     orderDetails.billing_address.country_code}}</p>
-                                                <p class="mb-2">{{orderDetails.billing_address.language+' -
-                                                    '+orderDetails.billing_address.language_code}}</p>
                 
                                             </div>
                                             <div *ngIf="!orderDetails.shipping_address">
@@ -212,8 +210,6 @@
                                                 </p>
                                                 <p class="mb-2">{{orderDetails.shipping_address.country+' - '+
                                                     orderDetails.shipping_address.country_code}}</p>
-                                                <p class="mb-2">{{orderDetails.shipping_address.language+' -
-                                                    '+orderDetails.shipping_address.language_code}}</p>
                     
                                             </div>
                                             <div *ngIf="!orderDetails.shipping_address">
@@ -263,12 +259,12 @@
 
                                         <td class="align-middle text-center">
 
-                                            <p class="mt-1 mb-0 font-weight-normal text-success" *ngIf="orderDetails.system_status=='SHIPPED'">Shipped on : {{product.shipped_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
+                                            <p class="mt-1 mb-0 font-weight-normal text-success" *ngIf="product.is_shipped==1">Shipped on : {{product.shipped_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
 
-                                            <p class="mt-1 mb-0 font-weight-normal text-success" *ngIf="orderDetails.system_status=='SHIPPED'">Tracking Id : <a target="_blank" class="text-primary" [href]="product.tracking_url">{{ product.tracking_id }}</a></p>
+                                            <p class="mt-1 mb-0 font-weight-normal text-success" *ngIf="product.is_shipped==1">Tracking Id : <a target="_blank" class="text-primary" [href]="product.tracking_url">{{ product.tracking_id }}</a></p>
                                                     
-                                            <button *ngIf="orderDetails.system_status=='SHIPPED' && product.label_url" class="btn btn-sm btn-primary" type="button" (click)="openShippingLabelToPrint(product.label_url)">View Shipping Label</button>
-
+                                            <app-image-preview *ngIf="product.is_shipped==1 && product.label_url" [isBase64]="1" [imgPath]="'data:image/png;base64,'+product.label_url" height="300" width="300" caption="Shipping label"></app-image-preview>
+                            
                                             <p class="mt-1 mb-0 font-weight-normal text-success" *ngIf="orderDetails.system_status=='PICKED_UP'">Pickedup on : {{product.pickedup_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
                                             <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="orderDetails.system_status=='REFUND_REQUESTED'">Date time : {{product.refund_requested_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
                                             <p class="mt-1 mb-0 font-weight-normal text-danger" *ngIf="orderDetails.system_status=='REFUND_PROCESSED'">Date time : {{product.refund_processed_on | date: 'dd-MM-yyyy HH:mm a' }}</p>
