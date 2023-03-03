@@ -9,14 +9,13 @@ import { ArticleCategoriesAddEditModalComponent } from '../../article-categories
 import { ArticleCategoriesAddEditModalModule } from '../../article-categories-add-edit-modal/article-categories-add-edit-modal.module';
 
 @NgModule({
-  declarations: [ArticleCategoryInfoComponent],
-  imports: [
-    SharedModule,
-    ArticleCategoryInfoRoutingModule,
-    ImagePreviewModule,
-    ChangeSequenceModule,
-    ArticleCategoriesAddEditModalModule
-  ],
-  entryComponents:[ArticleCategoriesAddEditModalComponent]
+    declarations: [ArticleCategoryInfoComponent],
+    imports: [
+        SharedModule,
+        ArticleCategoryInfoRoutingModule,
+        ImagePreviewModule,
+        ChangeSequenceModule,
+        ArticleCategoriesAddEditModalModule
+    ]
 })
 export class ArticleCategoryInfoModule { }

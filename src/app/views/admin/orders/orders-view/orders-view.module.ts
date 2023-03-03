@@ -13,17 +13,16 @@ import { CustomImageCropperService } from 'src/app/components/custom-image-cropp
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [OrdersViewComponent],
-  imports: [
-    SharedModule,
-    OrdersViewRoutingModule,
-    MatTabsModule,
-    RefundDrugModalModule,
-    OrderLogsModule,
-    ImagePreviewModule,
-    CustomImageCropperModule
-  ],
-  providers:[orderHelper,CustomImageCropperService],
-  entryComponents:[RefundDrugModalComponent,CustomImageCropperComponent]
+    declarations: [OrdersViewComponent],
+    imports: [
+        SharedModule,
+        OrdersViewRoutingModule,
+        MatTabsModule,
+        RefundDrugModalModule,
+        OrderLogsModule,
+        ImagePreviewModule,
+        CustomImageCropperModule
+    ],
+    providers: [orderHelper, CustomImageCropperService]
 })
 export class OrdersViewModule { }

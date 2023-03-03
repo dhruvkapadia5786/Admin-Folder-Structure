@@ -10,14 +10,13 @@ import { ModalModule,BsModalService } from 'ngx-bootstrap/modal';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [ManufacturersComponent],
-  imports:[
-    SharedModule,
-    ManufacturersRoutingModule,
-    ModalModule.forRoot(),
-    ManufacturerAddEditModalModule
-  ],
-  providers:[ManufacturersService,BsModalService,ManufacturerAddEditModalService],
-  entryComponents: [ManufacturerAddEditModalComponent]
+    declarations: [ManufacturersComponent],
+    imports: [
+        SharedModule,
+        ManufacturersRoutingModule,
+        ModalModule.forRoot(),
+        ManufacturerAddEditModalModule
+    ],
+    providers: [ManufacturersService, BsModalService, ManufacturerAddEditModalService]
 })
 export class ManufacturersModule { }

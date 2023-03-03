@@ -8,13 +8,12 @@ import { AttributesAddEditModalComponent } from '../../attributes-add-edit-modal
 import { AttributesAddEditModalModule } from '../../attributes-add-edit-modal/attributes-add-edit-modal.module';
 
 @NgModule({
-  declarations: [AttributeInfoComponent],
-  imports: [
-    SharedModule,
-    AttributeInfoRoutingModule,
-    ImagePreviewModule,
-    AttributesAddEditModalModule
-  ],
-  entryComponents:[AttributesAddEditModalComponent]
+    declarations: [AttributeInfoComponent],
+    imports: [
+        SharedModule,
+        AttributeInfoRoutingModule,
+        ImagePreviewModule,
+        AttributesAddEditModalModule
+    ]
 })
 export class AttributeInfoModule { }

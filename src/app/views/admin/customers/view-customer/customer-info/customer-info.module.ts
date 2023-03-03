@@ -17,18 +17,17 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
-  declarations: [
-    CustomerInfoComponent
-  ],
-  imports: [
-    SharedModule,
-    ImagePreviewModule,
-    ModalModule.forRoot(),
-    NgxMaskModule.forChild(),
-    CustomImageCropperModule,
-    ChangePasswordModalModule,
-    CustomerInfoRoutingModule
-  ],
-  entryComponents: [CustomImageCropperComponent, ChangePasswordModalComponent]
+    declarations: [
+        CustomerInfoComponent
+    ],
+    imports: [
+        SharedModule,
+        ImagePreviewModule,
+        ModalModule.forRoot(),
+        NgxMaskModule.forChild(),
+        CustomImageCropperModule,
+        ChangePasswordModalModule,
+        CustomerInfoRoutingModule
+    ]
 })
 export class CustomerInfoModule { }

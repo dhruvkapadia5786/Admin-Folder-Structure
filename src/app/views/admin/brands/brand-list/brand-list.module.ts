@@ -8,14 +8,13 @@ import { BrandAddEditModalComponent } from '../brand-add-edit-modal/brand-add-ed
 import { BrandAddEditModalModule } from '../brand-add-edit-modal/brand-add-edit-modal.module';
 
 @NgModule({
-  declarations: [
-    BrandListComponent
-  ],
-  imports: [
-    SharedModule,
-    BrandAddEditModalModule,
-    BrandListRoutingModule
-  ],
-  entryComponents: [BrandAddEditModalComponent]
+    declarations: [
+        BrandListComponent
+    ],
+    imports: [
+        SharedModule,
+        BrandAddEditModalModule,
+        BrandListRoutingModule
+    ]
 })
 export class BrandListModule { }

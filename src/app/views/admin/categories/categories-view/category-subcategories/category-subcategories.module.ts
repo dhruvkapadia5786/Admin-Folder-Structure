@@ -8,12 +8,11 @@ import { SubcategoriesAddEditModalComponent } from '../subcategories-add-edit-mo
 import { SubcategoriesAddEditModalModule } from '../subcategories-add-edit-modal/subcategories-add-edit-modal.module';
 
 @NgModule({
-  declarations: [CategorySubcategoriesComponent],
-  imports: [
-    SharedModule,
-    SubcategoriesAddEditModalModule,
-    CategorySubcategoriesRoutingModule
-  ],
-  entryComponents:[SubcategoriesAddEditModalComponent]
+    declarations: [CategorySubcategoriesComponent],
+    imports: [
+        SharedModule,
+        SubcategoriesAddEditModalModule,
+        CategorySubcategoriesRoutingModule
+    ]
 })
 export class CategorySubcategoriesModule { }

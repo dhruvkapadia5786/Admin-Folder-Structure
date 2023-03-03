@@ -8,13 +8,12 @@ import { ProcessRefundModalService } from 'src/app/components/process-refund-mod
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [RefundRequestedOrdersComponent],
-  imports: [
-    RefundRequestedOrdersRoutingModule,
-    SharedModule,
-    ProcessRefundModalModule
-  ],
-  entryComponents:[ProcessRefundModalComponent],
-  providers:[orderHelper,ProcessRefundModalService]
+    declarations: [RefundRequestedOrdersComponent],
+    imports: [
+        RefundRequestedOrdersRoutingModule,
+        SharedModule,
+        ProcessRefundModalModule
+    ],
+    providers: [orderHelper, ProcessRefundModalService]
 })
 export class RefundRequestedOrdersModule { }
