@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { FAQGroupAddEditModalService } from './faq-group-add-edit-modal.service';
@@ -13,19 +13,19 @@ import { HttpClient } from '@angular/common/http';
 export class FAQGroupAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  manufacturerForm: FormGroup;
+  manufacturerForm: UntypedFormGroup;
 
   constructor(
     private _helper:Helper,
     private http: HttpClient,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _manufacturerAddEditModalService: FAQGroupAddEditModalService){
     this.manufacturerForm = this.formBuilder.group({
-      'id':new FormControl(null),
-      'name': new FormControl(null, [Validators.required]),
-      'heading':new FormControl(null,[]),
-      'subheading':new FormControl(null,[]),
+      'id':new UntypedFormControl(null),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'heading':new UntypedFormControl(null,[]),
+      'subheading':new UntypedFormControl(null,[]),
     });
   }
 

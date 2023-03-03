@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, FormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { PlansAddEditModalService } from './plans-add-edit-modal.service';
@@ -12,7 +12,7 @@ import { PlansAddEditModalService } from './plans-add-edit-modal.service';
 export class PlansAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  subscriptionPlanForm: FormGroup;
+  subscriptionPlanForm: UntypedFormGroup;
   countriesList:any[]=[];
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
@@ -21,20 +21,20 @@ export class PlansAddEditModalComponent implements OnInit {
   constructor(
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _tcAddEditModalService: PlansAddEditModalService
   ) {
     this.subscriptionPlanForm = this.formBuilder.group({
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'plan_for': new FormControl(null, [Validators.required]),
-      'description': new FormControl(null, [Validators.required]),
-      'duration': new FormControl(null, [Validators.required]),
-      'duration_unit': new FormControl(null, [Validators.required]),
-      'charge': new FormControl(null, [Validators.required]),
-      'currency': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'plan_for': new UntypedFormControl(null, [Validators.required]),
+      'description': new UntypedFormControl(null, [Validators.required]),
+      'duration': new UntypedFormControl(null, [Validators.required]),
+      'duration_unit': new UntypedFormControl(null, [Validators.required]),
+      'charge': new UntypedFormControl(null, [Validators.required]),
+      'currency': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(null, []),
     });
   }
 

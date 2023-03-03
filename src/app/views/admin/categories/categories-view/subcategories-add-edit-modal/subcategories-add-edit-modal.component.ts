@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, UntypedFormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { SubcategoriesAddEditModalService } from './subcategories-add-edit-modal.service';
@@ -14,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
 export class SubcategoriesAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  SubcategoryForm: FormGroup;
+  SubcategoryForm: UntypedFormGroup;
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -25,18 +25,18 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
     private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _tcAddEditModalService: SubcategoriesAddEditModalService
   ) {
     this.SubcategoryForm = this.formBuilder.group({
-      'category_id':new FormControl(null, []),
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
-      'description': new FormControl(null, []),
-      'image_url': new FormControl(null, []),
-      'attributes':new FormArray([],[])
+      'category_id':new UntypedFormControl(null, []),
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(null, []),
+      'description': new UntypedFormControl(null, []),
+      'image_url': new UntypedFormControl(null, []),
+      'attributes':new UntypedFormArray([],[])
     });
   }
 
@@ -123,12 +123,12 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       description:this.subcategoryDetails.description
     });
     this.imageUrl = this.subcategoryDetails.image ? environment.api_url + this.subcategoryDetails.image : `../../../../../assets/img/no_preview.png`;
-    const attributesControl = this.SubcategoryForm.get('attributes') as FormArray;
+    const attributesControl = this.SubcategoryForm.get('attributes') as UntypedFormArray;
     if(this.subcategoryDetails.attributes){
       this.subcategoryDetails.attributes.forEach((item:any)=>{
-        let attributeFormGroup = new FormGroup({
-          'attribute_id':new FormControl(item.attribute_id, [Validators.required]),
-          'values':new FormControl(item.values_ids, [Validators.required]),
+        let attributeFormGroup = new UntypedFormGroup({
+          'attribute_id':new UntypedFormControl(item.attribute_id, [Validators.required]),
+          'values':new UntypedFormControl(item.values_ids, [Validators.required]),
         });
         attributesControl.push(attributeFormGroup);
       });
@@ -164,10 +164,10 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
     this.SubcategoryForm.updateValueAndValidity();
   }
 
-  newAttributeInput(): FormGroup{
-    return new FormGroup({
-      'attribute_id': new FormControl('', [Validators.required]),
-      'values': new FormControl([], [Validators.required]),
+  newAttributeInput(): UntypedFormGroup{
+    return new UntypedFormGroup({
+      'attribute_id': new UntypedFormControl('', [Validators.required]),
+      'values': new UntypedFormControl([], [Validators.required]),
     });
   }
 
@@ -175,8 +175,8 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
     this.attributes().removeAt(empIndex);
   }
 
-  attributes(): FormArray {
-      return this.SubcategoryForm.get("attributes") as FormArray
+  attributes(): UntypedFormArray {
+      return this.SubcategoryForm.get("attributes") as UntypedFormArray
   }
   /*-----------------------------END OF ATTRIBUTES --------------------------------*/
 

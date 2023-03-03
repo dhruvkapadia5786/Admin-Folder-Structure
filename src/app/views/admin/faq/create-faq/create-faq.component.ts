@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ import { Editor } from 'ngx-editor';
 export class CreateFaqComponent implements OnInit {
   editor: Editor;
   answerText:string='';
-  public FAQForm!: FormGroup;
+  public FAQForm!: UntypedFormGroup;
   public FAQgroup:any=[];
   public eventInfo!: string;
 
@@ -38,11 +38,11 @@ export class CreateFaqComponent implements OnInit {
 
   ngOnInit() {
     this.getFAQGroups();
-    this.FAQForm = new FormGroup({
-      'group_id': new FormControl([],[Validators.required]),
-      'question': new FormControl(null, [Validators.required]),
-      'answer': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(true)
+    this.FAQForm = new UntypedFormGroup({
+      'group_id': new UntypedFormControl([],[Validators.required]),
+      'question': new UntypedFormControl(null, [Validators.required]),
+      'answer': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(true)
     });
   }
 

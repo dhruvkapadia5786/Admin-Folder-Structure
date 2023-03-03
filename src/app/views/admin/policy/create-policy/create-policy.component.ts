@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,7 @@ export class CreatePolicyComponent implements OnInit {
   editor: Editor;
   answerText:string='';
   public FAQId: any;
-  public FAQForm!: FormGroup;
+  public FAQForm!: UntypedFormGroup;
   public eventInfo!: string;
 
   constructor(
@@ -31,10 +31,10 @@ export class CreatePolicyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.FAQForm = new FormGroup({
-      'title': new FormControl(null, [Validators.required]),
-      'policy_text': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(true)
+    this.FAQForm = new UntypedFormGroup({
+      'title': new UntypedFormControl(null, [Validators.required]),
+      'policy_text': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(true)
     });
 
     if(this.FAQId){

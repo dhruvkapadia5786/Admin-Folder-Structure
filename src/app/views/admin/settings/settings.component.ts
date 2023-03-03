@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormControl, UntypedFormArray } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { Helper } from 'src/app/services/helper.service';
 export class SettingsComponent implements OnInit {
 
   systemSettingsDetails: any;
-  public systemSettings!: FormGroup;
+  public systemSettings!: UntypedFormGroup;
 
   constructor(
     private _toastr: Toastr,
@@ -22,8 +22,8 @@ export class SettingsComponent implements OnInit {
     public activeRoute: ActivatedRoute,
     public _helper: Helper
   ) {
-    this.systemSettings = new FormGroup({
-      'entries': new FormArray([])
+    this.systemSettings = new UntypedFormGroup({
+      'entries': new UntypedFormArray([])
     });
   }
 
@@ -31,12 +31,12 @@ export class SettingsComponent implements OnInit {
     this.getSystemSettingsDetails();
   }
 
-  newEntry(): FormGroup {
-    return new FormGroup({
-      'id': new FormControl(null, []),
-      'title': new FormControl('', [Validators.required]),
-      'value': new FormControl('', [Validators.required]),
-      'deletable': new FormControl(1, []),
+  newEntry(): UntypedFormGroup {
+    return new UntypedFormGroup({
+      'id': new UntypedFormControl(null, []),
+      'title': new UntypedFormControl('', [Validators.required]),
+      'value': new UntypedFormControl('', [Validators.required]),
+      'deletable': new UntypedFormControl(1, []),
     });
   }
 
@@ -54,14 +54,14 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  entries(): FormArray {
-    return this.systemSettings.get("entries") as FormArray
+  entries(): UntypedFormArray {
+    return this.systemSettings.get("entries") as UntypedFormArray
   }
 
 
 
 
-  clearFormArray = (formArray: FormArray) => {
+  clearFormArray = (formArray: UntypedFormArray) => {
     while (formArray.length !== 0) {
       formArray.removeAt(0)
     }
@@ -72,13 +72,13 @@ export class SettingsComponent implements OnInit {
     this._http.get(url).subscribe((data: any) => {
       this.systemSettingsDetails = data;
       this.clearFormArray(this.entries());
-      const entryControl = this.systemSettings.get('entries') as FormArray;
+      const entryControl = this.systemSettings.get('entries') as UntypedFormArray;
       data.forEach((item: any) => {
-        let shFormGroup = new FormGroup({
-          'id': new FormControl(item.id, []),
-          'title': new FormControl({ value: item.title, disabled: item.title_editable == 1 ? false : true }, [Validators.required]),
-          'value': new FormControl({ value: item.value, disabled: item.value_editable == 1 ? false : true }, [Validators.required]),
-          'deletable': new FormControl(item.deletable, []),
+        let shFormGroup = new UntypedFormGroup({
+          'id': new UntypedFormControl(item.id, []),
+          'title': new UntypedFormControl({ value: item.title, disabled: item.title_editable == 1 ? false : true }, [Validators.required]),
+          'value': new UntypedFormControl({ value: item.value, disabled: item.value_editable == 1 ? false : true }, [Validators.required]),
+          'deletable': new UntypedFormControl(item.deletable, []),
         });
         entryControl.push(shFormGroup);
       });

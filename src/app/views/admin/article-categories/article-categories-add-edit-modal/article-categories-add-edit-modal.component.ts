@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, FormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { ArticleCategoriesAddEditModalService } from './article-categories-add-edit-modal.service';
@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 export class ArticleCategoriesAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  treatmentConditionForm: FormGroup;
+  treatmentConditionForm: UntypedFormGroup;
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -21,16 +21,16 @@ export class ArticleCategoriesAddEditModalComponent implements OnInit {
   constructor(
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _tcAddEditModalService: ArticleCategoriesAddEditModalService
   ) {
     this.treatmentConditionForm = this.formBuilder.group({
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
-      'description': new FormControl(null, []),
-      'image_url': new FormControl(null, []),
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(null, []),
+      'description': new UntypedFormControl(null, []),
+      'image_url': new UntypedFormControl(null, []),
     });
   }
 

@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { AccountVerifyModalService } from './account-verify-modal.service';
@@ -13,19 +13,19 @@ import { HttpClient } from '@angular/common/http';
 export class AccountVerifyModalComponent implements OnInit {
   @Output() onFormSubmitted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  accountVerifyForm: FormGroup;
+  accountVerifyForm: UntypedFormGroup;
 
   constructor(
     private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _tcAddEditModalService: AccountVerifyModalService){
 
     this.accountVerifyForm = this.formBuilder.group({
-      'status':new FormControl(null, [Validators.required]),
-      'comment': new FormControl(null, [])
+      'status':new UntypedFormControl(null, [Validators.required]),
+      'comment': new UntypedFormControl(null, [])
     });
   }
 

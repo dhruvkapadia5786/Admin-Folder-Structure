@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, UntypedFormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { CategoriesAddEditModalService } from './categories-add-edit-modal.service';
@@ -14,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
 export class CategoriesAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  treatmentConditionForm: FormGroup;
+  treatmentConditionForm: UntypedFormGroup;
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -26,18 +26,18 @@ export class CategoriesAddEditModalComponent implements OnInit {
     private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _tcAddEditModalService: CategoriesAddEditModalService){
     this.getAllAttributesData();
 
     this.treatmentConditionForm = this.formBuilder.group({
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
-      'description': new FormControl(null, []),
-      'image_url': new FormControl(null, []),
-      'attributes':new FormArray([])
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(null, []),
+      'description': new UntypedFormControl(null, []),
+      'image_url': new UntypedFormControl(null, []),
+      'attributes':new UntypedFormArray([])
     });
   }
 
@@ -74,12 +74,12 @@ export class CategoriesAddEditModalComponent implements OnInit {
       description:this.categoryDetails.description
     });
     this.imageUrl = this.categoryDetails.image ? environment.api_url + this.categoryDetails.image : `../../../../../assets/img/no_preview.png`;
-    const attributesControl = this.treatmentConditionForm.get('attributes') as FormArray;
+    const attributesControl = this.treatmentConditionForm.get('attributes') as UntypedFormArray;
     if(this.categoryDetails.attributes){
       this.categoryDetails.attributes.forEach((item:any)=>{
-        let attributeFormGroup = new FormGroup({
-          'attribute_id':new FormControl(item.attribute_id, [Validators.required]),
-          'values':new FormControl(item.values_ids, [Validators.required]),
+        let attributeFormGroup = new UntypedFormGroup({
+          'attribute_id':new UntypedFormControl(item.attribute_id, [Validators.required]),
+          'values':new UntypedFormControl(item.values_ids, [Validators.required]),
         });
         attributesControl.push(attributeFormGroup);
       });
@@ -160,10 +160,10 @@ export class CategoriesAddEditModalComponent implements OnInit {
     this.treatmentConditionForm.updateValueAndValidity();
   }
 
-  newAttributeInput(): FormGroup{
-    return new FormGroup({
-      'attribute_id': new FormControl('', [Validators.required]),
-      'values': new FormControl([], [Validators.required]),
+  newAttributeInput(): UntypedFormGroup{
+    return new UntypedFormGroup({
+      'attribute_id': new UntypedFormControl('', [Validators.required]),
+      'values': new UntypedFormControl([], [Validators.required]),
     });
   }
 
@@ -171,8 +171,8 @@ export class CategoriesAddEditModalComponent implements OnInit {
     this.attributes().removeAt(empIndex);
   }
 
-  attributes(): FormArray {
-      return this.treatmentConditionForm.get("attributes") as FormArray
+  attributes(): UntypedFormArray {
+      return this.treatmentConditionForm.get("attributes") as UntypedFormArray
   }
   /*-----------------------------END OF ATTRIBUTES --------------------------------*/
 

@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, FormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { ValuesAddEditModalService } from './values-add-edit-modal.service';
@@ -14,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
 export class ValuesAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  AttributesForm: FormGroup;
+  AttributesForm: UntypedFormGroup;
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -25,15 +25,15 @@ export class ValuesAddEditModalComponent implements OnInit {
     private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _addEditModalService: ValuesAddEditModalService){
     this.AttributesForm = this.formBuilder.group({
-      'attribute_id':new FormControl(null, []),
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
-      'image_url': new FormControl(null, []),
+      'attribute_id':new UntypedFormControl(null, []),
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(null, []),
+      'image_url': new UntypedFormControl(null, []),
     });
   }
 

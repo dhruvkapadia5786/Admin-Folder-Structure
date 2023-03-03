@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormArray } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,7 @@ export class CreateArticleComponent implements OnInit {
   editor: Editor;
   answerText:string='';
   public articleId: any;
-  public articleForm!: FormGroup;
+  public articleForm!: UntypedFormGroup;
   public eventInfo!: string;
   categoriesDetails:any=[];
 
@@ -36,13 +36,13 @@ export class CreateArticleComponent implements OnInit {
 
   ngOnInit(){
     this.getCategories();
-    this.articleForm = new FormGroup({
-      'image_url': new FormControl(null, []),
-      'categories': new FormControl([], []),
-      'title': new FormControl(null, [Validators.required]),
-      'body': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(true),
-      'tags':new FormArray([])
+    this.articleForm = new UntypedFormGroup({
+      'image_url': new UntypedFormControl(null, []),
+      'categories': new UntypedFormControl([], []),
+      'title': new UntypedFormControl(null, [Validators.required]),
+      'body': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(true),
+      'tags':new UntypedFormArray([])
     });
     if(this.articleId){
        this.getArticleDetails();

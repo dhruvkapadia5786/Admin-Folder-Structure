@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, EventEmitter, Component, OnInit, Output, OnDestroy } from '@angular/core';
 import { BrandAddEditModalService } from './brand-add-edit-modal.service';
-import { FormGroup, FormControl, Validators,FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators,UntypedFormBuilder } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { environment } from 'src/environments/environment';
 import { Helper } from 'src/app/services/helper.service';
@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
 export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  brandForm: FormGroup;
+  brandForm: UntypedFormGroup;
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -26,8 +26,8 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
 
 
   protected manufacturers: any[] = [];
-  public manufacturerCtrl: FormControl = new FormControl();
-  public manufacturerFilteringCtrl: FormControl = new FormControl();
+  public manufacturerCtrl: UntypedFormControl = new UntypedFormControl();
+  public manufacturerFilteringCtrl: UntypedFormControl = new UntypedFormControl();
   public searching = false;
   public filteredManufacturers: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   protected _onDestroy = new Subject<void>();
@@ -36,18 +36,18 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
     private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
     private _brandAddEditModalService: BrandAddEditModalService
   ) {
     this.brandForm = this.formBuilder.group({
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'description': new FormControl(null, []),
-      'image_url': new FormControl(null, []),
-      'is_active': new FormControl(true, []),
-      'is_featured': new FormControl(null, []),
-      'categories': new FormControl([], []),
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'description': new UntypedFormControl(null, []),
+      'image_url': new UntypedFormControl(null, []),
+      'is_active': new UntypedFormControl(true, []),
+      'is_featured': new UntypedFormControl(null, []),
+      'categories': new UntypedFormControl([], []),
     });
   }
 
