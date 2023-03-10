@@ -77,7 +77,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -122,7 +122,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -134,7 +134,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -143,7 +143,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-sm btn-default m-0" articleViewId=${full.id}>View <i class="ml-2 fa fa-eye"></i></button>
+            <button class="btn btn-sm btn-primary m-0" articleViewId=${full.id}>View <i class="ml-2 fa fa-eye"></i></button>
             <button class="btn btn-sm btn-primary m-0" articleEditId=${full.id}>Edit <i class="ml-2 fa fa-edit"></i></button>
             `;
           },

@@ -76,11 +76,32 @@ export class CategoriesAddEditModalComponent implements OnInit {
     this.imageUrl = this.categoryDetails.image ? environment.api_url + this.categoryDetails.image : `../../../../../assets/img/no_preview.png`;
     const attributesControl = this.treatmentConditionForm.get('attributes') as UntypedFormArray;
     if(this.categoryDetails.attributes){
-      this.categoryDetails.attributes.forEach((item:any)=>{
+
+      this.categoryDetails.attributes.forEach((item:any,index:number)=>{
+        let valArray:any  = [];
+        item.values.forEach((val:any,valIndex:number)=>{
+          let chArray :any = [];
+          if(val.children && val.children.length>0){
+             val.children.forEach((child:any,childIndex:number)=>{
+                  let childValArray= child.values.slice().map((ch:any)=> ch.attribute_value_id);
+                  let childFormGroup =  new UntypedFormGroup({
+                    'child_attribute_id': new UntypedFormControl(child.attribute_id, []),
+                    'child_attribute_values': new UntypedFormControl(childValArray, [])
+                  });
+                  chArray.push(childFormGroup);
+             });
+          }
+          let valFormGroup= new UntypedFormGroup({
+            'value_id': new UntypedFormControl(val.attribute_value_id, [Validators.required]),
+            'children':new UntypedFormArray(chArray)
+          });
+          valArray.push(valFormGroup);
+        });
         let attributeFormGroup = new UntypedFormGroup({
           'attribute_id':new UntypedFormControl(item.attribute_id, [Validators.required]),
-          'values':new UntypedFormControl(item.values_ids, [Validators.required]),
+          'values':new UntypedFormArray(valArray)
         });
+        console.log('attributeFormGroup=',attributeFormGroup);
         attributesControl.push(attributeFormGroup);
       });
     }
@@ -100,6 +121,13 @@ export class CategoriesAddEditModalComponent implements OnInit {
       attribute_id:event.value
     });
     let valuesss= this.getValuesFromAttribute('value',event.value);
+    this.clearFormArray(this.valuesInputArray(index));
+  }
+
+  clearFormArray = (formArray: UntypedFormArray) => {
+    while (formArray.length !== 0) {
+      formArray.removeAt(0)
+    }
   }
 
   getValuesFromAttribute(key:string,value:number){
@@ -116,6 +144,19 @@ export class CategoriesAddEditModalComponent implements OnInit {
         values = [];
       }
       return values;
+  }
+
+  childAttrChange(attrIndex:number,valueIndex:number,childIndex:number,event:any){
+    this.childrenArray(attrIndex,valueIndex).at(childIndex).patchValue({
+      child_attribute_id:event.value
+    });
+    let valuesss= this.getValuesFromAttribute('value',event.value);
+  }
+
+  childAttrValueChange(attrIndex:number,valueIndex:number,childIndex:number,event:any){
+    this.childrenArray(attrIndex,valueIndex).at(childIndex).patchValue({
+      child_attribute_values:event.value
+    });
   }
 
   async saveTreatmentCondition(formValid:boolean){
@@ -163,18 +204,77 @@ export class CategoriesAddEditModalComponent implements OnInit {
   newAttributeInput(): UntypedFormGroup{
     return new UntypedFormGroup({
       'attribute_id': new UntypedFormControl('', [Validators.required]),
-      'values': new UntypedFormControl([], [Validators.required]),
+      'values': new UntypedFormArray([], [Validators.required]),
     });
   }
 
-  removeAttributeInput(empIndex:number){
-    this.attributes().removeAt(empIndex);
+  removeAttributeInput(attrIndex:number){
+    this.attributes().removeAt(attrIndex);
   }
 
   attributes(): UntypedFormArray {
       return this.treatmentConditionForm.get("attributes") as UntypedFormArray
   }
-  /*-----------------------------END OF ATTRIBUTES --------------------------------*/
+  /*-----------------------------END OF ATTRIBUTES ---------------------*/
+
+  /*-----------------------------VALUES --------------------------------*/
+  addValueInput(attrIndex:number,attrValue:number){
+    this.valuesInputArray(attrIndex).push(this.newValueInput(attrValue));
+    this.treatmentConditionForm.updateValueAndValidity();
+  }
+
+  newValueInput(attrValue:number): UntypedFormGroup{
+    return new UntypedFormGroup({
+      'value_id': new UntypedFormControl(attrValue, [Validators.required]),
+      'children':new UntypedFormArray([], [])
+    });
+  }
+
+  removeValueInput(attrIndex:number,valueIndex:number){
+    this.valuesInputArray(attrIndex).removeAt(valueIndex);
+  }
+
+  valuesInputArray(attrIndex:number): UntypedFormArray {
+    return this.attributes().at(attrIndex).get('values') as UntypedFormArray
+  }
+
+  getcheckBoxValue(attrIndex:number,inputVal:number) {
+    let checked = this.valuesInputArray(attrIndex) ? (this.valuesInputArray(attrIndex)?.value.filter((itm:any)=>itm.value_id == inputVal).length>0?true:false):false;
+    return checked;
+  }
+
+  /*-----------------------------END OF CHILD ATTRIBUTES --------------------------------*/
+
+  /*--------------------------------- CHILDREN ----------------------------------*/
+  newChildInput(){
+    return new UntypedFormGroup({
+      'child_attribute_id': new UntypedFormControl('', []),
+      'child_attribute_values': new UntypedFormControl([], [])
+    });
+  }
+
+  addNewChildToAttrChildren(attrIndex:number,valueIndex:number){
+    this.childrenArray(attrIndex,valueIndex).push(this.newChildInput());
+    this.treatmentConditionForm.updateValueAndValidity();
+  }
+
+  removeChildFromAttrChildren(attrIndex:number,valueIndex:number,childIndex:number){
+    this.childrenArray(attrIndex,valueIndex).removeAt(childIndex);
+  }
+
+  childrenArray(attrIndex:number,valueIndex:number){
+    return this.valuesInputArray(attrIndex).at(valueIndex).get('children') as UntypedFormArray
+  }
+  /*-------------------------------- END CHILDREN -------------------------------*/
+
+
+  setAttributeValue(attrIndex:number,valueIndex:number,attrValue:number,checked:boolean){
+    if(checked){
+        this.addValueInput(attrIndex,attrValue);
+    }else{
+        this.removeValueInput(attrIndex,valueIndex);
+    }
+  }
 
   closeModal(){
     this._bsModalRef.hide();

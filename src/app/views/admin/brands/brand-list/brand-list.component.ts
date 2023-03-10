@@ -130,7 +130,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -144,7 +144,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },

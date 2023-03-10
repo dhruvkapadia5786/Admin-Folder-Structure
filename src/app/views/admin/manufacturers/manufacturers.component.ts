@@ -74,12 +74,26 @@ export class ManufacturersComponent implements OnInit,AfterViewInit,OnDestroy {
         {
           data: 'address',
           title: 'Address',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'contact_number',
           title: 'Contact number',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'is_active',

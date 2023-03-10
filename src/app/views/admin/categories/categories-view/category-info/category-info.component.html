@@ -27,8 +27,25 @@
            <tbody>
               <tr *ngFor="let attr of CategoryDetails.attributes">
                   <td>{{ attr.attribute_name }}</td>
-                  <td>
-                      <span *ngFor="let val of attr.values" class="badge badge-pill badge-primary p-2 mr-2">{{ val.attribute_value_name }}</span>
+                  <td *ngFor="let val of attr.values">
+                      <span  class="badge badge-pill badge-primary p-2 mr-2">{{ val.attribute_value_name }}</span>
+                      
+                      <table class="table table-sm">
+                        <thead class="bg-light">
+                           <tr>
+                             <th colspan="2">Child Attributes</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr *ngFor="let child of val.children">
+                               <td>{{ child.attribute_name }}</td>
+                               <td>
+                                   <span *ngFor="let childval of child.values" class="badge badge-pill badge-primary p-2 mr-2">{{ childval.attribute_value_name }}</span>                                 
+                               </td>
+                           </tr>
+                        </tbody>
+                     </table>
+
                   </td>
               </tr>
            </tbody>

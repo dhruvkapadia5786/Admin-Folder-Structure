@@ -112,7 +112,7 @@ export class PolicyListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-sm btn-default m-0" policyViewId=${full.id}>View <i class="ml-2 fa fa-eye"></i></button>
+            <button class="btn btn-sm btn-primary m-0" policyViewId=${full.id}>View <i class="ml-2 fa fa-eye"></i></button>
             <button class="btn btn-sm btn-primary m-0" policyEditId=${full.id}>Edit <i class="ml-2 fa fa-edit"></i></button>
             `;
           },

@@ -80,7 +80,7 @@ export class TopListingSubscriptionPaymentHistoryComponent implements OnInit,Aft
             if (data) {
               return `<img src='${environment.api_url + data}' height="100" width="100" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -143,7 +143,7 @@ export class TopListingSubscriptionPaymentHistoryComponent implements OnInit,Aft
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-sm btn-default m-0" receiptId=${full.receipt_url}>View Receipt</button>
+            <button class="btn btn-sm btn-primary m-0" receiptId=${full.receipt_url}>View Receipt</button>
             `;
           },
           orderable: false

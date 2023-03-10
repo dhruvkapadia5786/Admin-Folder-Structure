@@ -110,7 +110,7 @@ export class AttributeValuesComponent implements OnInit,AfterViewInit,OnDestroy 
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },

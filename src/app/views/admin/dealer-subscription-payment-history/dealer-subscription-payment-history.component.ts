@@ -123,7 +123,7 @@ export class DealerSubscriptionPaymentHistoryComponent implements OnInit, AfterV
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-sm btn-default m-0" receiptId=${full.receipt_url}>View Receipt</button>
+            <button class="btn btn-sm btn-primary m-0" receiptId=${full.receipt_url}>View Receipt</button>
             `;
           },
           orderable: false

@@ -172,29 +172,57 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return `<span>${data}</span>`;
             } else {
-              return `<span></span>`;
+              return `<span>-</span>`;
             }
           }
         },
         {
           data: 'country',
           title: 'Country',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         }, 
         {
           data: 'state',
           title: 'State',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'city_name',
           title: 'City',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'zip_code',
           title: 'ZipCode',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'is_active',
@@ -224,7 +252,7 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, record: any) {
-            return `<button class="btn btn-default btn-sm m-0" userID=${record.id}>View</button>
+            return `<button class="btn btn-primary btn-sm m-0" userID=${record.id}>View</button>
             <br/>
             <button class="btn btn-sm btn-primary mt-2" userEditID=${record.id}>Edit</button>`;
           },

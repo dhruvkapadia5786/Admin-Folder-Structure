@@ -36,7 +36,7 @@ export class CustomerInfoComponent implements OnInit,OnDestroy {
   deviceList: any[] = [];
   states: any[] = [];
 
-  imageUrl: any = '../../../../assets/img/no-image.png';
+  imageUrl: any = '../../../../../assets/img/no-image.png';
   _albums = [{
     src: this.imageUrl,
     caption: 'Full Face Image',

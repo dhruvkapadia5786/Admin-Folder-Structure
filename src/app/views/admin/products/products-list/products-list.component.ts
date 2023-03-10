@@ -280,7 +280,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return `<a href="javascript:void(0);" productID=${full.id}><img src='${environment.api_url + data}' height="100" width="100" /></>`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -467,11 +467,16 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         {
+          data: 'weight',
+          title: 'Weight',
+          className: 'text-left  font-weight-normal'
+        },
+        {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-default btn-sm m-0" productID=${full.id}>View</button>
+            <button class="btn btn-primary btn-sm m-0" productID=${full.id}>View</button>
             `;
           },
           orderable: false

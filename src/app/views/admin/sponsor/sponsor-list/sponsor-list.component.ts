@@ -123,19 +123,33 @@ export class SponsorListComponent implements OnInit, AfterViewInit, OnDestroy {
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
         {
           data: 'name',
           title: 'Sponsor Name',
-          className: 'text-left  font-weight-normal'
+          className: 'text-left  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'slug',
           title: 'Slug',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'is_active',

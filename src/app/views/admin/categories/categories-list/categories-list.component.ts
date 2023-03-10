@@ -72,7 +72,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
 
   openAddModal(){
     this._hcAddEditModalService.setData({event:'ADD'})
-    this.modalRef = this.modalService.show(CategoriesAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef = this.modalService.show(CategoriesAddEditModalComponent,{class:'modal-full-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
     });
@@ -81,7 +81,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
   openEditModal(id:any){
     let data = this.healthConditionList.find((item:any)=>item.id == id);
     this._hcAddEditModalService.setData({event:'EDIT',data:data});
-    this.modalRef = this.modalService.show(CategoriesAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef = this.modalService.show(CategoriesAddEditModalComponent,{class:'modal-full-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();
     });
@@ -128,7 +128,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },

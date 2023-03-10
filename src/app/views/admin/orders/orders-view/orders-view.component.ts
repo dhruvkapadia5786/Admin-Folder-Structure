@@ -31,7 +31,7 @@ export class OrdersViewComponent implements OnInit, OnDestroy {
 
   iframeMapURL: string = `https://www.google.com/maps/embed/v1/place`;
   @ViewChild('mapIframe') input: any;
-  imageUrl: any = '../../../../assets/img/no-image.png';
+  imageUrl: any = '../../../../../assets/img/no-image.png';
   _albums = [{
     src: this.imageUrl,
     caption: 'License image',
@@ -136,7 +136,7 @@ export class OrdersViewComponent implements OnInit, OnDestroy {
         });
       }
     }).catch((err:any) => {
-        this.imageUrl = '../../../../assets/img/no-image.png';
+        this.imageUrl = '../../../../../assets/img/no-image.png';
         this._albums = [];
         this._albums.push({
           src: this.imageUrl,

@@ -126,7 +126,14 @@ export class SellerListComponent  implements OnInit, AfterViewInit,OnDestroy {
         {
           data: 'email',
           title: 'Email',
-          className: 'text-left  font-weight-normal'
+          className: 'text-left  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'cell_phone_number',
@@ -143,22 +150,50 @@ export class SellerListComponent  implements OnInit, AfterViewInit,OnDestroy {
         {
           data: 'country',
           title: 'Country',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         }, 
         {
           data: 'state',
           title: 'State',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'city_name',
           title: 'City',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'zip_code',
           title: 'ZipCode',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'is_active',
@@ -180,7 +215,7 @@ export class SellerListComponent  implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -188,7 +223,7 @@ export class SellerListComponent  implements OnInit, AfterViewInit,OnDestroy {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, record: any) {
-            return `<button class="btn btn-default btn-sm m-0" sellerID=${record.id}>View</button>`;
+            return `<button class="btn btn-primary btn-sm m-0" sellerID=${record.id}>View</button>`;
           },
           orderable: false
         }

@@ -124,7 +124,7 @@ export class DealerListComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return `<a class="text-primary font-weight-bold" href="javascript:void(0);" dealerID=${record.id}>${data}</a>`;
             } else {
-              return `<span></span>`;
+              return `<span>-</span>`;
             }
           }
         },
@@ -136,7 +136,7 @@ export class DealerListComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return `<a class="text-primary font-weight-bold" href="javascript:void(0);" dealerID=${record.id}>${data.charAt(0).toUpperCase() + data.slice(1) +' '+record.last_name}</a>`;
             } else {
-              return `<span></span>`;
+              return `<span>-</span>`;
             }
           }
         },
@@ -153,39 +153,81 @@ export class DealerListComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return `<span>${data}</span>`;
             } else {
-              return `<span></span>`;
+              return `<span>-</span>`;
             }
           }
         },
         {
           data: 'country',
           title: 'Country',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         }, 
         {
           data: 'state',
           title: 'State',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'city_name',
           title: 'City',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'zip_code',
           title: 'ZipCode',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data:'vat_number',
           title: 'Vat number',
-          className: 'text-left  font-weight-normal'
+          className: 'text-left  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'website',
           title: 'website',
-          className: 'text-center  font-weight-normal'
+          className: 'text-center  font-weight-normal',
+          render: (data: any, type: any, record: any) => {
+            if (data) {
+              return `<span>${data}</span>`;
+            } else {
+              return `<span>-</span>`;
+            }
+          }
         },
         {
           data: 'created_at',
@@ -203,7 +245,7 @@ export class DealerListComponent implements OnInit, AfterViewInit,OnDestroy {
           title: 'Action',
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, record: any) {
-            return `<button class="btn btn-default btn-sm m-0" dealerID=${record.id}>View</button>`;
+            return `<button class="btn btn-primary btn-sm m-0" dealerID=${record.id}>View</button>`;
           },
           orderable: false
         }

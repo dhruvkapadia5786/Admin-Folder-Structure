@@ -24,7 +24,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
   public title = '';
   public isLightBox = true;
 
-  imageUrl: any = '../../../../assets/img/no-preview.png';
+  imageUrl: any = 'src/assets/img/no-preview.png';
   _albums = [{
     src: this.imageUrl,
     caption: 'Full Face Image',
@@ -55,7 +55,6 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
   getImage(imageName:string){
     if (imageName){
       this.imageUrl = this.isBase64==1 ? imageName:this.sanitizer.bypassSecurityTrustUrl(environment.api_url + imageName);
-      console.log('this.imageUrl=',this.imageUrl);
       this._albums = [];
       this._albums.push({
         src: this.imageUrl,
