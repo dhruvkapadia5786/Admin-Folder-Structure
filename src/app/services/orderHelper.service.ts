@@ -68,7 +68,7 @@ export class orderHelper {
       else if (status == 'REFUNDED'){
         badge= `<span class='badge  badge-pill badge-danger  p-2'>Refunded</span>`;
       } else {
-        badge= '<span></span>';
+        badge= '<span>-</span>';
       }
       return badge;
     }
@@ -101,7 +101,7 @@ export class orderHelper {
       else if (status == 'REFUND_PROCESSED'){
         badge= `<span class='badge  badge-pill badge-danger  p-2'>Refund Processed</span>`;
       } else {
-        badge= '<span></span>';
+        badge= '<span>-</span>';
       }
       return badge;
     }

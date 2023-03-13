@@ -97,7 +97,7 @@ export class FaqListComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },

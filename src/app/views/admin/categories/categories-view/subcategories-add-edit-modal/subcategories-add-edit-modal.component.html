@@ -95,7 +95,6 @@
                                                         <div  formArrayName="values">
                                                             <div *ngFor="let valueItem of valuesInputArray(attributeIndex).controls; let valueIndex=index">
                                                                 <div class="mt-2" [formGroupName]="valueIndex">
-                                                                    <input type="text" class="form-control" formControlName="value_id" />
                                                                     <div formArrayName="children">                                                                
                                                                     <td  *ngIf="childrenArray(attributeIndex,valueIndex) && childrenArray(attributeIndex,valueIndex).controls">                                                                       
                                                                         <div *ngFor="let childAttributeItem of childrenArray(attributeIndex,valueIndex).controls; let childIndex=index">

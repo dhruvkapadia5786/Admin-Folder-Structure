@@ -292,7 +292,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return `<a href="javascript:void(0);" productID=${full.id}>${data}</a>`
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -320,7 +320,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getProductStatus(data);
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -353,7 +353,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
               return '<span class="badge badge-dark">Inactive</span>'
             }
             else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -438,7 +438,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -450,7 +450,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -462,7 +462,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },

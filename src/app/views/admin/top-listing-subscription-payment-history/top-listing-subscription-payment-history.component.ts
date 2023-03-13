@@ -134,7 +134,7 @@ export class TopListingSubscriptionPaymentHistoryComponent implements OnInit,Aft
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },

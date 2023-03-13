@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { SponsorAddEditModalComponent } from '../sponsor-add-edit-modal/sponsor-add-edit-modal.component';
 import { SponsorAddEditModalService } from '../sponsor-add-edit-modal/sponsor-add-edit-modal.service';
 import { Router } from '@angular/router';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-sponsor-list',
@@ -26,6 +27,7 @@ export class SponsorListComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private _renderer:Renderer2,
     private _http: HttpClient,
+    private _helper:Helper,
     private modalService: BsModalService,
     private _brandAddEditModalService: SponsorAddEditModalService) {
      this.getDTOptions();
@@ -160,6 +162,30 @@ export class SponsorListComponent implements OnInit, AfterViewInit, OnDestroy {
               return `<i class="fa fa-check text-success"></img>`;
             } else {
               return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data: 'created_at',
+          title: 'Created At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
+          data: 'updated_at',
+          title: 'Updated At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
             }
           }
         },

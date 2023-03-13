@@ -9,6 +9,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ArticleCategoriesAddEditModalComponent } from '../article-categories-add-edit-modal/article-categories-add-edit-modal.component';
 import {  ArticleCategoriesAddEditModalService } from '../article-categories-add-edit-modal/article-categories-add-edit-modal.service';
 import { Router } from '@angular/router';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-article-categories-list',
@@ -28,6 +29,7 @@ export class  ArticleCategoriesListComponent implements OnInit, AfterViewInit, O
     private router:Router,
     private _renderer:Renderer2,
     private _http: HttpClient,
+    private _helper:Helper,
     private modalService: BsModalService,
     private _hcAddEditModalService:  ArticleCategoriesAddEditModalService
   ) {
@@ -146,6 +148,30 @@ export class  ArticleCategoriesListComponent implements OnInit, AfterViewInit, O
               return `<i class="fa fa-check text-success"></img>`;
             } else {
               return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data: 'created_at',
+          title: 'Created At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
+          data: 'updated_at',
+          title: 'Updated At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
             }
           }
         },
