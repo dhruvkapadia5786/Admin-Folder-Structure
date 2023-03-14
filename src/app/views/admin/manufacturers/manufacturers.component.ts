@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { ManufacturerAddEditModalComponent } from './manufacturer-add-edit-modal/manufacturer-add-edit-modal.component';
 import { ManufacturerAddEditModalService } from './manufacturer-add-edit-modal/manufacturer-add-edit-modal.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-anufacturers',
@@ -24,6 +25,7 @@ export class ManufacturersComponent implements OnInit,AfterViewInit,OnDestroy {
 
   constructor(
     private _http: HttpClient,
+    private _helper:Helper,
     private modalService: BsModalService,
     private _manufacturerAddEditModalService: ManufacturerAddEditModalService,
     private _renderer: Renderer2) {
@@ -104,6 +106,30 @@ export class ManufacturersComponent implements OnInit,AfterViewInit,OnDestroy {
               return `<i class="fa fa-check text-success"></i>`;
             } else {
               return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data: 'created_at',
+          title: 'Created At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
+          data: 'updated_at',
+          title: 'Updated At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
             }
           }
         },

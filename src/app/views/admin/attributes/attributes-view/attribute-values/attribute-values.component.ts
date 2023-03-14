@@ -120,6 +120,30 @@ export class AttributeValuesComponent implements OnInit,AfterViewInit,OnDestroy 
           className: 'text-center  font-weight-normal'
         },
         {
+          data: 'created_at',
+          title: 'Created At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
+          data: 'updated_at',
+          title: 'Updated At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
           data: 'is_active',
           title: 'Active',
           className: 'text-center  font-weight-normal',
