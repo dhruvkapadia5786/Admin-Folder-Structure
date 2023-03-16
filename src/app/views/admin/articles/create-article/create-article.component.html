@@ -69,7 +69,7 @@
                             [ngModelOptions]="{standalone: true}"
                             [placeholder]="'Enter Body'"
                             [spellcheck]="true"
-                            (input)='patchAnswer()'
+                            (ngModelChange)='patchAnswer()'
                             minHeight='530px'></ngx-editor>
                     </div>
                     <div class="invalid-feedback" *ngIf="body?.invalid && (body?.dirty || body?.touched)" class="text-danger">

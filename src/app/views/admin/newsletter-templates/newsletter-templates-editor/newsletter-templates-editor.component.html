@@ -61,7 +61,7 @@
                             [ngModelOptions]="{standalone: true}"
                             [placeholder]="'Enter HTML content'"
                             [spellcheck]="true"
-                            (input)='patchAnswer()'
+                            (ngModelChange)='patchAnswer()'
                             minHeight='530px'></ngx-editor>
                     </div>
                     <div class="invalid-feedback" *ngIf="email_content?.invalid && (email_content?.dirty || email_content?.touched)" class="text-danger">
