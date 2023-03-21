@@ -78,6 +78,13 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>Stripe Connect Account</td>
+                            <td>
+                                <h5>{{dealerDetails.personal_info.stripe_account_id ? dealerDetails.personal_info.stripe_account_id:'Not Found'}}</h5>
+                                <a *ngIf="dealerDetails.personal_info.stripe_account_id" class="btn btn-sm btn-info" target="_blank" [href]="'https://dashboard.stripe.com/connect/accounts/'+dealerDetails.personal_info.stripe_account_id+'/activity'">View Details</a>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Account Verified</td>
                             <td>
                                 <p [ngClass]="{'badge badge-pill':true,'badge-success':dealerDetails.personal_info.account_verified_by_admin==1,'badge-dark':dealerDetails.personal_info.account_verified_by_admin!=1}">{{ dealerDetails.personal_info.account_verified_by_admin==1?'Verified':'Not Verified'}}</p>

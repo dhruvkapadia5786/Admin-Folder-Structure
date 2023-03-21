@@ -76,7 +76,7 @@
                                        </div>       
                                     </div>
                                     <div class="col-8">                                       
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered table-responsive">
                                             <tr>                                                                                
                                                     <td>
                                                         <ul class="list-group-flush">
@@ -99,7 +99,7 @@
                                                                         <div *ngFor="let childAttributeItem of childrenArray(attributeIndex,valueIndex).controls; let childIndex=index">
                                                                             <div class="form-group mt-2" [formGroupName]="childIndex">
                                                                                 <div class="form-row">
-                                                                                    <div class="col-5">                                                                   
+                                                                                    <div class="col-2">                                                                   
                                                                                         <div>                                                               
                                                                                             <mat-select formControlName="child_attribute_id" placeholder="Child Attribute" (selectionChange)="childAttrChange(attributeIndex,valueIndex,childIndex,$event)">
                                                                                                 <mat-option *ngFor="let attr of attributesData" [value]="attr.id">
@@ -108,7 +108,7 @@
                                                                                             </mat-select>
                                                                                         </div>                                                          
                                                                                     </div>
-                                                                                    <div class="col-5">
+                                                                                    <div class="col-8">
                                                                                         <mat-select formControlName="child_attribute_values" placeholder="Value" (selectionChange)="childAttrValueChange(attributeIndex,valueIndex,childIndex,$event)" multiple>
                                                                                             <mat-option *ngFor="let value of getValuesFromAttribute('value',childAttributeItem.get('child_attribute_id')?.value)" [value]="value.id">
                                                                                                 {{value.name}}
@@ -121,7 +121,7 @@
                                                                                 </div>
                                                                             </div>                                                                   
                                                                         </div>
-                                                                        <div class="text-center">
+                                                                        <div class="text-left">
                                                                             <button type="button"  class="btn btn-sm btn-primary" (click)="addNewChildToAttrChildren(attributeIndex,valueIndex)"><i class="fa fa-plus mr-2"></i>Add More Child Attribute</button>
                                                                         </div>
                                                                     </td> 

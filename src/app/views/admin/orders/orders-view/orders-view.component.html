@@ -393,17 +393,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr [ngClass]="{'alert-success':transaction.transaction_type=='CHARGE'}"
+                                    <tr [ngClass]="{'alert-success':transaction.transaction_type=='CHARGE',
+                                        'alert-warning':transaction.transaction_type=='TRANSFER'
+                                        'alert-danger':transaction.transaction_type=='REFUND'
+                                        }"
                                         *ngFor="let transaction of orderDetails.all_payment_transactions;let i=index;">
                                         <td>{{i+1}}</td>
                                         <td>{{transaction.transaction_type}}</td>
                                         <td>{{transaction.payment_source}}</td>
-                                        <td>{{transaction.charged_amount | currency:orderDetails.currency}}</td>
                                         <td>
-                                            <a *ngIf="transaction.payment_source=='STRIPE'" target="_blank"
+                                            <span *ngIf="transaction.payment_source=='STRIPE' && transaction.transaction_type=='CHARGE'">{{transaction.charged_amount | currency:orderDetails.currency}}</span>
+                                            <span *ngIf="transaction.payment_source=='STRIPE' && transaction.transaction_type=='TRANSFER'">{{ transaction.transfer_amount | currency:orderDetails.currency }}</span>
+                                        </td>
+                                        <td>
+                                            <a *ngIf="transaction.payment_source=='STRIPE' && transaction.transaction_type=='CHARGE'" target="_blank"
                                                 href="https://dashboard.stripe.com/payments/{{transaction.charge_id}}">{{transaction.charge_id}}</a>
-                                            <span *ngIf="transaction.payment_source=='WALLET'">{{'Wallet Transaction
-                                                #'+transaction.charge_id}}</span>
+
+                                            
+                                            <a *ngIf="transaction.payment_source=='STRIPE' && transaction.transaction_type=='TRANSFER'" target="_blank"
+                                                href="https://dashboard.stripe.com/connect/transfers/{{transaction.transfer_id}}">{{transaction.transfer_id}}</a>
+                                                
+                                            <span *ngIf="transaction.payment_source=='WALLET'">{{'Wallet Transaction #'+transaction.charge_id}}</span>
                                         </td>
                                         <td>
                                             <div *ngIf="transaction.details">
@@ -412,7 +422,10 @@
                                                <p class="mb-0">Expires {{ transaction.details.card.exp_month+' / '+transaction.details.card.exp_year }}</p>
                                             </div>
                                          </td>    
-                                        <td>{{transaction.refunded_amount | currency:orderDetails.currency}}</td>
+                                        <td>
+                                            <span *ngIf="transaction.transaction_type=='REFUND">{{transaction.refunded_amount | currency:orderDetails.currency}}</span>
+                                            <span *ngIf="transaction.transaction_type=='TRANSFER_REVERSED'">{{transaction.transfer_reversal_amount | currency:orderDetails.currency}}</span>
+                                        </td>
                                         <td>
                                             <span
                                                 *ngIf="transaction.refund_id && transaction.payment_source=='STRIPE'">{{transaction.refund_id}}</span>
