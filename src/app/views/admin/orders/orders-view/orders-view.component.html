@@ -393,10 +393,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr [ngClass]="{'alert-success':transaction.transaction_type=='CHARGE',
-                                        'alert-warning':transaction.transaction_type=='TRANSFER'
-                                        'alert-danger':transaction.transaction_type=='REFUND'
-                                        }"
+                                    <tr [ngClass]="{'alert-success':transaction.transaction_type=='CHARGE','alert-warning':transaction.transaction_type=='TRANSFER','alert-danger':transaction.transaction_type=='REFUND'}"
                                         *ngFor="let transaction of orderDetails.all_payment_transactions;let i=index;">
                                         <td>{{i+1}}</td>
                                         <td>{{transaction.transaction_type}}</td>
@@ -423,7 +420,7 @@
                                             </div>
                                          </td>    
                                         <td>
-                                            <span *ngIf="transaction.transaction_type=='REFUND">{{transaction.refunded_amount | currency:orderDetails.currency}}</span>
+                                            <span *ngIf="transaction.transaction_type=='REFUND'">{{transaction.refunded_amount | currency:orderDetails.currency}}</span>
                                             <span *ngIf="transaction.transaction_type=='TRANSFER_REVERSED'">{{transaction.transfer_reversal_amount | currency:orderDetails.currency}}</span>
                                         </td>
                                         <td>

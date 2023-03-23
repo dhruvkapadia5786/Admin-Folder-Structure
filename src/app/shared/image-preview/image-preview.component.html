@@ -1,6 +1,6 @@
 <img class="img-responsive license-image"
 [src]="imageUrl"
-onError="this.onerror=null;this.src='../../../../assets/img/no-preview.png';"
+(onError)="handleError($event)"
 (click)="open()"
 [ngStyle]="{'max-width.px':maxWidth,'max-height.px':maxHeight}" />
 <div class="text-center" *ngIf="title">

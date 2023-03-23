@@ -24,7 +24,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
   public title = '';
   public isLightBox = true;
 
-  imageUrl: any = 'src/assets/img/no-preview.png';
+  imageUrl: any = '../../../assets/img/no_preview.png';
   _albums = [{
     src: this.imageUrl,
     caption: 'Full Face Image',
@@ -73,4 +73,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
     }
   }
 
+  handleError(event:any){
+      event.target.src = '../../../assets/img/no_preview.png';
+  }
 }
