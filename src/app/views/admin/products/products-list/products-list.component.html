@@ -38,7 +38,9 @@
         </div>
     </div>
     <div class="row mt-2">
-
+        <button type="button" class="btn btn-success mr-2" (click)="bulkUpdate('published')"><i class="fas fa-check-circle mr-2"></i>Publish</button>
+        <button type="button" class="btn btn-danger mr-2" (click)="bulkUpdate('rejected')"><i class="fas fa-times mr-2"></i>Reject</button>
+        <button type="button" class="btn btn-dark" (click)="bulkUpdate('deleted')"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
     </div>
   <div class="p-2" *blockUI="'datatable'">
     <div class="table-responsive">

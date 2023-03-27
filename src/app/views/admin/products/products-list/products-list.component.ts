@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Helper } from 'src/app/services/helper.service';
 import { CurrencyPipe  } from '@angular/common';
 import {environment} from 'src/environments/environment';
-
+import { Toastr } from 'src/app/services/toastr.service';
 import { ProductsFilterModalService } from '../products-filter-modal/products-filter-modal.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ProductsFilterModalComponent } from '../products-filter-modal/products-filter-modal.component';
@@ -71,7 +71,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject();
-  dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
 
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
   sellerDealerId:any;
@@ -83,6 +83,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public _helper: Helper,
     private cp:CurrencyPipe,
+    public _toastr: Toastr,
     private modalService: BsModalService,
     private _productsFilterModalService: ProductsFilterModalService,
     private _renderer: Renderer2){
@@ -211,7 +212,6 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     this._productsFilterModalService.setData({event:'EDIT',all_attributes: this.attributesData, filters:this.product_config.filter.ATTRIBUTES});
     this.modalRef = this.modalService.show(ProductsFilterModalComponent,{class:'modal-lg'});
     this.modalRef.content.onFilterAppliedCompleted.subscribe((appliedFilters:any)=>{
-      console.log('appliedFilters=',appliedFilters);
       this.product_config.filter.ATTRIBUTES=appliedFilters.attributes;
       this.handleChange('',null);
     });
@@ -232,6 +232,38 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  bulkUpdate(action:string){
+    let selected_products:any =[];
+		this.dtElement.dtInstance
+			.then((dtInstance: DataTables.Api) => {
+				selected_products = dtInstance.rows({ selected: true }).data();
+				return selected_products;
+			})
+			.then((data) => {
+        let temp:any=[];
+				if(selected_products.length > 0){
+          selected_products = selected_products.filter((item:any)=> {
+              if(item.id){
+                 temp.push(item.id)
+              }
+            });
+          this.updateStatus(action,temp);
+        }else{
+          this._toastr.showWarning('No Product Selected');
+        }
+    });
+  }
+
+  updateStatus(status:string,ids:any){
+    const url = 'api/admin/products/update-status';
+    this._http.post(url,{status:status,ids:ids}).subscribe((res: any) => {
+      this._toastr.showSuccess('Products Succsesfully '+status);
+      this.rerender();
+    },(err:any) => {
+
+    });
+  }
+
   getDTOptions(){
     this.blockDataTable.start();
     this.dtOptions = {
@@ -244,7 +276,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       autoWidth: true,
       ordering: true,
       order: [[18, 'desc']],
-      ajax: (dataTablesParameters: any, callback) => {
+      ajax: (dataTablesParameters: any, callback:any) => {
        dataTablesParameters.filter = {}
        dataTablesParameters.filter =  this.product_config.filter;
         this._http
@@ -271,6 +303,11 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           });
       },
       columns: [
+        {
+          data:'id',
+          title:'Id',
+          className: 'text-left  font-weight-normal'
+        },
         {
           data:'image',
           title: 'Image',
@@ -328,7 +365,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'has_subscription',
           title: 'Has Subscription',
           className: 'text-center  font-weight-normal',
-          render: (data) => {
+          render: (data:any) => {
             if (data) {
               return `<i class="fa fa-check text-success"></i>`;
             } else {
@@ -410,7 +447,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'is_active',
           title: 'Active',
           className: 'text-center  font-weight-normal',
-          render: (data) => {
+          render: (data:any) => {
             if (data) {
               return `<i class="fa fa-check text-success"></i>`;
             } else {
@@ -422,7 +459,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'is_featured',
           title: 'Is Featured',
           className: 'text-center  font-weight-normal',
-          render: (data) => {
+          render: (data:any) => {
             if (data) {
               return `<i class="fa fa-check text-success"></i>`;
             } else {
@@ -481,7 +518,8 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           orderable: false
         }
-      ]
+      ],
+      select: true
     };
 
   }

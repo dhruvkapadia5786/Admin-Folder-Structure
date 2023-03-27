@@ -56,8 +56,8 @@ export class ProductInfoComponent implements OnInit {
   }
 
   updateStatus(status:string){
-    const url = 'api/admin/products/update-status/' + this.productId;
-    this.http.post(url,{status:status}).subscribe((res: any) => {
+    const url = 'api/admin/products/update-status';
+    this.http.post(url,{status:status,ids:[ this.productId]}).subscribe((res: any) => {
        this.getProductDetails();
     },(err:any) => {
 
