@@ -9,6 +9,8 @@
             <tr><td class="font-weight-normal">URL</td><td class="font-weight-normal">{{ CategoryDetails.slug || '-' }}</td></tr>
             <tr><td class="font-weight-normal">Active</td><td class="font-weight-normal"><h5><i class="fa fa-check text-success" *ngIf="CategoryDetails.is_active"></i><i class="fa fa-times text-danger" *ngIf="!CategoryDetails.is_active"></i></h5></td></tr>
             <tr><td class="font-weight-normal">Description</td><td class="font-weight-normal">{{CategoryDetails.description}}</td></tr>
+            <tr><td class="font-weight-normal">Min Shipping Weight (grams)</td><td class="font-weight-normal">{{ CategoryDetails.min_shipping_weight || '-' }}</td></tr>
+            <tr><td class="font-weight-normal">Max Shipping Weight (grams)</td><td class="font-weight-normal">{{ CategoryDetails.max_shipping_weight || '-' }}</td></tr>
             <tr>
               <td class="font-weight-normal">Image</td>
               <td class="font-weight-normal">

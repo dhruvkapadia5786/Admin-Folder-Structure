@@ -275,7 +275,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[18, 'desc']],
+      order: [[19, 'desc']],
       ajax: (dataTablesParameters: any, callback:any) => {
        dataTablesParameters.filter = {}
        dataTablesParameters.filter =  this.product_config.filter;
@@ -502,11 +502,6 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
               return '<span>-</span>';
             }
           }
-        },
-        {
-          data: 'weight',
-          title: 'Weight',
-          className: 'text-left  font-weight-normal'
         },
         {
           title: 'Action',

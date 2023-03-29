@@ -36,6 +36,8 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       'is_active': new UntypedFormControl(null, []),
       'description': new UntypedFormControl(null, []),
       'image_url': new UntypedFormControl(null, []),
+      'min_shipping_weight': new UntypedFormControl(null, []),
+      'max_shipping_weight': new UntypedFormControl(null, []),
       'attributes':new UntypedFormArray([])
     });
   }
@@ -46,6 +48,8 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
   get is_active() { return this.SubcategoryForm.get('is_active'); }
   get description() { return this.SubcategoryForm.get('description'); }
   get image_url() { return this.SubcategoryForm.get('image_url'); }
+  get min_shipping_weight() { return this.SubcategoryForm.get('min_shipping_weight'); }
+  get max_shipping_weight() { return this.SubcategoryForm.get('max_shipping_weight'); }
 
   ngOnInit(): void {
     this.getAllAttributesData();
@@ -120,7 +124,9 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       category_id:this.subcategoryDetails.category_id,
       name:this.subcategoryDetails.name,
       is_active:this.subcategoryDetails.is_active,
-      description:this.subcategoryDetails.description
+      description:this.subcategoryDetails.description,
+      min_shipping_weight:this.subcategoryDetails.min_shipping_weight,
+      max_shipping_weight:this.subcategoryDetails.max_shipping_weight
     });
     this.imageUrl = this.subcategoryDetails.image ? environment.api_url + this.subcategoryDetails.image : `../../../../../assets/img/no_preview.png`;
     const attributesControl = this.SubcategoryForm.get('attributes') as UntypedFormArray;

@@ -37,6 +37,8 @@ export class CategoriesAddEditModalComponent implements OnInit {
       'is_active': new UntypedFormControl(null, []),
       'description': new UntypedFormControl(null, []),
       'image_url': new UntypedFormControl(null, []),
+      'min_shipping_weight': new UntypedFormControl(null, []),
+      'max_shipping_weight': new UntypedFormControl(null, []),
       'attributes':new UntypedFormArray([])
     });
   }
@@ -46,6 +48,8 @@ export class CategoriesAddEditModalComponent implements OnInit {
   get is_active() { return this.treatmentConditionForm.get('is_active'); }
   get description() { return this.treatmentConditionForm.get('description'); }
   get image_url() { return this.treatmentConditionForm.get('image_url'); }
+  get min_shipping_weight() { return this.treatmentConditionForm.get('min_shipping_weight'); }
+  get max_shipping_weight() { return this.treatmentConditionForm.get('max_shipping_weight'); }
 
   ngOnInit(): void {
     let details = this._tcAddEditModalService.getData();
@@ -71,7 +75,9 @@ export class CategoriesAddEditModalComponent implements OnInit {
       category_id:this.categoryDetails.category_id,
       name:this.categoryDetails.name,
       is_active:this.categoryDetails.is_active,
-      description:this.categoryDetails.description
+      description:this.categoryDetails.description,
+      min_shipping_weight:this.categoryDetails.min_shipping_weight,
+      max_shipping_weight:this.categoryDetails.max_shipping_weight
     });
     this.imageUrl = this.categoryDetails.image ? environment.api_url + this.categoryDetails.image : `../../../../../assets/img/no_preview.png`;
     const attributesControl = this.treatmentConditionForm.get('attributes') as UntypedFormArray;

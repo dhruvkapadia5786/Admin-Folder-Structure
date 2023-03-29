@@ -135,6 +135,30 @@ export class CategorySubcategoriesComponent implements OnInit,AfterViewInit,OnDe
           }
         },
         {
+          data:'min_shipping_weight',
+          title: 'Min Shipping Weight',
+          className: 'text-left  font-weight-normal',
+          render: (data: any) => {
+            if (data) {
+              return data+' grams'
+            } else {
+              return `-`;
+            }
+          }
+        },
+        {
+          data:'max_shipping_weight',
+          title: 'Max Shipping Weight',
+          className: 'text-left  font-weight-normal',
+          render: (data: any) => {
+            if (data) {
+              return data+' grams'
+            } else {
+              return `-`;
+            }
+          }
+        },
+        {
           data: 'created_at',
           title: 'Created At',
           className: 'text-center  font-weight-normal',
