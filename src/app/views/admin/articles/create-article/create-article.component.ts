@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Helper } from 'src/app/services/helper.service';
 import { Editor } from 'ngx-editor';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-create-article',
@@ -18,6 +19,7 @@ export class CreateArticleComponent implements OnInit {
   public articleForm!: UntypedFormGroup;
   public eventInfo!: string;
   categoriesDetails:any=[];
+  articleDetails:any;
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -70,6 +72,8 @@ export class CreateArticleComponent implements OnInit {
   getArticleDetails(){
     const url = 'api/admin/articles/view/' + this.articleId;
     this._http.get(url).subscribe((res: any) => {
+        this.imageUrl = res.coverimage ? environment.api_url+res.coverimage: '../../../../../assets/img/no_preview.png';
+        this.articleDetails = res;
         this.articleForm.patchValue({
           title: res.title,
           body: res.body,
@@ -105,6 +109,7 @@ export class CreateArticleComponent implements OnInit {
 
 
     const formData: FormData = new FormData();
+    formVal.coverimage = this.articleDetails.coverimage;
     formData.append('article', JSON.stringify(formVal));
     formData.append('image_url', this.selectedImageFile);
 
