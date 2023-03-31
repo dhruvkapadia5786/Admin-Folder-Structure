@@ -68,6 +68,13 @@
                         <tr><td>Subscription Activated On</td><td>{{ dealerDetails.personal_info.subscription_activated_on  | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
                         <tr><td>Subscription Expire On</td><td>{{ dealerDetails.personal_info.subscription_expire_on  | date:'dd-MM-yyyy hh:mm:ss a'}}</td></tr>
                         <tr><td>Subscription Status</td><td><p>{{ dealerDetails.personal_info.subscription_status }}</p></td></tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <button class="btn btn-block btn-outline-warning" (click)="openEditSubscriptionPlanModal()">Edit Subscription Plan</button>
+                            </td>
+                        </tr>
+
                         <tr><td>Account Type</td><td><p [ngClass]="{'badge badge-pill':true,'badge-success':dealerDetails.personal_info.account_type=='premium','badge-primary':dealerDetails.personal_info.account_type=='free'}">{{ dealerDetails.personal_info.account_type }}</p></td></tr>
                     
                         <tr>

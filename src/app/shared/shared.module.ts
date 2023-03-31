@@ -16,6 +16,7 @@ import {MatInputModule} from '@angular/material/input';
 import { PipesModule } from 'src/app/pipes/pipes.module'
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [],
@@ -28,6 +29,7 @@ import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
     }),
     TabsModule.forRoot(),
     ModalModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     FormsModule, 
     DataTablesModule,
     NgxPaginationModule,
@@ -59,6 +61,7 @@ import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
     MatSlideToggleModule,
     MatInputModule,
     NgxPaginationModule,
+    BsDatepickerModule,
     PipesModule,
     TabsModule,
     ModalModule

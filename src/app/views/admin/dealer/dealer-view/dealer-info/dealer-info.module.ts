@@ -5,6 +5,7 @@ import { DealerInfoComponent } from './dealer-info.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ImagePreviewModule } from 'src/app/shared/image-preview/image-preview.module';
 import { AccountVerifyModalModule } from 'src/app/components/account-verify-modal/account-verify-modal.module';
+import { EditSubscriptionPlanModule } from '../edit-subscription-plan/edit-subscription-plan.module';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { AccountVerifyModalModule } from 'src/app/components/account-verify-moda
   imports:[
     SharedModule,
     ImagePreviewModule,
+    EditSubscriptionPlanModule,
     AccountVerifyModalModule,
     DealerInfoRoutingModule
   ]
