@@ -363,18 +363,22 @@
   </div>
 
   <div class="row mt-3">
-    
-    <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+    <div class="col-xl-6 col-lg-4 col-md-6 col-12">
+      <highcharts-chart style="max-height:500px;width:100%;display:block;" [Highcharts]="Highcharts"
+        [constructorType]="chartConstructor" [options]="chartOptionsUserExperienceLevel" [callbackFunction]="chartCallback"
+        [(update)]="updateFlag" [oneToOne]="oneToOneFlag"></highcharts-chart>
+    </div>
+    <div class="col-xl-6 col-lg-4 col-md-6 col-12">
       <highcharts-chart style="max-height:500px;width:100%;display:block;" [Highcharts]="Highcharts"
         [constructorType]="chartConstructor" [options]="chartOptionsDeviceType" [callbackFunction]="chartCallback"
         [(update)]="updateFlag" [oneToOne]="oneToOneFlag"></highcharts-chart>
     </div>
-    <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+    <div class="col-xl-6 col-lg-4 col-md-6 col-12 mt-3">
       <highcharts-chart style="max-height:500px;width:100%;display:block;" [Highcharts]="Highcharts"
         [constructorType]="chartConstructor" [options]="chartOptionsUserBrowser" [callbackFunction]="chartCallback"
         [(update)]="updateFlag" [oneToOne]="oneToOneFlag"></highcharts-chart>
     </div>
-    <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+    <div class="col-xl-6 col-lg-4 col-md-6 col-12 mt-3">
       <highcharts-chart style="max-height:500px;width:100%;display:block;" [Highcharts]="Highcharts"
         [constructorType]="chartConstructor" [options]="chartOptionsUserOs" [callbackFunction]="chartCallback"
         [(update)]="updateFlag" [oneToOne]="oneToOneFlag"></highcharts-chart>

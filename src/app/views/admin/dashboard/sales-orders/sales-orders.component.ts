@@ -18,6 +18,7 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
   public UserOsData: any[] = [];
   public UserBrowserData: any[] = [];
   public UserDeviceTypeData: any[] = [];
+  public UserExperienceLevelData:any[]=[];
 
   chart:any;
   Highcharts: typeof Highcharts = Highcharts;
@@ -26,6 +27,7 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
   chartOptionsUserOs: Highcharts.Options = {};
   chartOptionsUserBrowser: Highcharts.Options = {};
   chartOptionsDeviceType: Highcharts.Options = {};
+  chartOptionsUserExperienceLevel: Highcharts.Options = {};
 
   chartCallback:any;
   updateFlag = false;
@@ -57,7 +59,11 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
       self.chartOptionsUserOs = chartOptions;
     } else if (whichChart == 'BrowserPie') {
       self.chartOptionsUserBrowser = chartOptions;
-    } else if (whichChart == 'DeviceTypePie') {
+    } 
+    else if (whichChart == 'ExperienceLevelPie') {
+      self.chartOptionsUserExperienceLevel = chartOptions;
+    } 
+    else if (whichChart == 'DeviceTypePie') {
       self.chartOptionsDeviceType = chartOptions;
     } else {
       self.chartOptionsline = chartOptions;
@@ -280,13 +286,25 @@ export class SalesOrdersComponent implements OnInit, AfterViewInit {
           data: this.UserOsData
         }]);
         this.loadChartData(userOsChartoptions, 'OsPie');
-
+        res.user_experience_level.filter((itm:any)=>{
+            this.UserExperienceLevelData.push({
+               name:itm.value,
+               showInLegend: true,
+               y:itm.count
+            });
+        });
+        let userExperienceChangeOptions = this.getMyChart('Users By Experience Level',[{
+          name:'Users',
+          colorByPoint:true,
+          data:this.UserExperienceLevelData
+        }]);
+        this.loadChartData(userExperienceChangeOptions, 'ExperienceLevelPie');
         res.user_device_details.group_by_browser.filter((obj:any) => {
           this.UserBrowserData.push({
             name: obj.browser_name,
             y: obj.users
           })
-        })
+        });
         let userBrowserChartoptions = this.getMyChart('Browser Used By Users', [{
           name: 'Users',
           colorByPoint: true,

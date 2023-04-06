@@ -88,8 +88,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/articles', iconName: 'fa-newspaper', displayName: 'Articles' },
 				]
 			},
-			{ route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' }
-		]
+			/*{ route: '/admin/reports', iconName: 'fa-file', displayName: 'Reports' }*/		]
 	}
 
 	ngOnInit() {

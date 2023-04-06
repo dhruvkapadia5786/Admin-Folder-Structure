@@ -46,6 +46,15 @@
                                                 </p>
                                             </td>
                                         </tr>
+
+                                        <tr>
+                                            <td>Shipping Type</td>
+                                            <td>{{ orderDetails.shipping_type }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping Method</td>
+                                            <td>{{ orderDetails.shipping_method }}</td>
+                                        </tr>
                                         
                             </tbody>
                         </table>
@@ -220,6 +229,40 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <div class="mt-3">
+                            <table class="table table-sm table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>
+                                            Shipping Address
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div *ngIf="orderDetails.place_address">
+                                               
+                                                <p class="mb-0">
+                                                    {{ orderDetails.place_address.address_line_1 ?
+                                                    orderDetails.place_address.address_line_1:''}}
+                                                    {{ orderDetails.place_address.address_line_2 ? ', ':''
+                                                    }}<br />{{orderDetails.place_address?.address_line_2}}
+                                                    
+                                                </p>
+                    
+                                                <p class="mb-0">{{orderDetails.place_address.city_name +'+' - '+orderDetails.place_address.zip_code}}
+                                                </p>
+                                                <p class="mb-2">{{orderDetails.place_address.country+' - '+
+                                                    orderDetails.place_address.country_code}}</p>
+                    
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                       
 
                     </div>
@@ -273,7 +316,7 @@
                                         </td>
                                         <td class="align-middle text-center">{{product.quantity}}</td>
 
-                                        <td class="align-middle text-right">{{ product.tax_amount | currency:orderDetails.currency}}</td>
+                                        <td class="align-middle text-right">{{ product.total_tax_amount | currency:orderDetails.currency}}</td>
                                         <td class="align-middle text-right">{{ product.commission_amount | currency:orderDetails.currency}} {{ '   ('+product.commission_percentage+'%)' }}</td>
                                         
                                         <td class="align-middle text-right">
@@ -290,32 +333,28 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-900">Tax</th>
-                                            <td class="font-weight-semi-bold text-right">{{(orderDetails.tax_amount||0)
-                                                | currency:orderDetails.currency}}</td>
+                                            <td class="font-weight-semi-bold text-right">{{(orderDetails.tax_amount||0) | currency:orderDetails.currency}}</td>
                                         </tr>
 
                                         <tr>
-                                            <th
-                                                [ngClass]="{'text-900':true,'text-danger':orderDetails.coupon_discount>0?true:false}">
-                                                Coupon Discount {{ orderDetails.coupon_details &&
-                                                orderDetails.coupon_details.coupon_code?'( Coupon Code Used :
-                                                '+orderDetails.coupon_details.coupon_code+' )':'' }}</th>
-                                            <td
-                                                [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.coupon_discount>0?true:false}">
-                                                {{(orderDetails.coupon_discount||0) | currency:orderDetails.currency}}</td>
+                                            <th [ngClass]="{'text-900':true,'text-danger':orderDetails.discount>0?true:false}">Discount</th>
+                                            <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.discount>0?true:false}"> {{(orderDetails.discount||0) | currency:orderDetails.currency}}</td>
                                         </tr>
                                         <tr>
-                                            <th
-                                                [ngClass]="{'text-900':true,'text-danger':orderDetails.shipping_charge>0?true:false}">
-                                                Shipping Charges</th>
-                                            <td
-                                                [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.shipping_charge>0?true:false}">
-                                                {{(orderDetails.shipping_charge || 0) | currency:orderDetails.currency }}</td>
+                                            <th [ngClass]="{'text-900':true,'text-danger':orderDetails.shipping_charge>0?true:false}">Shipping Charges</th>
+                                            <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.shipping_charge>0?true:false}">{{(orderDetails.shipping_charge || 0) | currency:orderDetails.currency }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th [ngClass]="{'text-900':true,'text-danger':orderDetails.shipping_insurance_charge>0?true:false}">Shipping Insurance Charges</th>
+                                            <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.shipping_insurance_charge>0?true:false}">{{(orderDetails.shipping_insurance_charge || 0) | currency:orderDetails.currency }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th [ngClass]="{'text-900':true,'text-danger':orderDetails.transaction_charge>0?true:false}">Trasanction Charge</th>
+                                            <td [ngClass]="{'font-weight-semi-bold text-right':true,'text-danger':orderDetails.transaction_charge>0?true:false}">{{(orderDetails.transaction_charge || 0) | currency:orderDetails.currency }}</td>
                                         </tr>
                                         <tr class="border-top">
                                             <th class="font-weight-bold">Total</th>
-                                            <td class="font-weight-bold text-right">{{orderDetails.total_amount |
-                                                currency:orderDetails.currency }}</td>
+                                            <td class="font-weight-bold text-right">{{orderDetails.total_amount | currency:orderDetails.currency }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
