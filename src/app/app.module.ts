@@ -10,8 +10,8 @@ import { HttpInterceptorModule } from './interceptors/http.interceptor.module';
 import { ToastrModule } from 'ngx-toastr';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { notificationHelper} from 'src/app/services/notificationHelper.service';
-//import { MsgService } from 'src/app/services/msgService';
-//import { WebsocketService } from 'src/app/services/WebsocketService';
+import { MsgService } from 'src/app/services/msgService';
+import { WebsocketService } from 'src/app/services/WebsocketService';
 
 @NgModule({
   declarations: [
@@ -29,7 +29,7 @@ import { notificationHelper} from 'src/app/services/notificationHelper.service';
 		}),
     AppRoutingModule
   ],
-  providers: [notificationHelper, CurrencyPipe],
+  providers: [notificationHelper,MsgService,WebsocketService,CurrencyPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
