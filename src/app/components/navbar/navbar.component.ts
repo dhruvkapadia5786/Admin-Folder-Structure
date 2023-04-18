@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { notificationHelper } from 'src/app/services/notificationHelper.service';
 import { AppNotification } from 'src/app/models/Notification';
 import * as moment from 'moment-timezone';
-import { MsgService } from 'src/app/services/msgService';
+//import { MsgService } from 'src/app/services/msgService';
 import * as io from 'socket.io-client';
 import { Subscription } from 'rxjs';
 
@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		private element: ElementRef,
 		private http: HttpClient,
 		private _authService: AuthService,
-		private msgService: MsgService,
+		//private msgService: MsgService,
 		public _notificationHelper: notificationHelper,
 		private _changeDetectorRef: ChangeDetectorRef) {
 		this.location = location;
@@ -117,7 +117,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	}
 
 	dissconnectSocket() {
-		this.msgService.dissconnectSocket();
+		//this.msgService.dissconnectSocket();
 	}
 
 	getNotifications() {
