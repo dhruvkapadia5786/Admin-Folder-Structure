@@ -39,7 +39,15 @@ export class CategoriesAddEditModalComponent implements OnInit {
       'image_url': new UntypedFormControl(null, []),
       'min_shipping_weight': new UntypedFormControl(null, []),
       'max_shipping_weight': new UntypedFormControl(null, []),
-      'attributes':new UntypedFormArray([])
+      'attributes':new UntypedFormArray([]),
+      'name_fr': new UntypedFormControl(null,[]),
+      'name_nl': new UntypedFormControl(null,[]),
+      'name_es': new UntypedFormControl(null,[]),
+      'name_pt': new UntypedFormControl(null,[]),
+      'description_fr': new UntypedFormControl(null,[]),
+      'description_nl': new UntypedFormControl(null,[]),
+      'description_es': new UntypedFormControl(null,[]),
+      'description_pt': new UntypedFormControl(null,[]),
     });
   }
 
@@ -50,6 +58,16 @@ export class CategoriesAddEditModalComponent implements OnInit {
   get image_url() { return this.treatmentConditionForm.get('image_url'); }
   get min_shipping_weight() { return this.treatmentConditionForm.get('min_shipping_weight'); }
   get max_shipping_weight() { return this.treatmentConditionForm.get('max_shipping_weight'); }
+
+  get name_fr() { return this.treatmentConditionForm.get('name_fr'); }
+  get name_nl() { return this.treatmentConditionForm.get('name_nl'); }
+  get name_es() { return this.treatmentConditionForm.get('name_es'); }
+  get name_pt() { return this.treatmentConditionForm.get('name_pt'); }
+
+  get description_fr() { return this.treatmentConditionForm.get('description_fr'); }
+  get description_nl() { return this.treatmentConditionForm.get('description_nl'); }
+  get description_es() { return this.treatmentConditionForm.get('description_es'); }
+  get description_pt() { return this.treatmentConditionForm.get('description_pt'); }
 
   ngOnInit(): void {
     let details = this._tcAddEditModalService.getData();
@@ -77,7 +95,15 @@ export class CategoriesAddEditModalComponent implements OnInit {
       is_active:this.categoryDetails.is_active,
       description:this.categoryDetails.description,
       min_shipping_weight:this.categoryDetails.min_shipping_weight,
-      max_shipping_weight:this.categoryDetails.max_shipping_weight
+      max_shipping_weight:this.categoryDetails.max_shipping_weight,
+      name_fr:this.categoryDetails.name_fr,
+      name_nl:this.categoryDetails.name_nl,
+      name_es:this.categoryDetails.name_es,
+      name_pt:this.categoryDetails.name_pt,
+      description_fr:this.categoryDetails.description_fr,
+      description_nl:this.categoryDetails.description_nl,
+      description_es:this.categoryDetails.description_es,
+      description_pt:this.categoryDetails.description_pt
     });
     this.imageUrl = this.categoryDetails.image ? environment.api_url + this.categoryDetails.image : `../../../../../assets/img/no_preview.png`;
     const attributesControl = this.treatmentConditionForm.get('attributes') as UntypedFormArray;

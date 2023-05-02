@@ -38,7 +38,15 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       'image_url': new UntypedFormControl(null, []),
       'min_shipping_weight': new UntypedFormControl(null, []),
       'max_shipping_weight': new UntypedFormControl(null, []),
-      'attributes':new UntypedFormArray([])
+      'attributes':new UntypedFormArray([]),
+      'name_fr': new UntypedFormControl(null,[]),
+      'name_nl': new UntypedFormControl(null,[]),
+      'name_es': new UntypedFormControl(null,[]),
+      'name_pt': new UntypedFormControl(null,[]),
+      'description_fr': new UntypedFormControl(null,[]),
+      'description_nl': new UntypedFormControl(null,[]),
+      'description_es': new UntypedFormControl(null,[]),
+      'description_pt': new UntypedFormControl(null,[]),
     });
   }
 
@@ -50,6 +58,15 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
   get image_url() { return this.SubcategoryForm.get('image_url'); }
   get min_shipping_weight() { return this.SubcategoryForm.get('min_shipping_weight'); }
   get max_shipping_weight() { return this.SubcategoryForm.get('max_shipping_weight'); }
+  get name_fr() { return this.SubcategoryForm.get('name_fr'); }
+  get name_nl() { return this.SubcategoryForm.get('name_nl'); }
+  get name_es() { return this.SubcategoryForm.get('name_es'); }
+  get name_pt() { return this.SubcategoryForm.get('name_pt'); }
+
+  get description_fr() { return this.SubcategoryForm.get('description_fr'); }
+  get description_nl() { return this.SubcategoryForm.get('description_nl'); }
+  get description_es() { return this.SubcategoryForm.get('description_es'); }
+  get description_pt() { return this.SubcategoryForm.get('description_pt'); }
 
   ngOnInit(): void {
     this.getAllAttributesData();
@@ -126,7 +143,15 @@ export class SubcategoriesAddEditModalComponent implements OnInit {
       is_active:this.subcategoryDetails.is_active,
       description:this.subcategoryDetails.description,
       min_shipping_weight:this.subcategoryDetails.min_shipping_weight,
-      max_shipping_weight:this.subcategoryDetails.max_shipping_weight
+      max_shipping_weight:this.subcategoryDetails.max_shipping_weight,
+      name_fr:this.subcategoryDetails.name_fr,
+      name_nl:this.subcategoryDetails.name_nl,
+      name_es:this.subcategoryDetails.name_es,
+      name_pt:this.subcategoryDetails.name_pt,
+      description_fr:this.subcategoryDetails.description_fr,
+      description_nl:this.subcategoryDetails.description_nl,
+      description_es:this.subcategoryDetails.description_es,
+      description_pt:this.subcategoryDetails.description_pt
     });
     this.imageUrl = this.subcategoryDetails.image ? environment.api_url + this.subcategoryDetails.image : `../../../../../assets/img/no_preview.png`;
     const attributesControl = this.SubcategoryForm.get('attributes') as UntypedFormArray;

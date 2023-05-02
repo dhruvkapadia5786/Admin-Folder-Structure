@@ -131,7 +131,7 @@ export class FAQGroupComponent implements OnInit,AfterViewInit,OnDestroy {
 
   openAddModal(){
     this._manufacturerAddEditModalService.setData({event:'ADD'})
-    this.modalRef = this.modalService.show(FAQGroupAddEditModalComponent);
+    this.modalRef = this.modalService.show(FAQGroupAddEditModalComponent,{class:'modal-x-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
     });
@@ -140,7 +140,7 @@ export class FAQGroupComponent implements OnInit,AfterViewInit,OnDestroy {
   openEditModal(id:any){
     let data = this.manufacturersTableData.find((item:any)=>item.id == id);
     this._manufacturerAddEditModalService.setData({event:'EDIT',data:data});
-    this.modalRef = this.modalService.show(FAQGroupAddEditModalComponent);
+    this.modalRef = this.modalService.show(FAQGroupAddEditModalComponent,{class:'modal-x-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();
     });

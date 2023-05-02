@@ -48,6 +48,14 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
       'is_active': new UntypedFormControl(true, []),
       'is_featured': new UntypedFormControl(null, []),
       'categories': new UntypedFormControl([], []),
+      'name_fr': new UntypedFormControl(null,[]),
+      'name_nl': new UntypedFormControl(null,[]),
+      'name_es': new UntypedFormControl(null,[]),
+      'name_pt': new UntypedFormControl(null,[]),
+      'description_fr': new UntypedFormControl(null,[]),
+      'description_nl': new UntypedFormControl(null,[]),
+      'description_es': new UntypedFormControl(null,[]),
+      'description_pt': new UntypedFormControl(null,[]),
     });
   }
 
@@ -58,6 +66,15 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
   get is_active() { return this.brandForm.get('is_active'); }
   get is_featured() { return this.brandForm.get('is_featured'); }
   get categories() { return this.brandForm.get('categories'); }
+
+  get name_fr() { return this.brandForm.get('name_fr'); }
+  get name_nl() { return this.brandForm.get('name_nl'); }
+  get name_es() { return this.brandForm.get('name_es'); }
+  get name_pt() { return this.brandForm.get('name_pt'); }
+  get description_fr() { return this.brandForm.get('description_fr'); }
+  get description_nl() { return this.brandForm.get('description_nl'); }
+  get description_es() { return this.brandForm.get('description_es'); }
+  get description_pt() { return this.brandForm.get('description_pt'); }
 
   ngOnInit(): void {
     this.getCategories();
@@ -91,7 +108,15 @@ export class BrandAddEditModalComponent implements OnInit, OnDestroy {
         is_active:details.data.is_active,
         is_featured:details.data.is_featured,
         manufacturer_id:details.data.manufacturer_id ? details.data.manufacturer_id.id:null,
-        categories:details.data.categories ? details.data.categories.map((item:any)=>item.id):[]
+        categories:details.data.categories ? details.data.categories.map((item:any)=>item.id):[],
+        name_fr:details.data.name_fr,
+        name_nl:details.data.name_nl,
+        name_es:details.data.name_es,
+        name_pt:details.data.name_pt,
+        description_fr:details.data.description_fr,
+        description_nl:details.data.description_nl,
+        description_es:details.data.description_es,
+        description_pt:details.data.description_pt
       });
       this.imageUrl = details.data.image ? environment.api_url + details.data.image : `../../../../../assets/img/no_preview.png`;
       if(details.data.manufacturer_id){

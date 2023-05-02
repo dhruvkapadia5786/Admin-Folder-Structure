@@ -84,7 +84,7 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openAddModal(){
     this._hcAddEditModalService.setData({event:'ADD',countriesList:this.countriesList})
-    this.modalRef = this.modalService.show( PlansAddEditModalComponent);
+    this.modalRef = this.modalService.show( PlansAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
     });
@@ -93,7 +93,7 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
   openEditModal(id:any){
     let data = this.plansList.find((item:any)=>item.id == id);
     this._hcAddEditModalService.setData({event:'EDIT',data:data,countriesList:this.countriesList});
-    this.modalRef = this.modalService.show( PlansAddEditModalComponent);
+    this.modalRef = this.modalService.show( PlansAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();
     });
