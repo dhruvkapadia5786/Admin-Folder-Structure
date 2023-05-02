@@ -83,6 +83,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					{ route: '/admin/faq', iconName: 'fa-question-circle', displayName: 'FAQ' },
 					{ route: '/admin/faq-group', iconName: 'fa-question-circle', displayName: 'FAQ Group' },
 					{ route: '/admin/settings', iconName: 'fa-cog', displayName: 'Settings' },
+					{ route: '/admin/shipping_insurance', iconName: 'fa-cog', displayName: 'Shipping insurance' },
 					{ route: '/admin/article-categories', iconName: 'fa-bars', displayName: 'Article Categories' },
 					{ route: '/admin/articles', iconName: 'fa-newspaper', displayName: 'Articles' },
 				]

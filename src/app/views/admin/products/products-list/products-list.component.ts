@@ -119,11 +119,13 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goToDetailsPage(productID: any): any {
-    this.router.navigate(['admin', 'products', 'view', productID]);
+    let link = '/admin/products/view/'+productID
+    this.router.navigate([]).then(result => {  window.open(link, '_blank'); });
   }
 
   goToEditPage(productEditId: any): any {
-    this.router.navigate(['admin', 'products', 'edit', productEditId]);
+    let link = '/admin/products/edit/'+productEditId;
+    this.router.navigate(['admin', 'products', 'edit', productEditId]).then(result => {  window.open(link, '_blank'); });
   }
 
   
