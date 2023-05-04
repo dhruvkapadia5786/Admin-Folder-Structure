@@ -107,7 +107,8 @@ export class FaqListComponent implements OnInit, AfterViewInit,OnDestroy {
           render: function (data: any, type: any, full: any) {
             return `
             <button class="btn btn-sm btn-primary m-0" faqViewId=${full.id}>View <i class="ml-2 fa fa-eye"></i></button>
-            <button class="btn btn-sm btn-primary m-0" faqEditId=${full.id}>Edit <i class="ml-2 fa fa-edit"></i></button>
+            <button class="btn btn-sm btn-warning m-0" faqEditId=${full.id}>Edit <i class="ml-2 fa fa-edit"></i></button>
+            <button class="btn btn-sm btn-danger m-0" faqDeleteId=${full.id}>Delete <i class="ml-2 fa fa-edit"></i></button>
             `;
           },
           orderable: false
@@ -135,6 +136,16 @@ export class FaqListComponent implements OnInit, AfterViewInit,OnDestroy {
       if (event.target.hasAttribute('faqEditId')) {
         this.goToEditPage(event.target.getAttribute('faqEditId'));
       }
+      if (event.target.hasAttribute('faqDeleteId')) {
+        this.deleteFAQ(event.target.getAttribute('faqDeleteId'));
+      }
+    });
+  }
+
+  deleteFAQ(id:any){
+    this._http.post<any>(`api/admin/faqs/delete/${id}`,{})
+    .subscribe((resp) => {
+      this.rerender();
     });
   }
 
