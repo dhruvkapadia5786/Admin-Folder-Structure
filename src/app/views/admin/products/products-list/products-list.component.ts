@@ -263,6 +263,12 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
         this._toastr.showSuccess(res.update_success);
       }
 
+      if(res.rejected.length>0){
+        this._toastr.showSuccess(res.rejected);
+      }
+      if(res.deleted.length>0){
+        this._toastr.showSuccess(res.deleted);
+      }
       if(res.update_error.length>0){
       this._toastr.showWarning(res.update_error);
       }

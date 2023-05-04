@@ -121,7 +121,7 @@ export class ListCustomerComponent implements OnInit, AfterViewInit,OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[0, 'desc']],
+      order: [[8, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         /* set manual filters in req body */
         dataTablesParameters.filter = {};

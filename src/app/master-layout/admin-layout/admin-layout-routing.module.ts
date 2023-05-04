@@ -26,7 +26,8 @@ const routes: Routes = [
   { path: 'newsletter-templates' , loadChildren:()=> import('../../views/admin/newsletter-templates/newsletter-templates.module').then(templates=>templates.NewsletterTemplatesModule) },
   { path: 'newsletter-subscribers', loadChildren: () => import('../../views/admin/newsletter-subscribers/newsletter-subscribers.module').then(newsletter => newsletter.NewsletterSubscribersModule) },
   { path: 'reports', loadChildren: () => import('../../views/admin/reports/reports.module').then(reports => reports.ReportsModule) },
-  { path: 'shipping_insurance',loadChildren:()=>import('../../views/admin/shipping_insurance/shipping_insurance.module').then(ins=>ins.ShippingInsuranceModule)}
+  { path: 'shipping_insurance',loadChildren:()=>import('../../views/admin/shipping_insurance/shipping_insurance.module').then(ins=>ins.ShippingInsuranceModule)},
+  { path: 'shipping_pricing',loadChildren:()=>import('../../views/admin/shipping_pricing/shipping_pricing.module').then(sp=>sp.ShippingPricingModule)}
 ];
 
 @NgModule({
