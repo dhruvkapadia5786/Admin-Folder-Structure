@@ -11,6 +11,7 @@ import { Toastr } from 'src/app/services/toastr.service';
 import { ProductsFilterModalService } from '../products-filter-modal/products-filter-modal.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ProductsFilterModalComponent } from '../products-filter-modal/products-filter-modal.component';
+import { ReasonModalComponent } from '../../common-components/reason-modal/reason-modal.component';
 
 @Component({
   selector: 'app-products-list',
@@ -249,16 +250,27 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
                  temp.push(item.id)
               }
             });
-          this.updateStatus(action,temp);
+            if(action=='rejected'){
+              this.openReasonModal(action,temp);
+            }else{
+              this.updateStatus(action,temp,'');
+            }
         }else{
           this._toastr.showWarning('No Product Selected');
         }
     });
   }
 
-  updateStatus(status:string,ids:any){
+  openReasonModal(status:string,ids:any){
+    this.modalRef = this.modalService.show(ReasonModalComponent)
+    this.modalRef.content.onEventCompleted.subscribe((reason: any) => {
+      this.updateStatus(status,ids,reason);
+    })
+  }
+  
+  updateStatus(status:string,ids:any,reason:string){
     const url = 'api/admin/products/update-status';
-    this._http.post(url,{status:status,ids:ids}).subscribe((res: any) => {
+    this._http.post(url,{status:status,reason:reason,ids:ids}).subscribe((res: any) => {
       if(res.update_success.length>0){
         this._toastr.showSuccess(res.update_success);
       }
@@ -268,6 +280,9 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       if(res.deleted.length>0){
         this._toastr.showSuccess(res.deleted);
+      }
+      if(res.updated.length>0){
+        this._toastr.showSuccess(res.updated);
       }
       if(res.update_error.length>0){
       this._toastr.showWarning(res.update_error);
