@@ -11,9 +11,9 @@
         <form (ngSubmit)="saveAttribute(attributesForm.valid)"
             [formGroup]="attributesForm" autocomplete="off">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-9">
                     <div class="form-group">
-                        <label>Attribute Name</label><br />
+                        <label>Attribute Name (English)</label><br />
                         <input type="hidden" id="id" formControlName="id" />
                         <input type="text" id="name" class="form-control" placeholder="Enter Attribute Name" formControlName="name" />
                         <div class="invalid-feedback" *ngIf="name?.invalid && (name?.dirty || name?.touched)"
@@ -28,6 +28,50 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Attribute Name (French)</label><br />
+                        <input type="text" id="name_fr" class="form-control" placeholder="Enter Attribute name_fr" formControlName="name_fr" />
+                        <div class="invalid-feedback" *ngIf="name_fr?.invalid && (name_fr?.dirty || name_fr?.touched)"
+                            class="text-danger">
+                            <div *ngIf="name_fr?.errors?.required">name_fr is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Attribute Name (Dutch)</label><br />
+                        <input type="text" id="name_nl" class="form-control" placeholder="Enter Attribute name_nl" formControlName="name_nl" />
+                        <div class="invalid-feedback" *ngIf="name_nl?.invalid && (name_nl?.dirty || name_nl?.touched)"
+                            class="text-danger">
+                            <div *ngIf="name_nl?.errors?.required">name_nl is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Attribute Name (Spanish)</label><br />
+                        <input type="text" id="name_es" class="form-control" placeholder="Enter Attribute name_es" formControlName="name_es" />
+                        <div class="invalid-feedback" *ngIf="name_es?.invalid && (name_es?.dirty || name_es?.touched)"
+                            class="text-danger">
+                            <div *ngIf="name_es?.errors?.required">name_es is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Attribute Name (Portuguese)</label><br />
+                        <input type="text" id="name_pt" class="form-control" placeholder="Enter Attribute name_pt" formControlName="name_pt" />
+                        <div class="invalid-feedback" *ngIf="name_pt?.invalid && (name_pt?.dirty || name_pt?.touched)"
+                            class="text-danger">
+                            <div *ngIf="name_pt?.errors?.required">name_pt is required.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <button class="btn btn-success btn-block btn-sm mt-2" type="submit">Save</button>
             </div>

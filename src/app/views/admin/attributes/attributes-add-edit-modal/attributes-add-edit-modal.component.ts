@@ -31,13 +31,21 @@ export class AttributesAddEditModalComponent implements OnInit {
     this.attributesForm = this.formBuilder.group({
       'id':new UntypedFormControl(null, []),
       'name': new UntypedFormControl(null, [Validators.required]),
-      'is_active': new UntypedFormControl(null, [])
+      'is_active': new UntypedFormControl(null, []),
+      'name_fr': new UntypedFormControl(null,[]),
+      'name_nl': new UntypedFormControl(null,[]),
+      'name_es': new UntypedFormControl(null,[]),
+      'name_pt': new UntypedFormControl(null,[]),
     });
   }
 
   get id() { return this.attributesForm.get('id'); }
   get name() { return this.attributesForm.get('name'); }
   get is_active() { return this.attributesForm.get('is_active'); }
+  get name_fr() { return this.attributesForm.get('name_fr'); }
+  get name_nl() { return this.attributesForm.get('name_nl'); }
+  get name_es() { return this.attributesForm.get('name_es'); }
+  get name_pt() { return this.attributesForm.get('name_pt'); }
 
   ngOnInit(): void {
     let details = this._tcAddEditModalService.getData();
@@ -61,7 +69,11 @@ export class AttributesAddEditModalComponent implements OnInit {
     this.attributesForm.patchValue({
       id:this.attributeDetails.id,
       name:this.attributeDetails.name,
-      is_active:this.attributeDetails.is_active
+      is_active:this.attributeDetails.is_active,
+      name_fr:this.attributeDetails.name_fr,
+      name_nl:this.attributeDetails.name_nl,
+      name_es:this.attributeDetails.name_es,
+      name_pt:this.attributeDetails.name_pt
     });
   }
  

@@ -35,6 +35,14 @@ export class PlansAddEditModalComponent implements OnInit {
       'charge': new UntypedFormControl(null, [Validators.required]),
       'currency': new UntypedFormControl(null, [Validators.required]),
       'is_active': new UntypedFormControl(null, []),
+      'name_fr': new UntypedFormControl(null,[]),
+      'name_nl': new UntypedFormControl(null,[]),
+      'name_es': new UntypedFormControl(null,[]),
+      'name_pt': new UntypedFormControl(null,[]),
+      'description_fr': new UntypedFormControl(null,[]),
+      'description_nl': new UntypedFormControl(null,[]),
+      'description_es': new UntypedFormControl(null,[]),
+      'description_pt': new UntypedFormControl(null,[]),
     });
   }
 
@@ -47,6 +55,14 @@ export class PlansAddEditModalComponent implements OnInit {
   get charge() { return this.subscriptionPlanForm.get('charge'); }
   get currency() { return this.subscriptionPlanForm.get('currency'); }
   get is_active() { return this.subscriptionPlanForm.get('is_active'); }
+  get name_fr() { return this.subscriptionPlanForm.get('name_fr'); }
+  get name_nl() { return this.subscriptionPlanForm.get('name_nl'); }
+  get name_es() { return this.subscriptionPlanForm.get('name_es'); }
+  get name_pt() { return this.subscriptionPlanForm.get('name_pt'); }
+  get description_fr() { return this.subscriptionPlanForm.get('description_fr'); }
+  get description_nl() { return this.subscriptionPlanForm.get('description_nl'); }
+  get description_es() { return this.subscriptionPlanForm.get('description_es'); }
+  get description_pt() { return this.subscriptionPlanForm.get('description_pt'); }
 
   ngOnInit(): void {
     let details = this._tcAddEditModalService.getData();
@@ -63,6 +79,14 @@ export class PlansAddEditModalComponent implements OnInit {
         charge:details.data.charge,
         currency:details.data.currency,        
         is_active:details.data.is_active,
+        name_fr:details.data.name_fr,
+        name_nl:details.data.name_nl,
+        name_es:details.data.name_es,
+        name_pt:details.data.name_pt,
+        description_fr:details.data.description_fr,
+        description_nl:details.data.description_nl,
+        description_es:details.data.description_es,
+        description_pt:details.data.description_pt
       });
     }
   }

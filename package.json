@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "fast_start": "NG_PERSISTENT_BUILD_CACHE=1 ng serve --port=5600",
+    "fast_start": "NG_PERSISTENT_BUILD_CACHE=1 ng serve --port=4200",
     "build": "ng build",
     "prod": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build --configuration production",
     "staging": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build --configuration staging",
