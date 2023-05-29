@@ -14,7 +14,17 @@ import { environment } from 'src/environments/environment';
 })
 export class CreateArticleComponent implements OnInit {
   editor: Editor;
+  editor_fr: Editor;
+  editor_nl: Editor;
+  editor_es: Editor;
+  editor_pt: Editor;
+
   answerText:string='';
+  answerText_fr:string='';
+  answerText_nl:string='';
+  answerText_es:string='';
+  answerText_pt:string='';
+
   public articleId: any;
   public articleForm!: UntypedFormGroup;
   public eventInfo!: string;
@@ -32,6 +42,11 @@ export class CreateArticleComponent implements OnInit {
     public activeRoute: ActivatedRoute,
     private _helper: Helper){
     this.editor = new Editor();
+    this.editor_fr = new Editor();
+    this.editor_nl = new Editor();
+    this.editor_es = new Editor();
+    this.editor_pt = new Editor();
+    
     this.articleId = this.activeRoute.snapshot.paramMap.get('id');
 
   }
@@ -45,19 +60,50 @@ export class CreateArticleComponent implements OnInit {
       'body': new UntypedFormControl(null, [Validators.required]),
       'status':new UntypedFormControl(null, [Validators.required]),
       'is_active': new UntypedFormControl(true),
-      'tags':new UntypedFormArray([])
+      'tags':new UntypedFormArray([]),
+
+      'title_es': new UntypedFormControl(null, []),
+      'body_es': new UntypedFormControl(null, []),
+
+      'title_fr': new UntypedFormControl(null, []),
+      'body_fr': new UntypedFormControl(null, []),
+
+      'title_nl': new UntypedFormControl(null, []),
+      'body_nl': new UntypedFormControl(null, []),
+
+      'title_pt': new UntypedFormControl(null, []),
+      'body_pt': new UntypedFormControl(null, [])
     });
     if(this.articleId){
        this.getArticleDetails();
     }
   }
 
+  
   ngOnDestroy(): void {
     this.editor.destroy();
+    this.editor_fr.destroy();
+    this.editor_nl.destroy();
+    this.editor_es.destroy();
+    this.editor_pt.destroy();
   }
+
 
   get title() { return this.articleForm.get('title'); }
   get body() { return this.articleForm.get('body'); }
+ 
+  get title_es() { return this.articleForm.get('title_es'); }
+  get body_es() { return this.articleForm.get('body_es'); }
+ 
+  get title_fr() { return this.articleForm.get('title_fr'); }
+  get body_fr() { return this.articleForm.get('body_fr'); }
+ 
+  get title_nl() { return this.articleForm.get('title_nl'); }
+  get body_nl() { return this.articleForm.get('body_nl'); }
+ 
+  get title_pt() { return this.articleForm.get('title_pt'); }
+  get body_pt() { return this.articleForm.get('body_pt'); }
+ 
   get status() { return this.articleForm.get('status'); }
   get is_active() { return this.articleForm.get('is_active'); }
   get image_url() { return this.articleForm.get('image_url'); }
@@ -65,7 +111,11 @@ export class CreateArticleComponent implements OnInit {
 
   patchAnswer(){
     this.articleForm.patchValue({
-      body:this.answerText
+      body:this.answerText,
+      body_fr:this.answerText_fr,
+      body_nl:this.answerText_nl,
+      body_es:this.answerText_es,
+      body_pt:this.answerText_pt
     });
   }
 
@@ -77,6 +127,19 @@ export class CreateArticleComponent implements OnInit {
         this.articleForm.patchValue({
           title: res.title,
           body: res.body,
+
+          title_es: res.title_es,
+          body_es: res.body_es,
+
+          title_fr: res.title_fr,
+          body_fr: res.body_fr,
+
+          title_nl: res.title_nl,
+          body_nl: res.body_nl,
+
+          title_pt: res.title_pt,
+          body_pt: res.body_pt,
+
           status:res.status,
           categories:res.categories ? res.categories.map((item:any)=>item.id):[],
           is_active:  res.is_active
@@ -107,9 +170,22 @@ export class CreateArticleComponent implements OnInit {
     var oDOM = oParser.parseFromString(formVal.body, "text/html");
     formVal.plainbody = oDOM.body.innerText;
 
+    var oDOM1 = oParser.parseFromString(formVal.body_es, "text/html");
+    formVal.plainbody_es = oDOM1.body.innerText;
+
+    var oDOM2 = oParser.parseFromString(formVal.body_fr, "text/html");
+    formVal.plainbody_fr = oDOM2.body.innerText;
+
+    var oDOM3 = oParser.parseFromString(formVal.body_nl, "text/html");
+    formVal.plainbody_nl =  oDOM3.body.innerText;
+
+    var oDOM4 = oParser.parseFromString(formVal.body_pt, "text/html");
+    formVal.plainbody_pt =  oDOM4.body.innerText;
 
     const formData: FormData = new FormData();
-    formVal.coverimage = this.articleDetails.coverimage;
+    if(this.articleId && this.articleDetails){
+       formVal.coverimage = this.articleDetails.coverimage;
+    }
     formData.append('article', JSON.stringify(formVal));
     formData.append('image_url', this.selectedImageFile);
 

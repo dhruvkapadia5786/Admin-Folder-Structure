@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { Editor } from 'ngx-editor';
   templateUrl: './create-faq.component.html',
   styleUrls: ['./create-faq.component.scss']
 })
-export class CreateFaqComponent implements OnInit {
+export class CreateFaqComponent implements OnInit,OnDestroy {
   editor: Editor;
   editor_fr: Editor;
   editor_nl: Editor;

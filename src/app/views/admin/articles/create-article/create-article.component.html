@@ -28,19 +28,7 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="form-row">
-                <div class="col-md-12">
-                    <label class="float-left">Title</label>
-                    <input type="text" id="title" formControlName="title" class="form-control input-lg" placeholder="Enter title"
-                    />
-                    <div class="invalid-feedback" *ngIf="title?.invalid && (title?.dirty || title?.touched)" class="text-danger">
-                        <div *ngIf="title?.errors?.required">title is required</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+   
         <div class="col-md-12">
             <div class="form-group">
                 <label class="float-left">Cover Image</label><br>
@@ -56,28 +44,202 @@
             </div>
         </div>
 
-        <input type="hidden" formControlName="body"/>
-        <div class="form-group">
-            <div class="form-row">
-                <div class="col-md-12">
-                    <label class="float-left">Body</label><br><br>
-                    <div class="NgxEditor__Wrapper">
-                        <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-                        <ngx-editor
-                            [editor]="editor"
-                            [(ngModel)]="answerText"
-                            [ngModelOptions]="{standalone: true}"
-                            [placeholder]="'Enter Body'"
-                            [spellcheck]="true"
-                            (ngModelChange)='patchAnswer()'
-                            minHeight='530px'></ngx-editor>
+        <div class="alert alert-primary mb-3">
+            <h5>English</h5>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Title</label>
+                        <input type="text" id="title" formControlName="title" class="form-control input-lg" placeholder="Enter title"
+                        />
+                        <div class="invalid-feedback" *ngIf="title?.invalid && (title?.dirty || title?.touched)" class="text-danger">
+                            <div *ngIf="title?.errors?.required">title is required</div>
+                        </div>
                     </div>
-                    <div class="invalid-feedback" *ngIf="body?.invalid && (body?.dirty || body?.touched)" class="text-danger">
-                        <div *ngIf="body?.errors?.required">Body is required</div>
+                </div>
+            </div>
+
+            <input type="hidden" formControlName="body"/>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Body</label><br><br>
+                        <div class="NgxEditor__Wrapper">
+                            <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                            <ngx-editor
+                                [editor]="editor"
+                                [(ngModel)]="answerText"
+                                [ngModelOptions]="{standalone: true}"
+                                [placeholder]="'Enter Body'"
+                                [spellcheck]="true"
+                                (ngModelChange)='patchAnswer()'
+                                minHeight='530px'></ngx-editor>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="body?.invalid && (body?.dirty || body?.touched)" class="text-danger">
+                            <div *ngIf="body?.errors?.required">Body is required</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="alert alert-primary mb-3">
+            <h5>Spanish</h5>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Title</label>
+                        <input type="text" id="title_es" formControlName="title_es" class="form-control input-lg" placeholder="Enter title_es"
+                        />
+                        <div class="invalid-feedback" *ngIf="title_es?.invalid && (title_es?.dirty || title_es?.touched)" class="text-danger">
+                            <div *ngIf="title_es?.errors?.required">title_es is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" formControlName="body_es"/>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Body</label><br><br>
+                        <div class="NgxEditor__Wrapper">
+                            <ngx-editor-menu [editor]="editor_es"> </ngx-editor-menu>
+                            <ngx-editor
+                                [editor]="editor_es"
+                                [(ngModel)]="answerText_es"
+                                [ngModelOptions]="{standalone: true}"
+                                [placeholder]="'Enter Body es'"
+                                [spellcheck]="true"
+                                (ngModelChange)='patchAnswer()'
+                                minHeight='530px'></ngx-editor>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="body_es?.invalid && (body_es?.dirty || body_es?.touched)" class="text-danger">
+                            <div *ngIf="body_es?.errors?.required">Body_es is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-primary mb-3">
+            <h5>French</h5>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Title fr</label>
+                        <input type="text" id="title_fr" formControlName="title_fr" class="form-control input-lg" placeholder="Enter title_fr"
+                        />
+                        <div class="invalid-feedback" *ngIf="title_fr?.invalid && (title_fr?.dirty || title_fr?.touched)" class="text-danger">
+                            <div *ngIf="title_fr?.errors?.required">title_fr is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" formControlName="body_fr"/>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Body fr</label><br><br>
+                        <div class="NgxEditor__Wrapper">
+                            <ngx-editor-menu [editor]="editor_fr"> </ngx-editor-menu>
+                            <ngx-editor
+                                [editor]="editor_fr"
+                                [(ngModel)]="answerText_fr"
+                                [ngModelOptions]="{standalone: true}"
+                                [placeholder]="'Enter Body fr'"
+                                [spellcheck]="true"
+                                (ngModelChange)='patchAnswer()'
+                                minHeight='530px'></ngx-editor>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="body_fr?.invalid && (body_fr?.dirty || body_fr?.touched)" class="text-danger">
+                            <div *ngIf="body_fr?.errors?.required">Body_fr is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-primary mb-3">
+            <h5>Dutch</h5>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Title</label>
+                        <input type="text" id="title_nl" formControlName="title_nl" class="form-control input-lg" placeholder="Enter title_nl"
+                        />
+                        <div class="invalid-feedback" *ngIf="title_nl?.invalid && (title_nl?.dirty || title_nl?.touched)" class="text-danger">
+                            <div *ngIf="title_nl?.errors?.required">title_nl is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" formControlName="body_nl"/>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Body nl</label><br><br>
+                        <div class="NgxEditor__Wrapper">
+                            <ngx-editor-menu [editor]="editor_nl"> </ngx-editor-menu>
+                            <ngx-editor
+                                [editor]="editor_nl"
+                                [(ngModel)]="answerText_nl"
+                                [ngModelOptions]="{standalone: true}"
+                                [placeholder]="'Enter Body nl'"
+                                [spellcheck]="true"
+                                (ngModelChange)='patchAnswer()'
+                                minHeight='530px'></ngx-editor>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="body_nl?.invalid && (body_nl?.dirty || body_nl?.touched)" class="text-danger">
+                            <div *ngIf="body_nl?.errors?.required">Body_nl is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-primary mb-3">
+            <h5>Portuguese</h5>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Title</label>
+                        <input type="text" id="title_pt" formControlName="title_pt" class="form-control input-lg" placeholder="Enter title_pt"
+                        />
+                        <div class="invalid-feedback" *ngIf="title_pt?.invalid && (title_pt?.dirty || title_pt?.touched)" class="text-danger">
+                            <div *ngIf="title_pt?.errors?.required">title_pt is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" formControlName="body_pt"/>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="float-left">Body pt</label><br><br>
+                        <div class="NgxEditor__Wrapper">
+                            <ngx-editor-menu [editor]="editor_pt"> </ngx-editor-menu>
+                            <ngx-editor
+                                [editor]="editor_pt"
+                                [(ngModel)]="answerText_pt"
+                                [ngModelOptions]="{standalone: true}"
+                                [placeholder]="'Enter Body pt'"
+                                [spellcheck]="true"
+                                (ngModelChange)='patchAnswer()'
+                                minHeight='530px'></ngx-editor>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="body_pt?.invalid && (body_pt?.dirty || body_pt?.touched)" class="text-danger">
+                            <div *ngIf="body_pt?.errors?.required">Body_pt is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="form-group">
             <div class="form-row">
                 <div class="col-md-6">
