@@ -8,10 +8,23 @@
         </div>
     </div>
     <div class="modal-body">
-        <form (ngSubmit)="saveAttribute(attributesForm.valid)"
-            [formGroup]="attributesForm" autocomplete="off">
+        <form (ngSubmit)="saveAttribute(attributesForm.valid)" [formGroup]="attributesForm" autocomplete="off">
+            
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Element Type</label><br />
+                        <select class="form-control" formControlName="element_type" id="element_type">
+                            <option value="dropdown">Dropdown</option>
+                            <option value="radio">Radio</option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf="element_type?.invalid && (element_type?.dirty || element_type?.touched)"
+                            class="text-danger">
+                            <div *ngIf="element_type?.errors?.required">Element Type is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Attribute Name (English)</label><br />
                         <input type="hidden" id="id" formControlName="id" />

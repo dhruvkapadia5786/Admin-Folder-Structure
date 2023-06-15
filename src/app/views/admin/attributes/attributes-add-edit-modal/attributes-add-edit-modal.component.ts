@@ -36,6 +36,7 @@ export class AttributesAddEditModalComponent implements OnInit {
       'name_nl': new UntypedFormControl(null,[]),
       'name_es': new UntypedFormControl(null,[]),
       'name_pt': new UntypedFormControl(null,[]),
+      'element_type': new UntypedFormControl('dropdown',[Validators.required])
     });
   }
 
@@ -46,6 +47,7 @@ export class AttributesAddEditModalComponent implements OnInit {
   get name_nl() { return this.attributesForm.get('name_nl'); }
   get name_es() { return this.attributesForm.get('name_es'); }
   get name_pt() { return this.attributesForm.get('name_pt'); }
+  get element_type() { return this.attributesForm.get('element_type'); }
 
   ngOnInit(): void {
     let details = this._tcAddEditModalService.getData();
@@ -69,6 +71,7 @@ export class AttributesAddEditModalComponent implements OnInit {
     this.attributesForm.patchValue({
       id:this.attributeDetails.id,
       name:this.attributeDetails.name,
+      element_type:this.attributeDetails.element_type,
       is_active:this.attributeDetails.is_active,
       name_fr:this.attributeDetails.name_fr,
       name_nl:this.attributeDetails.name_nl,
