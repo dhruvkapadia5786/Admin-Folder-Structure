@@ -93,7 +93,7 @@ export class SubscriptionPaymentHistoryComponent implements OnInit,AfterViewInit
             if (data) {
               return `<img src='${environment.api_url + data}' height="100" width="100" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -135,7 +135,7 @@ export class SubscriptionPaymentHistoryComponent implements OnInit,AfterViewInit
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -144,7 +144,7 @@ export class SubscriptionPaymentHistoryComponent implements OnInit,AfterViewInit
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-sm btn-default m-0" receiptId=${full.receipt_url}>View Receipt</button>
+            <button class="btn btn-sm btn-primary m-0" receiptId=${full.receipt_url}>View Receipt</button>
             `;
           },
           orderable: false

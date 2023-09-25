@@ -1,6 +1,6 @@
 <div class="p-3">
      
-    <div class="row bg-light py-2">
+    <!--<div class="row bg-light py-2">
         <div class="col-md-2">
             <mat-select placeholder="Select Report Type" [(ngModel)]="selectedReportType" (selectionChange)="onReportTypeChanged($event.value)">
                 <mat-option *ngFor="let item of reportConfig" [value]="item.reportType">
@@ -20,11 +20,6 @@
             <mat-datepicker #picker></mat-datepicker>
             <input *ngIf="selectedTimeUnit === 'CUSTOM_RANGE'" class="form-control input-sm h-75" placeholder="Select Date Range" autocomplete="off" type="text" matInput ngxDaterangepickerMd [locale]="{applyLabel: 'ok', format: 'MM-DD-YYYY', clearLabel: 'Clear', customRangeLabel: 'Custom range'}" startKey="start" endKey="end" [(ngModel)]="selectedDateRange" name="daterange"/>
         </div>
-        <!-- <mat-select placeholder="Custom Filter" [(ngModel)]="selectedCustomFilter">
-            <mat-option  *ngFor="let item of cutomFilterList" [value]="item" >
-            {{ item }}
-            </mat-option>
-        </mat-select> -->
         <div class="col-md-2">
             <mat-select placeholder="Records Per Page" [(ngModel)]="selectedLimit">
                 <mat-option *ngFor="let item of availableLimits" [value]="item">
@@ -42,21 +37,6 @@
         </div>
         <div class="card-body">
             <highcharts-chart style="max-height:500px;width:100%;display:block;" [Highcharts]="Highcharts" [constructorType]="chartConstructor" [options]="chartOptions" [callbackFunction]="chartCallback" [(update)]="updateFlag" [oneToOne]="oneToOneFlag"></highcharts-chart>
-        </div>
-    </div>
-    <div class="card my-3" *ngIf="selectedTimeUnit === 'MAP_VIEW' && markers.length > 0">
-        <div class="card-header bg-dark-blue">
-            <h6 class="text-white">Users Locations</h6>
-        </div>
-        <div class="card-body"><!-- @AGM/CORE -->
-            <!-- <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false" [zoomControl]="false" style=" height: 500px">
-                <agm-marker *ngFor="let m of markers; let i = index" [latitude]="m.lat" [longitude]="m.lng" [label]="m.label" [markerDraggable]="m.draggable" (mouseOver)="onMouseOver(infoWindow, $event)"
-                (mouseOut)="onMouseOut(infoWindow, $event)" (markerClick)="clickedMarker(m)">
-                    <agm-info-window [disableAutoPan]="false" #infoWindow>
-                    <strong><b>{{ m.full_name }}</b> <br> {{m.address_line_1}} <br> {{m.address_line_2}} <br> {{m.city_name}} {{m.zip_code}}</strong>
-                    </agm-info-window>
-                </agm-marker>
-            </agm-map> -->
         </div>
     </div>
     <div class="card mt-5 shadow-none"  *blockUI="'reportLoader'">
@@ -91,5 +71,5 @@
                 </div>
             </ng-template>
         </div>
-    </div>
+    </div>-->
 </div>

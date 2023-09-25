@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, FormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { ValuesAddEditModalService } from './values-add-edit-modal.service';
@@ -14,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
 export class ValuesAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  AttributesForm: FormGroup;
+  AttributesForm: UntypedFormGroup;
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -25,21 +25,29 @@ export class ValuesAddEditModalComponent implements OnInit {
     private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _addEditModalService: ValuesAddEditModalService){
     this.AttributesForm = this.formBuilder.group({
-      'attribute_id':new FormControl(null, []),
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
-      'image_url': new FormControl(null, []),
+      'attribute_id':new UntypedFormControl(null, []),
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'name_fr': new UntypedFormControl(null,[]),
+      'name_nl': new UntypedFormControl(null,[]),
+      'name_es': new UntypedFormControl(null,[]),
+      'name_pt': new UntypedFormControl(null,[]),
+      'is_active': new UntypedFormControl(null, []),
+      'image_url': new UntypedFormControl(null, []),
     });
   }
 
   get id() { return this.AttributesForm.get('id'); }
   get attribute_id() { return this.AttributesForm.get('attribute_id'); }
   get name() { return this.AttributesForm.get('name'); }
+  get name_fr() { return this.AttributesForm.get('name_fr'); }
+  get name_nl() { return this.AttributesForm.get('name_nl'); }
+  get name_es() { return this.AttributesForm.get('name_es'); }
+  get name_pt() { return this.AttributesForm.get('name_pt'); }
   get is_active() { return this.AttributesForm.get('is_active'); }
   get image_url() { return this.AttributesForm.get('image_url'); }
 
@@ -106,6 +114,10 @@ export class ValuesAddEditModalComponent implements OnInit {
       id:this.subcategoryDetails.id,
       attribute_id:this.subcategoryDetails.attribute_id,
       name:this.subcategoryDetails.name,
+      name_fr:this.subcategoryDetails.name_fr,
+      name_nl:this.subcategoryDetails.name_nl,
+      name_es:this.subcategoryDetails.name_es,
+      name_pt:this.subcategoryDetails.name_pt,
       is_active:this.subcategoryDetails.is_active,
       image_url:this.subcategoryDetails.image
     });

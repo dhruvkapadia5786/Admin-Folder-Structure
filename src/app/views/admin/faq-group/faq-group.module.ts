@@ -9,13 +9,12 @@ import { FAQGroupAddEditModalService } from './faq-group-add-edit-modal/faq-grou
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [FAQGroupComponent],
-  imports:[
-    SharedModule,
-    FAQGroupRoutingModule,
-    FAQGroupAddEditModalModule
-  ],
-  providers:[FAQGroupService,FAQGroupAddEditModalService],
-  entryComponents: [FAQGroupAddEditModalComponent]
+    declarations: [FAQGroupComponent],
+    imports: [
+        SharedModule,
+        FAQGroupRoutingModule,
+        FAQGroupAddEditModalModule
+    ],
+    providers: [FAQGroupService, FAQGroupAddEditModalService]
 })
 export class FAQGroupModule { }

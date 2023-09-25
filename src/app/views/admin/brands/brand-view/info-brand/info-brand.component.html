@@ -20,11 +20,22 @@
             <span *ngFor="let category of brandDetails.categories" class="ml-2 badge badge-primary badge-pill p-2">{{ category.name }}</span>
         </div>
 
-        <div class="col-md-12">
-            <label>Description</label>
-            <h5>{{brandDetails.description}}</h5>
-        </div>
     </div>
+
+    <table class="table">
+        <tbody>
+          <tr><td class="font-weight-normal">Name (English)</td><td class="font-weight-normal">{{brandDetails.name || '-'}}</tr>
+          <tr><td class="font-weight-normal">Name (French)</td><td class="font-weight-normal">{{brandDetails.name_fr || '-'}}</tr>
+          <tr><td class="font-weight-normal">Name (Dutch)</td><td class="font-weight-normal">{{brandDetails.name_nl || '-'}}</tr>
+          <tr><td class="font-weight-normal">Name (Spanish)</td><td class="font-weight-normal">{{brandDetails.name_es || '-'}}</tr>
+          <tr><td class="font-weight-normal">Name (Portuguese)</td><td class="font-weight-normal">{{brandDetails.name_pt || '-'}}</tr>
+          <tr><td class="font-weight-normal">Description (English)</td><td class="font-weight-normal">{{brandDetails.description  || '-'}}</td></tr>
+          <tr><td class="font-weight-normal">Description (French)</td><td class="font-weight-normal">{{brandDetails.description_fr  || '-'}}</td></tr>
+          <tr><td class="font-weight-normal">Description (Dutch)</td><td class="font-weight-normal">{{brandDetails.description_nl  || '-'}}</td></tr>
+          <tr><td class="font-weight-normal">Description (Spanish)</td><td class="font-weight-normal">{{brandDetails.description_es  || '-'}}</td></tr>
+          <tr><td class="font-weight-normal">Description (Portuguese)</td><td class="font-weight-normal">{{brandDetails.description_pt  || '-'}}</td></tr>
+       </tbody>
+    </table>
 
     <br>
     <div class="row">

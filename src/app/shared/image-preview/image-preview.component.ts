@@ -13,6 +13,7 @@ import { environment } from '../../../environments/environment';
 export class ImagePreviewComponent implements OnInit, OnChanges {
 
   @Input() imgPath!: string;
+  @Input() isBase64?:number=0;
   @Input() height?: string;
   @Input() width?: string;
   @Input() caption?: string;
@@ -23,7 +24,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
   public title = '';
   public isLightBox = true;
 
-  imageUrl: any = '../../../../assets/img/no-preview.png';
+  imageUrl: any = '../../../assets/img/no_preview.png';
   _albums = [{
     src: this.imageUrl,
     caption: 'Full Face Image',
@@ -53,7 +54,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
 
   getImage(imageName:string){
     if (imageName){
-      this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(environment.api_url + imageName);
+      this.imageUrl = this.isBase64==1 ? imageName:this.sanitizer.bypassSecurityTrustUrl(environment.api_url + imageName);
       this._albums = [];
       this._albums.push({
         src: this.imageUrl,
@@ -72,4 +73,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
     }
   }
 
+  handleError(event:any){
+      event.target.src = '../../../assets/img/no_preview.png';
+  }
 }

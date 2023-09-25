@@ -8,13 +8,12 @@ import { CategoriesAddEditModalComponent } from '../../categories-add-edit-modal
 import { CategoriesAddEditModalModule } from '../../categories-add-edit-modal/categories-add-edit-modal.module';
 
 @NgModule({
-  declarations: [CategoryInfoComponent],
-  imports: [
-    SharedModule,
-    CategoryInfoRoutingModule,
-    ImagePreviewModule,
-    CategoriesAddEditModalModule
-  ],
-  entryComponents:[CategoriesAddEditModalComponent]
+    declarations: [CategoryInfoComponent],
+    imports: [
+        SharedModule,
+        CategoryInfoRoutingModule,
+        ImagePreviewModule,
+        CategoriesAddEditModalModule
+    ]
 })
 export class CategoryInfoModule { }

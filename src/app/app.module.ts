@@ -29,7 +29,7 @@ import { WebsocketService } from 'src/app/services/WebsocketService';
 		}),
     AppRoutingModule
   ],
-  providers: [notificationHelper,MsgService,WebsocketService, CurrencyPipe],
+  providers: [notificationHelper,MsgService,WebsocketService,CurrencyPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

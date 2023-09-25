@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, FormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { PlansAddEditModalService } from './plans-add-edit-modal.service';
@@ -12,7 +12,7 @@ import { PlansAddEditModalService } from './plans-add-edit-modal.service';
 export class PlansAddEditModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  subscriptionPlanForm: FormGroup;
+  subscriptionPlanForm: UntypedFormGroup;
   countriesList:any[]=[];
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
@@ -21,20 +21,28 @@ export class PlansAddEditModalComponent implements OnInit {
   constructor(
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _tcAddEditModalService: PlansAddEditModalService
   ) {
     this.subscriptionPlanForm = this.formBuilder.group({
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'plan_for': new FormControl(null, [Validators.required]),
-      'description': new FormControl(null, [Validators.required]),
-      'duration': new FormControl(null, [Validators.required]),
-      'duration_unit': new FormControl(null, [Validators.required]),
-      'charge': new FormControl(null, [Validators.required]),
-      'currency': new FormControl(null, [Validators.required]),
-      'is_active': new FormControl(null, []),
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'plan_for': new UntypedFormControl(null, [Validators.required]),
+      'description': new UntypedFormControl(null, [Validators.required]),
+      'duration': new UntypedFormControl(null, [Validators.required]),
+      'duration_unit': new UntypedFormControl(null, [Validators.required]),
+      'charge': new UntypedFormControl(null, [Validators.required]),
+      'currency': new UntypedFormControl(null, [Validators.required]),
+      'is_active': new UntypedFormControl(null, []),
+      'name_fr': new UntypedFormControl(null,[]),
+      'name_nl': new UntypedFormControl(null,[]),
+      'name_es': new UntypedFormControl(null,[]),
+      'name_pt': new UntypedFormControl(null,[]),
+      'description_fr': new UntypedFormControl(null,[]),
+      'description_nl': new UntypedFormControl(null,[]),
+      'description_es': new UntypedFormControl(null,[]),
+      'description_pt': new UntypedFormControl(null,[]),
     });
   }
 
@@ -47,6 +55,14 @@ export class PlansAddEditModalComponent implements OnInit {
   get charge() { return this.subscriptionPlanForm.get('charge'); }
   get currency() { return this.subscriptionPlanForm.get('currency'); }
   get is_active() { return this.subscriptionPlanForm.get('is_active'); }
+  get name_fr() { return this.subscriptionPlanForm.get('name_fr'); }
+  get name_nl() { return this.subscriptionPlanForm.get('name_nl'); }
+  get name_es() { return this.subscriptionPlanForm.get('name_es'); }
+  get name_pt() { return this.subscriptionPlanForm.get('name_pt'); }
+  get description_fr() { return this.subscriptionPlanForm.get('description_fr'); }
+  get description_nl() { return this.subscriptionPlanForm.get('description_nl'); }
+  get description_es() { return this.subscriptionPlanForm.get('description_es'); }
+  get description_pt() { return this.subscriptionPlanForm.get('description_pt'); }
 
   ngOnInit(): void {
     let details = this._tcAddEditModalService.getData();
@@ -63,6 +79,14 @@ export class PlansAddEditModalComponent implements OnInit {
         charge:details.data.charge,
         currency:details.data.currency,        
         is_active:details.data.is_active,
+        name_fr:details.data.name_fr,
+        name_nl:details.data.name_nl,
+        name_es:details.data.name_es,
+        name_pt:details.data.name_pt,
+        description_fr:details.data.description_fr,
+        description_nl:details.data.description_nl,
+        description_es:details.data.description_es,
+        description_pt:details.data.description_pt
       });
     }
   }

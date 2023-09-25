@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { BrandAddEditModalComponent } from '../brand-add-edit-modal/brand-add-edit-modal.component';
 import { BrandAddEditModalService } from '../brand-add-edit-modal/brand-add-edit-modal.service';
 import { Router } from '@angular/router';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-brand-list',
@@ -28,6 +29,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private _renderer:Renderer2,
     private _http: HttpClient,
+    private _helper:Helper,
     private modalService: BsModalService,
     private _brandAddEditModalService: BrandAddEditModalService) {
      this.getDTOptions();
@@ -130,7 +132,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -144,7 +146,7 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -191,6 +193,30 @@ export class BrandListComponent implements OnInit, AfterViewInit, OnDestroy {
               return `<i class="fa fa-check text-success"></img>`;
             } else {
               return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data: 'created_at',
+          title: 'Created At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
+          data: 'updated_at',
+          title: 'Updated At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
             }
           }
         },

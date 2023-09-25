@@ -84,7 +84,7 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openAddModal(){
     this._hcAddEditModalService.setData({event:'ADD',countriesList:this.countriesList})
-    this.modalRef = this.modalService.show( PlansAddEditModalComponent);
+    this.modalRef = this.modalService.show( PlansAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
     });
@@ -93,7 +93,7 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
   openEditModal(id:any){
     let data = this.plansList.find((item:any)=>item.id == id);
     this._hcAddEditModalService.setData({event:'EDIT',data:data,countriesList:this.countriesList});
-    this.modalRef = this.modalService.show( PlansAddEditModalComponent);
+    this.modalRef = this.modalService.show( PlansAddEditModalComponent,{class:'modal-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();
     });
@@ -164,6 +164,30 @@ export class  PlansListComponent implements OnInit, AfterViewInit, OnDestroy {
               return `<i class="fa fa-check text-success"></img>`;
             } else {
               return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data: 'created_at',
+          title: 'Created At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
+          data: 'updated_at',
+          title: 'Updated At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
             }
           }
         },

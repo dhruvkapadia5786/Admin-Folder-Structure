@@ -8,14 +8,13 @@ import { PlansAddEditModalComponent } from '../plans-add-edit-modal/plans-add-ed
 import { PlansAddEditModalModule } from '../plans-add-edit-modal/plans-add-edit-modal.module';
 
 @NgModule({
-  declarations: [
-    PlansListComponent
-  ],
-  imports: [
-    SharedModule,
-    PlansAddEditModalModule,
-    PlansListRoutingModule
-  ],
-  entryComponents: [ PlansAddEditModalComponent]
+    declarations: [
+        PlansListComponent
+    ],
+    imports: [
+        SharedModule,
+        PlansAddEditModalModule,
+        PlansListRoutingModule
+    ]
 })
 export class PlansListModule { }

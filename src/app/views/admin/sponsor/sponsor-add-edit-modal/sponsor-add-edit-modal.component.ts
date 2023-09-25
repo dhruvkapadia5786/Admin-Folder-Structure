@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, EventEmitter, Component, OnInit, Output, OnDestroy } from '@angular/core';
 import { SponsorAddEditModalService } from './sponsor-add-edit-modal.service';
-import { FormGroup, FormControl, Validators,FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators,UntypedFormBuilder } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { environment } from 'src/environments/environment';
 import { Helper } from 'src/app/services/helper.service';
@@ -14,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
 export class SponsorAddEditModalComponent implements OnInit, OnDestroy {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  sponsorForm: FormGroup;
+  sponsorForm: UntypedFormGroup;
 
   imageUrl: any = '../../../../../assets/img/no_preview.png';
   selectedImageFile: any
@@ -23,16 +23,16 @@ export class SponsorAddEditModalComponent implements OnInit, OnDestroy {
     private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
     private _sponsorAddEditModalService: SponsorAddEditModalService
   ) {
     this.sponsorForm = this.formBuilder.group({
-      'id':new FormControl(null, []),
-      'name': new FormControl(null, [Validators.required]),
-      'description': new FormControl(null, []),
-      'image_url': new FormControl(null, []),
-      'is_active': new FormControl(true, []),
+      'id':new UntypedFormControl(null, []),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'description': new UntypedFormControl(null, []),
+      'image_url': new UntypedFormControl(null, []),
+      'is_active': new UntypedFormControl(true, []),
     });
   }
 

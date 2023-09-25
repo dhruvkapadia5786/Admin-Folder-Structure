@@ -3,7 +3,7 @@ import { Toastr } from 'src/app/services/toastr.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-change-password-with-otp',
@@ -12,7 +12,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class ChangePasswordWithOtpComponent implements OnInit {
   submitted: boolean = false;
-  changePasswordForm: FormGroup;
+  changePasswordForm: UntypedFormGroup;
   otpGenerated: boolean = false;
   RegExpValidator = {
 		'lowerCase': RegExp(/^(?=.*?[a-z])/),
@@ -32,9 +32,9 @@ export class ChangePasswordWithOtpComponent implements OnInit {
     private _http: HttpClient,
     private _router: Router) {
 
-    this.changePasswordForm = new FormGroup({
-      'newPassword': new FormControl(this.password.new,[]),
-      'otp': new FormControl(this.password.otp, null),
+    this.changePasswordForm = new UntypedFormGroup({
+      'newPassword': new UntypedFormControl(this.password.new,[]),
+      'otp': new UntypedFormControl(this.password.otp, null),
     });
   }
 

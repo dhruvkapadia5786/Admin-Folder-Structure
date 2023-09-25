@@ -47,7 +47,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[3, 'desc']],
+      order: [[4, 'desc']],
       ajax: (dataTablesParameters: any, callback) => {
         this.blockDataTable.start();
         this._http
@@ -77,7 +77,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -85,6 +85,22 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
           data: 'title',
           title: 'Title',
           className: 'text-left  font-weight-normal'
+        },
+        {
+          data: 'status',
+          title: 'Status',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data=='draft'){
+              return `<span class="badge badge-primary">Draft</span>`;
+            } 
+            else if (data=='published'){
+              return `<span class="badge badge-success">Published</span>`;
+            } 
+            else {
+              return `<span class="badge badge-info">Under Review</span>`;
+            }
+          }
         },
         {
           data: 'is_active',
@@ -106,7 +122,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -118,7 +134,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -127,7 +143,7 @@ export class ArticleListComponent implements OnInit, AfterViewInit,OnDestroy {
           className: 'text-center',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-sm btn-default m-0" articleViewId=${full.id}>View <i class="ml-2 fa fa-eye"></i></button>
+            <button class="btn btn-sm btn-primary m-0" articleViewId=${full.id}>View <i class="ml-2 fa fa-eye"></i></button>
             <button class="btn btn-sm btn-primary m-0" articleEditId=${full.id}>Edit <i class="ml-2 fa fa-edit"></i></button>
             `;
           },

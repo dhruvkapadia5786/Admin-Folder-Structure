@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AccountVerifyModalComponent } from 'src/app/components/account-verify-modal/account-verify-modal.component';
+import { EditSubscriptionPlanService } from '../edit-subscription-plan/edit-subscription-plan.service';
+import { EditSubscriptionPlanComponent } from '../edit-subscription-plan/edit-subscription-plan.component';
 
 @Component({
   selector: 'app-dealer-info',
@@ -24,6 +26,7 @@ export class DealerInfoComponent implements OnInit,OnDestroy {
     private route: ActivatedRoute,
     private _router: Router,
     private modalService: BsModalService,
+    private _editSubscriptionPlanModalService:EditSubscriptionPlanService,
     private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(){
@@ -71,5 +74,28 @@ export class DealerInfoComponent implements OnInit,OnDestroy {
       this.routerSubscription.unsubscribe();
      }
      if(this.blockDealerUI){this.blockDealerUI.unsubscribe();}
+  }
+
+  updateAccount(val:any){
+    this.blockDealerUI.start();
+    const url = 'api/admin/users/update_subscription_status/' + this.dealerDetails.personal_info.id;
+    this.http.post(url,val).subscribe(async (data: any) => {
+      this.blockDealerUI.stop();
+      this.getDealerDetails();
+    }, (err:any) => {
+      this.blockDealerUI.stop();
+    });
+  }
+
+  openEditSubscriptionPlanModal(){
+    this._editSubscriptionPlanModalService.setData({
+      subscription_activated_on:this.dealerDetails.personal_info.subscription_activated_on,
+      subscription_expire_on:this.dealerDetails.personal_info.subscription_expire_on,
+      subscription_status:this.dealerDetails.personal_info.subscription_status
+    });
+    this.modalRef = this.modalService.show(EditSubscriptionPlanComponent,{class:'modal-sm'});
+    this.modalRef.content.onEventCompleted.subscribe((data:any)=>{
+        this.updateAccount(data);
+    });
   }
 }

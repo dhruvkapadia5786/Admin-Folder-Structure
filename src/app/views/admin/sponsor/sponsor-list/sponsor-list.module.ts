@@ -8,14 +8,13 @@ import { SponsorAddEditModalComponent } from '../sponsor-add-edit-modal/sponsor-
 import { SponsorAddEditModalModule } from '../sponsor-add-edit-modal/sponsor-add-edit-modal.module';
 
 @NgModule({
-  declarations: [
-    SponsorListComponent
-  ],
-  imports: [
-    SharedModule,
-    SponsorAddEditModalModule,
-    SponsorListRoutingModule
-  ],
-  entryComponents: [SponsorAddEditModalComponent]
+    declarations: [
+        SponsorListComponent
+    ],
+    imports: [
+        SharedModule,
+        SponsorAddEditModalModule,
+        SponsorListRoutingModule
+    ]
 })
 export class SponsorListModule { }

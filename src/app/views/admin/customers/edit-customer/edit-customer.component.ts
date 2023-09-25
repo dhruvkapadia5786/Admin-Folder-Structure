@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
@@ -12,7 +12,7 @@ import { Helper } from '../../../../services/helper.service';
   styleUrls: ['./edit-customer.component.scss']
 })
 export class EditCustomerComponent implements OnInit {
-  editPatient: FormGroup;
+  editPatient: UntypedFormGroup;
   customerLoaded=false;
   customerId: string;
 
@@ -29,13 +29,13 @@ export class EditCustomerComponent implements OnInit {
     private helper: Helper
   ) {
     this.customerId = this.route.snapshot.params.id;
-    this.editPatient = new FormGroup({
-      'first_name': new FormControl(null, [Validators.required]),
-      'last_name': new FormControl(null, [Validators.required]),
-      'gender': new FormControl(null, [Validators.required]),
-      'date_of_birth': new FormControl(null, [Validators.required]),
-      'email': new FormControl(null, [Validators.required]),
-      'cell_phone_number': new FormControl(null, [Validators.required])
+    this.editPatient = new UntypedFormGroup({
+      'first_name': new UntypedFormControl(null, [Validators.required]),
+      'last_name': new UntypedFormControl(null, [Validators.required]),
+      'gender': new UntypedFormControl(null, [Validators.required]),
+      'date_of_birth': new UntypedFormControl(null, [Validators.required]),
+      'email': new UntypedFormControl(null, [Validators.required]),
+      'cell_phone_number': new UntypedFormControl(null, [Validators.required])
     });
   }
 

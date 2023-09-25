@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from './login.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
 import { cryptoHelperService } from 'src/app/services/cryptoHelper.service';
 
@@ -14,9 +14,9 @@ import { cryptoHelperService } from 'src/app/services/cryptoHelper.service';
 })
 export class LoginComponent implements OnInit {
 
-	loginForm: FormGroup = new FormGroup({
-		username: new FormControl(null, [Validators.required]),
-		password: new FormControl(null, [Validators.required]),
+	loginForm: UntypedFormGroup = new UntypedFormGroup({
+		username: new UntypedFormControl(null, [Validators.required]),
+		password: new UntypedFormControl(null, [Validators.required]),
 	});
 
 	validate: boolean = false;

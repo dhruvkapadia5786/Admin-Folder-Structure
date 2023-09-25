@@ -5,6 +5,8 @@ import { Toastr } from 'src/app/services/toastr.service';
 import { environment } from 'src/environments/environment';
 import { Helper } from 'src/app/services/helper.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ReasonModalComponent } from '../../../common-components/reason-modal/reason-modal.component';
 
 @Component({
   selector: 'app-product-info',
@@ -27,6 +29,7 @@ export class ProductInfoComponent implements OnInit {
     private router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     public _helper:Helper,
+    private modalService: BsModalService,
     public _toastr: Toastr){
     this.routeSubscribe = this.router.events.subscribe((event:any) => {
       if (event instanceof NavigationEnd) {
@@ -54,10 +57,18 @@ export class ProductInfoComponent implements OnInit {
         this.blockProductUI.stop();
     });
   }
+  modalRef!: BsModalRef;
+  
+  openReasonModal(status:string){
+    this.modalRef = this.modalService.show(ReasonModalComponent)
+    this.modalRef.content.onEventCompleted.subscribe((reason: any) => {
+      this.updateStatus(status,reason);
+    })
+  }
 
-  updateStatus(status:string){
-    const url = 'api/admin/products/update-status/' + this.productId;
-    this.http.post(url,{status:status}).subscribe((res: any) => {
+  updateStatus(status:string,reason:string=''){
+    const url = 'api/admin/products/update-status';
+    this.http.post(url,{status:status,reason:reason,ids:[ this.productId]}).subscribe((res: any) => {
        this.getProductDetails();
     },(err:any) => {
 

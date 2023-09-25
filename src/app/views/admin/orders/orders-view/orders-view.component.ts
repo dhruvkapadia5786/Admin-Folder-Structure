@@ -31,7 +31,7 @@ export class OrdersViewComponent implements OnInit, OnDestroy {
 
   iframeMapURL: string = `https://www.google.com/maps/embed/v1/place`;
   @ViewChild('mapIframe') input: any;
-  imageUrl: any = '../../../../assets/img/no-image.png';
+  imageUrl: any = '../../../../../assets/img/no-image.png';
   _albums = [{
     src: this.imageUrl,
     caption: 'License image',
@@ -136,7 +136,7 @@ export class OrdersViewComponent implements OnInit, OnDestroy {
         });
       }
     }).catch((err:any) => {
-        this.imageUrl = '../../../../assets/img/no-image.png';
+        this.imageUrl = '../../../../../assets/img/no-image.png';
         this._albums = [];
         this._albums.push({
           src: this.imageUrl,
@@ -155,20 +155,6 @@ export class OrdersViewComponent implements OnInit, OnDestroy {
     if(this.blockOrderUI){this.blockOrderUI.unsubscribe();}
   }
 
-  openShippingLabelToPrint(label_url: any) {
-    if (label_url) {
-      const b64Data = label_url.split(',')[1];
-      const contentType = 'application/pdf';
-      const blob = b64toBlob(b64Data, contentType);
-      const url = URL.createObjectURL(blob);
-      let pdfWindow: any = window.open('', '_blank');
-      pdfWindow.document.write(`<iframe id="shippingLabel" src="${url}" height="100%" width="100%"></iframe>`);
-      pdfWindow.document.close();
-      setTimeout(() => {
-        pdfWindow.frames['shippingLabel'].contentWindow.print();
-      }, 1000);
-    }
-  }
 
   /*---------------------------------------------------------------------------- */
   /*------------------------ DOWNLOAD BILLING STATEMENT FUNCTIONS  ------------------------  */

@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { RefundDrugModalService } from './refund-drug-modal.service';
 
@@ -11,16 +11,16 @@ import { RefundDrugModalService } from './refund-drug-modal.service';
 export class RefundDrugModalComponent implements OnInit {
   @Output() onEventCompleted: EventEmitter<any> = new EventEmitter();
   order!: any;
-  refundOrderForm:FormGroup
+  refundOrderForm:UntypedFormGroup
   all_products_for_refund_length: number = 0
 
   constructor(
     private _bsModalRef: BsModalRef,
     private _refundDrugModalService: RefundDrugModalService
   ) {
-    this.refundOrderForm = new FormGroup({
-      'selected_product_ids':new FormControl([], [Validators.required]),
-      'refund_reason':new FormControl(null, [Validators.required]),
+    this.refundOrderForm = new UntypedFormGroup({
+      'selected_product_ids':new UntypedFormControl([], [Validators.required]),
+      'refund_reason':new UntypedFormControl(null, [Validators.required]),
     });
   }
 

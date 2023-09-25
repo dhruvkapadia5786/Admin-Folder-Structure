@@ -56,7 +56,7 @@ export class CategorySubcategoriesComponent implements OnInit,AfterViewInit,OnDe
 
   openAddModal(){
     this._subcategoryAddEditModalService.setData({event:'ADD',data:{category_id:this.categoryId}})
-    this.modalRef = this.modalService.show(SubcategoriesAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef = this.modalService.show(SubcategoriesAddEditModalComponent,{class:'modal-full-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
     });
@@ -66,7 +66,7 @@ export class CategorySubcategoriesComponent implements OnInit,AfterViewInit,OnDe
     let data:any = this.CategoryTableData.find((item:any)=>item.id == id);
     data.category_id=this.categoryId;
     this._subcategoryAddEditModalService.setData({event:'EDIT',data:data});
-    this.modalRef = this.modalService.show(SubcategoriesAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef = this.modalService.show(SubcategoriesAddEditModalComponent,{class:'modal-full-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();
     });
@@ -113,7 +113,7 @@ export class CategorySubcategoriesComponent implements OnInit,AfterViewInit,OnDe
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -131,6 +131,54 @@ export class CategorySubcategoriesComponent implements OnInit,AfterViewInit,OnDe
               return `<i class="fa fa-check text-success"></img>`;
             } else {
               return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data:'min_shipping_weight',
+          title: 'Min Shipping Weight',
+          className: 'text-left  font-weight-normal',
+          render: (data: any) => {
+            if (data) {
+              return data+' grams'
+            } else {
+              return `-`;
+            }
+          }
+        },
+        {
+          data:'max_shipping_weight',
+          title: 'Max Shipping Weight',
+          className: 'text-left  font-weight-normal',
+          render: (data: any) => {
+            if (data) {
+              return data+' grams'
+            } else {
+              return `-`;
+            }
+          }
+        },
+        {
+          data: 'created_at',
+          title: 'Created At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
+          data: 'updated_at',
+          title: 'Updated At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
             }
           }
         },

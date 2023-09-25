@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, UntypedFormArray } from '@angular/forms';
 import { Helper } from 'src/app/services/helper.service';
 import { BsModalRef } from 'ngx-bootstrap/modal'
 import { ProductsFilterModalService } from './products-filter-modal.service';
@@ -14,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
 export class ProductsFilterModalComponent implements OnInit {
   @Output() onFilterAppliedCompleted: EventEmitter<any> = new EventEmitter();
   modalEvent: any;
-  treatmentConditionForm: FormGroup;
+  treatmentConditionForm: UntypedFormGroup;
 
   selectedImageFile: any;
   filterDetails:any;
@@ -24,12 +24,12 @@ export class ProductsFilterModalComponent implements OnInit {
     private _http: HttpClient,
     private _helper:Helper,
     private _bsModalRef:BsModalRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _changeDetectorRef:ChangeDetectorRef,
     private _productsFilterModalService: ProductsFilterModalService){
    
     this.treatmentConditionForm = this.formBuilder.group({
-      'attributes':new FormArray([])
+      'attributes':new UntypedFormArray([])
     });
   }
 
@@ -46,15 +46,15 @@ export class ProductsFilterModalComponent implements OnInit {
   }
 
   patchValueInFormControl(from:string,attributes:any[]){
-    const attributesControl = this.treatmentConditionForm.get('attributes') as FormArray;
+    const attributesControl = this.treatmentConditionForm.get('attributes') as UntypedFormArray;
     attributes.forEach((item:any)=>{
 
       let attribute_id= from==='default'?item.id:item.attribute_id;
       let values = from==='default'? (item.values ? item.values.slice().map((itm:any)=>itm.id):[]):item.values;
 
-      let attributeFormGroup = new FormGroup({
-        'attribute_id':new FormControl({value:attribute_id, disabled: true},[Validators.required]),
-        'values':new FormControl(values,[])
+      let attributeFormGroup = new UntypedFormGroup({
+        'attribute_id':new UntypedFormControl({value:attribute_id, disabled: true},[Validators.required]),
+        'values':new UntypedFormControl(values,[])
       });
       attributesControl.push(attributeFormGroup);
     });
@@ -105,10 +105,10 @@ export class ProductsFilterModalComponent implements OnInit {
     this.treatmentConditionForm.updateValueAndValidity();
   }
 
-  newAttributeInput(): FormGroup{
-    return new FormGroup({
-      'attribute_id': new FormControl('', [Validators.required]),
-      'values': new FormControl([], [Validators.required]),
+  newAttributeInput(): UntypedFormGroup{
+    return new UntypedFormGroup({
+      'attribute_id': new UntypedFormControl('', [Validators.required]),
+      'values': new UntypedFormControl([], [Validators.required]),
     });
   }
 
@@ -116,8 +116,8 @@ export class ProductsFilterModalComponent implements OnInit {
     this.attributes().removeAt(empIndex);
   }
 
-  attributes(): FormArray {
-      return this.treatmentConditionForm.get("attributes") as FormArray
+  attributes(): UntypedFormArray {
+      return this.treatmentConditionForm.get("attributes") as UntypedFormArray
   }
   /*-----------------------------END OF ATTRIBUTES --------------------------------*/
 

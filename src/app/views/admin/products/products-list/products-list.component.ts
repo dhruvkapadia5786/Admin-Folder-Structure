@@ -7,10 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Helper } from 'src/app/services/helper.service';
 import { CurrencyPipe  } from '@angular/common';
 import {environment} from 'src/environments/environment';
-
+import { Toastr } from 'src/app/services/toastr.service';
 import { ProductsFilterModalService } from '../products-filter-modal/products-filter-modal.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ProductsFilterModalComponent } from '../products-filter-modal/products-filter-modal.component';
+import { ReasonModalComponent } from '../../common-components/reason-modal/reason-modal.component';
 
 @Component({
   selector: 'app-products-list',
@@ -71,7 +72,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject();
-  dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
 
   @BlockUI('datatable') blockDataTable!: NgBlockUI;
   sellerDealerId:any;
@@ -83,6 +84,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public _helper: Helper,
     private cp:CurrencyPipe,
+    public _toastr: Toastr,
     private modalService: BsModalService,
     private _productsFilterModalService: ProductsFilterModalService,
     private _renderer: Renderer2){
@@ -118,11 +120,13 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goToDetailsPage(productID: any): any {
-    this.router.navigate(['admin', 'products', 'view', productID]);
+    let link = '/admin/products/view/'+productID
+    this.router.navigate([]).then(result => {  window.open(link, '_blank'); });
   }
 
   goToEditPage(productEditId: any): any {
-    this.router.navigate(['admin', 'products', 'edit', productEditId]);
+    let link = '/admin/products/edit/'+productEditId;
+    this.router.navigate(['admin', 'products', 'edit', productEditId]).then(result => {  window.open(link, '_blank'); });
   }
 
   
@@ -211,7 +215,6 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     this._productsFilterModalService.setData({event:'EDIT',all_attributes: this.attributesData, filters:this.product_config.filter.ATTRIBUTES});
     this.modalRef = this.modalService.show(ProductsFilterModalComponent,{class:'modal-lg'});
     this.modalRef.content.onFilterAppliedCompleted.subscribe((appliedFilters:any)=>{
-      console.log('appliedFilters=',appliedFilters);
       this.product_config.filter.ATTRIBUTES=appliedFilters.attributes;
       this.handleChange('',null);
     });
@@ -232,6 +235,64 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  bulkUpdate(action:string){
+    let selected_products:any =[];
+		this.dtElement.dtInstance
+			.then((dtInstance: DataTables.Api) => {
+				selected_products = dtInstance.rows({ selected: true }).data();
+				return selected_products;
+			})
+			.then((data) => {
+        let temp:any=[];
+				if(selected_products.length > 0){
+          selected_products = selected_products.filter((item:any)=> {
+              if(item.id){
+                 temp.push(item.id)
+              }
+            });
+            if(action=='rejected'){
+              this.openReasonModal(action,temp);
+            }else{
+              this.updateStatus(action,temp,'');
+            }
+        }else{
+          this._toastr.showWarning('No Product Selected');
+        }
+    });
+  }
+
+  openReasonModal(status:string,ids:any){
+    this.modalRef = this.modalService.show(ReasonModalComponent)
+    this.modalRef.content.onEventCompleted.subscribe((reason: any) => {
+      this.updateStatus(status,ids,reason);
+    })
+  }
+  
+  updateStatus(status:string,ids:any,reason:string){
+    const url = 'api/admin/products/update-status';
+    this._http.post(url,{status:status,reason:reason,ids:ids}).subscribe((res: any) => {
+      if(res.update_success.length>0){
+        this._toastr.showSuccess(res.update_success);
+      }
+
+      if(res.rejected.length>0){
+        this._toastr.showSuccess(res.rejected);
+      }
+      if(res.deleted.length>0){
+        this._toastr.showSuccess(res.deleted);
+      }
+      if(res.updated.length>0){
+        this._toastr.showSuccess(res.updated);
+      }
+      if(res.update_error.length>0){
+      this._toastr.showWarning(res.update_error);
+      }
+      this.rerender();
+    },(err:any) => {
+
+    });
+  }
+
   getDTOptions(){
     this.blockDataTable.start();
     this.dtOptions = {
@@ -243,8 +304,8 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       searching: true,
       autoWidth: true,
       ordering: true,
-      order: [[18, 'desc']],
-      ajax: (dataTablesParameters: any, callback) => {
+      order: [[19, 'desc']],
+      ajax: (dataTablesParameters: any, callback:any) => {
        dataTablesParameters.filter = {}
        dataTablesParameters.filter =  this.product_config.filter;
         this._http
@@ -272,6 +333,11 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       columns: [
         {
+          data:'id',
+          title:'Id',
+          className: 'text-left  font-weight-normal'
+        },
+        {
           data:'image',
           title: 'Image',
           orderable: false,
@@ -280,7 +346,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return `<a href="javascript:void(0);" productID=${full.id}><img src='${environment.api_url + data}' height="100" width="100" /></>`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -292,7 +358,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return `<a href="javascript:void(0);" productID=${full.id}>${data}</a>`
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -320,7 +386,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getProductStatus(data);
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -328,7 +394,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'has_subscription',
           title: 'Has Subscription',
           className: 'text-center  font-weight-normal',
-          render: (data) => {
+          render: (data:any) => {
             if (data) {
               return `<i class="fa fa-check text-success"></i>`;
             } else {
@@ -353,7 +419,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
               return '<span class="badge badge-dark">Inactive</span>'
             }
             else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -410,7 +476,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'is_active',
           title: 'Active',
           className: 'text-center  font-weight-normal',
-          render: (data) => {
+          render: (data:any) => {
             if (data) {
               return `<i class="fa fa-check text-success"></i>`;
             } else {
@@ -422,7 +488,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           data: 'is_featured',
           title: 'Is Featured',
           className: 'text-center  font-weight-normal',
-          render: (data) => {
+          render: (data:any) => {
             if (data) {
               return `<i class="fa fa-check text-success"></i>`;
             } else {
@@ -438,7 +504,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -450,7 +516,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -462,7 +528,7 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
             if (data) {
               return this._helper.getFormattedDate(data, 'DD/MM/YYYY HH:mm');
             } else {
-              return '<span></span>';
+              return '<span>-</span>';
             }
           }
         },
@@ -471,12 +537,13 @@ export class ProductsListComponent implements OnInit, AfterViewInit, OnDestroy {
           className: 'text-center  font-weight-normal',
           render: function (data: any, type: any, full: any) {
             return `
-            <button class="btn btn-default btn-sm m-0" productID=${full.id}>View</button>
+            <button class="btn btn-primary btn-sm m-0" productID=${full.id}>View</button>
             `;
           },
           orderable: false
         }
-      ]
+      ],
+      select: true
     };
 
   }

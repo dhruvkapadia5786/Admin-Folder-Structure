@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef } from 'ngx-bootstrap/modal'
@@ -12,7 +12,7 @@ import { Helper } from 'src/app/services/helper.service';
   styleUrls: ['./change-password-modal.component.scss']
 })
 export class ChangePasswordModalComponent implements OnInit {
-  editPassword: FormGroup;
+  editPassword: UntypedFormGroup;
   customerId: string;
 
   showDetails = true;
@@ -35,8 +35,8 @@ export class ChangePasswordModalComponent implements OnInit {
     private helper: Helper
   ) {
     this.customerId = this.route.snapshot.params.id;
-    this.editPassword = new FormGroup({
-      'password': new FormControl('', []),
+    this.editPassword = new UntypedFormGroup({
+      'password': new UntypedFormControl('', []),
     });
   }
 

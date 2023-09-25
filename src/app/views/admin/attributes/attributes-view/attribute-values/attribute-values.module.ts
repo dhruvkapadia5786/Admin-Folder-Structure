@@ -7,12 +7,11 @@ import { ValuesAddEditModalComponent } from '../values-add-edit-modal/values-add
 import { ValuesAddEditModalModule } from '../values-add-edit-modal/values-add-edit-modal.module';
 
 @NgModule({
-  declarations: [ AttributeValuesComponent],
-  imports:[
-    SharedModule,
-    ValuesAddEditModalModule,
-     AttributeValuesRoutingModule
-  ],
-  entryComponents:[ValuesAddEditModalComponent]
+    declarations: [AttributeValuesComponent],
+    imports: [
+        SharedModule,
+        ValuesAddEditModalModule,
+        AttributeValuesRoutingModule
+    ]
 })
 export class  AttributeValuesModule { }

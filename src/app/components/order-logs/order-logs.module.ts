@@ -9,15 +9,14 @@ import { OrderLogDetailsModalModule } from '../order-log-details-modal/order-log
 import { OrderLogDetailsModalComponent } from '../order-log-details-modal/order-log-details-modal.component';
 
 @NgModule({
-  declarations: [OrderLogsComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatSelectModule,
-    ModalModule.forRoot(),
-    OrderLogDetailsModalModule
-  ],
-  exports: [OrderLogsComponent],
-  entryComponents:[OrderLogDetailsModalComponent]
+    declarations: [OrderLogsComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatSelectModule,
+        ModalModule.forRoot(),
+        OrderLogDetailsModalModule
+    ],
+    exports: [OrderLogsComponent]
 })
 export class OrderLogsModule { }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Toastr } from 'src/app/services/toastr.service';
 import { HttpClient } from '@angular/common/http';
 import {GolfedApiEndpoints} from 'src/app/constants/GolfedApiEndpoints';
@@ -12,13 +12,13 @@ import {GolfedApiEndpoints} from 'src/app/constants/GolfedApiEndpoints';
 export class ForgotPasswordComponent implements OnInit {
 
   saving:boolean=false;
-  forgotPasswordForm:FormGroup;
+  forgotPasswordForm:UntypedFormGroup;
   constructor(
     private _toaster: Toastr,
     private _http: HttpClient) {
 
-		this.forgotPasswordForm = new FormGroup({
-			email: new FormControl(null, [Validators.required, Validators.email])
+		this.forgotPasswordForm = new UntypedFormGroup({
+			email: new UntypedFormControl(null, [Validators.required, Validators.email])
 		});
   }
 

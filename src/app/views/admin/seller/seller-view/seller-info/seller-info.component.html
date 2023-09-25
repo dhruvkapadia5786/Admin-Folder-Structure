@@ -32,6 +32,13 @@
                         </td>
                         </tr>
                         <tr>
+                            <td>Stripe Connect Account</td>
+                            <td>
+                                <h5>{{sellerDetails.personal_info.stripe_account_id ? sellerDetails.personal_info.stripe_account_id:'Not Found'}}</h5>
+                                <a *ngIf="sellerDetails.personal_info.stripe_account_id" class="btn btn-sm btn-info" target="_blank" [href]="'https://dashboard.stripe.com/connect/accounts/'+sellerDetails.personal_info.stripe_account_id+'/activity'">View Details</a>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Account Verified</td>
                             <td>
                                 <p [ngClass]="{'badge badge-pill':true,'badge-success':sellerDetails.personal_info.account_verified_by_admin==1,'badge-dark':sellerDetails.personal_info.account_verified_by_admin!=1}">{{ sellerDetails.personal_info.account_verified_by_admin==1?'Verified':'Not Verified'}}</p>
@@ -93,7 +100,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <app-image-preview [imgPath]="sellerDetails.photo_id_front" height="250" width="350" caption="PhotoId Front"></app-image-preview>
+                                    <app-image-preview [imgPath]="sellerDetails.personal_info.photo_id_front" height="250" width="350" caption="PhotoId Front"></app-image-preview>
                                 </td> 
                             </tr>
                         </tbody>
@@ -111,7 +118,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <app-image-preview [imgPath]="sellerDetails.photo_id_back" height="250" width="350" caption="PhotoId Back"></app-image-preview>
+                                    <app-image-preview [imgPath]="sellerDetails.personal_info.photo_id_back" height="250" width="350" caption="PhotoId Back"></app-image-preview>
                                 </td> 
                             </tr>
                         </tbody>

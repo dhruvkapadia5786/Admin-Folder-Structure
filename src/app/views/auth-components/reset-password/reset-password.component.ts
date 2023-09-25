@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ResetPasswordService } from "./reset-password.service";
 import { Toastr } from "src/app/services/toastr.service";
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: "app-reset-password",
@@ -14,7 +14,7 @@ export class ResetPasswordComponent implements OnInit {
   invalidToken: boolean=false;
   saving: boolean=false;
   submitted: boolean=false;
-  resetPasswordForm:FormGroup;
+  resetPasswordForm:UntypedFormGroup;
 
   RegExpValidator = {
 		'lowerCase': RegExp(/^(?=.*?[a-z])/),
@@ -32,9 +32,9 @@ export class ResetPasswordComponent implements OnInit {
     this._route.params.subscribe(params => {
       this.token = params["token"];
     });
-    this.resetPasswordForm = new FormGroup({
-      password:new FormControl(null,[]),
-      confirmPassword:new FormControl(null,[Validators.required])
+    this.resetPasswordForm = new UntypedFormGroup({
+      password:new UntypedFormControl(null,[]),
+      confirmPassword:new UntypedFormControl(null,[Validators.required])
     });
   }
 

@@ -9,6 +9,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { CategoriesAddEditModalComponent } from '../categories-add-edit-modal/categories-add-edit-modal.component';
 import { CategoriesAddEditModalService } from '../categories-add-edit-modal/categories-add-edit-modal.service';
 import { Router } from '@angular/router';
+import { Helper } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-categories-list',
@@ -27,6 +28,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
   constructor(
     private router:Router,
     private _renderer:Renderer2,
+    private _helper:Helper,
     private _http: HttpClient,
     private modalService: BsModalService,
     private _hcAddEditModalService: CategoriesAddEditModalService
@@ -72,7 +74,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
 
   openAddModal(){
     this._hcAddEditModalService.setData({event:'ADD'})
-    this.modalRef = this.modalService.show(CategoriesAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef = this.modalService.show(CategoriesAddEditModalComponent,{class:'modal-full-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
         this.rerender();
     });
@@ -81,7 +83,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
   openEditModal(id:any){
     let data = this.healthConditionList.find((item:any)=>item.id == id);
     this._hcAddEditModalService.setData({event:'EDIT',data:data});
-    this.modalRef = this.modalService.show(CategoriesAddEditModalComponent,{class:'modal-lg'});
+    this.modalRef = this.modalService.show(CategoriesAddEditModalComponent,{class:'modal-full-lg'});
     this.modalRef.content.onEventCompleted.subscribe(()=>{
       this.rerender();
     });
@@ -128,7 +130,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
               let url = environment.api_url + data;
               return `<img src=${url} height="80" width="80" />`;
             } else {
-              return ``;
+              return `-`;
             }
           }
         },
@@ -146,6 +148,54 @@ export class CategoriesListComponent implements OnInit, AfterViewInit, OnDestroy
               return `<i class="fa fa-check text-success"></img>`;
             } else {
               return `<i class="fa fa-times text-danger"></i>`;
+            }
+          }
+        },
+        {
+          data:'min_shipping_weight',
+          title: 'Min Shipping Weight',
+          className: 'text-left  font-weight-normal',
+          render: (data: any) => {
+            if (data) {
+              return data+' grams'
+            } else {
+              return `-`;
+            }
+          }
+        },
+        {
+          data:'max_shipping_weight',
+          title: 'Max Shipping Weight',
+          className: 'text-left  font-weight-normal',
+          render: (data: any) => {
+            if (data) {
+              return data+' grams'
+            } else {
+              return `-`;
+            }
+          }
+        },
+        {
+          data: 'created_at',
+          title: 'Created At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
+            }
+          }
+        },
+        {
+          data: 'updated_at',
+          title: 'Updated At',
+          className: 'text-center  font-weight-normal',
+          render: (data) => {
+            if (data) {
+              return this._helper.getFormattedDate(data, 'DD/MM/YYYY');
+            } else {
+              return '<span>-</span>';
             }
           }
         },

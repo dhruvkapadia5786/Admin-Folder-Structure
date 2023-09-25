@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Route, Router, ActivatedRoute } from '@angular/router';
 import { Editor, toDoc,toHTML } from 'ngx-editor';
 import { Helper } from 'src/app/services/helper.service';
@@ -19,7 +19,7 @@ import { NewsletterTemplatePreviewComponent } from '../newsletter-template-previ
 export class NewsletterTemplatesEditorComponent implements OnInit {
   //editor: Editor;
   contentText:any;
-  public emailTemplateForm!: FormGroup;
+  public emailTemplateForm!: UntypedFormGroup;
   templateId:any=null;
   templateDetails:any;
 
@@ -46,11 +46,11 @@ export class NewsletterTemplatesEditorComponent implements OnInit {
   }
 
   ngOnInit(){
-    this.emailTemplateForm = new FormGroup({
-      'template_name': new FormControl([],[Validators.required]),
-      'email_subject': new FormControl(null, [Validators.required]),
-      'email_content': new FormControl(null, [Validators.required]),
-      'status': new FormControl(null, [Validators.required])
+    this.emailTemplateForm = new UntypedFormGroup({
+      'template_name': new UntypedFormControl([],[Validators.required]),
+      'email_subject': new UntypedFormControl(null, [Validators.required]),
+      'email_content': new UntypedFormControl(null, [Validators.required]),
+      'status': new UntypedFormControl(null, [Validators.required])
     });
   }
 

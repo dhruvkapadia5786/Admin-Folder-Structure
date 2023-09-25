@@ -1,6 +1,6 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
 import * as moment from "moment-timezone";
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Injectable()
 export class Helper {
@@ -90,7 +90,7 @@ export class Helper {
   * Marks all controls in a form group as touched
   * @param formGroup - The form group to touch
   */
-    public markFormGroupTouched(formGroup: FormGroup) {
+    public markFormGroupTouched(formGroup: UntypedFormGroup) {
         (<any>Object).values(formGroup.controls).forEach((control: any) => {
             control.markAsTouched();
 

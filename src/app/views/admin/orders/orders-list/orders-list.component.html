@@ -64,7 +64,6 @@
                                             <span [innerHtml]="_orderHelper.getSystemStatus(order.system_status)"></span>
                                         </p>
                                     </div>
-                                    <div class="text-right mb-lg-0 md-md-0 mb-sm-2 mb-2 d-flex flex-lg-column flex-md-column flex-sm-row flex-row justify-content-between align-items-start" (click)="goToUserDetails(order.user_id)"><p class="mb-0"><small class="mb-0 cursor-pointer">CUSTOMER NAME</small></p><p class="cursor-pointer font-weight-bold mb-0">{{order.customer_name}}</p></div>
                                 </div>
                                 <div>
                                     <button type="button" class="float-right btn btn-sm btn-outline-primary" (click)="goToDetailsPage(order.id)">View</button>
@@ -77,6 +76,7 @@
                                     <tr>
                                         <th class="border-0 text-left">PRODUCTS</th>
                                         <th class="border-0 text-left">QUANTITY</th>
+                                        <th class="border-0 text-left">CUSTOMER</th>
                                         <th class="border-0 text-left">BILLING ADDRESS</th>
                                         <th class="border-0 text-right">PRICE</th>
                                     </tr>
@@ -88,16 +88,19 @@
                                           <div *ngIf="order.product_image" class="mr-2">
                                             <img [src]="api_url+ order.product_image" class="order-product-image"/>
                                           </div>
-                                          <div  class="align-middle text-left font-weight-bold">
+                                          <div  class="align-middle text-left font-weight-normal">
                                             {{ order.product_name }}
                                           </div>
                                         </div>
                                        </td>
-                                        <td class="align-middle text-left font-weight-bold">{{order.quantity}}</td>
-                                        <td>
-                                           <p *ngIf="order.address_line_1" class="font-weight-bold mb-0">{{order.address_line_1}}{{order.address_line_2 ? (' , '+order.address_line_2) : '' }}{{' , '+order.city_name+' , '+order.state+' , '+order.zip_code+' , '+order.country}}</p>
+                                        <td class="align-middle text-left font-weight-normal">{{order.quantity}}</td>
+                                        <td class="align-middle text-left font-weight-normal">
+                                          {{order.customer_name}}
                                         </td>
-                                        <td class="align-middle text-right font-weight-bold">{{ order.price | currency:order.currency}}</td>
+                                        <td class="align-middle text-left font-weight-normal">
+                                          {{order.address_line_1}}{{order.address_line_2 ? (' , '+order.address_line_2) : '' }}{{' , '+order.city_name+' , '+order.state+' , '+order.zip_code+' , '+order.country}}
+                                        </td>
+                                        <td class="align-middle text-right font-weight-normal">{{ order.price | currency:order.currency}}</td>
                                     </tr>
                                 </tbody>
                                 </table>
